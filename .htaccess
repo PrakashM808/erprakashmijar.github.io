@@ -1,0 +1,55 @@
+# =============================================
+# erprakashmijar.com — Apache Configuration
+# =============================================
+
+# --- Force HTTPS ---
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# --- Force www removal (non-www canonical) ---
+RewriteCond %{HTTP_HOST} ^www\.erprakashmijar\.com [NC]
+RewriteRule ^(.*)$ https://erprakashmijar.com/$1 [L,R=301]
+
+# --- Custom 404 page ---
+ErrorDocument 404 /404.html
+
+# --- Security Headers ---
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set X-XSS-Protection "1; mode=block"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+  Header always set Content-Security-Policy "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self';"
+</IfModule>
+
+# --- Browser Caching ---
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html                "access plus 1 hour"
+  ExpiresByType text/css                 "access plus 1 month"
+  ExpiresByType application/javascript   "access plus 1 month"
+  ExpiresByType image/svg+xml            "access plus 1 month"
+  ExpiresByType image/png                "access plus 1 month"
+  ExpiresByType image/jpeg               "access plus 1 month"
+  ExpiresByType image/ico                "access plus 1 year"
+  ExpiresByType image/x-icon             "access plus 1 year"
+  ExpiresByType font/woff2               "access plus 1 year"
+  ExpiresByType text/xml                 "access plus 1 day"
+</IfModule>
+
+# --- Gzip Compression ---
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+# --- Disable directory listing ---
+Options -Indexes
+
+# --- Block access to hidden files ---
+<FilesMatch "^\.">
+  Order allow,deny
+  Deny from all
+</FilesMatch>

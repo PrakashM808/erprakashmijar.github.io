@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+  <!-- Primary SEO -->
+  <title>Prakash Mijar — Cybersecurity Professional</title>
+  <meta name="description" content="Prakash Mijar is a cybersecurity professional specialising in penetration testing, vulnerability assessment, security architecture, and incident response."/>
+  <meta name="keywords" content="cybersecurity, penetration testing, vulnerability assessment, security architecture, incident response, security auditing, Prakash Mijar"/>
+  <meta name="author" content="Prakash Mijar"/>
+  <meta name="robots" content="index, follow"/>
+  <link rel="canonical" href="https://erprakashmijar.com/"/>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://erprakashmijar.com/"/>
+  <meta property="og:title" content="Prakash Mijar — Cybersecurity Professional"/>
+  <meta property="og:description" content="Threat intelligence, vulnerability assessment, and security architecture — built to defend against modern adversaries."/>
+  <meta property="og:image" content="https://erprakashmijar.com/og-image.png"/>
+  <meta property="og:site_name" content="erprakashmijar.com"/>
+  <meta property="og:locale" content="en_US"/>
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:url" content="https://erprakashmijar.com/"/>
+  <meta name="twitter:title" content="Prakash Mijar — Cybersecurity Professional"/>
+  <meta name="twitter:description" content="Threat intelligence, vulnerability assessment, and security architecture — built to defend against modern adversaries."/>
+  <meta name="twitter:image" content="https://erprakashmijar.com/og-image.png"/>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <link rel="alternate icon" href="favicon.ico"/>
+  <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+  <meta name="theme-color" content="#00ff88"/>
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Prakash Mijar",
+    "url": "https://erprakashmijar.com",
+    "jobTitle": "Cybersecurity Professional",
+    "description": "Cybersecurity professional specialising in penetration testing, vulnerability assessment, security architecture, and incident response.",
+    "knowsAbout": ["Penetration Testing","Vulnerability Assessment","Security Architecture","Incident Response","Security Auditing","Security Training"],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "contact@erprakashmijar.com",
+      "contactType": "professional inquiry"
+    }
+  }
+  </script>
+
+  <!-- Font preload for performance (FIX #4) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/></noscript>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #020d06;
+      --green: #00ff88;
+      --green-muted: rgba(0,255,136,0.08);
+      --green-border: rgba(0,255,136,0.18);
+      --text: #c8ffe6;
+      --muted: #4a7a62;
+      --mono: 'Share Tech Mono', monospace;
+      --sans: 'Syne', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    /* FIX #5: default cursor on mobile/touch, custom only on hover-capable devices */
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      overflow-x: hidden;
+      cursor: auto;
+    }
+
+    .cursor, .cursor-ring { display: none; }
+
+    @media (hover: hover) and (pointer: fine) {
+      body { cursor: none; }
+      a, button { cursor: none; }
+      .cursor {
+        display: block;
+        position: fixed;
+        width: 12px; height: 12px;
+        background: var(--green);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: width 0.2s, height 0.2s;
+        mix-blend-mode: screen;
+      }
+      .cursor-ring {
+        display: block;
+        position: fixed;
+        width: 36px; height: 36px;
+        border: 1px solid rgba(0,255,136,0.5);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9998;
+        transform: translate(-50%, -50%);
+        transition: width 0.25s, height 0.25s;
+      }
+    }
+
+    /* Scanlines */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px, transparent 3px,
+        rgba(0,0,0,0.08) 3px, rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* Grid */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 500;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.4rem 4rem;
+      border-bottom: 1px solid var(--green-border);
+      background: rgba(2,13,6,0.9);
+      backdrop-filter: blur(12px);
+    }
+    .nav-logo { font-family: var(--mono); color: var(--green); font-size: 0.85rem; letter-spacing: 0.12em; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); text-decoration: none; letter-spacing: 0.1em; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--green); }
+    .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; padding: 4px; }
+    .nav-toggle span { display: block; width: 22px; height: 2px; background: var(--green); transition: all 0.2s; }
+
+    @media (max-width: 640px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-toggle { display: flex; }
+      .nav-links {
+        display: none; position: absolute; top: 100%; left: 0; right: 0;
+        flex-direction: column; gap: 0;
+        background: rgba(2,13,6,0.97);
+        border-bottom: 1px solid var(--green-border);
+        padding: 1rem 0;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links li a { display: block; padding: 0.8rem 1.5rem; font-size: 0.85rem; }
+    }
+
+    /* HERO */
+    .hero {
+      position: relative; min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 10rem 4rem 6rem; z-index: 1; overflow: hidden;
+    }
+    .hero-tag { font-family: var(--mono); font-size: 0.75rem; color: var(--green); letter-spacing: 0.2em; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.6s 0.2s forwards; }
+    .hero h1 { font-family: var(--sans); font-weight: 800; font-size: clamp(3rem, 7vw, 7rem); line-height: 1; letter-spacing: -0.02em; color: #fff; opacity: 0; animation: fadeUp 0.7s 0.4s forwards; }
+    .hero h1 span { color: var(--green); }
+    .hero-sub { margin-top: 2rem; font-family: var(--mono); font-size: clamp(0.85rem, 1.5vw, 1rem); color: var(--muted); max-width: 520px; line-height: 1.8; opacity: 0; animation: fadeUp 0.7s 0.6s forwards; }
+    .hero-actions { margin-top: 3rem; display: flex; gap: 1.2rem; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.7s 0.8s forwards; }
+    .btn { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.15em; padding: 0.85rem 2rem; text-decoration: none; border-radius: 2px; transition: all 0.2s; display: inline-block; }
+    .btn-primary { background: var(--green); color: #020d06; font-weight: 700; }
+    .btn-primary:hover { background: #fff; transform: translateY(-2px); }
+    .btn-outline { border: 1px solid var(--green-border); color: var(--green); }
+    .btn-outline:hover { background: var(--green-muted); transform: translateY(-2px); }
+    .orb { position: absolute; right: -5rem; top: 50%; transform: translateY(-50%); width: 700px; height: 700px; background: radial-gradient(circle, rgba(0,255,136,0.07) 0%, transparent 70%); border-radius: 50%; pointer-events: none; animation: pulse 4s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{transform:translateY(-50%) scale(1);opacity:1} 50%{transform:translateY(-50%) scale(1.05);opacity:0.7} }
+    .status-bar { position: absolute; bottom: 3rem; left: 4rem; display: flex; gap: 3rem; font-family: var(--mono); font-size: 0.7rem; color: var(--muted); opacity: 0; animation: fadeUp 0.7s 1s forwards; flex-wrap: wrap; }
+    .status-item { display: flex; align-items: center; gap: 0.5rem; }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+    /* SHARED */
+    section { position: relative; z-index: 1; }
+    .section-label { font-family: var(--mono); font-size: 0.7rem; color: var(--green); letter-spacing: 0.25em; margin-bottom: 1rem; }
+    .section-title { font-family: var(--sans); font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 800; color: #fff; letter-spacing: -0.02em; margin-bottom: 4rem; }
+
+    /* SERVICES */
+    .services { padding: 8rem 4rem; border-top: 1px solid var(--green-border); }
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5px; background: var(--green-border); border: 1px solid var(--green-border); }
+    .service-card { background: var(--bg); padding: 2.5rem; transition: background 0.2s; position: relative; overflow: hidden; }
+    .service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--green); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; }
+    .service-card:hover::before { transform: scaleX(1); }
+    .service-card:hover { background: var(--green-muted); }
+    .service-icon { font-family: var(--mono); font-size: 1.4rem; color: var(--green); margin-bottom: 1.2rem; }
+    .service-card h3 { font-family: var(--sans); font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 0.7rem; }
+    .service-card p { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); line-height: 1.8; }
+
+    /* PROJECTS */
+    .projects { padding: 8rem 4rem; border-top: 1px solid var(--green-border); }
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+    .project-card { border: 1px solid var(--green-border); padding: 2rem; background: var(--bg); transition: border-color 0.2s, background 0.2s; }
+    .project-card:hover { border-color: var(--green); background: var(--green-muted); }
+    .project-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.8rem; }
+    .project-tags span { font-family: var(--mono); font-size: 0.65rem; color: var(--green); letter-spacing: 0.12em; background: rgba(0,255,136,0.08); border: 1px solid var(--green-border); padding: 0.15rem 0.5rem; border-radius: 2px; }
+    .project-card h3 { font-family: var(--sans); font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 0.7rem; }
+    .project-card p { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); line-height: 1.8; }
+    .project-links { margin-top: 1.2rem; display: flex; gap: 1rem; }
+    .project-link { font-family: var(--mono); font-size: 0.7rem; color: var(--green); text-decoration: none; letter-spacing: 0.1em; border-bottom: 1px solid var(--green-border); padding-bottom: 1px; transition: color 0.2s, border-color 0.2s; }
+    .project-link:hover { color: #fff; border-color: #fff; }
+
+    /* ABOUT */
+    .about { padding: 8rem 4rem; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; border-top: 1px solid var(--green-border); }
+    .about-text p { font-family: var(--mono); font-size: 0.82rem; color: var(--muted); line-height: 2; margin-bottom: 1rem; }
+    .cert-list { margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .cert-badge { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; color: var(--green); border: 1px solid var(--green-border); padding: 0.3rem 0.7rem; border-radius: 2px; background: var(--green-muted); }
+    .about-social { margin-top: 1.8rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+    .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: var(--green-border); border: 1px solid var(--green-border); align-self: start; }
+    .stat { background: var(--bg); padding: 2rem; text-align: center; }
+    .stat-num { font-family: var(--sans); font-size: 2.5rem; font-weight: 800; color: var(--green); }
+    .stat-label { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em; margin-top: 0.3rem; }
+
+    /* CONTACT */
+    .contact { padding: 8rem 4rem; border-top: 1px solid var(--green-border); text-align: center; }
+    .contact .section-title { margin-bottom: 1rem; }
+    .contact-sub { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); margin-bottom: 3rem; }
+    .contact-email { display: inline-block; font-family: var(--mono); font-size: clamp(1rem, 2.5vw, 1.5rem); color: var(--green); text-decoration: none; border-bottom: 1px solid var(--green-border); padding-bottom: 0.3rem; transition: border-color 0.2s, color 0.2s; }
+    .contact-email:hover { color: #fff; border-color: #fff; }
+
+    /* FOOTER */
+    footer { padding: 2rem 4rem; border-top: 1px solid var(--green-border); display: flex; justify-content: space-between; align-items: center; z-index: 1; position: relative; flex-wrap: wrap; gap: 1rem; }
+    footer span { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); }
+    .footer-domain { color: var(--green); }
+    .blink { animation: blink 1s step-end infinite; }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .hero, .services, .projects, .about, .contact { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .about { grid-template-columns: 1fr; gap: 3rem; }
+      .status-bar { left: 1.5rem; gap: 1.5rem; }
+      footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+  <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+  <nav role="navigation" aria-label="Main navigation">
+    <div class="nav-logo">// erprakashmijar.com</div>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" id="navToggle">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#services">services</a></li>
+      <li><a href="#projects">projects</a></li>
+      <li><a href="#about">about</a></li>
+      <li><a href="#contact">contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero" aria-label="Introduction">
+      <div class="orb" aria-hidden="true"></div>
+      <p class="hero-tag">// CYBERSECURITY PROFESSIONAL</p>
+      <h1>Securing<br/>Your <span>Digital</span><br/>Perimeter.</h1>
+      <p class="hero-sub">
+        Threat intelligence, vulnerability assessment, and security architecture —
+        built to defend against modern adversaries.
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary">VIEW PROJECTS</a>
+        <a href="#contact" class="btn btn-outline">GET IN TOUCH</a>
+      </div>
+      <div class="status-bar" aria-hidden="true">
+        <div class="status-item"><span class="status-dot"></span>SYSTEMS ONLINE</div>
+        <div class="status-item"><span class="status-dot"></span>THREAT MONITORING ACTIVE</div>
+        <div class="status-item"><span class="status-dot"></span>ENCRYPTION ENABLED</div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="services" id="services" aria-labelledby="services-heading">
+      <p class="section-label">// WHAT I DO</p>
+      <h2 class="section-title" id="services-heading">Core Services</h2>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon" aria-hidden="true">[01]</div>
+          <h3>Penetration Testing</h3>
+          <p>Simulated attacks on networks, applications, and infrastructure to uncover vulnerabilities before adversaries do.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon" aria-hidden="true">[02]</div>
+          <h3>Vulnerability Assessment</h3>
+          <p>Comprehensive scanning and analysis of your systems to identify, classify, and prioritize security weaknesses.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon" aria-hidden="true">[03]</div>
+          <h3>Security Architecture</h3>
+          <p>Designing robust, layered defense frameworks tailored to your organization's risk profile and compliance needs.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon" aria-hidden="true">[04]</div>
+          <h3>Incident Response</h3>
+          <p>Rapid containment, investigation, and recovery services when a breach or security event occurs.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon" aria-hidden="true">[05]</div>
+          <h3>Security Auditing</h3>
+          <p>In-depth reviews of policies, configurations, and controls aligned with industry standards and best practices.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon" aria-hidden="true">[06]</div>
+          <h3>Security Training</h3>
+          <p>Empowering teams to recognise threats and act as your organisation's first line of defense.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section class="projects" id="projects" aria-labelledby="projects-heading">
+      <p class="section-label">// WHAT I'VE BUILT</p>
+      <h2 class="section-title" id="projects-heading">Projects</h2>
+      <div class="projects-grid">
+
+        <article class="project-card">
+          <div class="project-tags">
+            <span>Malware Analysis</span><span>Reverse Engineering</span>
+          </div>
+          <h3>WannaCry Ransomware Analysis</h3>
+          <p>Static and dynamic analysis of a WannaCry sample. Documented propagation via the EternalBlue exploit, encryption routine, and C2 communication patterns in a sandboxed environment.</p>
+          <div class="project-links">
+            <!-- Replace # with your actual report URL, GitHub repo, or blog post -->
+            <a href="#" class="project-link">VIEW REPORT →</a>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-tags">
+            <span>Network Security</span><span>Wireshark</span><span>Snort</span>
+          </div>
+          <h3>Network Traffic Monitoring Lab</h3>
+          <p>Built a home lab to capture and analyse live network traffic. Configured Snort IDS rules to detect port scans, brute-force attempts, and anomalous payloads using custom signatures.</p>
+          <div class="project-links">
+            <a href="#" class="project-link">VIEW WRITEUP →</a>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-tags">
+            <span>Linux Security</span><span>Lynis</span><span>Hardening</span>
+          </div>
+          <h3>Lynis Security Audit</h3>
+          <p>Performed a CIS-benchmark-aligned audit on a Linux server using Lynis. Identified and remediated misconfigurations across SSH, filesystem permissions, and kernel parameters.</p>
+          <div class="project-links">
+            <a href="#" class="project-link">VIEW AUDIT →</a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about" id="about" aria-labelledby="about-heading">
+      <div class="about-text">
+        <p class="section-label">// ABOUT</p>
+        <h2 class="section-title" id="about-heading">Prakash Mijar</h2>
+        <p>A cybersecurity professional with hands-on experience in offensive and defensive security. I work with organisations to understand, reduce, and manage digital risk.</p>
+        <p>Passionate about ethical hacking, threat modelling, and building security programs that are practical and resilient against the evolving threat landscape.</p>
+        <div class="cert-list" aria-label="Skills and tools">
+          <span class="cert-badge">Kali Linux</span>
+          <span class="cert-badge">Wireshark</span>
+          <span class="cert-badge">Burp Suite</span>
+          <span class="cert-badge">Metasploit</span>
+          <span class="cert-badge">Nmap</span>
+          <span class="cert-badge">Snort IDS</span>
+          <span class="cert-badge">OWASP Top 10</span>
+          <span class="cert-badge">Python</span>
+        </div>
+        <div class="about-social">
+          <!-- Replace # with your real GitHub and LinkedIn URLs -->
+          <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="btn btn-outline">GITHUB</a>
+          <a href="https://linkedin.com/in/" target="_blank" rel="noopener noreferrer" class="btn btn-outline">LINKEDIN</a>
+        </div>
+      </div>
+      <!-- Stats updated with honest, non-inflated values (FIX #1) -->
+      <div class="about-stats" aria-label="Quick facts">
+        <div class="stat">
+          <div class="stat-num">3+</div>
+          <div class="stat-label">PROJECTS</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">CTF</div>
+          <div class="stat-label">COMPETITOR</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">SOC</div>
+          <div class="stat-label">ANALYST SKILLS</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">24/7</div>
+          <div class="stat-label">LEARNING</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact" id="contact" aria-labelledby="contact-heading">
+      <p class="section-label" style="text-align:center">// CONTACT</p>
+      <h2 class="section-title" id="contact-heading">Ready to Secure<br/>Your Systems?</h2>
+      <p class="contact-sub">Let's identify your risks and build a stronger defence together.</p>
+      <!--
+        EMAIL SETUP (FIX #2):
+        Replace the address below once your email is configured. Options:
+          • Free with your domain: zoho.com/mail
+          • Google Workspace (paid): workspace.google.com
+          • Temporary: use your personal Gmail address
+      -->
+      <a href="mailto:contact@erprakashmijar.com" class="contact-email">contact@erprakashmijar.com</a>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>&copy; 2026 Prakash Mijar</span>
+    <span class="footer-domain">erprakashmijar.com<span class="blink" aria-hidden="true">_</span></span>
+  </footer>
+
+  <script>
+    // Mobile nav toggle
+    const toggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    toggle.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Custom cursor — desktop/mouse only
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      const cursor = document.getElementById('cursor');
+      const ring   = document.getElementById('cursorRing');
+      let mx = 0, my = 0, rx = 0, ry = 0;
+      document.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        cursor.style.left = mx + 'px';
+        cursor.style.top  = my + 'px';
+      });
+      (function tick() {
+        rx += (mx - rx) * 0.12;
+        ry += (my - ry) * 0.12;
+        ring.style.left = rx + 'px';
+        ring.style.top  = ry + 'px';
+        requestAnimationFrame(tick);
+      })();
+      document.querySelectorAll('a, button').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          cursor.style.width = '20px'; cursor.style.height = '20px';
+          ring.style.width   = '56px'; ring.style.height   = '56px';
+        });
+        el.addEventListener('mouseleave', () => {
+          cursor.style.width = '12px'; cursor.style.height = '12px';
+          ring.style.width   = '36px'; ring.style.height   = '36px';
+        });
+      });
+    }
+
+    // Scroll fade-in
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity   = '1';
+          e.target.style.transform = 'translateY(0)';
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.service-card, .project-card, .about-text, .stat').forEach(el => {
+      el.style.opacity    = '0';
+      el.style.transform  = 'translateY(20px)';
+      el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      io.observe(el);
+    });
+  </script>
+</body>
+</html>
