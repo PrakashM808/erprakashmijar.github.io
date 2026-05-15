@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard — PM::OFFSEC</title>
+  <title>Dashboard — PM::OFFSEC Security</title>
   <meta name="robots" content="noindex"/>
   <link rel="icon" type="image/svg+xml" href="../favicon.svg"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@300;400;500;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.8.0/Recharts.min.js"></script>
   <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -19,30 +18,29 @@
     --muted:#2a4a62;--text:#7aafc8;--text2:#c0dce8;--white:#e8f4f8;
     --danger:#ff3b5c;--warn:#f59e0b;--ok:#00ff88;
     --mono:'Azeret Mono',monospace;--display:'Bebas Neue',sans-serif;--body:'DM Sans',sans-serif;
-    --sidebar:220px;--header:54px;
+    --sidebar:230px;--header:56px;
   }
   html,body{height:100%;overflow:hidden}
   body{background:var(--bg);color:var(--text2);font-family:var(--body)}
   ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(0,255,136,.15);border-radius:2px}
   button,input,select,textarea{font-family:inherit}
-  /* LAYOUT */
   #app{display:flex;flex-direction:column;height:100vh}
   /* HEADER */
-  .hdr{height:var(--header);display:flex;align-items:center;padding:0 1.2rem;background:rgba(3,7,15,.9);border-bottom:1px solid rgba(0,255,136,.07);backdrop-filter:blur(16px);flex-shrink:0;gap:.8rem;position:relative;z-index:100}
+  .hdr{height:var(--header);display:flex;align-items:center;padding:0 1.2rem;background:rgba(3,7,15,.92);border-bottom:1px solid rgba(0,255,136,.08);backdrop-filter:blur(16px);flex-shrink:0;gap:.7rem;z-index:100}
   .hdr-logo{font-family:var(--display);font-size:1.2rem;color:var(--white);letter-spacing:.08em;white-space:nowrap}
   .hdr-logo span{color:var(--g)}
-  .hdr-search{flex:1;max-width:340px;position:relative;margin-left:.3rem}
-  .hdr-search input{width:100%;background:rgba(0,255,136,.03);border:1px solid var(--border);border-radius:6px;padding:.42rem .9rem .42rem 2.2rem;font-family:var(--mono);font-size:.63rem;color:var(--text2);outline:none;transition:border-color .2s}
+  .hdr-search{flex:1;max-width:300px;position:relative;margin-left:.3rem}
+  .hdr-search input{width:100%;background:rgba(0,255,136,.03);border:1px solid var(--border);border-radius:6px;padding:.4rem .9rem .4rem 2.1rem;font-family:var(--mono);font-size:.62rem;color:var(--text2);outline:none;transition:border-color .2s}
   .hdr-search input:focus{border-color:rgba(0,255,136,.3)}
-  .hdr-search::before{content:'⌕';position:absolute;left:.7rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.9rem}
+  .hdr-search::before{content:'⌕';position:absolute;left:.6rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.9rem}
   .hdr-right{margin-left:auto;display:flex;align-items:center;gap:.6rem}
-  .role-badge{font-family:var(--mono);font-size:.52rem;letter-spacing:.1em;padding:.22rem .55rem;border-radius:3px}
+  .role-badge{font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;padding:.2rem .5rem;border-radius:3px}
   .rb-admin{background:rgba(124,58,237,.12);color:#a78bfa;border:1px solid rgba(124,58,237,.2)}
-  .rb-client{background:rgba(0,212,255,.06);color:var(--g2);border:1px solid rgba(0,212,255,.15)}
-  .rb-user{background:rgba(0,255,136,.06);color:var(--g);border:1px solid rgba(0,255,136,.15)}
-  .hdr-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--g3),var(--g));display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.6rem;font-weight:700;color:#fff;cursor:pointer;flex-shrink:0}
-  .hdr-name{font-family:var(--mono);font-size:.63rem;color:var(--text2)}
-  .hdr-btn{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;padding:.38rem .8rem;border-radius:5px;border:none;cursor:pointer;transition:all .2s}
+  .rb-client{background:rgba(0,212,255,.06);color:var(--g2)}
+  .rb-user{background:rgba(0,255,136,.06);color:var(--g)}
+  .hdr-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--g3),var(--g));display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.58rem;font-weight:700;color:#fff;cursor:pointer;flex-shrink:0}
+  .hdr-name{font-family:var(--mono);font-size:.62rem;color:var(--text2)}
+  .hdr-btn{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;padding:.36rem .78rem;border-radius:5px;border:none;cursor:pointer;transition:all .2s}
   .hdr-scan{background:var(--g);color:#040810;font-weight:700}
   .hdr-scan:hover{background:#fff}
   .hdr-scan:disabled{background:rgba(0,255,136,.15);color:rgba(0,255,136,.3);cursor:not-allowed}
@@ -51,145 +49,186 @@
   /* BODY */
   .body{flex:1;display:flex;overflow:hidden}
   /* SIDEBAR */
-  .sidebar{width:var(--sidebar);flex-shrink:0;background:rgba(6,13,26,.7);border-right:1px solid rgba(0,255,136,.06);display:flex;flex-direction:column;overflow-y:auto}
-  .sb-section{padding:.7rem 0}
-  .sb-label{font-family:var(--mono);font-size:.48rem;color:var(--muted);letter-spacing:.2em;padding:.2rem 1rem .4rem;text-transform:uppercase}
-  .sb-item{display:flex;align-items:center;gap:.6rem;padding:.56rem 1rem;font-family:var(--mono);font-size:.62rem;color:var(--muted);letter-spacing:.05em;cursor:pointer;border-left:2px solid transparent;transition:all .18s;border:none;background:none;width:100%;text-align:left}
+  .sidebar{width:var(--sidebar);flex-shrink:0;background:rgba(6,13,26,.72);border-right:1px solid rgba(0,255,136,.06);display:flex;flex-direction:column;overflow-y:auto}
+  .sb-section{padding:.6rem 0}
+  .sb-label{font-family:var(--mono);font-size:.47rem;color:var(--muted);letter-spacing:.2em;padding:.2rem .9rem .4rem;text-transform:uppercase}
+  .sb-item{display:flex;align-items:center;gap:.55rem;padding:.54rem .9rem;font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.05em;cursor:pointer;border-left:2px solid transparent;transition:all .18s;border:none;background:none;width:100%;text-align:left}
   .sb-item:hover{color:var(--text2);background:rgba(0,255,136,.02)}
   .sb-item.active{color:var(--g);background:rgba(0,255,136,.05);border-left-color:var(--g)}
-  .sb-icon{font-size:.85rem;width:16px;text-align:center;flex-shrink:0}
-  .sb-badge{margin-left:auto;font-family:var(--mono);font-size:.48rem;background:rgba(255,59,92,.15);color:var(--danger);border:1px solid rgba(255,59,92,.2);border-radius:3px;padding:.1rem .35rem}
-  .sb-bottom{margin-top:auto;padding:.7rem 0;border-top:1px solid rgba(0,255,136,.06)}
-  .scan-info{margin:.6rem;background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.08);border-radius:6px;padding:.7rem .9rem}
-  .scan-info-label{font-family:var(--mono);font-size:.5rem;color:var(--muted);letter-spacing:.12em;margin-bottom:.3rem}
-  .scan-info-host{font-family:var(--mono);font-size:.6rem;color:var(--text2)}
-  .scan-info-time{font-family:var(--mono);font-size:.5rem;color:var(--muted)}
+  .sb-icon{font-size:.8rem;width:15px;text-align:center;flex-shrink:0}
+  .sb-badge{margin-left:auto;font-family:var(--mono);font-size:.46rem;background:rgba(255,59,92,.15);color:var(--danger);border:1px solid rgba(255,59,92,.2);border-radius:3px;padding:.08rem .3rem}
+  .sb-bottom{margin-top:auto;padding:.6rem 0;border-top:1px solid rgba(0,255,136,.06)}
+  .device-mini{margin:.5rem .7rem;background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.08);border-radius:5px;padding:.6rem .8rem}
+  .dm-label{font-family:var(--mono);font-size:.48rem;color:var(--muted);letter-spacing:.12em;margin-bottom:.3rem}
+  .dm-host{font-family:var(--mono);font-size:.58rem;color:var(--text2)}
+  .dm-ip{font-family:var(--mono);font-size:.5rem;color:var(--muted)}
+  .dm-score{font-family:var(--display);font-size:1.4rem;color:var(--g)}
   /* MAIN */
   .main{flex:1;overflow-y:auto;overflow-x:hidden}
-  .page{display:none;padding:1.4rem;animation:pgIn .22s ease}
+  .page{display:none;padding:1.3rem;animation:pgIn .2s ease}
   .page.active{display:block}
-  @keyframes pgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-  .pg-hdr{margin-bottom:1.2rem}
-  .pg-title{font-family:var(--display);font-size:1.7rem;color:var(--white);letter-spacing:.05em;line-height:1}
-  .pg-sub{font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-top:.2rem;letter-spacing:.07em}
+  @keyframes pgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+  .pg-hdr{margin-bottom:1.1rem;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:.6rem}
+  .pg-title{font-family:var(--display);font-size:1.65rem;color:var(--white);letter-spacing:.05em;line-height:1}
+  .pg-sub{font-family:var(--mono);font-size:.57rem;color:var(--muted);margin-top:.2rem;letter-spacing:.07em}
   /* PANEL */
-  .panel{background:rgba(6,13,26,.7);border:1px solid rgba(0,255,136,.07);border-radius:9px;overflow:hidden;margin-bottom:1rem}
-  .panel-hdr{display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;border-bottom:1px solid rgba(0,255,136,.05)}
-  .panel-title{font-family:var(--mono);font-size:.6rem;color:var(--g);letter-spacing:.15em;text-transform:uppercase}
-  .panel-act{font-family:var(--mono);font-size:.55rem;color:var(--muted);cursor:pointer;transition:color .2s;border:none;background:none;letter-spacing:.1em}
-  .panel-act:hover{color:var(--g)}
-  .panel-body{padding:1.1rem}
+  .panel{background:rgba(6,13,26,.72);border:1px solid rgba(0,255,136,.07);border-radius:9px;overflow:hidden;margin-bottom:.9rem}
+  .ph{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.1rem;border-bottom:1px solid rgba(0,255,136,.05)}
+  .pt{font-family:var(--mono);font-size:.58rem;color:var(--g);letter-spacing:.15em;text-transform:uppercase}
+  .pa{font-family:var(--mono);font-size:.53rem;color:var(--muted);cursor:pointer;transition:color .2s;border:none;background:none;letter-spacing:.1em}
+  .pa:hover{color:var(--g)}
+  .pb{padding:1.1rem}
   /* GRIDS */
-  .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-bottom:1rem}
-  .g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-  .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+  .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:.9rem}
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+  .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem}
   @media(max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}}
   /* STAT CARD */
-  .sc{background:rgba(6,13,26,.7);border:1px solid rgba(0,255,136,.07);border-radius:9px;padding:1.1rem 1.3rem;position:relative;overflow:hidden;transition:border-color .2s}
+  .sc{background:rgba(6,13,26,.72);border:1px solid rgba(0,255,136,.07);border-radius:9px;padding:1rem 1.2rem;position:relative;overflow:hidden;transition:border-color .2s}
   .sc:hover{border-color:rgba(0,255,136,.18)}
   .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
   .sc-g::before{background:linear-gradient(90deg,var(--g),transparent)}
   .sc-b::before{background:linear-gradient(90deg,var(--g2),transparent)}
   .sc-p::before{background:linear-gradient(90deg,var(--g3),transparent)}
   .sc-r::before{background:linear-gradient(90deg,var(--danger),transparent)}
-  .sc-label{font-family:var(--mono);font-size:.53rem;color:var(--muted);letter-spacing:.13em;text-transform:uppercase;margin-bottom:.55rem}
-  .sc-value{font-family:var(--display);font-size:2rem;line-height:1;letter-spacing:.03em}
-  .sc-delta{font-family:var(--mono);font-size:.53rem;color:var(--muted);margin-top:.25rem}
-  .sc-icon{position:absolute;right:.9rem;top:.9rem;font-size:1.3rem;opacity:.12}
+  .sc-label{font-family:var(--mono);font-size:.52rem;color:var(--muted);letter-spacing:.13em;text-transform:uppercase;margin-bottom:.5rem}
+  .sc-value{font-family:var(--display);font-size:1.9rem;line-height:1;letter-spacing:.03em}
+  .sc-delta{font-family:var(--mono);font-size:.52rem;color:var(--muted);margin-top:.22rem}
+  .sc-icon{position:absolute;right:.8rem;top:.8rem;font-size:1.2rem;opacity:.12}
   /* BADGE */
-  .badge{display:inline-block;font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;padding:.18rem .45rem;border-radius:3px;text-transform:uppercase}
+  .badge{display:inline-block;font-family:var(--mono);font-size:.48rem;letter-spacing:.1em;padding:.16rem .42rem;border-radius:3px;text-transform:uppercase}
   .b-critical{background:rgba(255,59,92,.1);color:var(--danger);border:1px solid rgba(255,59,92,.25)}
   .b-high{background:rgba(255,140,66,.1);color:#ff8c42;border:1px solid rgba(255,140,66,.22)}
   .b-medium{background:rgba(245,200,66,.08);color:#f5c842;border:1px solid rgba(245,200,66,.2)}
   .b-low{background:rgba(77,217,172,.07);color:#4dd9ac;border:1px solid rgba(77,217,172,.17)}
   .b-ok{background:rgba(0,255,136,.06);color:var(--ok);border:1px solid rgba(0,255,136,.15)}
+  .b-online{background:rgba(0,255,136,.07);color:var(--ok);border:1px solid rgba(0,255,136,.18)}
+  .b-offline{background:rgba(255,59,92,.07);color:var(--danger);border:1px solid rgba(255,59,92,.2)}
   /* TABLE */
   .tbl{width:100%;border-collapse:collapse}
-  .tbl th{font-family:var(--mono);font-size:.52rem;color:var(--muted);letter-spacing:.14em;text-align:left;padding:.55rem .8rem;border-bottom:1px solid rgba(0,255,136,.06);text-transform:uppercase}
-  .tbl td{font-family:var(--mono);font-size:.6rem;color:var(--text2);padding:.65rem .8rem;border-bottom:1px solid rgba(0,255,136,.03)}
+  .tbl th{font-family:var(--mono);font-size:.5rem;color:var(--muted);letter-spacing:.14em;text-align:left;padding:.52rem .75rem;border-bottom:1px solid rgba(0,255,136,.06);text-transform:uppercase}
+  .tbl td{font-family:var(--mono);font-size:.58rem;color:var(--text2);padding:.62rem .75rem;border-bottom:1px solid rgba(0,255,136,.03)}
   .tbl tr:last-child td{border-bottom:none}
   .tbl tr:hover td{background:rgba(0,255,136,.015)}
   /* SKILL BAR */
-  .skill-row{display:flex;align-items:center;gap:.7rem;margin-bottom:.65rem}
-  .skill-name{font-family:var(--mono);font-size:.58rem;color:var(--text2);width:130px;flex-shrink:0}
+  .skill-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem}
+  .skill-name{font-family:var(--mono);font-size:.56rem;color:var(--text2);width:125px;flex-shrink:0}
   .skill-track{flex:1;height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden}
   .skill-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--g),var(--g2));transition:width 1s cubic-bezier(.16,1,.3,1)}
-  .skill-pct{font-family:var(--mono);font-size:.52rem;color:var(--muted);width:28px;text-align:right}
+  .skill-pct{font-family:var(--mono);font-size:.5rem;color:var(--muted);width:26px;text-align:right}
   /* ISSUE ROW */
-  .issue-row{display:flex;align-items:center;gap:.9rem;padding:.6rem .8rem;border-radius:5px;margin-bottom:.3rem}
-  /* ACTIVITY */
-  .act-item{display:flex;align-items:flex-start;gap:.7rem;padding:.6rem 0;border-bottom:1px solid rgba(0,255,136,.04)}
+  .issue-row{display:flex;align-items:center;gap:.8rem;padding:.55rem .75rem;border-radius:5px;margin-bottom:.3rem}
+  /* ALERT BOX */
+  .alert-box{display:flex;gap:.8rem;padding:.8rem .9rem;border-radius:7px;margin-bottom:.35rem}
+  .alert-bar{width:3px;border-radius:2px;flex-shrink:0;align-self:stretch}
+  /* CHAT */
+  .chat-wrap{display:flex;flex-direction:column;height:480px}
+  .chat-msgs{flex:1;overflow-y:auto;padding:.8rem;display:flex;flex-direction:column;gap:.5rem}
+  .msg{max-width:84%}
+  .msg-bot{align-self:flex-start}
+  .msg-user{align-self:flex-end}
+  .msg-bubble{padding:.58rem .82rem;font-family:var(--mono);font-size:.61rem;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+  .msg-bot .msg-bubble{background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.1);border-radius:2px 8px 8px 8px;color:var(--text2)}
+  .msg-user .msg-bubble{background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.18);border-radius:8px 2px 8px 8px;color:var(--white)}
+  .msg-time{font-family:var(--mono);font-size:.46rem;color:var(--muted);margin-top:.18rem;padding:0 .18rem}
+  .msg-user .msg-time{text-align:right}
+  .typing{display:flex;gap:4px;padding:.58rem .82rem;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.09);border-radius:2px 8px 8px 8px;width:fit-content;align-self:flex-start}
+  .typing-dot{width:5px;height:5px;border-radius:50%;background:var(--g);animation:td .8s ease infinite}
+  .typing-dot:nth-child(2){animation-delay:.12s}.typing-dot:nth-child(3){animation-delay:.24s}
+  @keyframes td{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+  .chat-sug{padding:.45rem;border-top:1px solid rgba(0,255,136,.05);display:flex;gap:.3rem;flex-wrap:wrap;background:rgba(0,0,0,.08)}
+  .sug-btn{font-family:var(--mono);font-size:.5rem;color:var(--text);background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.09);border-radius:4px;padding:.22rem .5rem;cursor:pointer;transition:all .18s;letter-spacing:.05em}
+  .sug-btn:hover{background:rgba(0,255,136,.09);color:var(--g)}
+  .chat-input-row{padding:.6rem;border-top:1px solid rgba(0,255,136,.05);display:flex;gap:.4rem;align-items:flex-end;background:rgba(0,0,0,.12)}
+  .chat-inp{flex:1;background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.09);border-radius:6px;padding:.52rem .75rem;font-family:var(--mono);font-size:.61rem;color:var(--white);outline:none;resize:none;max-height:72px;min-height:32px;line-height:1.5;transition:border-color .2s}
+  .chat-inp:focus{border-color:rgba(0,255,136,.28)}
+  .chat-send{width:32px;height:32px;border-radius:6px;background:linear-gradient(135deg,var(--g3),var(--g));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;transition:all .18s}
+  .chat-send:hover{transform:scale(1.08)}
+  /* SCAN ANIMATION */
+  .scan-anim{text-align:center;padding:2.5rem 1.5rem}
+  .scan-ring{width:110px;height:110px;margin:0 auto 1.4rem;position:relative}
+  .scan-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column}
+  .scan-pct-num{font-family:var(--display);font-size:2rem;color:var(--g);line-height:1}
+  .scan-stage{font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-top:.4rem;letter-spacing:.1em}
+  /* DEVICE MODAL */
+  .modal-overlay{position:fixed;inset:0;background:rgba(3,7,15,.85);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center}
+  .modal{background:var(--bg2);border:1px solid rgba(0,255,136,.15);border-radius:12px;width:100%;max-width:520px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+  .modal-bar{height:2px;background:linear-gradient(90deg,var(--g),var(--g2),var(--g3))}
+  .modal-hdr{padding:1.2rem 1.4rem;border-bottom:1px solid rgba(0,255,136,.06);display:flex;align-items:center;justify-content:space-between}
+  .modal-title{font-family:var(--display);font-size:1.3rem;color:var(--white);letter-spacing:.05em}
+  .modal-close{font-family:var(--mono);font-size:.9rem;color:var(--muted);background:none;border:none;cursor:pointer;transition:color .2s}
+  .modal-close:hover{color:var(--danger)}
+  .modal-body{padding:1.4rem}
+  /* DEVICE TABS */
+  .dtabs{display:flex;gap:0;border-bottom:1px solid rgba(0,255,136,.08);margin-bottom:1.2rem}
+  .dtab{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;color:var(--muted);padding:.55rem 1rem;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s}
+  .dtab.active{color:var(--g);border-bottom-color:var(--g)}
+  /* FORM */
+  .form-group{margin-bottom:.8rem}
+  .form-label{font-family:var(--mono);font-size:.54rem;color:var(--g2);letter-spacing:.15em;display:block;margin-bottom:.32rem}
+  .form-input{width:100%;background:rgba(0,0,0,.25);border:1px solid rgba(0,255,136,.09);border-radius:5px;padding:.6rem .85rem;font-family:var(--mono);font-size:.65rem;color:var(--white);outline:none;transition:border-color .2s}
+  .form-input:focus{border-color:rgba(0,255,136,.3)}
+  .form-hint{font-family:var(--mono);font-size:.52rem;color:var(--muted);margin-top:.25rem;line-height:1.5}
+  .form-grid2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+  /* BUTTONS */
+  .btn{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;padding:.62rem 1.3rem;border-radius:5px;border:none;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:.4rem}
+  .btn-g{background:var(--g);color:#040810;font-weight:700}
+  .btn-g:hover{background:#fff;transform:translateY(-1px)}
+  .btn-o{background:rgba(0,255,136,.06);color:var(--g);border:1px solid rgba(0,255,136,.15)}
+  .btn-o:hover{background:rgba(0,255,136,.12)}
+  .btn-r{background:rgba(255,59,92,.08);color:var(--danger);border:1px solid rgba(255,59,92,.2)}
+  .btn-r:hover{background:rgba(255,59,92,.15)}
+  .btn-sm{padding:.38rem .75rem;font-size:.55rem}
+  /* DEVICE CARDS */
+  .devices-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.9rem}
+  .device-card{background:var(--bg2);border:1px solid rgba(0,255,136,.08);border-radius:9px;overflow:hidden;transition:all .25s;cursor:pointer}
+  .device-card:hover{border-color:rgba(0,255,136,.22);transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  .device-card.selected{border-color:var(--g);box-shadow:0 0 20px rgba(0,255,136,.1)}
+  .device-card-top{height:3px;background:linear-gradient(90deg,var(--g),var(--g2))}
+  .device-card.offline .device-card-top{background:linear-gradient(90deg,var(--danger),transparent)}
+  .device-body{padding:1.1rem}
+  .device-name{font-family:var(--display);font-size:1.15rem;color:var(--white);letter-spacing:.04em;margin-bottom:.25rem}
+  .device-ip{font-family:var(--mono);font-size:.6rem;color:var(--g2);margin-bottom:.6rem}
+  .device-meta{font-family:var(--mono);font-size:.57rem;color:var(--muted);line-height:1.7;margin-bottom:.8rem}
+  .device-score-row{display:flex;align-items:center;justify-content:space-between}
+  .device-score{font-family:var(--display);font-size:2rem;line-height:1}
+  .device-actions{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.7rem;padding-top:.7rem;border-top:1px solid rgba(0,255,136,.05)}
+  /* NETWORK DISCOVER */
+  .discover-progress{background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:6px;padding:.9rem 1rem;margin-bottom:.8rem}
+  .dp-bar-wrap{height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin:.5rem 0}
+  .dp-bar{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--g),var(--g2));transition:width .3s ease;animation:scanBar 2s ease infinite}
+  @keyframes scanBar{0%{width:0%}50%{width:100%}100%{width:0%;margin-left:100%}}
+  /* PROFILE */
+  .profile-layout{display:grid;grid-template-columns:260px 1fr;gap:1rem}
+  .profile-card{background:var(--bg2);border:1px solid rgba(0,255,136,.08);border-radius:9px;padding:1.6rem;text-align:center}
+  .profile-av{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--g3),var(--g));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:1.7rem;color:#fff;margin:0 auto 1rem;box-shadow:0 0 24px rgba(0,255,136,.15)}
+  .profile-name{font-family:var(--display);font-size:1.4rem;color:var(--white);letter-spacing:.04em}
+  .profile-role{font-family:var(--mono);font-size:.56rem;color:var(--muted);letter-spacing:.12em;margin-top:.3rem}
+  .profile-email{font-family:var(--mono);font-size:.58rem;color:var(--g);margin-top:.4rem}
+  .pstat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.06);border-radius:6px;overflow:hidden;margin-top:1.2rem}
+  .pstat{background:rgba(6,13,26,.9);padding:.9rem;text-align:center}
+  .pstat-n{font-family:var(--display);font-size:1.5rem;color:var(--g)}
+  .pstat-l{font-family:var(--mono);font-size:.48rem;color:var(--muted);letter-spacing:.12em}
+  .save-btn{background:var(--g);color:#040810;font-family:var(--mono);font-size:.6rem;font-weight:700;letter-spacing:.12em;border:none;border-radius:5px;padding:.6rem 1.3rem;cursor:pointer;transition:all .2s}
+  .save-btn:hover{background:#fff;transform:translateY(-1px)}
+  /* MISC */
+  .flex-between{display:flex;justify-content:space-between;align-items:center}
+  .act-item{display:flex;align-items:flex-start;gap:.65rem;padding:.55rem 0;border-bottom:1px solid rgba(0,255,136,.04)}
   .act-item:last-child{border-bottom:none}
-  .act-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
+  .act-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px}
   .dot-ok{background:var(--ok);box-shadow:0 0 5px var(--ok)}
   .dot-warn{background:var(--warn);box-shadow:0 0 5px var(--warn)}
   .dot-danger{background:var(--danger);box-shadow:0 0 5px var(--danger)}
   .dot-info{background:var(--g2);box-shadow:0 0 5px var(--g2)}
-  .act-text{font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.5;flex:1}
-  .act-time{font-family:var(--mono);font-size:.52rem;color:var(--muted);white-space:nowrap}
-  /* SCANNER ANIMATION */
-  .scan-anim{text-align:center;padding:2.5rem 2rem}
-  .scan-ring{width:120px;height:120px;margin:0 auto 1.5rem;position:relative}
-  .scan-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column}
-  .scan-pct-num{font-family:var(--display);font-size:2.2rem;color:var(--g);line-height:1}
-  .scan-stage{font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:.5rem;letter-spacing:.1em}
-  .scan-chips{display:flex;gap:4px;justify-content:center;margin-top:1.2rem;flex-wrap:wrap}
-  .scan-chip{font-family:var(--mono);font-size:.48rem;padding:.18rem .45rem;border-radius:3px;transition:all .3s;letter-spacing:.08em}
-  /* CHAT */
-  .chat-wrap{display:flex;flex-direction:column;height:520px}
-  .chat-msgs{flex:1;overflow-y:auto;padding:.9rem;display:flex;flex-direction:column;gap:.55rem}
-  .msg{max-width:84%}
-  .msg-bot{align-self:flex-start}
-  .msg-user{align-self:flex-end}
-  .msg-bubble{padding:.6rem .85rem;font-family:var(--mono);font-size:.63rem;line-height:1.72;white-space:pre-wrap;word-break:break-word}
-  .msg-bot .msg-bubble{background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.1);border-radius:2px 9px 9px 9px;color:var(--text2)}
-  .msg-user .msg-bubble{background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.18);border-radius:9px 2px 9px 9px;color:var(--white)}
-  .msg-time{font-family:var(--mono);font-size:.48rem;color:var(--muted);margin-top:.2rem;padding:0 .2rem}
-  .msg-user .msg-time{text-align:right}
-  .typing{display:flex;gap:4px;padding:.6rem .85rem;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.09);border-radius:2px 9px 9px 9px;width:fit-content;align-self:flex-start}
-  .typing-dot{width:5px;height:5px;border-radius:50%;background:var(--g);animation:td .8s ease infinite}
-  .typing-dot:nth-child(2){animation-delay:.12s}.typing-dot:nth-child(3){animation-delay:.24s}
-  @keyframes td{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
-  .chat-sug{padding:.5rem;border-top:1px solid rgba(0,255,136,.05);display:flex;gap:.35rem;flex-wrap:wrap;background:rgba(0,0,0,.08)}
-  .sug-btn{font-family:var(--mono);font-size:.52rem;color:var(--text);background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:4px;padding:.25rem .55rem;cursor:pointer;transition:all .18s;letter-spacing:.05em}
-  .sug-btn:hover{background:rgba(0,255,136,.09);border-color:rgba(0,255,136,.25);color:var(--g)}
-  .chat-input-row{padding:.65rem;border-top:1px solid rgba(0,255,136,.05);display:flex;gap:.45rem;align-items:flex-end;background:rgba(0,0,0,.12)}
-  .chat-inp{flex:1;background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.09);border-radius:6px;padding:.55rem .8rem;font-family:var(--mono);font-size:.63rem;color:var(--white);outline:none;resize:none;max-height:76px;min-height:34px;line-height:1.5;transition:border-color .2s}
-  .chat-inp:focus{border-color:rgba(0,255,136,.28)}
-  .chat-send{width:34px;height:34px;border-radius:6px;background:linear-gradient(135deg,var(--g3),var(--g));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;transition:all .18s}
-  .chat-send:hover{transform:scale(1.08)}
-  /* PROFILE */
-  .profile-layout{display:grid;grid-template-columns:280px 1fr;gap:1rem}
-  .profile-card{background:rgba(6,13,26,.7);border:1px solid rgba(0,255,136,.08);border-radius:9px;padding:1.8rem;text-align:center}
-  .profile-av{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--g3),var(--g));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:1.8rem;color:#fff;margin:0 auto 1rem;box-shadow:0 0 24px rgba(0,255,136,.15)}
-  .profile-name{font-family:var(--display);font-size:1.5rem;color:var(--white);letter-spacing:.04em}
-  .profile-role{font-family:var(--mono);font-size:.58rem;color:var(--muted);letter-spacing:.12em;margin-top:.3rem}
-  .profile-email{font-family:var(--mono);font-size:.6rem;color:var(--g);margin-top:.4rem}
-  .pstat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.06);border-radius:6px;overflow:hidden;margin-top:1.3rem}
-  .pstat{background:rgba(6,13,26,.9);padding:1rem;text-align:center}
-  .pstat-n{font-family:var(--display);font-size:1.6rem;color:var(--g)}
-  .pstat-l{font-family:var(--mono);font-size:.5rem;color:var(--muted);letter-spacing:.12em}
-  /* FORM */
-  .form-group{margin-bottom:.9rem}
-  .form-label{font-family:var(--mono);font-size:.56rem;color:var(--g2);letter-spacing:.15em;display:block;margin-bottom:.35rem}
-  .form-input{width:100%;background:rgba(0,0,0,.25);border:1px solid rgba(0,255,136,.09);border-radius:5px;padding:.62rem .9rem;font-family:var(--mono);font-size:.66rem;color:var(--white);outline:none;transition:border-color .2s}
-  .form-input:focus{border-color:rgba(0,255,136,.3)}
-  .save-btn{background:var(--g);color:#040810;font-family:var(--mono);font-size:.63rem;font-weight:700;letter-spacing:.12em;border:none;border-radius:5px;padding:.65rem 1.4rem;cursor:pointer;transition:all .2s}
-  .save-btn:hover{background:#fff;transform:translateY(-1px)}
-  /* SCORE GAUGE SVG */
-  .gauge-wrap{position:relative;width:170px;height:170px;margin:0 auto}
-  .gauge-ring{animation:spin 0s linear infinite}
+  .act-text{font-family:var(--mono);font-size:.58rem;color:var(--text2);line-height:1.5;flex:1}
+  .act-time{font-family:var(--mono);font-size:.5rem;color:var(--muted);white-space:nowrap}
+  .api-status{font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;padding:.25rem .65rem;border-radius:10px;display:inline-flex;align-items:center;gap:.3rem}
+  .api-online{background:rgba(0,255,136,.08);color:var(--ok);border:1px solid rgba(0,255,136,.18)}
+  .api-offline{background:rgba(255,59,92,.07);color:var(--danger);border:1px solid rgba(255,59,92,.2)}
+  .api-dot{width:5px;height:5px;border-radius:50%;animation:blink2 2s infinite}
+  .api-online .api-dot{background:var(--ok)}.api-offline .api-dot{background:var(--danger)}
+  @keyframes blink2{0%,100%{opacity:1}50%{opacity:.3}}
   @keyframes spin{to{transform:rotate(360deg)}}
-  /* ALERT BOX */
-  .alert-box{display:flex;gap:.9rem;padding:.9rem 1rem;border-radius:7px;margin-bottom:.4rem}
-  .alert-bar{width:3px;border-radius:2px;flex-shrink:0;align-self:stretch}
-  /* MISC */
-  .flex-between{display:flex;justify-content:space-between;align-items:center}
-  .mt1{margin-top:.8rem}.mt2{margin-top:1.4rem}
-  .tag{font-family:var(--mono);font-size:.52rem;padding:.16rem .45rem;border-radius:2px;letter-spacing:.07em}
-  .tag-g{color:var(--g);background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.12)}
-  .tag-b{color:var(--g2);background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.1)}
-  .tag-p{color:#c084fc;background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.14)}
   </style>
 </head>
 <body>
@@ -199,20 +238,23 @@
     <div class="hdr-logo">SEC<span>AUDIT</span></div>
     <div class="hdr-search"><input type="search" placeholder="Search..." id="globalSearch"/></div>
     <div class="hdr-right">
+      <div class="api-status api-offline" id="apiStatusBadge"><div class="api-dot"></div><span id="apiStatusText">API OFFLINE</span></div>
       <span class="role-badge" id="hdrRole"></span>
       <div class="hdr-avatar" id="hdrAvatar" onclick="nav('profile')">PM</div>
       <span class="hdr-name" id="hdrName">Prakash</span>
-      <button class="hdr-btn hdr-scan" id="scanBtn" onclick="startScan()">NEW SCAN</button>
+      <button class="hdr-btn hdr-scan" id="scanBtn" onclick="openScanModal()">SCAN DEVICE</button>
       <button class="hdr-btn hdr-out" onclick="AUTH.logout()">LOGOUT</button>
     </div>
   </header>
+
   <div class="body">
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="sb-section">
         <div class="sb-label">Main</div>
         <button class="sb-item active" onclick="nav('dashboard')"><span class="sb-icon">⬡</span>Dashboard</button>
-        <button class="sb-item" onclick="nav('scan')"><span class="sb-icon">◈</span>Scanner</button>
+        <button class="sb-item" onclick="nav('devices')"><span class="sb-icon">◈</span>Devices<span class="sb-badge" id="sbDeviceCount">0</span></button>
+        <button class="sb-item" onclick="nav('scan')"><span class="sb-icon">⬢</span>Scanner</button>
         <button class="sb-item" onclick="nav('alerts')"><span class="sb-icon">◉</span>Alerts<span class="sb-badge" id="sbAlertBadge" style="display:none">0</span></button>
         <button class="sb-item" onclick="nav('ai')"><span class="sb-icon">🤖</span>AI Analysis</button>
         <button class="sb-item" onclick="nav('reports')"><span class="sb-icon">⬙</span>Reports</button>
@@ -222,230 +264,243 @@
         <button class="sb-item" onclick="nav('admin')"><span class="sb-icon">⚙</span>Admin Panel</button>
         <button class="sb-item" onclick="nav('users')"><span class="sb-icon">◎</span>Users</button>
       </div>
-      <div class="sb-section" id="clientSection" style="display:none">
-        <div class="sb-label">Account</div>
-        <button class="sb-item" onclick="nav('invoices')"><span class="sb-icon">◱</span>Invoices</button>
-      </div>
       <div class="sb-section">
         <div class="sb-label">Account</div>
+        <button class="sb-item" onclick="nav('settings')"><span class="sb-icon">⚙</span>API Settings</button>
         <button class="sb-item" onclick="nav('profile')"><span class="sb-icon">◉</span>Profile</button>
         <button class="sb-item" onclick="window.location.href='../index.html'"><span class="sb-icon">🌐</span>Portfolio</button>
       </div>
       <div class="sb-bottom">
-        <div class="scan-info" id="scanInfoBox" style="display:none">
-          <div class="scan-info-label">LAST SCAN</div>
-          <div class="scan-info-host" id="scanInfoHost"></div>
-          <div class="scan-info-time" id="scanInfoTime"></div>
+        <div class="device-mini" id="currentDeviceMini" style="display:none">
+          <div class="dm-label">ACTIVE DEVICE</div>
+          <div class="dm-host" id="dmHost">—</div>
+          <div class="dm-ip" id="dmIp">—</div>
+          <div class="dm-score" id="dmScore">—</div>
         </div>
       </div>
     </aside>
-    <!-- MAIN -->
+
+    <!-- MAIN CONTENT -->
     <main class="main" id="mainContent">
 
-      <!-- DASHBOARD PAGE -->
+      <!-- ── DASHBOARD ── -->
       <div class="page active" id="page-dashboard">
-        <div class="pg-hdr"><div class="pg-title">DASHBOARD</div><div class="pg-sub" id="dashWelcome">Loading...</div></div>
+        <div class="pg-hdr">
+          <div><div class="pg-title">DASHBOARD</div><div class="pg-sub" id="dashWelcome">Loading...</div></div>
+          <button class="btn btn-g" onclick="openScanModal()">+ SCAN DEVICE</button>
+        </div>
         <div class="g4" id="statRow">
-          <div class="sc sc-g"><div class="sc-icon">🛡️</div><div class="sc-label">Security Score</div><div class="sc-value" id="s-score" style="color:var(--g)">—</div><div class="sc-delta" id="s-score-d">Run a scan first</div></div>
-          <div class="sc sc-r"><div class="sc-icon">⚠️</div><div class="sc-label">Critical Issues</div><div class="sc-value" id="s-crit" style="color:var(--danger)">—</div><div class="sc-delta" id="s-crit-d">—</div></div>
-          <div class="sc sc-b"><div class="sc-icon">🔌</div><div class="sc-label">Open Ports</div><div class="sc-value" id="s-ports" style="color:var(--g2)">—</div><div class="sc-delta" id="s-ports-d">—</div></div>
-          <div class="sc sc-p"><div class="sc-icon">🔐</div><div class="sc-label">Failed Logins (24h)</div><div class="sc-value" id="s-logins" style="color:var(--g3)">—</div><div class="sc-delta">Brute-force attempts</div></div>
+          <div class="sc sc-g"><div class="sc-icon">🛡️</div><div class="sc-label">Active Devices</div><div class="sc-value" id="s-devices" style="color:var(--g)">0</div><div class="sc-delta">Monitored hosts</div></div>
+          <div class="sc sc-r"><div class="sc-icon">⚠️</div><div class="sc-label">Total Issues</div><div class="sc-value" id="s-issues" style="color:var(--danger)">—</div><div class="sc-delta" id="s-issues-d">Run a scan first</div></div>
+          <div class="sc sc-b"><div class="sc-icon">📡</div><div class="sc-label">Avg Score</div><div class="sc-value" id="s-score" style="color:var(--g2)">—</div><div class="sc-delta">Across all devices</div></div>
+          <div class="sc sc-p"><div class="sc-icon">🔐</div><div class="sc-label">Critical Alerts</div><div class="sc-value" id="s-crit" style="color:var(--g3)">—</div><div class="sc-delta">Across all scans</div></div>
         </div>
         <div class="g2">
           <div class="panel">
-            <div class="panel-hdr"><div class="panel-title">Score Trend</div></div>
-            <div class="panel-body">
-              <svg width="100%" height="160" id="trendSvg" viewBox="0 0 400 160" preserveAspectRatio="none"></svg>
-            </div>
+            <div class="ph"><div class="pt">Scanned Devices</div><button class="pa" onclick="nav('devices')">VIEW ALL →</button></div>
+            <div class="pb" id="devicesPreview"><div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:1.5rem">No devices scanned yet. Click SCAN DEVICE to start.</div></div>
           </div>
           <div class="panel">
-            <div class="panel-hdr"><div class="panel-title">Severity Breakdown</div></div>
-            <div class="panel-body" id="sevBreakdown">
-              <div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">Run a scan to see breakdown</div>
-            </div>
+            <div class="ph"><div class="pt">Recent Activity</div></div>
+            <div class="pb" id="activityFeed"><div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:1.5rem">No activity yet</div></div>
           </div>
         </div>
         <div class="panel">
-          <div class="panel-hdr"><div class="panel-title">Recent Activity</div><button class="panel-act" onclick="nav('alerts')">VIEW ALL →</button></div>
-          <div class="panel-body" id="activityFeed">
-            <div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:1.5rem">No activity yet — run a scan</div>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="panel-hdr"><div class="panel-title">Top Issues</div><button class="panel-act" onclick="nav('reports')">ALL ISSUES →</button></div>
-          <div class="panel-body" id="topIssues">
-            <div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:1.5rem">No issues found — run a scan</div>
-          </div>
+          <div class="ph"><div class="pt">Top Issues Across All Devices</div><button class="pa" onclick="nav('reports')">ALL ISSUES →</button></div>
+          <div class="pb" id="allTopIssues"><div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:1.5rem">Scan devices to see issues</div></div>
         </div>
       </div>
 
-      <!-- SCAN PAGE -->
+      <!-- ── DEVICES ── -->
+      <div class="page" id="page-devices">
+        <div class="pg-hdr">
+          <div><div class="pg-title">DEVICES</div><div class="pg-sub">Manage and monitor all scanned devices</div></div>
+          <div style="display:flex;gap:.5rem">
+            <button class="btn btn-o btn-sm" onclick="openDiscoverModal()">🔍 DISCOVER NETWORK</button>
+            <button class="btn btn-g btn-sm" onclick="openScanModal()">+ ADD DEVICE</button>
+          </div>
+        </div>
+        <div class="devices-grid" id="devicesGrid">
+          <div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);padding:2rem;grid-column:1/-1;text-align:center">No devices yet. Click ADD DEVICE to scan your first machine.</div>
+        </div>
+      </div>
+
+      <!-- ── SCANNER ── -->
       <div class="page" id="page-scan">
-        <div class="pg-hdr"><div class="pg-title">SYSTEM SCANNER</div><div class="pg-sub">Run and inspect security scans</div></div>
+        <div class="pg-hdr"><div><div class="pg-title">SCANNER</div><div class="pg-sub" id="scanPageSub">Select a device to view scan results</div></div></div>
         <div class="panel">
-          <div class="panel-hdr"><div class="panel-title">Scanner Engine</div></div>
-          <div class="panel-body" id="scannerBody">
+          <div class="ph"><div class="pt" id="scanPanelTitle">Scan Results</div><button class="pa" id="reScanBtn" onclick="reScanCurrent()" style="display:none">RE-SCAN →</button></div>
+          <div class="pb" id="scannerBody">
             <div style="text-align:center;padding:2rem">
-              <div style="font-family:var(--display);font-size:1.8rem;color:var(--white);letter-spacing:.05em;margin-bottom:.5rem">READY TO SCAN</div>
-              <div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);margin-bottom:1.5rem">Checks open ports, SSH config, firewall, packages, permissions, and auth logs.</div>
-              <button onclick="startScan()" style="font-family:var(--mono);font-size:.7rem;font-weight:700;letter-spacing:.14em;padding:.85rem 2.2rem;background:var(--g);color:#040810;border:none;border-radius:6px;cursor:pointer;transition:all .2s">START SCAN →</button>
+              <div style="font-family:var(--display);font-size:1.7rem;color:var(--white);letter-spacing:.05em;margin-bottom:.5rem">NO DEVICE SELECTED</div>
+              <div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-bottom:1.5rem">Go to Devices and run a scan, or click below.</div>
+              <button onclick="openScanModal()" class="btn btn-g">SCAN A DEVICE →</button>
             </div>
           </div>
         </div>
-        <div id="scanResults" style="display:none">
+        <div id="scanResultsDetail" style="display:none">
           <div class="g2">
-            <div class="panel">
-              <div class="panel-hdr"><div class="panel-title">Open Ports</div></div>
-              <div class="panel-body" id="portsPanel"></div>
-            </div>
-            <div class="panel">
-              <div class="panel-hdr"><div class="panel-title">SSH Configuration</div></div>
-              <div class="panel-body" id="sshPanel"></div>
-            </div>
-            <div class="panel">
-              <div class="panel-hdr"><div class="panel-title">Outdated Packages</div></div>
-              <div class="panel-body" id="pkgPanel"></div>
-            </div>
-            <div class="panel">
-              <div class="panel-hdr"><div class="panel-title">Auth & Login Activity</div></div>
-              <div class="panel-body" id="authPanel"></div>
-            </div>
+            <div class="panel"><div class="ph"><div class="pt">Open Ports</div></div><div class="pb" id="portsPanel"></div></div>
+            <div class="panel"><div class="ph"><div class="pt">SSH Configuration</div></div><div class="pb" id="sshPanel"></div></div>
+            <div class="panel"><div class="ph"><div class="pt">Outdated Packages</div></div><div class="pb" id="pkgPanel"></div></div>
+            <div class="panel"><div class="ph"><div class="pt">Auth & Login Activity</div></div><div class="pb" id="authPanel"></div></div>
           </div>
-          <div class="panel">
-            <div class="panel-hdr"><div class="panel-title">File Permissions</div></div>
-            <div class="panel-body" id="permsPanel"></div>
-          </div>
+          <div class="panel"><div class="ph"><div class="pt">File Permissions</div></div><div class="pb" id="permsPanel"></div></div>
+          <div class="panel"><div class="ph"><div class="pt">Users</div></div><div class="pb" id="usersPanel"></div></div>
         </div>
       </div>
 
-      <!-- ALERTS PAGE -->
+      <!-- ── ALERTS ── -->
       <div class="page" id="page-alerts">
         <div class="pg-hdr flex-between">
-          <div><div class="pg-title">ALERTS</div><div class="pg-sub">Active security alerts</div></div>
-          <button onclick="dismissAll()" style="font-family:var(--mono);font-size:.6rem;color:var(--muted);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:5px;padding:.4rem .9rem;cursor:pointer;letter-spacing:.1em">DISMISS ALL</button>
+          <div><div class="pg-title">ALERTS</div><div class="pg-sub">Active security alerts across all devices</div></div>
+          <button onclick="dismissAll()" class="btn btn-o btn-sm">DISMISS ALL</button>
         </div>
-        <div id="alertsPanel">
-          <div class="panel"><div class="panel-body"><div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">Run a scan to generate alerts</div></div></div>
-        </div>
+        <div id="alertsPanel"><div class="panel"><div class="pb"><div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">Scan devices to generate alerts</div></div></div></div>
       </div>
 
-      <!-- AI PAGE -->
+      <!-- ── AI ── -->
       <div class="page" id="page-ai">
-        <div class="pg-hdr"><div class="pg-title">AI ANALYSIS</div><div class="pg-sub">Claude-powered vulnerability analysis and assistant</div></div>
-        <div class="panel" id="aiAnalysisPanel">
-          <div class="panel-hdr"><div class="panel-title">AI Security Report</div><button class="panel-act" id="runAiBtn" onclick="runAI()">ANALYZE →</button></div>
-          <div class="panel-body" id="aiOutput">
-            <div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">Run a scan first, then click ANALYZE → to get an AI-powered security report with remediation commands.</div>
+        <div class="pg-hdr"><div><div class="pg-title">AI ANALYSIS</div><div class="pg-sub">Claude-powered vulnerability analysis</div></div></div>
+        <div class="panel">
+          <div class="ph">
+            <div class="pt">AI Security Report</div>
+            <div style="display:flex;gap:.5rem;align-items:center">
+              <select id="aiDeviceSelect" style="font-family:var(--mono);font-size:.55rem;background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.1);color:var(--text2);border-radius:4px;padding:.25rem .5rem;outline:none">
+                <option value="">Select device...</option>
+              </select>
+              <button class="pa" onclick="runAI()">ANALYZE →</button>
+            </div>
           </div>
+          <div class="pb" id="aiOutput"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">Select a device and click ANALYZE to get an AI-powered security report with exact remediation commands.</div></div>
         </div>
         <div class="panel">
-          <div class="panel-hdr">
-            <div class="panel-title">AI Security Assistant</div>
-            <span style="font-family:var(--mono);font-size:.52rem;color:var(--ok);display:flex;align-items:center;gap:.3rem"><span style="width:5px;height:5px;border-radius:50%;background:var(--ok);display:inline-block;box-shadow:0 0 4px var(--ok)"></span>Online · Claude</span>
-          </div>
+          <div class="ph"><div class="pt">AI Security Assistant</div><span style="font-family:var(--mono);font-size:.5rem;color:var(--ok);display:flex;align-items:center;gap:.3rem"><span style="width:5px;height:5px;border-radius:50%;background:var(--ok);display:inline-block;box-shadow:0 0 4px var(--ok)"></span>Online · Claude</span></div>
           <div class="chat-wrap">
             <div class="chat-msgs" id="chatMsgs"></div>
             <div class="chat-sug" id="chatSug">
-              <button class="sug-btn" onclick="sendChat('What are the critical risks?')">Critical risks?</button>
-              <button class="sug-btn" onclick="sendChat('How do I fix SSH root login?')">Fix SSH root login</button>
-              <button class="sug-btn" onclick="sendChat('Give me the firewall commands')">Firewall commands</button>
-              <button class="sug-btn" onclick="sendChat('What should I do first?')">What first?</button>
+              <button class="sug-btn" onclick="sendChat('What are the most critical risks?')">Critical risks?</button>
+              <button class="sug-btn" onclick="sendChat('How do I fix SSH root login?')">Fix SSH root</button>
+              <button class="sug-btn" onclick="sendChat('Give me firewall setup commands')">Firewall commands</button>
+              <button class="sug-btn" onclick="sendChat('What should I patch first?')">What first?</button>
             </div>
             <div class="chat-input-row">
-              <textarea class="chat-inp" id="chatInput" rows="1" placeholder="Ask about vulnerabilities, commands, or security best practices..."></textarea>
+              <textarea class="chat-inp" id="chatInput" rows="1" placeholder="Ask about vulnerabilities, remediation commands..."></textarea>
               <button class="chat-send" onclick="sendChat()">➤</button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- REPORTS PAGE -->
+      <!-- ── REPORTS ── -->
       <div class="page" id="page-reports">
-        <div class="pg-hdr"><div class="pg-title">REPORTS</div><div class="pg-sub">Export security findings</div></div>
-        <div class="panel">
-          <div class="panel-hdr"><div class="panel-title">Export Options</div></div>
-          <div class="panel-body">
-            <div class="g3">
-              <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:1.3rem">
-                <div style="font-family:var(--mono);font-size:.52rem;color:var(--g);letter-spacing:.15em;margin-bottom:.5rem">TXT</div>
-                <div style="font-family:var(--display);font-size:1rem;color:var(--white);letter-spacing:.04em;margin-bottom:.4rem">Full Report</div>
-                <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:1.6;margin-bottom:1rem">Complete scan results with all findings and CVSS scores.</div>
-                <button onclick="exportTxt()" style="font-family:var(--mono);font-size:.58rem;font-weight:700;letter-spacing:.1em;padding:.5rem 1rem;background:var(--g);color:#040810;border:none;border-radius:5px;cursor:pointer">DOWNLOAD →</button>
-              </div>
-              <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:1.3rem">
-                <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.5rem">JSON</div>
-                <div style="font-family:var(--display);font-size:1rem;color:var(--white);letter-spacing:.04em;margin-bottom:.4rem">Raw Scan Data</div>
-                <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:1.6;margin-bottom:1rem">Machine-readable JSON for integration with SIEM or other tools.</div>
-                <button onclick="exportJson()" style="font-family:var(--mono);font-size:.58rem;font-weight:700;letter-spacing:.1em;padding:.5rem 1rem;background:rgba(0,212,255,.12);color:var(--g2);border:1px solid rgba(0,212,255,.2);border-radius:5px;cursor:pointer">DOWNLOAD →</button>
-              </div>
-              <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:1.3rem;opacity:.5">
-                <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted);letter-spacing:.15em;margin-bottom:.5rem">PDF</div>
-                <div style="font-family:var(--display);font-size:1rem;color:var(--white);letter-spacing:.04em;margin-bottom:.4rem">Executive Summary</div>
-                <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:1.6;margin-bottom:1rem">Requires backend PDF generation — add via FastAPI + WeasyPrint.</div>
-                <button disabled style="font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;padding:.5rem 1rem;background:rgba(255,255,255,.04);color:var(--muted);border:1px solid rgba(255,255,255,.06);border-radius:5px;cursor:not-allowed">BACKEND NEEDED</button>
-              </div>
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">REPORTS</div><div class="pg-sub">Export security findings</div></div>
+          <select id="reportDeviceSelect" style="font-family:var(--mono);font-size:.6rem;background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.1);color:var(--text2);border-radius:4px;padding:.3rem .6rem;outline:none">
+            <option value="all">All Devices</option>
+          </select>
+        </div>
+        <div class="panel"><div class="ph"><div class="pt">Export Options</div></div><div class="pb">
+          <div class="g3">
+            <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:1.2rem">
+              <div style="font-family:var(--mono);font-size:.5rem;color:var(--g);letter-spacing:.15em;margin-bottom:.4rem">TXT</div>
+              <div style="font-family:var(--display);font-size:1rem;color:var(--white);letter-spacing:.04em;margin-bottom:.35rem">Full Report</div>
+              <div style="font-family:var(--mono);font-size:.56rem;color:var(--muted);line-height:1.6;margin-bottom:.9rem">Complete scan results with all findings and CVSS scores.</div>
+              <button onclick="exportTxt()" class="btn btn-g btn-sm">DOWNLOAD →</button>
+            </div>
+            <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:1.2rem">
+              <div style="font-family:var(--mono);font-size:.5rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.4rem">JSON</div>
+              <div style="font-family:var(--display);font-size:1rem;color:var(--white);letter-spacing:.04em;margin-bottom:.35rem">Raw Scan Data</div>
+              <div style="font-family:var(--mono);font-size:.56rem;color:var(--muted);line-height:1.6;margin-bottom:.9rem">Machine-readable JSON for SIEM integration.</div>
+              <button onclick="exportJson()" class="btn btn-sm" style="background:rgba(0,212,255,.1);color:var(--g2);border:1px solid rgba(0,212,255,.2)">DOWNLOAD →</button>
+            </div>
+            <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:1.2rem;opacity:.5">
+              <div style="font-family:var(--mono);font-size:.5rem;color:var(--muted);letter-spacing:.15em;margin-bottom:.4rem">PDF</div>
+              <div style="font-family:var(--display);font-size:1rem;color:var(--white);letter-spacing:.04em;margin-bottom:.35rem">Executive Summary</div>
+              <div style="font-family:var(--mono);font-size:.56rem;color:var(--muted);line-height:1.6;margin-bottom:.9rem">Requires backend — add WeasyPrint to FastAPI.</div>
+              <button disabled class="btn btn-sm" style="background:rgba(255,255,255,.04);color:var(--muted);cursor:not-allowed">BACKEND NEEDED</button>
             </div>
           </div>
-        </div>
-        <div class="panel" id="allIssuesPanel">
-          <div class="panel-hdr"><div class="panel-title">All Issues</div></div>
-          <div class="panel-body" id="allIssuesBody">
-            <div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">Run a scan to see all issues</div>
-          </div>
-        </div>
+        </div></div>
+        <div class="panel"><div class="ph"><div class="pt">All Issues (Selected Device)</div></div><div class="pb" id="allIssuesBody"><div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">Scan devices to see all issues</div></div></div>
       </div>
 
-      <!-- ADMIN PAGE -->
+      <!-- ── SETTINGS ── -->
+      <div class="page" id="page-settings">
+        <div class="pg-hdr"><div><div class="pg-title">API SETTINGS</div><div class="pg-sub">Configure backend connection and API keys</div></div></div>
+        <div class="g2">
+          <div class="panel"><div class="ph"><div class="pt">Backend API URL</div></div><div class="pb">
+            <div class="form-group">
+              <label class="form-label">FASTAPI BACKEND URL</label>
+              <input class="form-input" id="apiUrlInput" placeholder="http://localhost:8000"/>
+              <div class="form-hint">Your Python FastAPI backend URL. Local: http://localhost:8000 · Railway: https://your-app.railway.app</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">CONNECTION STATUS</label>
+              <div id="apiTestResult" style="font-family:var(--mono);font-size:.62rem;color:var(--muted)">Not tested</div>
+            </div>
+            <div style="display:flex;gap:.6rem">
+              <button onclick="testApi()" class="btn btn-o btn-sm">TEST CONNECTION</button>
+              <button onclick="saveApiSettings()" class="save-btn">SAVE</button>
+            </div>
+          </div></div>
+          <div class="panel"><div class="ph"><div class="pt">Anthropic API Key</div></div><div class="pb">
+            <div class="form-group">
+              <label class="form-label">API KEY</label>
+              <div style="position:relative">
+                <input class="form-input" id="apiKeyInput" type="password" placeholder="sk-ant-api03-..."/>
+                <span onclick="toggleApiKey()" style="position:absolute;right:.8rem;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--muted);font-size:.8rem">👁</span>
+              </div>
+              <div class="form-hint">Get from console.anthropic.com · Stored locally in browser only</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">MODE</label>
+              <select class="form-input" id="apiMode">
+                <option value="backend">Via Backend (Secure — recommended)</option>
+                <option value="direct">Direct Browser (Demo only — key visible)</option>
+              </select>
+              <div class="form-hint">Via Backend: key stays on your server. Direct: key is in browser (not safe for production)</div>
+            </div>
+            <button onclick="saveApiSettings()" class="save-btn">SAVE SETTINGS</button>
+            <span id="settingsSaved" style="font-family:var(--mono);font-size:.55rem;color:var(--ok);margin-left:.8rem;display:none">✓ Saved</span>
+          </div></div>
+        </div>
+        <div class="panel"><div class="ph"><div class="pt">Backend Setup Guide</div></div><div class="pb">
+          <div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);line-height:2">
+            <strong style="color:var(--g2)">Step 1 — Install Python dependencies:</strong><br>
+            <code style="background:rgba(0,0,0,.3);padding:.3rem .6rem;border-radius:3px;display:block;margin:.4rem 0;color:var(--g)">cd backend && pip install -r requirements.txt</code>
+            <strong style="color:var(--g2)">Step 2 — Create your .env file:</strong><br>
+            <code style="background:rgba(0,0,0,.3);padding:.3rem .6rem;border-radius:3px;display:block;margin:.4rem 0;color:var(--g)">cp .env.example .env  →  add your ANTHROPIC_API_KEY</code>
+            <strong style="color:var(--g2)">Step 3 — Run the backend:</strong><br>
+            <code style="background:rgba(0,0,0,.3);padding:.3rem .6rem;border-radius:3px;display:block;margin:.4rem 0;color:var(--g)">python main.py</code>
+            <strong style="color:var(--g2)">Step 4 — Deploy to Railway (free):</strong><br>
+            <code style="background:rgba(0,0,0,.3);padding:.3rem .6rem;border-radius:3px;display:block;margin:.4rem 0;color:var(--g)">railway login && railway init && railway up</code>
+            <strong style="color:var(--g2)">Step 5 — Set the URL above and click Test Connection</strong>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- ── ADMIN ── -->
       <div class="page" id="page-admin">
-        <div class="pg-hdr"><div class="pg-title">ADMIN PANEL</div><div class="pg-sub">Site management and monitoring</div></div>
+        <div class="pg-hdr"><div><div class="pg-title">ADMIN PANEL</div><div class="pg-sub">Site management</div></div></div>
         <div class="g4">
           <div class="sc sc-g"><div class="sc-label">Registered Users</div><div class="sc-value" id="adminUserCount" style="color:var(--g)">—</div></div>
-          <div class="sc sc-b"><div class="sc-label">Page Views</div><div class="sc-value" style="color:var(--g2)">247</div><div class="sc-delta">Demo data</div></div>
-          <div class="sc sc-p"><div class="sc-label">Scans Run</div><div class="sc-value" id="adminScanCount" style="color:var(--g3)">—</div></div>
-          <div class="sc sc-r"><div class="sc-label">Pending Tasks</div><div class="sc-value" style="color:var(--danger)">5</div><div class="sc-delta">See below</div></div>
+          <div class="sc sc-b"><div class="sc-label">Devices Scanned</div><div class="sc-value" id="adminDevCount" style="color:var(--g2)">—</div></div>
+          <div class="sc sc-p"><div class="sc-label">Total Scans Run</div><div class="sc-value" id="adminScanCount" style="color:var(--g3)">—</div></div>
+          <div class="sc sc-r"><div class="sc-label">API Status</div><div class="sc-value" id="adminApiStatus" style="color:var(--danger);font-size:1.2rem;margin-top:.2rem">OFFLINE</div></div>
         </div>
-        <div class="g2">
-          <div class="panel">
-            <div class="panel-hdr"><div class="panel-title">Pending Tasks</div></div>
-            <div class="panel-body">
-              <table class="tbl"><thead><tr><th>Task</th><th>Priority</th><th>Status</th></tr></thead><tbody>
-                <tr><td>Upload CV to assets/</td><td><span class="badge b-critical">CRITICAL</span></td><td><span class="badge b-medium">PENDING</span></td></tr>
-                <tr><td>Add GitHub profile URL</td><td><span class="badge b-high">HIGH</span></td><td><span class="badge b-medium">PENDING</span></td></tr>
-                <tr><td>Configure domain email</td><td><span class="badge b-high">HIGH</span></td><td><span class="badge b-medium">PENDING</span></td></tr>
-                <tr><td>Update TryHackMe rank</td><td><span class="badge b-medium">MEDIUM</span></td><td><span class="badge b-medium">PENDING</span></td></tr>
-                <tr><td>Add LinkedIn URL</td><td><span class="badge b-medium">MEDIUM</span></td><td><span class="badge b-medium">PENDING</span></td></tr>
-              </tbody></table>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="panel-hdr"><div class="panel-title">Registered Users</div></div>
-            <div class="panel-body" id="adminUsersTable"></div>
-          </div>
-        </div>
+        <div class="panel"><div class="ph"><div class="pt">Registered Users</div></div><div class="pb" id="adminUsersTable"></div></div>
       </div>
 
-      <!-- USERS PAGE -->
+      <!-- ── USERS ── -->
       <div class="page" id="page-users">
-        <div class="pg-hdr"><div class="pg-title">USERS</div><div class="pg-sub">All registered accounts</div></div>
-        <div class="panel"><div class="panel-hdr"><div class="panel-title">User Directory</div></div><div class="panel-body" id="usersTable"></div></div>
+        <div class="pg-hdr"><div><div class="pg-title">USERS</div></div></div>
+        <div class="panel"><div class="ph"><div class="pt">All Accounts</div></div><div class="pb" id="usersTable"></div></div>
       </div>
 
-      <!-- INVOICES PAGE -->
-      <div class="page" id="page-invoices">
-        <div class="pg-hdr"><div class="pg-title">INVOICES</div><div class="pg-sub">Billing & payments</div></div>
-        <div class="panel"><div class="panel-hdr"><div class="panel-title">Invoice History</div></div>
-          <div class="panel-body">
-            <table class="tbl"><thead><tr><th>Invoice</th><th>Description</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead><tbody>
-              <tr><td>INV-001</td><td>Penetration Testing — Demo Corp</td><td>$1,200</td><td>2026-04-01</td><td><span class="badge b-ok">PAID</span></td></tr>
-              <tr><td>INV-002</td><td>Security Audit — Demo Ltd</td><td>$850</td><td>2026-05-01</td><td><span class="badge b-medium">PENDING</span></td></tr>
-            </tbody></table>
-          </div>
-        </div>
-      </div>
-
-      <!-- PROFILE PAGE -->
+      <!-- ── PROFILE ── -->
       <div class="page" id="page-profile">
-        <div class="pg-hdr"><div class="pg-title">PROFILE</div><div class="pg-sub">Your account details</div></div>
+        <div class="pg-hdr"><div><div class="pg-title">PROFILE</div><div class="pg-sub">Your account</div></div></div>
         <div class="profile-layout">
           <div class="profile-card">
             <div class="profile-av" id="profAv">PM</div>
@@ -453,25 +508,21 @@
             <div class="profile-role" id="profRole">—</div>
             <div class="profile-email" id="profEmail">—</div>
             <div class="pstat-grid">
-              <div class="pstat"><div class="pstat-n">3+</div><div class="pstat-l">PROJECTS</div></div>
-              <div class="pstat"><div class="pstat-n">8</div><div class="pstat-l">DOMAINS</div></div>
-              <div class="pstat"><div class="pstat-n" id="profScansCount">0</div><div class="pstat-l">SCANS</div></div>
+              <div class="pstat"><div class="pstat-n" id="profDevices">0</div><div class="pstat-l">DEVICES</div></div>
+              <div class="pstat"><div class="pstat-n" id="profScans">0</div><div class="pstat-l">SCANS</div></div>
               <div class="pstat"><div class="pstat-n">BB</div><div class="pstat-l">BUG BOUNTY</div></div>
+              <div class="pstat"><div class="pstat-n">8</div><div class="pstat-l">DOMAINS</div></div>
             </div>
           </div>
           <div>
-            <div class="panel">
-              <div class="panel-hdr"><div class="panel-title">Edit Profile</div></div>
-              <div class="panel-body">
-                <div class="form-group"><label class="form-label">FULL NAME</label><input class="form-input" id="editName"/></div>
-                <div class="form-group"><label class="form-label">EMAIL</label><input class="form-input" id="editEmail" type="email"/></div>
-                <div class="form-group"><label class="form-label">GITHUB URL</label><input class="form-input" id="editGithub" placeholder="https://github.com/yourhandle"/></div>
-                <div class="form-group"><label class="form-label">LINKEDIN URL</label><input class="form-input" id="editLinkedin" placeholder="https://linkedin.com/in/yourhandle"/></div>
-                <div class="form-group"><label class="form-label">TRYHACKME RANK</label><input class="form-input" id="editTHM" placeholder="e.g. Top 5% · 12,000 pts"/></div>
-                <button class="save-btn" onclick="saveProfile()">SAVE CHANGES</button>
-                <span id="saveMsg" style="font-family:var(--mono);font-size:.58rem;color:var(--ok);margin-left:1rem;display:none">✓ Saved</span>
-              </div>
-            </div>
+            <div class="panel"><div class="ph"><div class="pt">Edit Profile</div></div><div class="pb">
+              <div class="form-group"><label class="form-label">NAME</label><input class="form-input" id="editName"/></div>
+              <div class="form-group"><label class="form-label">EMAIL</label><input class="form-input" id="editEmail" type="email"/></div>
+              <div class="form-group"><label class="form-label">GITHUB</label><input class="form-input" id="editGithub" placeholder="https://github.com/handle"/></div>
+              <div class="form-group"><label class="form-label">LINKEDIN</label><input class="form-input" id="editLinkedin" placeholder="https://linkedin.com/in/handle"/></div>
+              <button class="save-btn" onclick="saveProfile()">SAVE</button>
+              <span id="saveMsg" style="font-family:var(--mono);font-size:.55rem;color:var(--ok);margin-left:.8rem;display:none">✓ Saved</span>
+            </div></div>
           </div>
         </div>
       </div>
@@ -480,537 +531,873 @@
   </div>
 </div>
 
+<!-- ════ SCAN DEVICE MODAL ════ -->
+<div id="scanModal" style="display:none" class="modal-overlay" onclick="if(event.target===this)closeScanModal()">
+  <div class="modal">
+    <div class="modal-bar"></div>
+    <div class="modal-hdr">
+      <div class="modal-title">SCAN DEVICE</div>
+      <button class="modal-close" onclick="closeScanModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="dtabs">
+        <div class="dtab active" onclick="setDeviceTab('local')">THIS MACHINE</div>
+        <div class="dtab" onclick="setDeviceTab('remote')">REMOTE VIA SSH</div>
+      </div>
+      <!-- LOCAL TAB -->
+      <div id="dtab-local">
+        <div style="background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.1);border-radius:6px;padding:.9rem 1rem;margin-bottom:1rem">
+          <div style="font-family:var(--mono);font-size:.58rem;color:var(--g);margin-bottom:.3rem">⚡ LOCAL SCAN</div>
+          <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.7">Scans the machine running your FastAPI backend. Checks ports, SSH config, firewall, packages, permissions, and auth logs in real time.</div>
+        </div>
+        <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-bottom:1rem">
+          API Status: <span id="localApiStatus" style="color:var(--danger)">Not connected</span>
+        </div>
+        <div id="localScanError" style="display:none;font-family:var(--mono);font-size:.6rem;color:var(--danger);background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.2);border-radius:5px;padding:.6rem .8rem;margin-bottom:.8rem"></div>
+        <button onclick="runLocalScan()" class="btn btn-g" style="width:100%" id="localScanBtn">START LOCAL SCAN →</button>
+        <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:.6rem;text-align:center">Requires backend running at your configured API URL</div>
+      </div>
+      <!-- REMOTE TAB -->
+      <div id="dtab-remote" style="display:none">
+        <div style="background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.12);border-radius:6px;padding:.8rem 1rem;margin-bottom:1rem">
+          <div style="font-family:var(--mono);font-size:.57rem;color:var(--g2);line-height:1.6">Connects to any Linux machine via SSH and runs a full security audit remotely — from your machine to theirs.</div>
+        </div>
+        <div class="form-group"><label class="form-label">IP ADDRESS OR HOSTNAME</label><input class="form-input" id="remoteHost" placeholder="192.168.1.100 or server.example.com"/></div>
+        <div class="form-grid2">
+          <div class="form-group"><label class="form-label">SSH PORT</label><input class="form-input" id="remoteSshPort" placeholder="22" value="22" type="number"/></div>
+          <div class="form-group"><label class="form-label">USERNAME</label><input class="form-input" id="remoteUsername" placeholder="root" value="root"/></div>
+        </div>
+        <div class="dtabs" style="margin-bottom:1rem">
+          <div class="dtab active" onclick="setAuthTab('password')">PASSWORD</div>
+          <div class="dtab" onclick="setAuthTab('key')">SSH KEY</div>
+        </div>
+        <div id="auth-password">
+          <div class="form-group"><label class="form-label">PASSWORD</label><input class="form-input" id="remotePassword" type="password" placeholder="SSH password"/></div>
+        </div>
+        <div id="auth-key" style="display:none">
+          <div class="form-group"><label class="form-label">PRIVATE KEY PATH (on backend server)</label><input class="form-input" id="remoteKeyPath" placeholder="~/.ssh/id_rsa"/><div class="form-hint">Path to your private key on the machine running the backend API</div></div>
+        </div>
+        <div id="remoteScanError" style="display:none;font-family:var(--mono);font-size:.6rem;color:var(--danger);background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.2);border-radius:5px;padding:.6rem .8rem;margin-bottom:.8rem"></div>
+        <button onclick="runRemoteScan()" class="btn btn-g" style="width:100%;margin-top:.5rem" id="remoteScanBtn">SCAN REMOTE DEVICE →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ NETWORK DISCOVER MODAL ════ -->
+<div id="discoverModal" style="display:none" class="modal-overlay" onclick="if(event.target===this)closeDiscoverModal()">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-bar"></div>
+    <div class="modal-hdr">
+      <div class="modal-title">DISCOVER NETWORK DEVICES</div>
+      <button class="modal-close" onclick="closeDiscoverModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:6px;padding:.8rem 1rem;margin-bottom:1rem">
+        <div style="font-family:var(--mono);font-size:.58rem;color:var(--g);margin-bottom:.3rem">🔍 NETWORK SWEEP</div>
+        <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.7">Pings all hosts on your subnet to find live devices. SSH-capable devices can then be scanned individually.</div>
+      </div>
+      <div class="form-group"><label class="form-label">SUBNET (leave blank for auto-detect)</label><input class="form-input" id="discoverSubnet" placeholder="192.168.1.0/24 (auto-detected if empty)"/></div>
+      <div id="discoverProgress" style="display:none" class="discover-progress">
+        <div style="font-family:var(--mono);font-size:.6rem;color:var(--g);margin-bottom:.3rem">SCANNING NETWORK...</div>
+        <div class="dp-bar-wrap"><div class="dp-bar"></div></div>
+        <div style="font-family:var(--mono);font-size:.56rem;color:var(--muted)">Pinging all hosts on subnet. This may take 10–30 seconds.</div>
+      </div>
+      <div id="discoverResults" style="display:none">
+        <div style="font-family:var(--mono);font-size:.6rem;color:var(--g2);margin-bottom:.6rem" id="discoverCount"></div>
+        <div id="discoverList" style="display:flex;flex-direction:column;gap:.35rem;max-height:300px;overflow-y:auto"></div>
+      </div>
+      <div id="discoverError" style="display:none;font-family:var(--mono);font-size:.6rem;color:var(--danger);background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.2);border-radius:5px;padding:.6rem .8rem;margin-bottom:.8rem"></div>
+      <button onclick="runDiscover()" class="btn btn-g" style="width:100%;margin-top:.5rem" id="discoverBtn">DISCOVER DEVICES →</button>
+    </div>
+  </div>
+</div>
+
 <script src="../assets/auth.js"></script>
 <script>
-/* ═══════════════ AUTH GUARD ═══════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   AUTH GUARD
+═══════════════════════════════════════════════════════════════ */
 const SESSION = AUTH.requireAuth('../login.html');
 if (!SESSION) throw new Error('Not authenticated');
 
-/* ═══════════════ SCAN DATA ═══════════════ */
-let SCAN = null;
-let scanCount = parseInt(localStorage.getItem('pm_scan_count')||'0');
-let dismissed = new Set();
+/* ═══════════════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════════════ */
+let DEVICES    = JSON.parse(localStorage.getItem('pm_devices_v3') || '[]');
+let ACTIVITY   = JSON.parse(localStorage.getItem('pm_activity_v3') || '[]');
+let DISMISSED  = new Set();
+let SCAN_COUNT = parseInt(localStorage.getItem('pm_scan_count_v3') || '0');
+let SETTINGS   = JSON.parse(localStorage.getItem('pm_settings_v3') || '{"apiUrl":"http://localhost:8000","apiKey":"","apiMode":"backend"}');
+let API_ONLINE = false;
 let chatHistory = [];
+let activeDeviceTab = 'local';
+let activeAuthTab = 'password';
 
 const SEV_C = { critical:'rgba(255,59,92,.1)', high:'rgba(255,140,66,.1)', medium:'rgba(245,200,66,.08)', low:'rgba(77,217,172,.07)', ok:'rgba(77,217,172,.06)' };
 const SEV_B = { critical:'rgba(255,59,92,.25)', high:'rgba(255,140,66,.22)', medium:'rgba(245,200,66,.2)', low:'rgba(77,217,172,.17)', ok:'rgba(77,217,172,.15)' };
 const SEV_COL = { critical:'#ff3b5c', high:'#ff8c42', medium:'#f5c842', low:'#4dd9ac', ok:'#4dd9ac' };
 
-function badge(sev) {
-  return `<span class="badge b-${sev}">${sev}</span>`;
+function saveDevices() { localStorage.setItem('pm_devices_v3', JSON.stringify(DEVICES)); }
+function saveActivity() { localStorage.setItem('pm_activity_v3', JSON.stringify(ACTIVITY.slice(-50))); }
+function saveScanCount() { localStorage.setItem('pm_scan_count_v3', SCAN_COUNT); }
+
+/* ═══════════════════════════════════════════════════════════════
+   API LAYER
+═══════════════════════════════════════════════════════════════ */
+function apiUrl(path) { return SETTINGS.apiUrl.replace(/\/$/, '') + path; }
+
+async function apiGet(path) {
+  const r = await fetch(apiUrl(path), { headers: { 'Accept': 'application/json' } });
+  if (!r.ok) throw new Error(`API error ${r.status}: ${await r.text()}`);
+  return r.json();
 }
 
-/* ═══════════════ MOCK SCANNER ═══════════════ */
-function mockScan() {
+async function apiPost(path, body) {
+  const r = await fetch(apiUrl(path), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  if (!r.ok) { const t = await r.text(); throw new Error(t); }
+  return r.json();
+}
+
+async function checkApiStatus() {
+  try {
+    await fetch(apiUrl('/api/health'), { signal: AbortSignal.timeout(3000) });
+    API_ONLINE = true;
+  } catch {
+    API_ONLINE = false;
+  }
+  updateApiStatusUI();
+  return API_ONLINE;
+}
+
+function updateApiStatusUI() {
+  const badge = document.getElementById('apiStatusBadge');
+  const text  = document.getElementById('apiStatusText');
+  const admin = document.getElementById('adminApiStatus');
+  if (API_ONLINE) {
+    badge.className = 'api-status api-online';
+    text.textContent = 'API ONLINE';
+    if (admin) { admin.textContent = 'ONLINE'; admin.style.color = 'var(--ok)'; }
+  } else {
+    badge.className = 'api-status api-offline';
+    text.textContent = 'API OFFLINE';
+    if (admin) { admin.textContent = 'OFFLINE'; admin.style.color = 'var(--danger)'; }
+  }
+  // Update modal local scan status
+  const ls = document.getElementById('localApiStatus');
+  if (ls) { ls.textContent = API_ONLINE ? 'Connected ✓' : 'Not connected — start backend first'; ls.style.color = API_ONLINE ? 'var(--ok)' : 'var(--danger)'; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MOCK FALLBACK (when API offline)
+═══════════════════════════════════════════════════════════════ */
+function mockScan(host, type) {
+  const score = Math.floor(Math.random()*30)+55;
   return {
-    timestamp: new Date().toISOString(),
-    hostname: 'prod-server-01',
-    os: 'Ubuntu 22.04.3 LTS',
-    kernel: '5.15.0-91-generic',
-    uptime: '47 days, 3h 22m',
-    security_score: 71,
+    timestamp: new Date().toISOString(), scan_type: type, hostname: host,
+    ip: host, os: 'Ubuntu 22.04 LTS (DEMO)', kernel: '5.15.0-91-generic',
+    uptime: `${Math.floor(Math.random()*60)} days`, security_score: score,
     open_ports: [
-      {port:22,service:'SSH',state:'open',risk:'medium',detail:'Root login enabled'},
+      {port:22,service:'SSH',state:'open',risk:'medium',detail:'Root login check needed'},
       {port:80,service:'HTTP',state:'open',risk:'high',detail:'Unencrypted traffic'},
-      {port:443,service:'HTTPS',state:'open',risk:'low',detail:'TLS 1.2/1.3 OK'},
-      {port:3306,service:'MySQL',state:'open',risk:'critical',detail:'Exposed to internet'},
-      {port:8080,service:'HTTP-Alt',state:'open',risk:'high',detail:'Dev server in production'},
-      {port:6379,service:'Redis',state:'open',risk:'critical',detail:'No authentication'},
+      {port:3306,service:'MySQL',state:'open',risk:'critical',detail:'Database exposed'}
     ],
-    failed_logins:{last_24h:847,unique_ips:23,top_ip:'185.224.128.42',top_user:'root'},
-    firewall:{status:'inactive',tool:'ufw',rules_count:0},
-    outdated_packages:[
-      {name:'openssl',current:'3.0.2',latest:'3.0.13',severity:'critical'},
-      {name:'curl',current:'7.81.0',latest:'8.5.0',severity:'high'},
-      {name:'sudo',current:'1.9.9',latest:'1.9.15',severity:'medium'},
-      {name:'bash',current:'5.1.16',latest:'5.2.21',severity:'low'},
-      {name:'openssh-server',current:'8.9',latest:'9.6',severity:'high'},
+    firewall: {status:'inactive',tool:'ufw'},
+    ssh_config: {root_login:'yes',password_auth:'yes',max_auth_tries:6,port:22},
+    failed_logins: {last_24h:Math.floor(Math.random()*1000)+50,unique_ips:Math.floor(Math.random()*30)+5,top_ip:'185.224.128.42',top_user:'root'},
+    outdated_packages: [{name:'openssl',new_version:'3.0.13',severity:'critical'},{name:'curl',new_version:'8.5.0',severity:'high'}],
+    permissions: [{path:'/etc/shadow',perms:'640',risk:'ok',detail:'OK'},{path:'/home/.ssh/authorized_keys',perms:'664',risk:'high',detail:'Too permissive'}],
+    users: [{name:'root',uid:0,shell:'/bin/bash',sudo:true},{name:'ubuntu',uid:1000,shell:'/bin/bash',sudo:true}],
+    disk_encryption: {status:'none',detail:'LUKS not configured'},
+    score_history: [{date:'Mon',score:score-5},{date:'Tue',score:score-2},{date:'Wed',score:score},{date:'Thu',score:score},{date:'Today',score:score}],
+    issues: [
+      {id:1,severity:'critical',title:'MySQL exposed to internet',category:'Network',cvss:9.8,detail:'Port 3306 open'},
+      {id:2,severity:'high',title:'SSH root login enabled',category:'SSH',cvss:7.5,detail:'PermitRootLogin yes'},
+      {id:3,severity:'high',title:'Firewall inactive',category:'Network',cvss:7.2,detail:'ufw inactive'},
+      {id:4,severity:'medium',title:'SSH password auth on',category:'SSH',cvss:5.3,detail:'PasswordAuthentication yes'},
+      {id:5,severity:'low',title:'Disk encryption not configured',category:'Storage',cvss:3.1,detail:'LUKS missing'},
     ],
-    permissions:[
-      {path:'/etc/passwd',perms:'-rw-r--r--',risk:'ok',detail:'World-readable (normal)'},
-      {path:'/etc/shadow',perms:'-rw-r-----',risk:'ok',detail:'Root-only (correct)'},
-      {path:'/var/log/auth.log',perms:'-rw-rw-r--',risk:'medium',detail:'Group-writable log'},
-      {path:'/home/deploy/.ssh/authorized_keys',perms:'-rw-rw-r--',risk:'high',detail:'Too permissive SSH keys'},
-    ],
-    ssh_config:{root_login:'yes',password_auth:'yes',permit_empty_passwords:'no',max_auth_tries:6,port:22},
-    disk_encryption:{status:'none',detail:'LUKS not configured on /dev/sda'},
-    score_history:[
-      {date:'Jan',score:62},{date:'Feb',score:65},{date:'Mar',score:61},{date:'Apr',score:68},{date:'May',score:71}
-    ],
-    issues:[
-      {id:1,severity:'critical',title:'MySQL exposed to internet',category:'Network',cvss:9.8},
-      {id:2,severity:'critical',title:'Redis has no authentication',category:'Database',cvss:9.1},
-      {id:3,severity:'critical',title:'OpenSSL 3.0.2 — CVE-2024-0727',category:'Packages',cvss:8.7},
-      {id:4,severity:'high',title:'SSH root login enabled',category:'SSH',cvss:7.5},
-      {id:5,severity:'high',title:'Firewall completely inactive',category:'Network',cvss:7.2},
-      {id:6,severity:'high',title:'847 brute-force attempts in 24h',category:'Auth',cvss:7.0},
-      {id:7,severity:'high',title:'Dev server port 8080 open',category:'Network',cvss:6.8},
-      {id:8,severity:'medium',title:'SSH password authentication on',category:'SSH',cvss:5.3},
-      {id:9,severity:'medium',title:'3 users with sudo, no MFA',category:'Auth',cvss:5.0},
-      {id:10,severity:'low',title:'Disk encryption not configured',category:'Storage',cvss:3.1},
-    ],
+    _demo: true
   };
 }
 
-/* ═══════════════ SCAN FLOW ═══════════════ */
-const STAGES = ['Enumerating open ports...','Checking SSH configuration...','Auditing packages...','Scanning file permissions...','Analysing auth logs...','Checking firewall...','Mapping attack surface...','Calculating risk score...'];
+/* ═══════════════════════════════════════════════════════════════
+   SCAN MODAL
+═══════════════════════════════════════════════════════════════ */
+function openScanModal() {
+  document.getElementById('scanModal').style.display='flex';
+  checkApiStatus().then(updateApiStatusUI);
+}
+function closeScanModal() { document.getElementById('scanModal').style.display='none'; }
 
-async function startScan() {
-  nav('scan');
-  const btn = document.getElementById('scanBtn');
-  btn.disabled = true; btn.textContent = 'SCANNING...';
-  let p = 0, si = 0;
-  document.getElementById('scannerBody').innerHTML = `
+function setDeviceTab(tab) {
+  activeDeviceTab = tab;
+  document.querySelectorAll('.dtab').forEach((t,i)=>{ if(i<2) t.classList.toggle('active', (tab==='local'&&i===0)||(tab==='remote'&&i===1)); });
+  document.getElementById('dtab-local').style.display  = tab==='local'  ? 'block' : 'none';
+  document.getElementById('dtab-remote').style.display = tab==='remote' ? 'block' : 'none';
+}
+
+function setAuthTab(tab) {
+  activeAuthTab = tab;
+  document.querySelectorAll('.dtab').forEach((t,i)=>{ if(i>=2) t.classList.toggle('active', (tab==='password'&&i===2)||(tab==='key'&&i===3)); });
+  document.getElementById('auth-password').style.display = tab==='password' ? 'block' : 'none';
+  document.getElementById('auth-key').style.display      = tab==='key'      ? 'block' : 'none';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RUN SCANS
+═══════════════════════════════════════════════════════════════ */
+const SCAN_STAGES = ['Enumerating open ports...','Checking SSH config...','Auditing packages...','Scanning permissions...','Reading auth logs...','Checking firewall...','Calculating score...'];
+
+function showScanProgress(container) {
+  container.innerHTML = `
     <div class="scan-anim">
       <div class="scan-ring">
-        <svg width="120" height="120" viewBox="0 0 120 120">
-          <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(0,255,136,.07)" stroke-width="2"/>
-          <circle id="scanArc" cx="60" cy="60" r="52" fill="none" stroke="#00ff88" stroke-width="2"
-            stroke-dasharray="326" stroke-dashoffset="326" stroke-linecap="round" transform="rotate(-90 60 60)" style="transition:stroke-dashoffset .2s"/>
+        <svg width="110" height="110" viewBox="0 0 110 110">
+          <circle cx="55" cy="55" r="48" fill="none" stroke="rgba(0,255,136,.07)" stroke-width="2"/>
+          <circle id="scanArc" cx="55" cy="55" r="48" fill="none" stroke="#00ff88" stroke-width="2"
+            stroke-dasharray="301" stroke-dashoffset="301" stroke-linecap="round" transform="rotate(-90 55 55)" style="transition:stroke-dashoffset .2s"/>
         </svg>
         <div class="scan-pct"><div class="scan-pct-num" id="scanPct">0%</div></div>
       </div>
-      <div class="scan-stage" id="scanStage">${STAGES[0]}</div>
-      <div class="scan-chips">${['Ports','SSH','Packages','Permissions','Auth','Firewall','Surface','Score'].map(s=>`<span class="scan-chip" id="chip-${s}" style="background:rgba(255,255,255,.03);color:var(--muted);border:1px solid rgba(255,255,255,.05)">${s}</span>`).join('')}</div>
+      <div class="scan-stage" id="scanStage">${SCAN_STAGES[0]}</div>
     </div>`;
-  document.getElementById('scanResults').style.display = 'none';
+}
 
-  const interval = setInterval(() => {
-    p = Math.min(p + Math.random()*8+3, 100);
-    const pct = Math.round(p);
-    const arc = document.getElementById('scanArc');
-    const pctEl = document.getElementById('scanPct');
-    if (arc) arc.style.strokeDashoffset = 326 - (326*pct/100);
-    if (pctEl) pctEl.textContent = pct + '%';
-    if (si < STAGES.length-1 && p > (si+1)*12) {
-      si++;
-      const stageEl = document.getElementById('scanStage');
-      if (stageEl) stageEl.textContent = STAGES[si];
+async function animateScan(durationMs) {
+  let p=0, si=0;
+  return new Promise(resolve => {
+    const iv = setInterval(()=>{
+      p = Math.min(p + Math.random()*8+3, 95);
+      const arc=document.getElementById('scanArc'),pct=document.getElementById('scanPct'),stage=document.getElementById('scanStage');
+      if(arc) arc.style.strokeDashoffset = 301-(301*p/100);
+      if(pct) pct.textContent = Math.round(p)+'%';
+      const si2 = Math.floor(p/15);
+      if(stage&&si2<SCAN_STAGES.length&&si2!==si){si=si2;stage.textContent=SCAN_STAGES[si];}
+    },180);
+    setTimeout(()=>{ clearInterval(iv); resolve(); }, durationMs);
+  });
+}
+
+async function runLocalScan() {
+  const btn = document.getElementById('localScanBtn');
+  const err = document.getElementById('localScanError');
+  err.style.display='none';
+  btn.disabled=true; btn.textContent='SCANNING...';
+
+  const isOnline = await checkApiStatus();
+  let scanData;
+
+  if (isOnline) {
+    try {
+      closeScanModal();
+      nav('scan');
+      showScanProgress(document.getElementById('scannerBody'));
+      await animateScan(3000);
+      scanData = await apiGet('/api/scan/local');
+    } catch(e) {
+      btn.disabled=false; btn.textContent='START LOCAL SCAN →';
+      err.textContent='Scan failed: '+e.message; err.style.display='block';
+      document.getElementById('scanModal').style.display='flex';
+      return;
     }
-    const chips = ['Ports','SSH','Packages','Permissions','Auth','Firewall','Surface','Score'];
-    chips.forEach((c,i) => {
-      const el = document.getElementById('chip-'+c);
-      if (el && p > i*12.5) { el.style.background='rgba(0,255,136,.1)'; el.style.color='var(--g)'; el.style.borderColor='rgba(0,255,136,.2)'; }
-    });
-  }, 160);
+  } else {
+    // Demo mode
+    closeScanModal();
+    nav('scan');
+    showScanProgress(document.getElementById('scannerBody'));
+    await animateScan(2800);
+    scanData = mockScan('localhost', 'local');
+    addActivity('warn','DEMO MODE: Backend offline — showing simulated scan data','Just now');
+  }
 
-  await new Promise(r => setTimeout(r, 3400));
-  clearInterval(interval);
-  SCAN = mockScan();
-  scanCount++;
-  localStorage.setItem('pm_scan_count', scanCount);
-  dismissed = new Set();
-  btn.disabled = false; btn.textContent = 'NEW SCAN';
+  addDevice(scanData);
+  btn.disabled=false; btn.textContent='START LOCAL SCAN →';
+}
 
-  updateDashboard();
-  renderScanResults();
+async function runRemoteScan() {
+  const host = document.getElementById('remoteHost').value.trim();
+  const port = parseInt(document.getElementById('remoteSshPort').value) || 22;
+  const user = document.getElementById('remoteUsername').value.trim() || 'root';
+  const pass = document.getElementById('remotePassword').value;
+  const key  = document.getElementById('remoteKeyPath').value.trim();
+  const btn  = document.getElementById('remoteScanBtn');
+  const err  = document.getElementById('remoteScanError');
+
+  if (!host) { err.textContent='Please enter an IP address or hostname.'; err.style.display='block'; return; }
+  err.style.display='none';
+
+  const isOnline = await checkApiStatus();
+  let scanData;
+
+  if (isOnline) {
+    btn.disabled=true; btn.textContent='CONNECTING...';
+    try {
+      closeScanModal(); nav('scan');
+      showScanProgress(document.getElementById('scannerBody'));
+      document.getElementById('scanStage').textContent = `Connecting to ${host}:${port}...`;
+      const payload = { host, port, username: user };
+      if (activeAuthTab==='password' && pass) payload.password = pass;
+      if (activeAuthTab==='key'      && key)  payload.key_path  = key;
+      await animateScan(4000);
+      scanData = await apiPost('/api/scan/remote', payload);
+    } catch(e) {
+      btn.disabled=false; btn.textContent='SCAN REMOTE DEVICE →';
+      err.textContent='Connection failed: '+e.message; err.style.display='block';
+      document.getElementById('scanModal').style.display='flex';
+      return;
+    }
+  } else {
+    // Demo mode
+    if (!host) { err.textContent='Enter an IP address.'; err.style.display='block'; return; }
+    closeScanModal(); nav('scan');
+    showScanProgress(document.getElementById('scannerBody'));
+    await animateScan(3200);
+    scanData = mockScan(host, 'remote');
+    scanData.hostname = host;
+    addActivity('warn',`DEMO MODE: Backend offline — showing simulated scan for ${host}`,'Just now');
+  }
+
+  addDevice(scanData);
+  btn.disabled=false; btn.textContent='SCAN REMOTE DEVICE →';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DEVICE MANAGEMENT
+═══════════════════════════════════════════════════════════════ */
+function addDevice(scanData) {
+  // Check if device exists (update) or add new
+  const idx = DEVICES.findIndex(d => d.ip === scanData.ip);
+  const device = {
+    id: scanData.ip,
+    ip: scanData.ip,
+    hostname: scanData.hostname,
+    os: scanData.os,
+    lastScan: scanData.timestamp,
+    scans: [],
+    ...scanData
+  };
+  if (idx >= 0) {
+    // Merge history
+    device.scans = [...(DEVICES[idx].scans || []), { date: new Date().toLocaleTimeString(), score: scanData.security_score, timestamp: scanData.timestamp }].slice(-10);
+    DEVICES[idx] = device;
+    addActivity('info', `Re-scanned ${scanData.hostname} (${scanData.ip}) — Score: ${scanData.security_score}/100`, 'Just now');
+  } else {
+    device.scans = [{ date: new Date().toLocaleTimeString(), score: scanData.security_score, timestamp: scanData.timestamp }];
+    DEVICES.push(device);
+    addActivity('ok', `New device added: ${scanData.hostname} (${scanData.ip}) — Score: ${scanData.security_score}/100`, 'Just now');
+  }
+  if (scanData.issues?.filter(i=>i.severity==='critical').length > 0) {
+    addActivity('danger', `${scanData.issues.filter(i=>i.severity==='critical').length} critical issues found on ${scanData.hostname}`, 'Just now');
+  }
+  SCAN_COUNT++;
+  saveDevices(); saveScanCount();
+  renderScanResult(scanData);
+  renderDashboard();
+  renderDevicesGrid();
   renderAlerts();
   renderReports();
-  updateScanInfo();
-
+  updateDeviceSelects();
+  updateSidebarMini(scanData);
+  document.getElementById('scanResultsDetail').style.display='block';
   document.getElementById('scannerBody').innerHTML = `
-    <div style="text-align:center;padding:2rem">
-      <div style="font-family:var(--display);font-size:1.8rem;color:var(--g);letter-spacing:.05em;margin-bottom:.5rem">SCAN COMPLETE ✓</div>
-      <div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);margin-bottom:1.5rem">${SCAN.hostname} · ${SCAN.issues.length} issues found · Score: ${SCAN.security_score}/100</div>
-      <button onclick="startScan()" style="font-family:var(--mono);font-size:.68rem;font-weight:700;letter-spacing:.14em;padding:.8rem 2rem;background:var(--g);color:#040810;border:none;border-radius:6px;cursor:pointer">RUN AGAIN →</button>
+    <div style="text-align:center;padding:1.5rem">
+      <div style="font-family:var(--display);font-size:1.7rem;color:var(--g);letter-spacing:.05em;margin-bottom:.4rem">SCAN COMPLETE ✓${scanData._demo?' (DEMO)':''}</div>
+      <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-bottom:1.2rem">${scanData.hostname} · ${scanData.ip} · Score: ${scanData.security_score}/100 · ${scanData.issues.length} issues</div>
+      <button onclick="openScanModal()" class="btn btn-g btn-sm">SCAN ANOTHER DEVICE</button>
     </div>`;
-  document.getElementById('scanResults').style.display = 'block';
+  document.getElementById('scanPageSub').textContent = `${scanData.hostname} (${scanData.ip}) · ${new Date(scanData.timestamp).toLocaleTimeString()}`;
+  document.getElementById('scanPanelTitle').textContent = `Scan Results — ${scanData.hostname}`;
+  document.getElementById('reScanBtn').style.display='inline-block';
+  document.getElementById('reScanBtn').dataset.ip = scanData.ip;
+  document.getElementById('reScanBtn').dataset.type = scanData.scan_type;
 }
 
-function updateScanInfo() {
-  if (!SCAN) return;
-  document.getElementById('scanInfoBox').style.display = 'block';
-  document.getElementById('scanInfoHost').textContent = SCAN.hostname;
-  document.getElementById('scanInfoTime').textContent = new Date(SCAN.timestamp).toLocaleTimeString();
+function reScanCurrent() {
+  const ip = document.getElementById('reScanBtn').dataset.ip;
+  const type = document.getElementById('reScanBtn').dataset.type;
+  const dev = DEVICES.find(d=>d.ip===ip);
+  if (!dev) { openScanModal(); return; }
+  if (type==='local') { runLocalScan(); }
+  else {
+    document.getElementById('remoteHost').value = ip;
+    openScanModal(); setDeviceTab('remote');
+  }
 }
 
-/* ═══════════════ DASHBOARD ═══════════════ */
-function updateDashboard() {
-  if (!SCAN) return;
-  const s = SCAN;
-  const scoreColor = s.security_score>=80?'var(--g)':s.security_score>=60?'#f5c842':'var(--danger)';
-  const crit = s.issues.filter(i=>i.severity==='critical').length;
-  const high = s.issues.filter(i=>i.severity==='high').length;
-  document.getElementById('s-score').textContent = s.security_score;
-  document.getElementById('s-score').style.color = scoreColor;
-  document.getElementById('s-score-d').textContent = s.security_score>=80?'Good':'Needs attention';
-  document.getElementById('s-crit').textContent = crit;
-  document.getElementById('s-crit-d').textContent = `${high} high severity`;
-  document.getElementById('s-ports').textContent = s.open_ports.length;
-  document.getElementById('s-ports-d').textContent = `${s.open_ports.filter(p=>p.risk==='critical').length} critical`;
-  document.getElementById('s-logins').textContent = s.failed_logins.last_24h;
+function scanDeviceById(ip) {
+  const dev = DEVICES.find(d=>d.ip===ip);
+  if (!dev) return;
+  nav('scan');
+  renderScanResult(dev);
+  document.getElementById('scanResultsDetail').style.display='block';
+  document.getElementById('scannerBody').innerHTML = `<div style="text-align:center;padding:1.5rem"><div style="font-family:var(--display);font-size:1.7rem;color:var(--g);letter-spacing:.05em;margin-bottom:.4rem">LOADED FROM CACHE</div><div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-bottom:1.2rem">Last scan: ${new Date(dev.lastScan).toLocaleString()}</div><button onclick="openScanModal()" class="btn btn-g btn-sm">RE-SCAN THIS DEVICE</button></div>`;
+  document.getElementById('scanPageSub').textContent = `${dev.hostname} (${dev.ip})`;
+}
 
-  // Trend chart
-  drawTrend(s.score_history);
+function removeDevice(ip) {
+  if (!confirm(`Remove device ${ip} and all its scan data?`)) return;
+  DEVICES = DEVICES.filter(d=>d.ip!==ip);
+  saveDevices();
+  renderDashboard();
+  renderDevicesGrid();
+  renderAlerts();
+  updateDeviceSelects();
+  addActivity('warn',`Device ${ip} removed from monitoring`,'Just now');
+}
 
-  // Severity breakdown
-  const sevs = ['critical','high','medium','low'];
-  document.getElementById('sevBreakdown').innerHTML = sevs.map(sev => {
-    const count = s.issues.filter(i=>i.severity===sev).length;
-    const pct = (count/s.issues.length)*100;
-    return `<div class="skill-row"><span class="skill-name">${sev.charAt(0).toUpperCase()+sev.slice(1)}</span><div class="skill-track"><div class="skill-fill" style="width:${pct}%;background:${SEV_COL[sev]}"></div></div><span class="skill-pct" style="color:${SEV_COL[sev]}">${count}</span></div>`;
-  }).join('');
+function updateSidebarMini(data) {
+  const box = document.getElementById('currentDeviceMini');
+  box.style.display='block';
+  document.getElementById('dmHost').textContent = data.hostname;
+  document.getElementById('dmIp').textContent = data.ip;
+  const score = data.security_score;
+  const el = document.getElementById('dmScore');
+  el.textContent = score;
+  el.style.color = score>=80?'var(--g)':score>=60?'#f5c842':'var(--danger)';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDER FUNCTIONS
+═══════════════════════════════════════════════════════════════ */
+function badge(sev) { return `<span class="badge b-${sev}">${sev}</span>`; }
+
+function renderDashboard() {
+  const total = DEVICES.length;
+  const allIssues = DEVICES.flatMap(d=>d.issues||[]);
+  const crits = allIssues.filter(i=>i.severity==='critical').length;
+  const avgScore = total ? Math.round(DEVICES.reduce((s,d)=>s+(d.security_score||0),0)/total) : 0;
+  document.getElementById('s-devices').textContent = total;
+  document.getElementById('s-issues').textContent = allIssues.length || '—';
+  document.getElementById('s-issues-d').textContent = total ? `${crits} critical` : 'Run a scan first';
+  document.getElementById('s-score').textContent = total ? avgScore : '—';
+  document.getElementById('s-crit').textContent = crits || '—';
+  document.getElementById('sbDeviceCount').textContent = total;
+
+  // Devices preview
+  document.getElementById('devicesPreview').innerHTML = DEVICES.length ? DEVICES.slice(-4).map(d=>{
+    const score=d.security_score||0; const col=score>=80?'var(--g)':score>=60?'#f5c842':'var(--danger)';
+    return `<div style="display:flex;align-items:center;gap:.8rem;padding:.55rem .7rem;background:rgba(255,255,255,.02);border:1px solid rgba(0,255,136,.05);border-radius:5px;margin-bottom:.3rem;cursor:pointer" onclick="scanDeviceById('${d.ip}')">
+      <div style="font-family:var(--display);font-size:1.4rem;color:${col};width:36px;text-align:right">${score}</div>
+      <div style="flex:1"><div style="font-family:var(--mono);font-size:.6rem;color:var(--text2)">${d.hostname}</div><div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${d.ip} · ${d.os||'Linux'}</div></div>
+      <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${(d.issues||[]).filter(i=>i.severity==='critical').length}C ${(d.issues||[]).filter(i=>i.severity==='high').length}H</div>
+    </div>`;
+  }).join('') : '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:1.5rem">No devices scanned yet</div>';
 
   // Activity
-  document.getElementById('activityFeed').innerHTML = [
-    {col:'dot-ok',text:`Scan complete — ${s.issues.length} issues found on ${s.hostname}`,time:'Just now'},
-    {col:'dot-danger',text:`${s.failed_logins.last_24h} brute-force attempts in last 24h from ${s.failed_logins.unique_ips} unique IPs`,time:'Just now'},
-    {col:'dot-danger',text:`Firewall status: ${s.firewall.status.toUpperCase()} — no ingress filtering active`,time:'Just now'},
-    {col:'dot-warn',text:`${s.outdated_packages.length} outdated packages — ${s.outdated_packages[0].name} has critical CVE`,time:'Just now'},
-    {col:'dot-info',text:`SSH root login enabled — high brute-force risk on port ${s.ssh_config.port}`,time:'Just now'},
-  ].map(a => `<div class="act-item"><div class="act-dot ${a.col}"></div><div class="act-text">${a.text}</div><div class="act-time">${a.time}</div></div>`).join('');
+  document.getElementById('activityFeed').innerHTML = ACTIVITY.length ? ACTIVITY.slice(-6).reverse().map(a=>
+    `<div class="act-item"><div class="act-dot dot-${a.type}"></div><div class="act-text">${a.text}</div><div class="act-time">${a.time}</div></div>`
+  ).join('') : '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:1.5rem">No activity yet</div>';
 
   // Top issues
-  document.getElementById('topIssues').innerHTML = s.issues.slice(0,6).map(issue =>
-    `<div class="issue-row" style="background:${SEV_C[issue.severity]};border:1px solid ${SEV_B[issue.severity]}">
-      ${badge(issue.severity)}
-      <div style="flex:1;font-family:var(--mono);font-size:.62rem;color:var(--text2)">${issue.title}</div>
-      <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">CVSS ${issue.cvss}</div>
-      <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${issue.category}</div>
-    </div>`).join('');
-
-  // Alert badge
-  const critCount = s.issues.filter(i=>i.severity==='critical').length;
-  const badge2 = document.getElementById('sbAlertBadge');
-  badge2.textContent = critCount; badge2.style.display = critCount ? 'inline-block' : 'none';
-
-  // Profile scans
-  document.getElementById('profScansCount').textContent = scanCount;
+  const top = allIssues.sort((a,b)=>b.cvss-a.cvss).slice(0,6);
+  document.getElementById('allTopIssues').innerHTML = top.length ? top.map(i=>
+    `<div class="issue-row" style="background:${SEV_C[i.severity]};border:1px solid ${SEV_B[i.severity]}">
+      ${badge(i.severity)}
+      <div style="flex:1;font-family:var(--mono);font-size:.6rem;color:var(--text2)">${i.title}</div>
+      <div style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">${i.category}</div>
+      <div style="font-family:var(--mono);font-size:.58rem;color:${SEV_COL[i.severity]}">CVSS ${i.cvss}</div>
+    </div>`).join('') : '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:1.5rem">No issues yet</div>';
 }
 
-function drawTrend(data) {
-  const svg = document.getElementById('trendSvg');
-  if (!svg || !data.length) return;
-  const W=400, H=160, pad=30;
-  const vals = data.map(d=>d.score);
-  const min=Math.min(...vals)-5, max=Math.max(...vals)+5;
-  const px = (i) => pad + (i/(data.length-1))*(W-2*pad);
-  const py = (v) => H-pad - ((v-min)/(max-min))*(H-2*pad);
-  const pts = data.map((d,i) => `${px(i)},${py(d.score)}`).join(' ');
-  const area = `${px(0)},${H-pad} ${pts} ${px(data.length-1)},${H-pad}`;
-  svg.innerHTML = `
-    <defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stop-color="#00ff88" stop-opacity=".15"/><stop offset="95%" stop-color="#00ff88" stop-opacity="0"/></linearGradient></defs>
-    <polygon points="${area}" fill="url(#tg)"/>
-    <polyline points="${pts}" fill="none" stroke="#00ff88" stroke-width="1.5" stroke-linejoin="round"/>
-    ${data.map((d,i)=>`<circle cx="${px(i)}" cy="${py(d.score)}" r="3" fill="#00ff88"/>
-    <text x="${px(i)}" y="${H-8}" text-anchor="middle" font-family="Azeret Mono" font-size="9" fill="#2a4a62">${d.date}</text>
-    <text x="${px(i)}" y="${py(d.score)-8}" text-anchor="middle" font-family="Azeret Mono" font-size="9" fill="#00ff88">${d.score}</text>`).join('')}`;
-}
-
-/* ═══════════════ SCAN RESULTS ═══════════════ */
-function renderScanResults() {
-  if (!SCAN) return;
-  const s = SCAN;
-  // Ports
-  document.getElementById('portsPanel').innerHTML = s.open_ports.map(p =>
-    `<div style="display:flex;align-items:center;gap:.8rem;padding:.5rem .7rem;background:${SEV_C[p.risk]};border:1px solid ${SEV_B[p.risk]};border-radius:5px;margin-bottom:.3rem">
-      <span style="font-family:var(--mono);font-size:.63rem;color:${SEV_COL[p.risk]};width:38px">${p.port}</span>
-      <span style="font-family:var(--mono);font-size:.6rem;color:var(--text2);width:65px">${p.service}</span>
-      <span style="font-family:var(--mono);font-size:.57rem;color:var(--muted);flex:1">${p.detail}</span>
-      ${badge(p.risk)}
-    </div>`).join('');
-  // SSH
-  document.getElementById('sshPanel').innerHTML = Object.entries(s.ssh_config).map(([k,v])=>{
-    const danger = (k==='root_login'&&v==='yes')||(k==='password_auth'&&v==='yes');
-    return `<div style="display:flex;justify-content:space-between;padding:.48rem .7rem;background:${danger?'rgba(255,59,92,.05)':'rgba(255,255,255,.02)'};border:1px solid ${danger?'rgba(255,59,92,.15)':'rgba(255,255,255,.04)'};border-radius:4px;margin-bottom:.3rem">
-      <span style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">${k}</span>
-      <span style="font-family:var(--mono);font-size:.6rem;color:${danger?'var(--danger)':'var(--ok)'}">${v}</span></div>`;
+function renderDevicesGrid() {
+  const grid = document.getElementById('devicesGrid');
+  if (!DEVICES.length) { grid.innerHTML='<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);padding:2rem;grid-column:1/-1;text-align:center">No devices yet. Click ADD DEVICE to start.</div>'; return; }
+  grid.innerHTML = DEVICES.map(d => {
+    const score=d.security_score||0; const col=score>=80?'var(--g)':score>=60?'#f5c842':'var(--danger)';
+    const crits=(d.issues||[]).filter(i=>i.severity==='critical').length;
+    return `<div class="device-card">
+      <div class="device-card-top"></div>
+      <div class="device-body">
+        <div class="device-name">${d.hostname}</div>
+        <div class="device-ip">${d.ip} · ${d.scan_type==='local'?'LOCAL':'REMOTE SSH'}</div>
+        <div class="device-meta">OS: ${d.os||'Linux'}<br>Uptime: ${d.uptime||'—'}<br>Last scan: ${new Date(d.lastScan||d.timestamp).toLocaleString()}</div>
+        <div class="device-score-row">
+          <div><div style="font-family:var(--mono);font-size:.5rem;color:var(--muted);margin-bottom:.2rem">SECURITY SCORE</div><div class="device-score" style="color:${col}">${score}<span style="font-size:1rem">/100</span></div></div>
+          <div style="text-align:right">
+            ${crits>0?`<div style="font-family:var(--mono);font-size:.55rem;color:var(--danger)">${crits} CRITICAL</div>`:''}
+            <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${(d.issues||[]).length} total issues</div>
+            ${d._demo?'<div style="font-family:var(--mono);font-size:.48rem;color:var(--warn);margin-top:.2rem">DEMO DATA</div>':''}
+          </div>
+        </div>
+        <div class="device-actions">
+          <button onclick="scanDeviceById('${d.ip}')" class="btn btn-o btn-sm">VIEW SCAN</button>
+          <button onclick="openRescanModal('${d.ip}','${d.scan_type}')" class="btn btn-g btn-sm">RE-SCAN</button>
+          <button onclick="removeDevice('${d.ip}')" class="btn btn-r btn-sm">REMOVE</button>
+        </div>
+      </div>
+    </div>`;
   }).join('');
+}
+
+function openRescanModal(ip, type) {
+  openScanModal();
+  if (type==='local') { setDeviceTab('local'); }
+  else { setDeviceTab('remote'); document.getElementById('remoteHost').value = ip; }
+}
+
+function renderScanResult(data) {
+  if (!data) return;
+  // Ports
+  document.getElementById('portsPanel').innerHTML = (data.open_ports||[]).map(p=>
+    `<div style="display:flex;align-items:center;gap:.7rem;padding:.48rem .65rem;background:${SEV_C[p.risk]};border:1px solid ${SEV_B[p.risk]};border-radius:5px;margin-bottom:.28rem">
+      <span style="font-family:var(--mono);font-size:.6rem;color:${SEV_COL[p.risk]};width:36px">${p.port}</span>
+      <span style="font-family:var(--mono);font-size:.57rem;color:var(--text2);width:62px">${p.service}</span>
+      <span style="font-family:var(--mono);font-size:.55rem;color:var(--muted);flex:1">${p.detail}</span>
+      ${badge(p.risk)}</div>`).join('') || '<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">No open ports detected</div>';
+  // SSH
+  document.getElementById('sshPanel').innerHTML = Object.entries(data.ssh_config||{}).map(([k,v])=>{
+    const d=(k==='root_login'&&v==='yes')||(k==='password_auth'&&v==='yes');
+    return `<div style="display:flex;justify-content:space-between;padding:.44rem .65rem;background:${d?'rgba(255,59,92,.05)':'rgba(255,255,255,.02)'};border:1px solid ${d?'rgba(255,59,92,.15)':'rgba(255,255,255,.04)'};border-radius:4px;margin-bottom:.25rem">
+      <span style="font-family:var(--mono);font-size:.57rem;color:var(--muted)">${k}</span>
+      <span style="font-family:var(--mono);font-size:.57rem;color:${d?'var(--danger)':'var(--ok)'}">${v}</span></div>`;
+  }).join('') || '<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">Could not read SSH config</div>';
   // Packages
-  document.getElementById('pkgPanel').innerHTML = s.outdated_packages.map(p =>
-    `<div style="display:flex;align-items:center;gap:.8rem;padding:.48rem .7rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:4px;margin-bottom:.3rem">
-      <span style="font-family:var(--mono);font-size:.6rem;color:var(--text2);flex:1">${p.name}</span>
-      <span style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">${p.current} → <span style="color:var(--g)">${p.latest}</span></span>
-      ${badge(p.severity)}
-    </div>`).join('');
+  document.getElementById('pkgPanel').innerHTML = (data.outdated_packages||[]).map(p=>
+    `<div style="display:flex;align-items:center;gap:.7rem;padding:.44rem .65rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:4px;margin-bottom:.25rem">
+      <span style="font-family:var(--mono);font-size:.58rem;color:var(--text2);flex:1">${p.name}</span>
+      <span style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">→ <span style="color:var(--g)">${p.new_version||'latest'}</span></span>
+      ${badge(p.severity||'medium')}</div>`).join('') || '<div style="font-family:var(--mono);font-size:.58rem;color:var(--ok)">✓ All packages up to date</div>';
   // Auth
+  const fl=data.failed_logins||{};
   document.getElementById('authPanel').innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:.7rem">
-      <div style="text-align:center;padding:1rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:6px">
-        <div style="font-family:var(--display);font-size:1.8rem;color:var(--danger)">${s.failed_logins.last_24h}</div>
-        <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">FAILED LOGINS (24h)</div>
-      </div>
-      <div style="text-align:center;padding:1rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:6px">
-        <div style="font-family:var(--display);font-size:1.8rem;color:var(--warn)">${s.failed_logins.unique_ips}</div>
-        <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">UNIQUE IPs</div>
-      </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.6rem">
+      <div style="text-align:center;padding:.9rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:6px"><div style="font-family:var(--display);font-size:1.7rem;color:var(--danger)">${fl.last_24h||0}</div><div style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">FAILED LOGINS (24h)</div></div>
+      <div style="text-align:center;padding:.9rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:6px"><div style="font-family:var(--display);font-size:1.7rem;color:var(--warn)">${fl.unique_ips||0}</div><div style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">UNIQUE IPs</div></div>
     </div>
-    <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.8">
-      Top attacker IP: <span style="color:var(--danger)">${s.failed_logins.top_ip}</span><br>
-      Firewall: <span style="color:${s.firewall.status==='inactive'?'var(--danger)':'var(--ok)'}">${s.firewall.status.toUpperCase()}</span><br>
-      Disk encryption: <span style="color:var(--muted)">${s.disk_encryption.status.toUpperCase()}</span>
+    <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:1.8">
+      Top IP: <span style="color:var(--danger)">${fl.top_ip||'none'}</span><br>
+      Firewall: <span style="color:${(data.firewall||{}).status==='inactive'?'var(--danger)':'var(--ok)'}">${(data.firewall||{}).status?.toUpperCase()||'UNKNOWN'}</span><br>
+      Disk encryption: <span style="color:var(--muted)">${(data.disk_encryption||{}).status?.toUpperCase()||'UNKNOWN'}</span>
     </div>`;
   // Permissions
-  document.getElementById('permsPanel').innerHTML = `<table class="tbl"><thead><tr><th>Path</th><th>Permissions</th><th>Detail</th><th>Risk</th></tr></thead><tbody>
-    ${s.permissions.map(p=>`<tr><td>${p.path}</td><td style="font-family:var(--mono);font-size:.58rem;color:var(--g2)">${p.perms}</td><td>${p.detail}</td><td>${badge(p.risk)}</td></tr>`).join('')}
+  document.getElementById('permsPanel').innerHTML = `<table class="tbl"><thead><tr><th>Path</th><th>Perms</th><th>Detail</th><th>Risk</th></tr></thead><tbody>
+    ${(data.permissions||[]).map(p=>`<tr><td>${p.path}</td><td style="font-family:var(--mono);font-size:.56rem;color:var(--g2)">${p.perms}</td><td>${p.detail}</td><td>${badge(p.risk)}</td></tr>`).join('')}
+  </tbody></table>`;
+  // Users
+  document.getElementById('usersPanel').innerHTML = `<table class="tbl"><thead><tr><th>User</th><th>UID</th><th>Shell</th><th>Sudo</th></tr></thead><tbody>
+    ${(data.users||[]).map(u=>`<tr><td style="color:${u.uid===0?'var(--danger)':'var(--text2)'}">${u.name}</td><td>${u.uid}</td><td style="font-size:.52rem">${u.shell}</td><td>${u.sudo?badge('high'):'<span style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">no</span>'}</td></tr>`).join('')}
   </tbody></table>`;
 }
 
-/* ═══════════════ ALERTS ═══════════════ */
 function renderAlerts() {
-  if (!SCAN) return;
-  const alerts = [
-    {id:1,type:'critical',title:'Database exposed to internet',detail:`MySQL port 3306 and Redis 6379 are publicly accessible. ${SCAN.failed_logins.last_24h} brute-force attempts detected.`,time:'Just now'},
-    {id:2,type:'critical',title:'Firewall completely inactive',detail:`ufw is not running on ${SCAN.hostname}. No ingress/egress filtering active.`,time:'Just now'},
-    {id:3,type:'high',title:'SSH root login enabled',detail:`Direct root SSH access is permitted. Port ${SCAN.ssh_config.port} exposed with ${SCAN.failed_logins.last_24h} failed attempts.`,time:'Just now'},
-    {id:4,type:'high',title:'Critical package outdated',detail:`OpenSSL ${SCAN.outdated_packages[0].current} has CVE-2024-0727 (CVSS 8.7). Update to ${SCAN.outdated_packages[0].latest} immediately.`,time:'Just now'},
-    {id:5,type:'medium',title:'SSH password authentication enabled',detail:'Password-based SSH login is on. Switch to key-based authentication only.',time:'Just now'},
-  ];
-  const active = alerts.filter(a => !dismissed.has(a.id));
-  document.getElementById('alertsPanel').innerHTML = active.length ? active.map(a =>
-    `<div class="alert-box" style="background:${SEV_C[a.type]};border:1px solid ${SEV_B[a.type]}">
-      <div class="alert-bar" style="background:${SEV_COL[a.type]}"></div>
+  const alerts = DEVICES.flatMap(d=>(d.issues||[]).filter(i=>['critical','high'].includes(i.severity)).map(i=>({...i,device:d.hostname,ip:d.ip})));
+  const active = alerts.filter(a=>!DISMISSED.has(a.ip+'-'+a.id));
+  const badge2 = document.getElementById('sbAlertBadge');
+  const crits = active.filter(a=>a.severity==='critical').length;
+  badge2.textContent=crits; badge2.style.display=crits?'inline-block':'none';
+  document.getElementById('alertsPanel').innerHTML = active.length ? active.slice(0,10).map(a=>
+    `<div class="alert-box" style="background:${SEV_C[a.severity]};border:1px solid ${SEV_B[a.severity]}">
+      <div class="alert-bar" style="background:${SEV_COL[a.severity]}"></div>
       <div style="flex:1">
-        <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:.35rem">
-          ${badge(a.type)}
-          <span style="font-family:var(--mono);font-size:.64rem;color:var(--white);flex:1">${a.title}</span>
-          <span style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${a.time}</span>
+        <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.3rem">
+          ${badge(a.severity)}<span style="font-family:var(--mono);font-size:.6rem;color:var(--g2)">${a.device} (${a.ip})</span>
+          <span style="font-family:var(--mono);font-size:.62rem;color:var(--white);flex:1">${a.title}</span>
+          <span style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">CVSS ${a.cvss}</span>
         </div>
-        <div style="font-family:var(--mono);font-size:.59rem;color:var(--muted);line-height:1.65">${a.detail}</div>
+        <div style="font-family:var(--mono);font-size:.57rem;color:var(--muted);line-height:1.6">${a.detail||''}</div>
       </div>
-      <button onclick="dismiss(${a.id})" style="font-family:var(--mono);font-size:.55rem;color:var(--muted);background:none;border:none;cursor:pointer;padding:.2rem;align-self:flex-start">✕</button>
+      <button onclick="dismissAlert('${a.ip+'-'+a.id}')" style="font-family:var(--mono);font-size:.52rem;color:var(--muted);background:none;border:none;cursor:pointer;align-self:flex-start;padding:.2rem">✕</button>
     </div>`).join('') :
-    `<div class="panel"><div class="panel-body"><div style="font-family:var(--mono);font-size:.65rem;color:var(--ok);text-align:center;padding:2rem">✓ All alerts dismissed</div></div></div>`;
+    `<div class="panel"><div class="pb"><div style="font-family:var(--mono);font-size:.62rem;color:var(--ok);text-align:center;padding:2rem">✓ ${DEVICES.length ? 'All alerts dismissed' : 'No devices scanned yet'}</div></div></div>`;
 }
 
-function dismiss(id) { dismissed.add(id); renderAlerts(); }
-function dismissAll() { if(SCAN) [1,2,3,4,5].forEach(i=>dismissed.add(i)); renderAlerts(); }
+function dismissAlert(key) { DISMISSED.add(key); renderAlerts(); }
+function dismissAll() { DEVICES.forEach(d=>(d.issues||[]).forEach(i=>DISMISSED.add(d.ip+'-'+i.id))); renderAlerts(); }
 
-/* ═══════════════ REPORTS ═══════════════ */
 function renderReports() {
-  if (!SCAN) return;
-  document.getElementById('allIssuesBody').innerHTML = SCAN.issues.map(issue =>
-    `<div class="issue-row" style="background:${SEV_C[issue.severity]};border:1px solid ${SEV_B[issue.severity]}">
-      ${badge(issue.severity)}
-      <div style="flex:1;font-family:var(--mono);font-size:.62rem;color:var(--text2)">${issue.title}</div>
-      <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${issue.category}</div>
-      <div style="font-family:var(--mono);font-size:.6rem;color:${SEV_COL[issue.severity]}">CVSS ${issue.cvss}</div>
-    </div>`).join('');
+  document.getElementById('allIssuesBody').innerHTML = DEVICES.length ?
+    DEVICES.flatMap(d=>(d.issues||[]).map(i=>({...i,device:d.hostname,ip:d.ip}))).sort((a,b)=>b.cvss-a.cvss).map(i=>
+      `<div class="issue-row" style="background:${SEV_C[i.severity]};border:1px solid ${SEV_B[i.severity]}">
+        ${badge(i.severity)}
+        <div style="flex:1;font-family:var(--mono);font-size:.6rem;color:var(--text2)">${i.title}</div>
+        <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2)">${i.device}</div>
+        <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${i.category}</div>
+        <div style="font-family:var(--mono);font-size:.58rem;color:${SEV_COL[i.severity]}">CVSS ${i.cvss}</div>
+      </div>`).join('') :
+    '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">Scan devices to see issues</div>';
 }
 
-function exportTxt() {
-  if (!SCAN) { alert('Run a scan first.'); return; }
-  const s = SCAN;
-  const txt = `SECURITY AUDIT REPORT
-Generated: ${new Date(s.timestamp).toLocaleString()}
-Host: ${s.hostname} | ${s.os} | Kernel: ${s.kernel}
-Uptime: ${s.uptime}
-Security Score: ${s.security_score}/100
-Audited by: ${SESSION.name}
-
-═══════════════════════════════════
-CRITICAL ISSUES (${s.issues.filter(i=>i.severity==='critical').length})
-═══════════════════════════════════
-${s.issues.filter(i=>i.severity==='critical').map(i=>`• [CVSS ${i.cvss}] ${i.title} (${i.category})`).join('\n')}
-
-HIGH SEVERITY (${s.issues.filter(i=>i.severity==='high').length})
-${s.issues.filter(i=>i.severity==='high').map(i=>`• [CVSS ${i.cvss}] ${i.title} (${i.category})`).join('\n')}
-
-MEDIUM / LOW (${s.issues.filter(i=>['medium','low'].includes(i.severity)).length})
-${s.issues.filter(i=>['medium','low'].includes(i.severity)).map(i=>`• [CVSS ${i.cvss}] ${i.title}`).join('\n')}
-
-═══════════════════════════════════
-OPEN PORTS (${s.open_ports.length})
-═══════════════════════════════════
-${s.open_ports.map(p=>`• Port ${p.port} (${p.service}) — ${p.detail} [${p.risk.toUpperCase()}]`).join('\n')}
-
-═══════════════════════════════════
-SSH CONFIGURATION
-═══════════════════════════════════
-${Object.entries(s.ssh_config).map(([k,v])=>`• ${k}: ${v}`).join('\n')}
-
-FIREWALL STATUS: ${s.firewall.status.toUpperCase()} (${s.firewall.tool})
-FAILED LOGINS (24h): ${s.failed_logins.last_24h} from ${s.failed_logins.unique_ips} IPs
-TOP ATTACKER IP: ${s.failed_logins.top_ip}
-DISK ENCRYPTION: ${s.disk_encryption.status.toUpperCase()}
-
-═══════════════════════════════════
-OUTDATED PACKAGES (${s.outdated_packages.length})
-═══════════════════════════════════
-${s.outdated_packages.map(p=>`• ${p.name}: ${p.current} → ${p.latest} [${p.severity.toUpperCase()}]`).join('\n')}
-
-Report generated by PM::OFFSEC Security Dashboard v2.0
-erprakashmijar.com`;
-  const blob = new Blob([txt], {type:'text/plain'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href=url; a.download=`security-audit-${s.hostname}-${Date.now()}.txt`; a.click();
-  URL.revokeObjectURL(url);
+function updateDeviceSelects() {
+  const opts = `<option value="all">All Devices</option>`+DEVICES.map(d=>`<option value="${d.ip}">${d.hostname} (${d.ip})</option>`).join('');
+  document.getElementById('aiDeviceSelect').innerHTML = '<option value="">Select device...</option>'+DEVICES.map(d=>`<option value="${d.ip}">${d.hostname} (${d.ip})</option>`).join('');
+  document.getElementById('reportDeviceSelect').innerHTML = opts;
 }
 
-function exportJson() {
-  if (!SCAN) { alert('Run a scan first.'); return; }
-  const blob = new Blob([JSON.stringify(SCAN, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href=url; a.download=`scan-data-${Date.now()}.json`; a.click();
-  URL.revokeObjectURL(url);
+/* ═══════════════════════════════════════════════════════════════
+   NETWORK DISCOVER
+═══════════════════════════════════════════════════════════════ */
+function openDiscoverModal() {
+  document.getElementById('discoverModal').style.display='flex';
+  document.getElementById('discoverResults').style.display='none';
+  document.getElementById('discoverProgress').style.display='none';
+}
+function closeDiscoverModal() { document.getElementById('discoverModal').style.display='none'; }
+
+async function runDiscover() {
+  const subnet = document.getElementById('discoverSubnet').value.trim();
+  const btn=document.getElementById('discoverBtn');
+  const err=document.getElementById('discoverError');
+  err.style.display='none';
+  const isOnline = await checkApiStatus();
+  if (!isOnline) {
+    err.textContent='Backend API must be running to discover network devices.'; err.style.display='block';
+    return;
+  }
+  btn.disabled=true; btn.textContent='SCANNING...';
+  document.getElementById('discoverProgress').style.display='block';
+  document.getElementById('discoverResults').style.display='none';
+  try {
+    const result = await apiPost('/api/scan/network', { subnet: subnet||null });
+    document.getElementById('discoverProgress').style.display='none';
+    document.getElementById('discoverCount').textContent = `Found ${result.devices_found} live device${result.devices_found!==1?'s':''} on ${result.subnet}`;
+    document.getElementById('discoverList').innerHTML = (result.devices||[]).map(d=>
+      `<div style="display:flex;align-items:center;gap:.8rem;padding:.6rem .8rem;background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.09);border-radius:6px">
+        <div style="flex:1"><div style="font-family:var(--mono);font-size:.62rem;color:var(--text2)">${d.ip}</div><div style="font-family:var(--mono);font-size:.54rem;color:var(--muted)">${d.hostname!==d.ip?d.hostname:''} · Ports: ${d.open_ports.join(', ')||'none'}</div></div>
+        <span class="badge ${d.status==='online'?'b-online':'b-offline'}">${d.status}</span>
+        ${d.ssh_available?`<button onclick="quickSshScan('${d.ip}')" class="btn btn-g btn-sm">SSH SCAN</button>`:'<span style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">No SSH</span>'}
+      </div>`).join('');
+    document.getElementById('discoverResults').style.display='block';
+  } catch(e) {
+    document.getElementById('discoverProgress').style.display='none';
+    err.textContent='Discovery failed: '+e.message; err.style.display='block';
+  }
+  btn.disabled=false; btn.textContent='DISCOVER DEVICES →';
 }
 
-/* ═══════════════ AI CHAT ═══════════════ */
-const SYSTEM = `You are an expert cybersecurity analyst in a Security Audit Dashboard. Analyze Linux system scan results and give:
-1. Clear explanations of vulnerabilities (explain jargon)
-2. Exact remediation commands in bash code blocks
-3. Business impact context
-4. Priority ordering
+function quickSshScan(ip) {
+  closeDiscoverModal();
+  openScanModal();
+  setDeviceTab('remote');
+  document.getElementById('remoteHost').value = ip;
+}
 
-About Prakash Mijar's portfolio: offensive security professional, penetration tester, SOC analyst. Site: erprakashmijar.com
+/* ═══════════════════════════════════════════════════════════════
+   AI
+═══════════════════════════════════════════════════════════════ */
+const AI_SYSTEM = `You are an expert cybersecurity analyst in a live Security Audit Dashboard. Analyze real Linux system scan results and provide:
+1. Clear explanations (explain all jargon)
+2. Exact bash remediation commands in code blocks
+3. Business risk context
+4. Priority ordering by severity
 
-Be concise, professional, and actionable. Format with clear sections.`;
+Be concise, professional, and actionable. Use clear section headers.`;
 
 function initChat() {
-  chatHistory = [];
-  addBotMsg('Hello! I\'m your AI security assistant. Run a scan and ask me about any vulnerability — I\'ll explain the risk and give you exact remediation commands.');
+  chatHistory=[];
+  document.getElementById('chatMsgs').innerHTML='';
+  addBotMsg(`Hello ${SESSION.name.split(' ')[0]}! I'm your AI security assistant. ${DEVICES.length?`I can see data from ${DEVICES.length} scanned device${DEVICES.length>1?'s':''}. Ask me about any vulnerability — I'll give you exact remediation commands.`:'Scan a device first, then ask me about the findings.'}`);
 }
 
 function addBotMsg(text) {
-  const msgs = document.getElementById('chatMsgs');
-  const d = document.createElement('div');
-  d.className = 'msg msg-bot';
-  const now = new Date().toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'});
-  d.innerHTML = `<div class="msg-bubble">${text}</div><div class="msg-time">${now}</div>`;
-  msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
+  const msgs=document.getElementById('chatMsgs');
+  const d=document.createElement('div');d.className='msg msg-bot';
+  const now=new Date().toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'});
+  d.innerHTML=`<div class="msg-bubble">${text}</div><div class="msg-time">${now}</div>`;
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
 }
 
 function addUserMsg(text) {
-  const msgs = document.getElementById('chatMsgs');
-  const d = document.createElement('div');
-  d.className = 'msg msg-user';
-  const now = new Date().toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'});
-  d.innerHTML = `<div class="msg-bubble">${text}</div><div class="msg-time">${now}</div>`;
-  msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
+  const msgs=document.getElementById('chatMsgs');
+  const d=document.createElement('div');d.className='msg msg-user';
+  const now=new Date().toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'});
+  d.innerHTML=`<div class="msg-bubble">${text}</div><div class="msg-time">${now}</div>`;
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
 }
 
-function showTyping() {
-  const msgs = document.getElementById('chatMsgs');
-  const d = document.createElement('div');
-  d.className = 'msg msg-bot'; d.id = 'typing';
-  d.innerHTML = `<div class="typing"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
-  msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
-}
-
-function hideTyping() { const t=document.getElementById('typing'); if(t)t.remove(); }
+function showTyping(){const msgs=document.getElementById('chatMsgs');const d=document.createElement('div');d.className='msg msg-bot';d.id='typing';d.innerHTML=`<div class="typing"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;}
+function hideTyping(){const t=document.getElementById('typing');if(t)t.remove();}
 
 async function sendChat(text) {
-  const inp = document.getElementById('chatInput');
-  const msg = text || inp.value.trim();
-  if (!msg) return;
-  inp.value = ''; inp.style.height='auto';
+  const inp=document.getElementById('chatInput');
+  const msg=text||inp.value.trim();
+  if(!msg)return;
+  inp.value='';inp.style.height='auto';
   document.getElementById('chatSug').style.display='none';
   addUserMsg(msg);
-  chatHistory.push({role:'user',content: SCAN ? `Context: ${JSON.stringify({score:SCAN.security_score,issues:SCAN.issues.slice(0,5),ports:SCAN.open_ports,ssh:SCAN.ssh_config,firewall:SCAN.firewall,failed_logins:SCAN.failed_logins})}. Question: ${msg}` : msg});
+  chatHistory.push({role:'user',content:msg});
   showTyping();
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYSTEM,messages:chatHistory})
-    });
-    const data = await res.json();
-    hideTyping();
-    const reply = data.content?.[0]?.text || 'Sorry, I could not get a response.';
-    chatHistory.push({role:'assistant',content:reply});
-    addBotMsg(reply);
-  } catch(e) {
-    hideTyping();
-    addBotMsg('Connection error. Check that the API is accessible from this environment.');
-  }
+    const contextData = DEVICES.length ? DEVICES.map(d=>({hostname:d.hostname,ip:d.ip,score:d.security_score,issues:d.issues?.slice(0,5),ssh:d.ssh_config,firewall:d.firewall})) : null;
+    if (SETTINGS.apiMode==='backend' && API_ONLINE) {
+      const result = await apiPost('/api/ai/chat', { scan_data: contextData?{devices:contextData}:{}, question: msg });
+      hideTyping(); chatHistory.push({role:'assistant',content:result.reply});
+      addBotMsg(result.reply);
+    } else {
+      // Direct browser call
+      const apiKey = SETTINGS.apiKey;
+      if (!apiKey) { hideTyping(); addBotMsg('⚠️ No API key configured. Go to Settings and add your Anthropic API key, or start the backend API.'); return; }
+      const fullMsg = contextData ? `Context (${DEVICES.length} devices): ${JSON.stringify(contextData)}\n\nQuestion: ${msg}` : msg;
+      const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:AI_SYSTEM,messages:[...chatHistory.slice(-6).filter(m=>m.role!=='assistant'||m!==chatHistory[chatHistory.length-1]),{role:'user',content:fullMsg}]})});
+      const data=await res.json();hideTyping();
+      const reply=data.content?.[0]?.text||'No response';
+      chatHistory.push({role:'assistant',content:reply});addBotMsg(reply);
+    }
+  } catch(e){hideTyping();addBotMsg('Error: '+e.message);}
 }
 
 async function runAI() {
-  if (!SCAN) { document.getElementById('aiOutput').innerHTML='<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">Run a scan first.</div>'; return; }
-  document.getElementById('runAiBtn').textContent = 'ANALYZING...';
-  document.getElementById('aiOutput').innerHTML = `<div style="display:flex;gap:5px;padding:1.5rem;justify-content:center">${[0,1,2].map(i=>`<div style="width:7px;height:7px;border-radius:50%;background:var(--g);animation:td .8s ease ${i*.15}s infinite"></div>`).join('')}</div>`;
+  const deviceIp = document.getElementById('aiDeviceSelect').value;
+  const device = deviceIp ? DEVICES.find(d=>d.ip===deviceIp) : DEVICES[0];
+  if (!device) { document.getElementById('aiOutput').innerHTML='<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">Select a device first.</div>'; return; }
+  document.getElementById('aiOutput').innerHTML=`<div style="display:flex;gap:5px;padding:1.5rem;justify-content:center">${[0,1,2].map(i=>`<div style="width:7px;height:7px;border-radius:50%;background:var(--g);animation:td .8s ease ${i*.15}s infinite"></div>`).join('')}</div>`;
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',max_tokens:1000,
-        system:SYSTEM,
-        messages:[{role:'user',content:`Analyze this security scan and provide:
-1. Executive Summary (2-3 sentences for a non-technical audience)
-2. Top 3 Critical Risks with business impact
-3. Immediate Actions with exact bash commands
-4. 30-Day Remediation Roadmap
-
-Scan: ${JSON.stringify({score:SCAN.security_score,hostname:SCAN.hostname,issues:SCAN.issues,ssh:SCAN.ssh_config,firewall:SCAN.firewall,failed_logins:SCAN.failed_logins,outdated:SCAN.outdated_packages.slice(0,3)})}`}]
-      })
-    });
-    const data = await res.json();
-    const reply = data.content?.[0]?.text || 'Analysis unavailable.';
-    document.getElementById('aiOutput').innerHTML = `<div style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85;white-space:pre-wrap;max-height:500px;overflow-y:auto">${reply}</div>`;
+    if (SETTINGS.apiMode==='backend' && API_ONLINE) {
+      const result = await apiPost('/api/ai/analyze', { scan_data: device });
+      document.getElementById('aiOutput').innerHTML=`<div style="font-family:var(--mono);font-size:.64rem;color:var(--text2);line-height:1.85;white-space:pre-wrap;max-height:450px;overflow-y:auto">${result.analysis}</div>`;
+    } else {
+      const apiKey = SETTINGS.apiKey;
+      if (!apiKey) { document.getElementById('aiOutput').innerHTML='<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">Add your API key in Settings, or start the backend.</div>'; return; }
+      const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,system:AI_SYSTEM,messages:[{role:'user',content:`Analyze this security scan:\n${JSON.stringify({hostname:device.hostname,ip:device.ip,score:device.security_score,issues:device.issues,ssh:device.ssh_config,firewall:device.firewall,failed_logins:device.failed_logins,packages:device.outdated_packages?.slice(0,5)})}`}]})});
+      const data=await res.json();
+      document.getElementById('aiOutput').innerHTML=`<div style="font-family:var(--mono);font-size:.64rem;color:var(--text2);line-height:1.85;white-space:pre-wrap;max-height:450px;overflow-y:auto">${data.content?.[0]?.text||'No response'}</div>`;
+    }
   } catch(e) {
-    document.getElementById('aiOutput').innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted)">Error connecting to AI. Check API access.</div>';
+    document.getElementById('aiOutput').innerHTML=`<div style="font-family:var(--mono);font-size:.63rem;color:var(--danger);padding:1rem">Error: ${e.message}</div>`;
   }
-  document.getElementById('runAiBtn').textContent = 'RE-ANALYZE →';
 }
 
-/* ═══════════════ ADMIN ═══════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   EXPORT
+═══════════════════════════════════════════════════════════════ */
+function exportTxt() {
+  if (!DEVICES.length) { alert('Scan devices first.'); return; }
+  const lines = [`PM::OFFSEC SECURITY AUDIT REPORT`, `Generated: ${new Date().toLocaleString()}`, `Audited by: ${SESSION.name}`, `Devices: ${DEVICES.length}`, ``, `${'═'.repeat(60)}`];
+  DEVICES.forEach(d=>{
+    lines.push(`\nDEVICE: ${d.hostname} (${d.ip})`, `OS: ${d.os}`, `Score: ${d.security_score}/100`, `Scan type: ${d.scan_type}`, `Last scan: ${new Date(d.lastScan||d.timestamp).toLocaleString()}`, ``);
+    const sev=['critical','high','medium','low'];
+    sev.forEach(s=>{
+      const issues=(d.issues||[]).filter(i=>i.severity===s);
+      if(issues.length){lines.push(`${s.toUpperCase()} (${issues.length})`);issues.forEach(i=>lines.push(`  • [CVSS ${i.cvss}] ${i.title} (${i.category})`));}
+    });
+    lines.push(`\nOpen Ports: ${(d.open_ports||[]).map(p=>`${p.port}/${p.service}`).join(', ')}`);
+    lines.push(`Firewall: ${(d.firewall||{}).status?.toUpperCase()||'UNKNOWN'}`);
+    lines.push(`Failed Logins (24h): ${(d.failed_logins||{}).last_24h||0}`);
+    lines.push(`${'─'.repeat(60)}`);
+  });
+  const blob=new Blob([lines.join('\n')],{type:'text/plain'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`security-audit-${Date.now()}.txt`;a.click();URL.revokeObjectURL(url);
+}
+
+function exportJson() {
+  if (!DEVICES.length) { alert('Scan devices first.'); return; }
+  const blob=new Blob([JSON.stringify({report_date:new Date().toISOString(),auditor:SESSION.name,devices:DEVICES},null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`scan-data-${Date.now()}.json`;a.click();URL.revokeObjectURL(url);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SETTINGS
+═══════════════════════════════════════════════════════════════ */
+function loadSettings() {
+  document.getElementById('apiUrlInput').value = SETTINGS.apiUrl || 'http://localhost:8000';
+  document.getElementById('apiKeyInput').value = SETTINGS.apiKey || '';
+  document.getElementById('apiMode').value = SETTINGS.apiMode || 'backend';
+}
+
+async function testApi() {
+  document.getElementById('apiTestResult').textContent='Testing...';
+  document.getElementById('apiTestResult').style.color='var(--muted)';
+  SETTINGS.apiUrl = document.getElementById('apiUrlInput').value.trim();
+  const online = await checkApiStatus();
+  document.getElementById('apiTestResult').textContent = online ? '✓ Connected successfully' : '✗ Cannot connect — make sure backend is running';
+  document.getElementById('apiTestResult').style.color = online ? 'var(--ok)' : 'var(--danger)';
+}
+
+function saveApiSettings() {
+  SETTINGS.apiUrl = document.getElementById('apiUrlInput').value.trim() || 'http://localhost:8000';
+  SETTINGS.apiKey = document.getElementById('apiKeyInput').value.trim();
+  SETTINGS.apiMode = document.getElementById('apiMode').value;
+  localStorage.setItem('pm_settings_v3', JSON.stringify(SETTINGS));
+  const msg=document.getElementById('settingsSaved');msg.style.display='inline';setTimeout(()=>msg.style.display='none',2000);
+  checkApiStatus();
+}
+
+function toggleApiKey() {
+  const inp=document.getElementById('apiKeyInput');
+  inp.type=inp.type==='password'?'text':'password';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ADMIN / USERS
+═══════════════════════════════════════════════════════════════ */
 function renderAdmin() {
-  const users = AUTH.getAllUsers();
-  document.getElementById('adminUserCount').textContent = users.length;
-  document.getElementById('adminScanCount').textContent = scanCount;
-  const html = `<table class="tbl"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th></tr></thead><tbody>
-    ${users.map(u=>`<tr><td>${u.name}</td><td style="color:var(--g2)">${u.email}</td><td>${badge(u.role==='admin'?'critical':u.role==='client'?'medium':'low').replace(/\bfalse\b/,u.role)}<span class="badge ${u.role==='admin'?'b-critical':u.role==='client'?'b-medium':'b-ok'}">${u.role}</span></td><td>${u.created||'—'}</td></tr>`).join('')}
-  </tbody></table>`;
-  document.getElementById('adminUsersTable').innerHTML = html;
-  document.getElementById('usersTable').innerHTML = html;
+  const users=AUTH.getAllUsers();
+  document.getElementById('adminUserCount').textContent=users.length;
+  document.getElementById('adminDevCount').textContent=DEVICES.length;
+  document.getElementById('adminScanCount').textContent=SCAN_COUNT;
+  const html=`<table class="tbl"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th></tr></thead><tbody>${users.map(u=>`<tr><td>${u.name}</td><td style="color:var(--g2)">${u.email}</td><td><span class="badge b-${u.role==='admin'?'critical':u.role==='client'?'medium':'ok'}">${u.role}</span></td><td>${u.created||'—'}</td></tr>`).join('')}</tbody></table>`;
+  document.getElementById('adminUsersTable').innerHTML=html;
+  if(document.getElementById('usersTable'))document.getElementById('usersTable').innerHTML=html;
 }
 
-/* ═══════════════ PROFILE ═══════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   PROFILE
+═══════════════════════════════════════════════════════════════ */
 function loadProfile() {
-  document.getElementById('profAv').textContent = SESSION.avatar || SESSION.name[0];
-  document.getElementById('profName').textContent = SESSION.name;
-  document.getElementById('profRole').textContent = SESSION.role.toUpperCase() + ' ACCOUNT';
-  document.getElementById('profEmail').textContent = SESSION.email;
-  document.getElementById('profScansCount').textContent = scanCount;
-  const prefs = JSON.parse(localStorage.getItem('pm_prefs_'+SESSION.id)||'{}');
-  document.getElementById('editName').value = SESSION.name;
-  document.getElementById('editEmail').value = SESSION.email;
-  document.getElementById('editGithub').value = prefs.github||'';
-  document.getElementById('editLinkedin').value = prefs.linkedin||'';
-  document.getElementById('editTHM').value = prefs.thm||'';
+  document.getElementById('profAv').textContent=SESSION.avatar||SESSION.name[0];
+  document.getElementById('profName').textContent=SESSION.name;
+  document.getElementById('profRole').textContent=SESSION.role.toUpperCase()+' ACCOUNT';
+  document.getElementById('profEmail').textContent=SESSION.email;
+  document.getElementById('profDevices').textContent=DEVICES.length;
+  document.getElementById('profScans').textContent=SCAN_COUNT;
+  const prefs=JSON.parse(localStorage.getItem('pm_prefs_'+SESSION.id)||'{}');
+  document.getElementById('editName').value=SESSION.name;
+  document.getElementById('editEmail').value=SESSION.email;
+  document.getElementById('editGithub').value=prefs.github||'';
+  document.getElementById('editLinkedin').value=prefs.linkedin||'';
 }
 
 function saveProfile() {
-  const prefs = { github:document.getElementById('editGithub').value, linkedin:document.getElementById('editLinkedin').value, thm:document.getElementById('editTHM').value };
-  localStorage.setItem('pm_prefs_'+SESSION.id, JSON.stringify(prefs));
-  const msg = document.getElementById('saveMsg');
-  msg.style.display='inline'; setTimeout(()=>msg.style.display='none',2000);
+  const prefs={github:document.getElementById('editGithub').value,linkedin:document.getElementById('editLinkedin').value};
+  localStorage.setItem('pm_prefs_'+SESSION.id,JSON.stringify(prefs));
+  const msg=document.getElementById('saveMsg');msg.style.display='inline';setTimeout(()=>msg.style.display='none',2000);
 }
 
-/* ═══════════════ NAVIGATION ═══════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   ACTIVITY
+═══════════════════════════════════════════════════════════════ */
+function addActivity(type, text, time) {
+  ACTIVITY.push({type,text,time});saveActivity();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════════════════════ */
 function nav(page) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
-  const target = document.getElementById('page-'+page);
-  if (target) target.classList.add('active');
-  document.querySelectorAll('.sb-item').forEach(b=>{
-    if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes(`'${page}'`)) b.classList.add('active');
-  });
-  if (page==='admin'||page==='users') renderAdmin();
-  if (page==='profile') loadProfile();
-  window.scrollTo(0,0);
+  const target=document.getElementById('page-'+page);
+  if(target)target.classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(b=>{if(b.getAttribute('onclick')?.includes(`'${page}'`))b.classList.add('active');});
+  if(page==='admin'||page==='users')renderAdmin();
+  if(page==='profile')loadProfile();
+  if(page==='settings')loadSettings();
 }
 
-/* ═══════════════ INIT ═══════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════════════ */
 function init() {
-  // Header
-  const roleClass = {admin:'rb-admin',client:'rb-client',user:'rb-user'};
-  document.getElementById('hdrRole').textContent = SESSION.role.toUpperCase();
-  document.getElementById('hdrRole').className = 'role-badge ' + (roleClass[SESSION.role]||'rb-user');
-  document.getElementById('hdrAvatar').textContent = SESSION.avatar || SESSION.name[0];
-  document.getElementById('hdrName').textContent = SESSION.name.split(' ')[0];
-  document.getElementById('dashWelcome').textContent = `WELCOME BACK — ${SESSION.name.toUpperCase()}`;
-  // Role-based nav
-  if (SESSION.role === 'admin') document.getElementById('adminSection').style.display='block';
-  if (SESSION.role === 'client') document.getElementById('clientSection').style.display='block';
-  // Chat
+  const roleClass={admin:'rb-admin',client:'rb-client',user:'rb-user'};
+  document.getElementById('hdrRole').textContent=SESSION.role.toUpperCase();
+  document.getElementById('hdrRole').className='role-badge '+(roleClass[SESSION.role]||'rb-user');
+  document.getElementById('hdrAvatar').textContent=SESSION.avatar||SESSION.name[0];
+  document.getElementById('hdrName').textContent=SESSION.name.split(' ')[0];
+  document.getElementById('dashWelcome').textContent=`WELCOME BACK — ${SESSION.name.toUpperCase()} · ${DEVICES.length} DEVICE${DEVICES.length!==1?'S':''} MONITORED`;
+  if(SESSION.role==='admin')document.getElementById('adminSection').style.display='block';
   initChat();
-  // Enter key for chat
-  document.getElementById('chatInput').addEventListener('keydown', e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}});
-  document.getElementById('chatInput').addEventListener('input', function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,76)+'px';});
+  renderDashboard();
+  renderDevicesGrid();
+  renderAlerts();
+  renderReports();
+  updateDeviceSelects();
+  loadSettings();
+  checkApiStatus();
+  setInterval(checkApiStatus, 30000);
+  document.getElementById('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}});
+  document.getElementById('chatInput').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,72)+'px';});
 }
 
 init();
