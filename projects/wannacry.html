@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WannaCry Analysis — Prakash Mijar</title>
+  <meta name="description" content="Full WannaCry ransomware analysis by Prakash Mijar — EternalBlue exploit chain, SMBv1 vulnerability, AES-RSA encryption, and C2 communication patterns."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://erprakashmijar.com/projects/wannacry.html"/>
+  <meta property="og:title" content="WannaCry Ransomware Analysis — Prakash Mijar"/>
+  <meta property="og:description" content="Full static and dynamic analysis of WannaCry. EternalBlue exploit chain, encryption routine, and C2 analysis."/>
+  <meta property="og:image" content="https://erprakashmijar.com/og-image.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="WannaCry Ransomware Analysis — Prakash Mijar"/>
+  <meta name="twitter:image" content="https://erprakashmijar.com/og-image.png"/>
+  <meta name="keywords" content="WannaCry, Ransomware Analysis, EternalBlue, MS17-010, Malware Analysis, Reverse Engineering, Cybersecurity, Prakash Mijar"/>
+  <link rel="canonical" href="https://erprakashmijar.com/projects/wannacry.html"/>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg"/>
+  <meta name="theme-color" content="#00ff88"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../assets/style.css"/>
+</head>
+<body>
+<a class="skip-nav" href="#main-content">Skip to content</a>
+<canvas id="bgCanvas"></canvas>
+<div id="cur"></div><div id="cur2"></div>
+
+<nav aria-label="Main navigation">
+  <a href="../index.html" class="nav-logo">PM<span>::</span>OFFSEC</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../projects.html" class="active">Projects</a></li>
+    <li><a href="../labs.html">Labs</a></li>
+    <li><a href="../skills.html">Skills</a></li>
+    <li><a href="../about.html">About</a></li>
+    <li><a href="mailto:contact@erprakashmijar.com" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<main id="main-content" role="main">
+  <div class="page-hero">
+    <div class="wrap">
+      <div class="breadcrumb"><a href="../index.html">HOME</a><span>/</span><a href="../projects.html">PROJECTS</a><span>/</span><span>WANNACRY ANALYSIS</span></div>
+      <div class="s-label">Malware Analysis · Reverse Engineering</div>
+      <h1 class="s-title">WANNACRY<br><span>RANSOMWARE ANALYSIS</span></h1>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="case-layout">
+
+      <!-- BODY -->
+      <div class="case-body reveal">
+
+        <h3>OVERVIEW</h3>
+        <p>WannaCry is a cryptoworm ransomware that exploited the EternalBlue vulnerability (MS17-010) in Windows SMBv1 to propagate across networks autonomously. This project involved setting up an isolated lab environment to perform both static and dynamic analysis on a WannaCry sample to document the full kill chain.</p>
+
+        <h3>LAB ENVIRONMENT</h3>
+        <p>Analysis was performed in a fully isolated VMware network with snapshot capability. No live internet access was permitted. Tools: REMnux (static analysis), FlareVM (dynamic analysis), Wireshark for network capture, Process Monitor and Process Hacker for behavioural monitoring.</p>
+
+        <h2>PHASE 1: STATIC ANALYSIS</h2>
+        <h3>FILE METADATA</h3>
+        <p>Initial triage using file hashing (MD5/SHA256), strings extraction, and PE header analysis to understand the binary structure without executing it.</p>
+        <ul>
+          <li>Identified PE32 executable with suspicious import table — CryptAcquireContext, CryptEncrypt confirming encryption capability</li>
+          <li>Strings analysis revealed hardcoded kill switch URL: iuqerfsodp9ifjaposdfjhgosurijfaewrwergwea.com</li>
+          <li>Embedded resource DLL identified containing the ransomware payload and Tor client</li>
+          <li>PDB path and compiler artifacts confirmed MSVC compilation, likely Windows development environment</li>
+        </ul>
+
+        <h2>PHASE 2: NETWORK PROPAGATION</h2>
+        <h3>ETERNALBLUE EXPLOIT CHAIN</h3>
+        <p>The worm component scans for hosts with TCP port 445 open and attempts to exploit CVE-2017-0144 (EternalBlue) — a buffer overflow in SMBv1's transaction handling that allows unauthenticated remote code execution as SYSTEM.</p>
+        <ul>
+          <li>SMBv1 negotiate protocol request to enumerate supported dialects</li>
+          <li>TRANS2_OPEN2 request with malformed parameters triggering buffer overflow</li>
+          <li>Shellcode execution achieved via pool spray — targeting nonpaged pool allocation</li>
+          <li>DoublePulsar kernel backdoor installed to receive and execute the WannaCry DLL payload</li>
+        </ul>
+
+        <h2>PHASE 3: ENCRYPTION ROUTINE</h2>
+        <h3>AES-RSA HYBRID ENCRYPTION</h3>
+        <p>WannaCry uses a hybrid encryption scheme designed to prevent key recovery without paying the ransom. Each file is encrypted with a unique AES-128 key, which is itself encrypted with an RSA-2048 public key controlled by the attacker.</p>
+        <ul>
+          <li>RSA-2048 public key embedded in binary — private key held only by attacker</li>
+          <li>Per-file AES-128 key generated using CryptGenRandom</li>
+          <li>AES key encrypted with embedded RSA public key and prepended to encrypted file</li>
+          <li>Target extensions: .doc, .xls, .pdf, .jpg, .zip, .rar, .vmdk — 176 file types total</li>
+          <li>Original files deleted via MoveFileEx after encryption (not secure-wiped — recovery possible with forensic tools if acted quickly)</li>
+        </ul>
+
+        <h2>PHASE 4: C2 COMMUNICATION</h2>
+        <h3>TOR-BASED COMMAND AND CONTROL</h3>
+        <p>WannaCry bundles a Tor client to communicate with hidden service C2 servers, making attribution and takedown difficult. Payment tracking was done via unique Bitcoin addresses per victim.</p>
+        <ul>
+          <li>Embedded Tor client extracted from resource section and executed</li>
+          <li>C2 hidden service addresses hardcoded in binary</li>
+          <li>Bitcoin address generation for per-victim payment tracking</li>
+          <li>Kill switch check — if the hardcoded URL resolved, execution terminated (exploited by Marcus Hutchins to stop spread)</li>
+        </ul>
+
+        <h3>OUTCOME &amp; KEY FINDINGS</h3>
+        <p>This analysis produced a full documented kill chain from initial SMB scan to file encryption, providing a practical understanding of cryptoworm architecture, exploitation techniques, and encryption design used in real-world ransomware.</p>
+        <ul>
+          <li>Kill switch mechanism fully documented and validated in lab</li>
+          <li>Encryption scheme analysed — confirmed no local key recovery possible post-encryption</li>
+          <li>Network indicators of compromise (IoCs) extracted for detection rule development</li>
+          <li>Snort/Suricata rules written to detect EternalBlue SMB negotiation patterns</li>
+        </ul>
+
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="case-sidebar reveal">
+
+        <div class="sidebar-card">
+          <h4>PROJECT TYPE</h4>
+          <div class="tool-tags">
+            <span class="tool-tag">Malware Analysis</span>
+            <span class="tool-tag">Static Analysis</span>
+            <span class="tool-tag">Dynamic Analysis</span>
+            <span class="tool-tag">Reverse Engineering</span>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <h4>SEVERITY</h4>
+          <span class="severity-badge sev-critical">CRITICAL</span>
+          <p style="font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-top:.7rem;line-height:1.6">CVE-2017-0144 — CVSS 9.8 / Critical. Unauthenticated RCE via SMBv1.</p>
+        </div>
+
+        <div class="sidebar-card">
+          <h4>TOOLS USED</h4>
+          <div class="tool-tags">
+            <span class="tool-tag">REMnux</span>
+            <span class="tool-tag">FlareVM</span>
+            <span class="tool-tag">Wireshark</span>
+            <span class="tool-tag">PEStudio</span>
+            <span class="tool-tag">x64dbg</span>
+            <span class="tool-tag">Process Monitor</span>
+            <span class="tool-tag">IDA Free</span>
+            <span class="tool-tag">strings</span>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <h4>ATTACK FLOW</h4>
+          <div class="flow-step"><div class="flow-n">1</div><div class="flow-text"><strong>SMB Scan</strong>Port 445 sweep for vulnerable hosts</div></div>
+          <div class="flow-step"><div class="flow-n">2</div><div class="flow-text"><strong>EternalBlue</strong>MS17-010 buffer overflow exploit</div></div>
+          <div class="flow-step"><div class="flow-n">3</div><div class="flow-text"><strong>DoublePulsar</strong>Kernel backdoor installation</div></div>
+          <div class="flow-step"><div class="flow-n">4</div><div class="flow-text"><strong>Payload Drop</strong>WannaCry DLL injected via backdoor</div></div>
+          <div class="flow-step"><div class="flow-n">5</div><div class="flow-text"><strong>Encryption</strong>AES-128 + RSA-2048 hybrid scheme</div></div>
+          <div class="flow-step"><div class="flow-n">6</div><div class="flow-text"><strong>Ransom Note</strong>BTC payment demand displayed</div></div>
+        </div>
+
+        <a href="../projects.html" class="btn btn-o" style="text-align:center;display:block">← ALL PROJECTS</a>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>&copy; 2026 Prakash Mijar</span>
+  <div class="f-links"><a href="../index.html">Home</a><a href="../projects.html">Projects</a><a href="../labs.html">Labs</a><a href="../about.html">About</a></div>
+  <span class="f-right">erprakashmijar.com<span class="blink">_</span></span>
+</footer>
+<script src="../assets/shared.js"></script>
+</body>
+</html>

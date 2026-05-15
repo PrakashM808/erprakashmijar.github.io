@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Projects — Prakash Mijar Cybersecurity</title>
+  <meta name="description" content="Cybersecurity project case studies by Prakash Mijar — WannaCry malware analysis, Snort IDS network lab, and Linux CIS hardening audit."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://erprakashmijar.com/projects.html"/>
+  <meta property="og:title" content="Projects — Prakash Mijar Cybersecurity"/>
+  <meta property="og:description" content="Cybersecurity project case studies — malware analysis, network monitoring, and Linux hardening."/>
+  <meta property="og:image" content="https://erprakashmijar.com/og-image.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Projects — Prakash Mijar Cybersecurity"/>
+  <meta name="twitter:image" content="https://erprakashmijar.com/og-image.png"/>
+  <meta name="keywords" content="Cybersecurity Projects, Malware Analysis, WannaCry, Penetration Testing, Network Security, Snort IDS, Linux Hardening, Prakash Mijar"/>
+  <link rel="canonical" href="https://erprakashmijar.com/projects.html"/>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <meta name="theme-color" content="#00ff88"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/style.css"/>
+  <style>
+  .page-hero{padding:9rem 0 4rem;border-bottom:1px solid rgba(0,255,136,.06)}
+  .proj-full-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;padding:4rem 0}
+  @media(max-width:900px){.proj-full-grid{grid-template-columns:1fr}}
+
+  .proj-card{background:var(--bg2);border:1px solid rgba(0,255,136,.07);border-radius:8px;overflow:hidden;transition:transform .25s,box-shadow .25s,border-color .25s;display:flex;flex-direction:column}
+  .proj-card:hover{transform:translateY(-5px);box-shadow:0 18px 50px rgba(0,0,0,.4),0 0 30px rgba(0,255,136,.05);border-color:rgba(0,255,136,.2)}
+  .proj-card-accent{height:3px}
+  .acc-g{background:linear-gradient(90deg,var(--g),var(--g2))}
+  .acc-b{background:linear-gradient(90deg,var(--g2),var(--g3))}
+  .acc-p{background:linear-gradient(90deg,var(--g3),var(--g))}
+  .acc-o{background:linear-gradient(90deg,#ff8c00,var(--g))}
+  .proj-body{padding:1.6rem;flex:1;display:flex;flex-direction:column}
+  .proj-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.9rem}
+  .proj-title{font-family:var(--display);font-size:1.6rem;color:#fff;letter-spacing:.04em;margin-bottom:.6rem;line-height:1.05}
+  .proj-desc{font-family:var(--mono);font-size:.67rem;color:var(--muted);line-height:1.85;flex:1;margin-bottom:1.2rem}
+  .proj-meta{display:flex;justify-content:space-between;align-items:center;padding-top:.9rem;border-top:1px solid rgba(0,255,136,.06)}
+  .proj-impact{font-family:var(--mono);font-size:.6rem;color:var(--g2);letter-spacing:.08em}
+  .proj-link{font-family:var(--mono);font-size:.62rem;color:var(--g);text-decoration:none;letter-spacing:.1em;transition:color .2s,gap .2s;display:flex;align-items:center;gap:.3rem;cursor:none}
+  .proj-link:hover{color:#fff;gap:.6rem}
+
+  .coming-card{background:var(--bg2);border:1px dashed rgba(0,255,136,.1);border-radius:8px;padding:1.6rem;display:flex;align-items:center;justify-content:center;text-align:center;min-height:220px}
+  .coming-inner{font-family:var(--mono);font-size:.65rem;color:var(--muted);letter-spacing:.12em}
+  .coming-inner span{display:block;font-size:1.2rem;margin-bottom:.6rem;opacity:.3}
+  </style>
+</head>
+<body>
+<a class="skip-nav" href="#main-content">Skip to content</a>
+<canvas id="bgCanvas"></canvas>
+<div id="cur"></div><div id="cur2"></div>
+
+<nav aria-label="Main navigation">
+  <a href="index.html" class="nav-logo">PM<span>::</span>OFFSEC</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="projects.html" class="active">Projects</a></li>
+    <li><a href="labs.html">Labs</a></li>
+    <li><a href="skills.html">Skills</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="mailto:contact@erprakashmijar.com" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<main id="main-content" role="main">
+  <div class="page-hero">
+    <div class="wrap">
+      <div class="breadcrumb"><a href="index.html">HOME</a><span>/</span><span>PROJECTS</span></div>
+      <div class="s-label">Portfolio</div>
+      <h1 class="s-title">PROJECT<br><span>CASE STUDIES</span></h1>
+      <p style="font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.9;max-width:520px">Real-world security research, lab projects, and CTF writeups. Each case study documents the methodology, tools used, findings, and outcomes.</p>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="proj-full-grid">
+
+      <article class="proj-card reveal">
+        <div class="proj-card-accent acc-g"></div>
+        <div class="proj-body">
+          <div class="proj-tags"><span class="tag tag-g">MALWARE ANALYSIS</span><span class="tag tag-g">REVERSE ENG</span></div>
+          <h2 class="proj-title">WANNACRY ANALYSIS</h2>
+          <p class="proj-desc">Static and dynamic analysis of WannaCry ransomware in a sandboxed lab. Documented the EternalBlue propagation chain, SMBv1 exploitation, AES-RSA encryption routine, and C2 communication patterns.</p>
+          <div class="proj-meta">
+            <span class="proj-impact">↑ Full kill chain documented</span>
+            <a href="projects/wannacry.html" class="proj-link">CASE STUDY →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="proj-card reveal">
+        <div class="proj-card-accent acc-b"></div>
+        <div class="proj-body">
+          <div class="proj-tags"><span class="tag tag-b">NETWORK SECURITY</span><span class="tag tag-b">IDS</span></div>
+          <h2 class="proj-title">NETWORK MONITORING LAB</h2>
+          <p class="proj-desc">Home lab environment with live packet capture. Built custom Snort IDS rules to detect port scans, brute-force, and anomalous payloads with full alert correlation and Wireshark analysis.</p>
+          <div class="proj-meta">
+            <span class="proj-impact">↑ 12 custom IDS rules</span>
+            <a href="projects/network-lab.html" class="proj-link">CASE STUDY →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="proj-card reveal">
+        <div class="proj-card-accent acc-p"></div>
+        <div class="proj-body">
+          <div class="proj-tags"><span class="tag tag-p">LINUX HARDENING</span><span class="tag tag-p">AUDIT</span></div>
+          <h2 class="proj-title">LYNIS SECURITY AUDIT</h2>
+          <p class="proj-desc">CIS-benchmark-aligned security audit of a Linux server using Lynis. Identified and remediated SSH misconfigs, kernel parameters, and unnecessary service exposure with before/after scoring.</p>
+          <div class="proj-meta">
+            <span class="proj-impact">↑ Hardening score +38 pts</span>
+            <a href="projects/lynis-audit.html" class="proj-link">CASE STUDY →</a>
+          </div>
+        </div>
+      </article>
+
+      <div class="coming-card reveal"><div class="coming-inner"><span>+</span>MORE COMING SOON<br>Add your next project here</div></div>
+      <div class="coming-card reveal"><div class="coming-inner"><span>+</span>CTF WRITEUP<br>Document your next CTF challenge</div></div>
+      <div class="coming-card reveal"><div class="coming-inner"><span>+</span>BUG BOUNTY REPORT<br>Add a responsible disclosure writeup</div></div>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>&copy; 2026 Prakash Mijar</span>
+  <div class="f-links"><a href="index.html">Home</a><a href="labs.html">Labs</a><a href="skills.html">Skills</a><a href="about.html">About</a></div>
+  <span class="f-right">erprakashmijar.com<span class="blink">_</span></span>
+</footer>
+<script src="assets/shared.js"></script>
+</body>
+</html>

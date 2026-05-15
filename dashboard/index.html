@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — PM::OFFSEC</title>
+  <meta name="robots" content="noindex"/>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@300;400;500;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.8.0/Recharts.min.js"></script>
+  <style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#03070f;--bg2:#060d1a;--bg3:#0a1628;
+    --g:#00ff88;--g2:#00d4ff;--g3:#7b2fff;
+    --border:rgba(0,255,136,.1);
+    --muted:#2a4a62;--text:#7aafc8;--text2:#c0dce8;--white:#e8f4f8;
+    --danger:#ff3b5c;--warn:#f59e0b;--ok:#00ff88;
+    --mono:'Azeret Mono',monospace;--display:'Bebas Neue',sans-serif;--body:'DM Sans',sans-serif;
+    --sidebar:220px;--header:54px;
+  }
+  html,body{height:100%;overflow:hidden}
+  body{background:var(--bg);color:var(--text2);font-family:var(--body)}
+  ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(0,255,136,.15);border-radius:2px}
+  button,input,select,textarea{font-family:inherit}
+  /* LAYOUT */
+  #app{display:flex;flex-direction:column;height:100vh}
+  /* HEADER */
+  .hdr{height:var(--header);display:flex;align-items:center;padding:0 1.2rem;background:rgba(3,7,15,.9);border-bottom:1px solid rgba(0,255,136,.07);backdrop-filter:blur(16px);flex-shrink:0;gap:.8rem;position:relative;z-index:100}
+  .hdr-logo{font-family:var(--display);font-size:1.2rem;color:var(--white);letter-spacing:.08em;white-space:nowrap}
+  .hdr-logo span{color:var(--g)}
+  .hdr-search{flex:1;max-width:340px;position:relative;margin-left:.3rem}
+  .hdr-search input{width:100%;background:rgba(0,255,136,.03);border:1px solid var(--border);border-radius:6px;padding:.42rem .9rem .42rem 2.2rem;font-family:var(--mono);font-size:.63rem;color:var(--text2);outline:none;transition:border-color .2s}
+  .hdr-search input:focus{border-color:rgba(0,255,136,.3)}
+  .hdr-search::before{content:'⌕';position:absolute;left:.7rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.9rem}
+  .hdr-right{margin-left:auto;display:flex;align-items:center;gap:.6rem}
+  .role-badge{font-family:var(--mono);font-size:.52rem;letter-spacing:.1em;padding:.22rem .55rem;border-radius:3px}
+  .rb-admin{background:rgba(124,58,237,.12);color:#a78bfa;border:1px solid rgba(124,58,237,.2)}
+  .rb-client{background:rgba(0,212,255,.06);color:var(--g2);border:1px solid rgba(0,212,255,.15)}
+  .rb-user{background:rgba(0,255,136,.06);color:var(--g);border:1px solid rgba(0,255,136,.15)}
+  .hdr-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--g3),var(--g));display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.6rem;font-weight:700;color:#fff;cursor:pointer;flex-shrink:0}
+  .hdr-name{font-family:var(--mono);font-size:.63rem;color:var(--text2)}
+  .hdr-btn{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;padding:.38rem .8rem;border-radius:5px;border:none;cursor:pointer;transition:all .2s}
+  .hdr-scan{background:var(--g);color:#040810;font-weight:700}
+  .hdr-scan:hover{background:#fff}
+  .hdr-scan:disabled{background:rgba(0,255,136,.15);color:rgba(0,255,136,.3);cursor:not-allowed}
+  .hdr-out{background:rgba(255,59,92,.06);color:var(--danger);border:1px solid rgba(255,59,92,.15)}
+  .hdr-out:hover{background:rgba(255,59,92,.12)}
+  /* BODY */
+  .body{flex:1;display:flex;overflow:hidden}
+  /* SIDEBAR */
+  .sidebar{width:var(--sidebar);flex-shrink:0;background:rgba(6,13,26,.7);border-right:1px solid rgba(0,255,136,.06);display:flex;flex-direction:column;overflow-y:auto}
+  .sb-section{padding:.7rem 0}
+  .sb-label{font-family:var(--mono);font-size:.48rem;color:var(--muted);letter-spacing:.2em;padding:.2rem 1rem .4rem;text-transform:uppercase}
+  .sb-item{display:flex;align-items:center;gap:.6rem;padding:.56rem 1rem;font-family:var(--mono);font-size:.62rem;color:var(--muted);letter-spacing:.05em;cursor:pointer;border-left:2px solid transparent;transition:all .18s;border:none;background:none;width:100%;text-align:left}
+  .sb-item:hover{color:var(--text2);background:rgba(0,255,136,.02)}
+  .sb-item.active{color:var(--g);background:rgba(0,255,136,.05);border-left-color:var(--g)}
+  .sb-icon{font-size:.85rem;width:16px;text-align:center;flex-shrink:0}
+  .sb-badge{margin-left:auto;font-family:var(--mono);font-size:.48rem;background:rgba(255,59,92,.15);color:var(--danger);border:1px solid rgba(255,59,92,.2);border-radius:3px;padding:.1rem .35rem}
+  .sb-bottom{margin-top:auto;padding:.7rem 0;border-top:1px solid rgba(0,255,136,.06)}
+  .scan-info{margin:.6rem;background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.08);border-radius:6px;padding:.7rem .9rem}
+  .scan-info-label{font-family:var(--mono);font-size:.5rem;color:var(--muted);letter-spacing:.12em;margin-bottom:.3rem}
+  .scan-info-host{font-family:var(--mono);font-size:.6rem;color:var(--text2)}
+  .scan-info-time{font-family:var(--mono);font-size:.5rem;color:var(--muted)}
+  /* MAIN */
+  .main{flex:1;overflow-y:auto;overflow-x:hidden}
+  .page{display:none;padding:1.4rem;animation:pgIn .22s ease}
+  .page.active{display:block}
+  @keyframes pgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+  .pg-hdr{margin-bottom:1.2rem}
+  .pg-title{font-family:var(--display);font-size:1.7rem;color:var(--white);letter-spacing:.05em;line-height:1}
+  .pg-sub{font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-top:.2rem;letter-spacing:.07em}
+  /* PANEL */
+  .panel{background:rgba(6,13,26,.7);border:1px solid rgba(0,255,136,.07);border-radius:9px;overflow:hidden;margin-bottom:1rem}
+  .panel-hdr{display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;border-bottom:1px solid rgba(0,255,136,.05)}
+  .panel-title{font-family:var(--mono);font-size:.6rem;color:var(--g);letter-spacing:.15em;text-transform:uppercase}
+  .panel-act{font-family:var(--mono);font-size:.55rem;color:var(--muted);cursor:pointer;transition:color .2s;border:none;background:none;letter-spacing:.1em}
+  .panel-act:hover{color:var(--g)}
+  .panel-body{padding:1.1rem}
+  /* GRIDS */
+  .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-bottom:1rem}
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+  @media(max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}}
+  /* STAT CARD */
+  .sc{background:rgba(6,13,26,.7);border:1px solid rgba(0,255,136,.07);border-radius:9px;padding:1.1rem 1.3rem;position:relative;overflow:hidden;transition:border-color .2s}
+  .sc:hover{border-color:rgba(0,255,136,.18)}
+  .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+  .sc-g::before{background:linear-gradient(90deg,var(--g),transparent)}
+  .sc-b::before{background:linear-gradient(90deg,var(--g2),transparent)}
+  .sc-p::before{background:linear-gradient(90deg,var(--g3),transparent)}
+  .sc-r::before{background:linear-gradient(90deg,var(--danger),transparent)}
+  .sc-label{font-family:var(--mono);font-size:.53rem;color:var(--muted);letter-spacing:.13em;text-transform:uppercase;margin-bottom:.55rem}
+  .sc-value{font-family:var(--display);font-size:2rem;line-height:1;letter-spacing:.03em}
+  .sc-delta{font-family:var(--mono);font-size:.53rem;color:var(--muted);margin-top:.25rem}
+  .sc-icon{position:absolute;right:.9rem;top:.9rem;font-size:1.3rem;opacity:.12}
+  /* BADGE */
+  .badge{display:inline-block;font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;padding:.18rem .45rem;border-radius:3px;text-transform:uppercase}
+  .b-critical{background:rgba(255,59,92,.1);color:var(--danger);border:1px solid rgba(255,59,92,.25)}
+  .b-high{background:rgba(255,140,66,.1);color:#ff8c42;border:1px solid rgba(255,140,66,.22)}
+  .b-medium{background:rgba(245,200,66,.08);color:#f5c842;border:1px solid rgba(245,200,66,.2)}
+  .b-low{background:rgba(77,217,172,.07);color:#4dd9ac;border:1px solid rgba(77,217,172,.17)}
+  .b-ok{background:rgba(0,255,136,.06);color:var(--ok);border:1px solid rgba(0,255,136,.15)}
+  /* TABLE */
+  .tbl{width:100%;border-collapse:collapse}
+  .tbl th{font-family:var(--mono);font-size:.52rem;color:var(--muted);letter-spacing:.14em;text-align:left;padding:.55rem .8rem;border-bottom:1px solid rgba(0,255,136,.06);text-transform:uppercase}
+  .tbl td{font-family:var(--mono);font-size:.6rem;color:var(--text2);padding:.65rem .8rem;border-bottom:1px solid rgba(0,255,136,.03)}
+  .tbl tr:last-child td{border-bottom:none}
+  .tbl tr:hover td{background:rgba(0,255,136,.015)}
+  /* SKILL BAR */
+  .skill-row{display:flex;align-items:center;gap:.7rem;margin-bottom:.65rem}
+  .skill-name{font-family:var(--mono);font-size:.58rem;color:var(--text2);width:130px;flex-shrink:0}
+  .skill-track{flex:1;height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden}
+  .skill-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--g),var(--g2));transition:width 1s cubic-bezier(.16,1,.3,1)}
+  .skill-pct{font-family:var(--mono);font-size:.52rem;color:var(--muted);width:28px;text-align:right}
+  /* ISSUE ROW */
+  .issue-row{display:flex;align-items:center;gap:.9rem;padding:.6rem .8rem;border-radius:5px;margin-bottom:.3rem}
+  /* ACTIVITY */
+  .act-item{display:flex;align-items:flex-start;gap:.7rem;padding:.6rem 0;border-bottom:1px solid rgba(0,255,136,.04)}
+  .act-item:last-child{border-bottom:none}
+  .act-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
+  .dot-ok{background:var(--ok);box-shadow:0 0 5px var(--ok)}
+  .dot-warn{background:var(--warn);box-shadow:0 0 5px var(--warn)}
+  .dot-danger{background:var(--danger);box-shadow:0 0 5px var(--danger)}
+  .dot-info{background:var(--g2);box-shadow:0 0 5px var(--g2)}
+  .act-text{font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.5;flex:1}
+  .act-time{font-family:var(--mono);font-size:.52rem;color:var(--muted);white-space:nowrap}
+  /* SCANNER ANIMATION */
+  .scan-anim{text-align:center;padding:2.5rem 2rem}
+  .scan-ring{width:120px;height:120px;margin:0 auto 1.5rem;position:relative}
+  .scan-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column}
+  .scan-pct-num{font-family:var(--display);font-size:2.2rem;color:var(--g);line-height:1}
+  .scan-stage{font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:.5rem;letter-spacing:.1em}
+  .scan-chips{display:flex;gap:4px;justify-content:center;margin-top:1.2rem;flex-wrap:wrap}
+  .scan-chip{font-family:var(--mono);font-size:.48rem;padding:.18rem .45rem;border-radius:3px;transition:all .3s;letter-spacing:.08em}
+  /* CHAT */
+  .chat-wrap{display:flex;flex-direction:column;height:520px}
+  .chat-msgs{flex:1;overflow-y:auto;padding:.9rem;display:flex;flex-direction:column;gap:.55rem}
+  .msg{max-width:84%}
+  .msg-bot{align-self:flex-start}
+  .msg-user{align-self:flex-end}
+  .msg-bubble{padding:.6rem .85rem;font-family:var(--mono);font-size:.63rem;line-height:1.72;white-space:pre-wrap;word-break:break-word}
+  .msg-bot .msg-bubble{background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.1);border-radius:2px 9px 9px 9px;color:var(--text2)}
+  .msg-user .msg-bubble{background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.18);border-radius:9px 2px 9px 9px;color:var(--white)}
+  .msg-time{font-family:var(--mono);font-size:.48rem;color:var(--muted);margin-top:.2rem;padding:0 .2rem}
+  .msg-user .msg-time{text-align:right}
+  .typing{display:flex;gap:4px;padding:.6rem .85rem;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.09);border-radius:2px 9px 9px 9px;width:fit-content;align-self:flex-start}
+  .typing-dot{width:5px;height:5px;border-radius:50%;background:var(--g);animation:td .8s ease infinite}
+  .typing-dot:nth-child(2){animation-delay:.12s}.typing-dot:nth-child(3){animation-delay:.24s}
+  @keyframes td{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+  .chat-sug{padding:.5rem;border-top:1px solid rgba(0,255,136,.05);display:flex;gap:.35rem;flex-wrap:wrap;background:rgba(0,0,0,.08)}
+  .sug-btn{font-family:var(--mono);font-size:.52rem;color:var(--text);background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:4px;padding:.25rem .55rem;cursor:pointer;transition:all .18s;letter-spacing:.05em}
+  .sug-btn:hover{background:rgba(0,255,136,.09);border-color:rgba(0,255,136,.25);color:var(--g)}
+  .chat-input-row{padding:.65rem;border-top:1px solid rgba(0,255,136,.05);display:flex;gap:.45rem;align-items:flex-end;background:rgba(0,0,0,.12)}
+  .chat-inp{flex:1;background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.09);border-radius:6px;padding:.55rem .8rem;font-family:var(--mono);font-size:.63rem;color:var(--white);outline:none;resize:none;max-height:76px;min-height:34px;line-height:1.5;transition:border-color .2s}
+  .chat-inp:focus{border-color:rgba(0,255,136,.28)}
+  .chat-send{width:34px;height:34px;border-radius:6px;background:linear-gradient(135deg,var(--g3),var(--g));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;transition:all .18s}
+  .chat-send:hover{transform:scale(1.08)}
+  /* PROFILE */
+  .profile-layout{display:grid;grid-template-columns:280px 1fr;gap:1rem}
+  .profile-card{background:rgba(6,13,26,.7);border:1px solid rgba(0,255,136,.08);border-radius:9px;padding:1.8rem;text-align:center}
+  .profile-av{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--g3),var(--g));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:1.8rem;color:#fff;margin:0 auto 1rem;box-shadow:0 0 24px rgba(0,255,136,.15)}
+  .profile-name{font-family:var(--display);font-size:1.5rem;color:var(--white);letter-spacing:.04em}
+  .profile-role{font-family:var(--mono);font-size:.58rem;color:var(--muted);letter-spacing:.12em;margin-top:.3rem}
+  .profile-email{font-family:var(--mono);font-size:.6rem;color:var(--g);margin-top:.4rem}
+  .pstat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.06);border-radius:6px;overflow:hidden;margin-top:1.3rem}
+  .pstat{background:rgba(6,13,26,.9);padding:1rem;text-align:center}
+  .pstat-n{font-family:var(--display);font-size:1.6rem;color:var(--g)}
+  .pstat-l{font-family:var(--mono);font-size:.5rem;color:var(--muted);letter-spacing:.12em}
+  /* FORM */
+  .form-group{margin-bottom:.9rem}
+  .form-label{font-family:var(--mono);font-size:.56rem;color:var(--g2);letter-spacing:.15em;display:block;margin-bottom:.35rem}
+  .form-input{width:100%;background:rgba(0,0,0,.25);border:1px solid rgba(0,255,136,.09);border-radius:5px;padding:.62rem .9rem;font-family:var(--mono);font-size:.66rem;color:var(--white);outline:none;transition:border-color .2s}
+  .form-input:focus{border-color:rgba(0,255,136,.3)}
+  .save-btn{background:var(--g);color:#040810;font-family:var(--mono);font-size:.63rem;font-weight:700;letter-spacing:.12em;border:none;border-radius:5px;padding:.65rem 1.4rem;cursor:pointer;transition:all .2s}
+  .save-btn:hover{background:#fff;transform:translateY(-1px)}
+  /* SCORE GAUGE SVG */
+  .gauge-wrap{position:relative;width:170px;height:170px;margin:0 auto}
+  .gauge-ring{animation:spin 0s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  /* ALERT BOX */
+  .alert-box{display:flex;gap:.9rem;padding:.9rem 1rem;border-radius:7px;margin-bottom:.4rem}
+  .alert-bar{width:3px;border-radius:2px;flex-shrink:0;align-self:stretch}
+  /* MISC */
+  .flex-between{display:flex;justify-content:space-between;align-items:center}
+  .mt1{margin-top:.8rem}.mt2{margin-top:1.4rem}
+  .tag{font-family:var(--mono);font-size:.52rem;padding:.16rem .45rem;border-radius:2px;letter-spacing:.07em}
+  .tag-g{color:var(--g);background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.12)}
+  .tag-b{color:var(--g2);background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.1)}
+  .tag-p{color:#c084fc;background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.14)}
+  </style>
+</head>
+<body>
+<div id="app">
+  <!-- HEADER -->
+  <header class="hdr">
+    <div class="hdr-logo">SEC<span>AUDIT</span></div>
+    <div class="hdr-search"><input type="search" placeholder="Search..." id="globalSearch"/></div>
+    <div class="hdr-right">
+      <span class="role-badge" id="hdrRole"></span>
+      <div class="hdr-avatar" id="hdrAvatar" onclick="nav('profile')">PM</div>
+      <span class="hdr-name" id="hdrName">Prakash</span>
+      <button class="hdr-btn hdr-scan" id="scanBtn" onclick="startScan()">NEW SCAN</button>
+      <button class="hdr-btn hdr-out" onclick="AUTH.logout()">LOGOUT</button>
+    </div>
+  </header>
+  <div class="body">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sb-section">
+        <div class="sb-label">Main</div>
+        <button class="sb-item active" onclick="nav('dashboard')"><span class="sb-icon">⬡</span>Dashboard</button>
+        <button class="sb-item" onclick="nav('scan')"><span class="sb-icon">◈</span>Scanner</button>
+        <button class="sb-item" onclick="nav('alerts')"><span class="sb-icon">◉</span>Alerts<span class="sb-badge" id="sbAlertBadge" style="display:none">0</span></button>
+        <button class="sb-item" onclick="nav('ai')"><span class="sb-icon">🤖</span>AI Analysis</button>
+        <button class="sb-item" onclick="nav('reports')"><span class="sb-icon">⬙</span>Reports</button>
+      </div>
+      <div class="sb-section" id="adminSection" style="display:none">
+        <div class="sb-label">Admin</div>
+        <button class="sb-item" onclick="nav('admin')"><span class="sb-icon">⚙</span>Admin Panel</button>
+        <button class="sb-item" onclick="nav('users')"><span class="sb-icon">◎</span>Users</button>
+      </div>
+      <div class="sb-section" id="clientSection" style="display:none">
+        <div class="sb-label">Account</div>
+        <button class="sb-item" onclick="nav('invoices')"><span class="sb-icon">◱</span>Invoices</button>
+      </div>
+      <div class="sb-section">
+        <div class="sb-label">Account</div>
+        <button class="sb-item" onclick="nav('profile')"><span class="sb-icon">◉</span>Profile</button>
+        <button class="sb-item" onclick="window.location.href='../index.html'"><span class="sb-icon">🌐</span>Portfolio</button>
+      </div>
+      <div class="sb-bottom">
+        <div class="scan-info" id="scanInfoBox" style="display:none">
+          <div class="scan-info-label">LAST SCAN</div>
+          <div class="scan-info-host" id="scanInfoHost"></div>
+          <div class="scan-info-time" id="scanInfoTime"></div>
+        </div>
+      </div>
+    </aside>
+    <!-- MAIN -->
+    <main class="main" id="mainContent">
+
+      <!-- DASHBOARD PAGE -->
+      <div class="page active" id="page-dashboard">
+        <div class="pg-hdr"><div class="pg-title">DASHBOARD</div><div class="pg-sub" id="dashWelcome">Loading...</div></div>
+        <div class="g4" id="statRow">
+          <div class="sc sc-g"><div class="sc-icon">🛡️</div><div class="sc-label">Security Score</div><div class="sc-value" id="s-score" style="color:var(--g)">—</div><div class="sc-delta" id="s-score-d">Run a scan first</div></div>
+          <div class="sc sc-r"><div class="sc-icon">⚠️</div><div class="sc-label">Critical Issues</div><div class="sc-value" id="s-crit" style="color:var(--danger)">—</div><div class="sc-delta" id="s-crit-d">—</div></div>
+          <div class="sc sc-b"><div class="sc-icon">🔌</div><div class="sc-label">Open Ports</div><div class="sc-value" id="s-ports" style="color:var(--g2)">—</div><div class="sc-delta" id="s-ports-d">—</div></div>
+          <div class="sc sc-p"><div class="sc-icon">🔐</div><div class="sc-label">Failed Logins (24h)</div><div class="sc-value" id="s-logins" style="color:var(--g3)">—</div><div class="sc-delta">Brute-force attempts</div></div>
+        </div>
+        <div class="g2">
+          <div class="panel">
+            <div class="panel-hdr"><div class="panel-title">Score Trend</div></div>
+            <div class="panel-body">
+              <svg width="100%" height="160" id="trendSvg" viewBox="0 0 400 160" preserveAspectRatio="none"></svg>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-hdr"><div class="panel-title">Severity Breakdown</div></div>
+            <div class="panel-body" id="sevBreakdown">
+              <div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">Run a scan to see breakdown</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-hdr"><div class="panel-title">Recent Activity</div><button class="panel-act" onclick="nav('alerts')">VIEW ALL →</button></div>
+          <div class="panel-body" id="activityFeed">
+            <div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:1.5rem">No activity yet — run a scan</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-hdr"><div class="panel-title">Top Issues</div><button class="panel-act" onclick="nav('reports')">ALL ISSUES →</button></div>
+          <div class="panel-body" id="topIssues">
+            <div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:1.5rem">No issues found — run a scan</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCAN PAGE -->
+      <div class="page" id="page-scan">
+        <div class="pg-hdr"><div class="pg-title">SYSTEM SCANNER</div><div class="pg-sub">Run and inspect security scans</div></div>
+        <div class="panel">
+          <div class="panel-hdr"><div class="panel-title">Scanner Engine</div></div>
+          <div class="panel-body" id="scannerBody">
+            <div style="text-align:center;padding:2rem">
+              <div style="font-family:var(--display);font-size:1.8rem;color:var(--white);letter-spacing:.05em;margin-bottom:.5rem">READY TO SCAN</div>
+              <div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);margin-bottom:1.5rem">Checks open ports, SSH config, firewall, packages, permissions, and auth logs.</div>
+              <button onclick="startScan()" style="font-family:var(--mono);font-size:.7rem;font-weight:700;letter-spacing:.14em;padding:.85rem 2.2rem;background:var(--g);color:#040810;border:none;border-radius:6px;cursor:pointer;transition:all .2s">START SCAN →</button>
+            </div>
+          </div>
+        </div>
+        <div id="scanResults" style="display:none">
+          <div class="g2">
+            <div class="panel">
+              <div class="panel-hdr"><div class="panel-title">Open Ports</div></div>
+              <div class="panel-body" id="portsPanel"></div>
+            </div>
+            <div class="panel">
+              <div class="panel-hdr"><div class="panel-title">SSH Configuration</div></div>
+              <div class="panel-body" id="sshPanel"></div>
+            </div>
+            <div class="panel">
+              <div class="panel-hdr"><div class="panel-title">Outdated Packages</div></div>
+              <div class="panel-body" id="pkgPanel"></div>
+            </div>
+            <div class="panel">
+              <div class="panel-hdr"><div class="panel-title">Auth & Login Activity</div></div>
+              <div class="panel-body" id="authPanel"></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-hdr"><div class="panel-title">File Permissions</div></div>
+            <div class="panel-body" id="permsPanel"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALERTS PAGE -->
+      <div class="page" id="page-alerts">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">ALERTS</div><div class="pg-sub">Active security alerts</div></div>
+          <button onclick="dismissAll()" style="font-family:var(--mono);font-size:.6rem;color:var(--muted);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:5px;padding:.4rem .9rem;cursor:pointer;letter-spacing:.1em">DISMISS ALL</button>
+        </div>
+        <div id="alertsPanel">
+          <div class="panel"><div class="panel-body"><div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">Run a scan to generate alerts</div></div></div>
+        </div>
+      </div>
+
+      <!-- AI PAGE -->
+      <div class="page" id="page-ai">
+        <div class="pg-hdr"><div class="pg-title">AI ANALYSIS</div><div class="pg-sub">Claude-powered vulnerability analysis and assistant</div></div>
+        <div class="panel" id="aiAnalysisPanel">
+          <div class="panel-hdr"><div class="panel-title">AI Security Report</div><button class="panel-act" id="runAiBtn" onclick="runAI()">ANALYZE →</button></div>
+          <div class="panel-body" id="aiOutput">
+            <div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">Run a scan first, then click ANALYZE → to get an AI-powered security report with remediation commands.</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-hdr">
+            <div class="panel-title">AI Security Assistant</div>
+            <span style="font-family:var(--mono);font-size:.52rem;color:var(--ok);display:flex;align-items:center;gap:.3rem"><span style="width:5px;height:5px;border-radius:50%;background:var(--ok);display:inline-block;box-shadow:0 0 4px var(--ok)"></span>Online · Claude</span>
+          </div>
+          <div class="chat-wrap">
+            <div class="chat-msgs" id="chatMsgs"></div>
+            <div class="chat-sug" id="chatSug">
+              <button class="sug-btn" onclick="sendChat('What are the critical risks?')">Critical risks?</button>
+              <button class="sug-btn" onclick="sendChat('How do I fix SSH root login?')">Fix SSH root login</button>
+              <button class="sug-btn" onclick="sendChat('Give me the firewall commands')">Firewall commands</button>
+              <button class="sug-btn" onclick="sendChat('What should I do first?')">What first?</button>
+            </div>
+            <div class="chat-input-row">
+              <textarea class="chat-inp" id="chatInput" rows="1" placeholder="Ask about vulnerabilities, commands, or security best practices..."></textarea>
+              <button class="chat-send" onclick="sendChat()">➤</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REPORTS PAGE -->
+      <div class="page" id="page-reports">
+        <div class="pg-hdr"><div class="pg-title">REPORTS</div><div class="pg-sub">Export security findings</div></div>
+        <div class="panel">
+          <div class="panel-hdr"><div class="panel-title">Export Options</div></div>
+          <div class="panel-body">
+            <div class="g3">
+              <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:1.3rem">
+                <div style="font-family:var(--mono);font-size:.52rem;color:var(--g);letter-spacing:.15em;margin-bottom:.5rem">TXT</div>
+                <div style="font-family:var(--display);font-size:1rem;color:var(--white);letter-spacing:.04em;margin-bottom:.4rem">Full Report</div>
+                <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:1.6;margin-bottom:1rem">Complete scan results with all findings and CVSS scores.</div>
+                <button onclick="exportTxt()" style="font-family:var(--mono);font-size:.58rem;font-weight:700;letter-spacing:.1em;padding:.5rem 1rem;background:var(--g);color:#040810;border:none;border-radius:5px;cursor:pointer">DOWNLOAD →</button>
+              </div>
+              <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:1.3rem">
+                <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.5rem">JSON</div>
+                <div style="font-family:var(--display);font-size:1rem;color:var(--white);letter-spacing:.04em;margin-bottom:.4rem">Raw Scan Data</div>
+                <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:1.6;margin-bottom:1rem">Machine-readable JSON for integration with SIEM or other tools.</div>
+                <button onclick="exportJson()" style="font-family:var(--mono);font-size:.58rem;font-weight:700;letter-spacing:.1em;padding:.5rem 1rem;background:rgba(0,212,255,.12);color:var(--g2);border:1px solid rgba(0,212,255,.2);border-radius:5px;cursor:pointer">DOWNLOAD →</button>
+              </div>
+              <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:1.3rem;opacity:.5">
+                <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted);letter-spacing:.15em;margin-bottom:.5rem">PDF</div>
+                <div style="font-family:var(--display);font-size:1rem;color:var(--white);letter-spacing:.04em;margin-bottom:.4rem">Executive Summary</div>
+                <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:1.6;margin-bottom:1rem">Requires backend PDF generation — add via FastAPI + WeasyPrint.</div>
+                <button disabled style="font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;padding:.5rem 1rem;background:rgba(255,255,255,.04);color:var(--muted);border:1px solid rgba(255,255,255,.06);border-radius:5px;cursor:not-allowed">BACKEND NEEDED</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel" id="allIssuesPanel">
+          <div class="panel-hdr"><div class="panel-title">All Issues</div></div>
+          <div class="panel-body" id="allIssuesBody">
+            <div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">Run a scan to see all issues</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADMIN PAGE -->
+      <div class="page" id="page-admin">
+        <div class="pg-hdr"><div class="pg-title">ADMIN PANEL</div><div class="pg-sub">Site management and monitoring</div></div>
+        <div class="g4">
+          <div class="sc sc-g"><div class="sc-label">Registered Users</div><div class="sc-value" id="adminUserCount" style="color:var(--g)">—</div></div>
+          <div class="sc sc-b"><div class="sc-label">Page Views</div><div class="sc-value" style="color:var(--g2)">247</div><div class="sc-delta">Demo data</div></div>
+          <div class="sc sc-p"><div class="sc-label">Scans Run</div><div class="sc-value" id="adminScanCount" style="color:var(--g3)">—</div></div>
+          <div class="sc sc-r"><div class="sc-label">Pending Tasks</div><div class="sc-value" style="color:var(--danger)">5</div><div class="sc-delta">See below</div></div>
+        </div>
+        <div class="g2">
+          <div class="panel">
+            <div class="panel-hdr"><div class="panel-title">Pending Tasks</div></div>
+            <div class="panel-body">
+              <table class="tbl"><thead><tr><th>Task</th><th>Priority</th><th>Status</th></tr></thead><tbody>
+                <tr><td>Upload CV to assets/</td><td><span class="badge b-critical">CRITICAL</span></td><td><span class="badge b-medium">PENDING</span></td></tr>
+                <tr><td>Add GitHub profile URL</td><td><span class="badge b-high">HIGH</span></td><td><span class="badge b-medium">PENDING</span></td></tr>
+                <tr><td>Configure domain email</td><td><span class="badge b-high">HIGH</span></td><td><span class="badge b-medium">PENDING</span></td></tr>
+                <tr><td>Update TryHackMe rank</td><td><span class="badge b-medium">MEDIUM</span></td><td><span class="badge b-medium">PENDING</span></td></tr>
+                <tr><td>Add LinkedIn URL</td><td><span class="badge b-medium">MEDIUM</span></td><td><span class="badge b-medium">PENDING</span></td></tr>
+              </tbody></table>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-hdr"><div class="panel-title">Registered Users</div></div>
+            <div class="panel-body" id="adminUsersTable"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- USERS PAGE -->
+      <div class="page" id="page-users">
+        <div class="pg-hdr"><div class="pg-title">USERS</div><div class="pg-sub">All registered accounts</div></div>
+        <div class="panel"><div class="panel-hdr"><div class="panel-title">User Directory</div></div><div class="panel-body" id="usersTable"></div></div>
+      </div>
+
+      <!-- INVOICES PAGE -->
+      <div class="page" id="page-invoices">
+        <div class="pg-hdr"><div class="pg-title">INVOICES</div><div class="pg-sub">Billing & payments</div></div>
+        <div class="panel"><div class="panel-hdr"><div class="panel-title">Invoice History</div></div>
+          <div class="panel-body">
+            <table class="tbl"><thead><tr><th>Invoice</th><th>Description</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead><tbody>
+              <tr><td>INV-001</td><td>Penetration Testing — Demo Corp</td><td>$1,200</td><td>2026-04-01</td><td><span class="badge b-ok">PAID</span></td></tr>
+              <tr><td>INV-002</td><td>Security Audit — Demo Ltd</td><td>$850</td><td>2026-05-01</td><td><span class="badge b-medium">PENDING</span></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROFILE PAGE -->
+      <div class="page" id="page-profile">
+        <div class="pg-hdr"><div class="pg-title">PROFILE</div><div class="pg-sub">Your account details</div></div>
+        <div class="profile-layout">
+          <div class="profile-card">
+            <div class="profile-av" id="profAv">PM</div>
+            <div class="profile-name" id="profName">—</div>
+            <div class="profile-role" id="profRole">—</div>
+            <div class="profile-email" id="profEmail">—</div>
+            <div class="pstat-grid">
+              <div class="pstat"><div class="pstat-n">3+</div><div class="pstat-l">PROJECTS</div></div>
+              <div class="pstat"><div class="pstat-n">8</div><div class="pstat-l">DOMAINS</div></div>
+              <div class="pstat"><div class="pstat-n" id="profScansCount">0</div><div class="pstat-l">SCANS</div></div>
+              <div class="pstat"><div class="pstat-n">BB</div><div class="pstat-l">BUG BOUNTY</div></div>
+            </div>
+          </div>
+          <div>
+            <div class="panel">
+              <div class="panel-hdr"><div class="panel-title">Edit Profile</div></div>
+              <div class="panel-body">
+                <div class="form-group"><label class="form-label">FULL NAME</label><input class="form-input" id="editName"/></div>
+                <div class="form-group"><label class="form-label">EMAIL</label><input class="form-input" id="editEmail" type="email"/></div>
+                <div class="form-group"><label class="form-label">GITHUB URL</label><input class="form-input" id="editGithub" placeholder="https://github.com/yourhandle"/></div>
+                <div class="form-group"><label class="form-label">LINKEDIN URL</label><input class="form-input" id="editLinkedin" placeholder="https://linkedin.com/in/yourhandle"/></div>
+                <div class="form-group"><label class="form-label">TRYHACKME RANK</label><input class="form-input" id="editTHM" placeholder="e.g. Top 5% · 12,000 pts"/></div>
+                <button class="save-btn" onclick="saveProfile()">SAVE CHANGES</button>
+                <span id="saveMsg" style="font-family:var(--mono);font-size:.58rem;color:var(--ok);margin-left:1rem;display:none">✓ Saved</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="../assets/auth.js"></script>
+<script>
+/* ═══════════════ AUTH GUARD ═══════════════ */
+const SESSION = AUTH.requireAuth('../login.html');
+if (!SESSION) throw new Error('Not authenticated');
+
+/* ═══════════════ SCAN DATA ═══════════════ */
+let SCAN = null;
+let scanCount = parseInt(localStorage.getItem('pm_scan_count')||'0');
+let dismissed = new Set();
+let chatHistory = [];
+
+const SEV_C = { critical:'rgba(255,59,92,.1)', high:'rgba(255,140,66,.1)', medium:'rgba(245,200,66,.08)', low:'rgba(77,217,172,.07)', ok:'rgba(77,217,172,.06)' };
+const SEV_B = { critical:'rgba(255,59,92,.25)', high:'rgba(255,140,66,.22)', medium:'rgba(245,200,66,.2)', low:'rgba(77,217,172,.17)', ok:'rgba(77,217,172,.15)' };
+const SEV_COL = { critical:'#ff3b5c', high:'#ff8c42', medium:'#f5c842', low:'#4dd9ac', ok:'#4dd9ac' };
+
+function badge(sev) {
+  return `<span class="badge b-${sev}">${sev}</span>`;
+}
+
+/* ═══════════════ MOCK SCANNER ═══════════════ */
+function mockScan() {
+  return {
+    timestamp: new Date().toISOString(),
+    hostname: 'prod-server-01',
+    os: 'Ubuntu 22.04.3 LTS',
+    kernel: '5.15.0-91-generic',
+    uptime: '47 days, 3h 22m',
+    security_score: 71,
+    open_ports: [
+      {port:22,service:'SSH',state:'open',risk:'medium',detail:'Root login enabled'},
+      {port:80,service:'HTTP',state:'open',risk:'high',detail:'Unencrypted traffic'},
+      {port:443,service:'HTTPS',state:'open',risk:'low',detail:'TLS 1.2/1.3 OK'},
+      {port:3306,service:'MySQL',state:'open',risk:'critical',detail:'Exposed to internet'},
+      {port:8080,service:'HTTP-Alt',state:'open',risk:'high',detail:'Dev server in production'},
+      {port:6379,service:'Redis',state:'open',risk:'critical',detail:'No authentication'},
+    ],
+    failed_logins:{last_24h:847,unique_ips:23,top_ip:'185.224.128.42',top_user:'root'},
+    firewall:{status:'inactive',tool:'ufw',rules_count:0},
+    outdated_packages:[
+      {name:'openssl',current:'3.0.2',latest:'3.0.13',severity:'critical'},
+      {name:'curl',current:'7.81.0',latest:'8.5.0',severity:'high'},
+      {name:'sudo',current:'1.9.9',latest:'1.9.15',severity:'medium'},
+      {name:'bash',current:'5.1.16',latest:'5.2.21',severity:'low'},
+      {name:'openssh-server',current:'8.9',latest:'9.6',severity:'high'},
+    ],
+    permissions:[
+      {path:'/etc/passwd',perms:'-rw-r--r--',risk:'ok',detail:'World-readable (normal)'},
+      {path:'/etc/shadow',perms:'-rw-r-----',risk:'ok',detail:'Root-only (correct)'},
+      {path:'/var/log/auth.log',perms:'-rw-rw-r--',risk:'medium',detail:'Group-writable log'},
+      {path:'/home/deploy/.ssh/authorized_keys',perms:'-rw-rw-r--',risk:'high',detail:'Too permissive SSH keys'},
+    ],
+    ssh_config:{root_login:'yes',password_auth:'yes',permit_empty_passwords:'no',max_auth_tries:6,port:22},
+    disk_encryption:{status:'none',detail:'LUKS not configured on /dev/sda'},
+    score_history:[
+      {date:'Jan',score:62},{date:'Feb',score:65},{date:'Mar',score:61},{date:'Apr',score:68},{date:'May',score:71}
+    ],
+    issues:[
+      {id:1,severity:'critical',title:'MySQL exposed to internet',category:'Network',cvss:9.8},
+      {id:2,severity:'critical',title:'Redis has no authentication',category:'Database',cvss:9.1},
+      {id:3,severity:'critical',title:'OpenSSL 3.0.2 — CVE-2024-0727',category:'Packages',cvss:8.7},
+      {id:4,severity:'high',title:'SSH root login enabled',category:'SSH',cvss:7.5},
+      {id:5,severity:'high',title:'Firewall completely inactive',category:'Network',cvss:7.2},
+      {id:6,severity:'high',title:'847 brute-force attempts in 24h',category:'Auth',cvss:7.0},
+      {id:7,severity:'high',title:'Dev server port 8080 open',category:'Network',cvss:6.8},
+      {id:8,severity:'medium',title:'SSH password authentication on',category:'SSH',cvss:5.3},
+      {id:9,severity:'medium',title:'3 users with sudo, no MFA',category:'Auth',cvss:5.0},
+      {id:10,severity:'low',title:'Disk encryption not configured',category:'Storage',cvss:3.1},
+    ],
+  };
+}
+
+/* ═══════════════ SCAN FLOW ═══════════════ */
+const STAGES = ['Enumerating open ports...','Checking SSH configuration...','Auditing packages...','Scanning file permissions...','Analysing auth logs...','Checking firewall...','Mapping attack surface...','Calculating risk score...'];
+
+async function startScan() {
+  nav('scan');
+  const btn = document.getElementById('scanBtn');
+  btn.disabled = true; btn.textContent = 'SCANNING...';
+  let p = 0, si = 0;
+  document.getElementById('scannerBody').innerHTML = `
+    <div class="scan-anim">
+      <div class="scan-ring">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(0,255,136,.07)" stroke-width="2"/>
+          <circle id="scanArc" cx="60" cy="60" r="52" fill="none" stroke="#00ff88" stroke-width="2"
+            stroke-dasharray="326" stroke-dashoffset="326" stroke-linecap="round" transform="rotate(-90 60 60)" style="transition:stroke-dashoffset .2s"/>
+        </svg>
+        <div class="scan-pct"><div class="scan-pct-num" id="scanPct">0%</div></div>
+      </div>
+      <div class="scan-stage" id="scanStage">${STAGES[0]}</div>
+      <div class="scan-chips">${['Ports','SSH','Packages','Permissions','Auth','Firewall','Surface','Score'].map(s=>`<span class="scan-chip" id="chip-${s}" style="background:rgba(255,255,255,.03);color:var(--muted);border:1px solid rgba(255,255,255,.05)">${s}</span>`).join('')}</div>
+    </div>`;
+  document.getElementById('scanResults').style.display = 'none';
+
+  const interval = setInterval(() => {
+    p = Math.min(p + Math.random()*8+3, 100);
+    const pct = Math.round(p);
+    const arc = document.getElementById('scanArc');
+    const pctEl = document.getElementById('scanPct');
+    if (arc) arc.style.strokeDashoffset = 326 - (326*pct/100);
+    if (pctEl) pctEl.textContent = pct + '%';
+    if (si < STAGES.length-1 && p > (si+1)*12) {
+      si++;
+      const stageEl = document.getElementById('scanStage');
+      if (stageEl) stageEl.textContent = STAGES[si];
+    }
+    const chips = ['Ports','SSH','Packages','Permissions','Auth','Firewall','Surface','Score'];
+    chips.forEach((c,i) => {
+      const el = document.getElementById('chip-'+c);
+      if (el && p > i*12.5) { el.style.background='rgba(0,255,136,.1)'; el.style.color='var(--g)'; el.style.borderColor='rgba(0,255,136,.2)'; }
+    });
+  }, 160);
+
+  await new Promise(r => setTimeout(r, 3400));
+  clearInterval(interval);
+  SCAN = mockScan();
+  scanCount++;
+  localStorage.setItem('pm_scan_count', scanCount);
+  dismissed = new Set();
+  btn.disabled = false; btn.textContent = 'NEW SCAN';
+
+  updateDashboard();
+  renderScanResults();
+  renderAlerts();
+  renderReports();
+  updateScanInfo();
+
+  document.getElementById('scannerBody').innerHTML = `
+    <div style="text-align:center;padding:2rem">
+      <div style="font-family:var(--display);font-size:1.8rem;color:var(--g);letter-spacing:.05em;margin-bottom:.5rem">SCAN COMPLETE ✓</div>
+      <div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);margin-bottom:1.5rem">${SCAN.hostname} · ${SCAN.issues.length} issues found · Score: ${SCAN.security_score}/100</div>
+      <button onclick="startScan()" style="font-family:var(--mono);font-size:.68rem;font-weight:700;letter-spacing:.14em;padding:.8rem 2rem;background:var(--g);color:#040810;border:none;border-radius:6px;cursor:pointer">RUN AGAIN →</button>
+    </div>`;
+  document.getElementById('scanResults').style.display = 'block';
+}
+
+function updateScanInfo() {
+  if (!SCAN) return;
+  document.getElementById('scanInfoBox').style.display = 'block';
+  document.getElementById('scanInfoHost').textContent = SCAN.hostname;
+  document.getElementById('scanInfoTime').textContent = new Date(SCAN.timestamp).toLocaleTimeString();
+}
+
+/* ═══════════════ DASHBOARD ═══════════════ */
+function updateDashboard() {
+  if (!SCAN) return;
+  const s = SCAN;
+  const scoreColor = s.security_score>=80?'var(--g)':s.security_score>=60?'#f5c842':'var(--danger)';
+  const crit = s.issues.filter(i=>i.severity==='critical').length;
+  const high = s.issues.filter(i=>i.severity==='high').length;
+  document.getElementById('s-score').textContent = s.security_score;
+  document.getElementById('s-score').style.color = scoreColor;
+  document.getElementById('s-score-d').textContent = s.security_score>=80?'Good':'Needs attention';
+  document.getElementById('s-crit').textContent = crit;
+  document.getElementById('s-crit-d').textContent = `${high} high severity`;
+  document.getElementById('s-ports').textContent = s.open_ports.length;
+  document.getElementById('s-ports-d').textContent = `${s.open_ports.filter(p=>p.risk==='critical').length} critical`;
+  document.getElementById('s-logins').textContent = s.failed_logins.last_24h;
+
+  // Trend chart
+  drawTrend(s.score_history);
+
+  // Severity breakdown
+  const sevs = ['critical','high','medium','low'];
+  document.getElementById('sevBreakdown').innerHTML = sevs.map(sev => {
+    const count = s.issues.filter(i=>i.severity===sev).length;
+    const pct = (count/s.issues.length)*100;
+    return `<div class="skill-row"><span class="skill-name">${sev.charAt(0).toUpperCase()+sev.slice(1)}</span><div class="skill-track"><div class="skill-fill" style="width:${pct}%;background:${SEV_COL[sev]}"></div></div><span class="skill-pct" style="color:${SEV_COL[sev]}">${count}</span></div>`;
+  }).join('');
+
+  // Activity
+  document.getElementById('activityFeed').innerHTML = [
+    {col:'dot-ok',text:`Scan complete — ${s.issues.length} issues found on ${s.hostname}`,time:'Just now'},
+    {col:'dot-danger',text:`${s.failed_logins.last_24h} brute-force attempts in last 24h from ${s.failed_logins.unique_ips} unique IPs`,time:'Just now'},
+    {col:'dot-danger',text:`Firewall status: ${s.firewall.status.toUpperCase()} — no ingress filtering active`,time:'Just now'},
+    {col:'dot-warn',text:`${s.outdated_packages.length} outdated packages — ${s.outdated_packages[0].name} has critical CVE`,time:'Just now'},
+    {col:'dot-info',text:`SSH root login enabled — high brute-force risk on port ${s.ssh_config.port}`,time:'Just now'},
+  ].map(a => `<div class="act-item"><div class="act-dot ${a.col}"></div><div class="act-text">${a.text}</div><div class="act-time">${a.time}</div></div>`).join('');
+
+  // Top issues
+  document.getElementById('topIssues').innerHTML = s.issues.slice(0,6).map(issue =>
+    `<div class="issue-row" style="background:${SEV_C[issue.severity]};border:1px solid ${SEV_B[issue.severity]}">
+      ${badge(issue.severity)}
+      <div style="flex:1;font-family:var(--mono);font-size:.62rem;color:var(--text2)">${issue.title}</div>
+      <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">CVSS ${issue.cvss}</div>
+      <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${issue.category}</div>
+    </div>`).join('');
+
+  // Alert badge
+  const critCount = s.issues.filter(i=>i.severity==='critical').length;
+  const badge2 = document.getElementById('sbAlertBadge');
+  badge2.textContent = critCount; badge2.style.display = critCount ? 'inline-block' : 'none';
+
+  // Profile scans
+  document.getElementById('profScansCount').textContent = scanCount;
+}
+
+function drawTrend(data) {
+  const svg = document.getElementById('trendSvg');
+  if (!svg || !data.length) return;
+  const W=400, H=160, pad=30;
+  const vals = data.map(d=>d.score);
+  const min=Math.min(...vals)-5, max=Math.max(...vals)+5;
+  const px = (i) => pad + (i/(data.length-1))*(W-2*pad);
+  const py = (v) => H-pad - ((v-min)/(max-min))*(H-2*pad);
+  const pts = data.map((d,i) => `${px(i)},${py(d.score)}`).join(' ');
+  const area = `${px(0)},${H-pad} ${pts} ${px(data.length-1)},${H-pad}`;
+  svg.innerHTML = `
+    <defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stop-color="#00ff88" stop-opacity=".15"/><stop offset="95%" stop-color="#00ff88" stop-opacity="0"/></linearGradient></defs>
+    <polygon points="${area}" fill="url(#tg)"/>
+    <polyline points="${pts}" fill="none" stroke="#00ff88" stroke-width="1.5" stroke-linejoin="round"/>
+    ${data.map((d,i)=>`<circle cx="${px(i)}" cy="${py(d.score)}" r="3" fill="#00ff88"/>
+    <text x="${px(i)}" y="${H-8}" text-anchor="middle" font-family="Azeret Mono" font-size="9" fill="#2a4a62">${d.date}</text>
+    <text x="${px(i)}" y="${py(d.score)-8}" text-anchor="middle" font-family="Azeret Mono" font-size="9" fill="#00ff88">${d.score}</text>`).join('')}`;
+}
+
+/* ═══════════════ SCAN RESULTS ═══════════════ */
+function renderScanResults() {
+  if (!SCAN) return;
+  const s = SCAN;
+  // Ports
+  document.getElementById('portsPanel').innerHTML = s.open_ports.map(p =>
+    `<div style="display:flex;align-items:center;gap:.8rem;padding:.5rem .7rem;background:${SEV_C[p.risk]};border:1px solid ${SEV_B[p.risk]};border-radius:5px;margin-bottom:.3rem">
+      <span style="font-family:var(--mono);font-size:.63rem;color:${SEV_COL[p.risk]};width:38px">${p.port}</span>
+      <span style="font-family:var(--mono);font-size:.6rem;color:var(--text2);width:65px">${p.service}</span>
+      <span style="font-family:var(--mono);font-size:.57rem;color:var(--muted);flex:1">${p.detail}</span>
+      ${badge(p.risk)}
+    </div>`).join('');
+  // SSH
+  document.getElementById('sshPanel').innerHTML = Object.entries(s.ssh_config).map(([k,v])=>{
+    const danger = (k==='root_login'&&v==='yes')||(k==='password_auth'&&v==='yes');
+    return `<div style="display:flex;justify-content:space-between;padding:.48rem .7rem;background:${danger?'rgba(255,59,92,.05)':'rgba(255,255,255,.02)'};border:1px solid ${danger?'rgba(255,59,92,.15)':'rgba(255,255,255,.04)'};border-radius:4px;margin-bottom:.3rem">
+      <span style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">${k}</span>
+      <span style="font-family:var(--mono);font-size:.6rem;color:${danger?'var(--danger)':'var(--ok)'}">${v}</span></div>`;
+  }).join('');
+  // Packages
+  document.getElementById('pkgPanel').innerHTML = s.outdated_packages.map(p =>
+    `<div style="display:flex;align-items:center;gap:.8rem;padding:.48rem .7rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:4px;margin-bottom:.3rem">
+      <span style="font-family:var(--mono);font-size:.6rem;color:var(--text2);flex:1">${p.name}</span>
+      <span style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">${p.current} → <span style="color:var(--g)">${p.latest}</span></span>
+      ${badge(p.severity)}
+    </div>`).join('');
+  // Auth
+  document.getElementById('authPanel').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:.7rem">
+      <div style="text-align:center;padding:1rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:6px">
+        <div style="font-family:var(--display);font-size:1.8rem;color:var(--danger)">${s.failed_logins.last_24h}</div>
+        <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">FAILED LOGINS (24h)</div>
+      </div>
+      <div style="text-align:center;padding:1rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:6px">
+        <div style="font-family:var(--display);font-size:1.8rem;color:var(--warn)">${s.failed_logins.unique_ips}</div>
+        <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">UNIQUE IPs</div>
+      </div>
+    </div>
+    <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.8">
+      Top attacker IP: <span style="color:var(--danger)">${s.failed_logins.top_ip}</span><br>
+      Firewall: <span style="color:${s.firewall.status==='inactive'?'var(--danger)':'var(--ok)'}">${s.firewall.status.toUpperCase()}</span><br>
+      Disk encryption: <span style="color:var(--muted)">${s.disk_encryption.status.toUpperCase()}</span>
+    </div>`;
+  // Permissions
+  document.getElementById('permsPanel').innerHTML = `<table class="tbl"><thead><tr><th>Path</th><th>Permissions</th><th>Detail</th><th>Risk</th></tr></thead><tbody>
+    ${s.permissions.map(p=>`<tr><td>${p.path}</td><td style="font-family:var(--mono);font-size:.58rem;color:var(--g2)">${p.perms}</td><td>${p.detail}</td><td>${badge(p.risk)}</td></tr>`).join('')}
+  </tbody></table>`;
+}
+
+/* ═══════════════ ALERTS ═══════════════ */
+function renderAlerts() {
+  if (!SCAN) return;
+  const alerts = [
+    {id:1,type:'critical',title:'Database exposed to internet',detail:`MySQL port 3306 and Redis 6379 are publicly accessible. ${SCAN.failed_logins.last_24h} brute-force attempts detected.`,time:'Just now'},
+    {id:2,type:'critical',title:'Firewall completely inactive',detail:`ufw is not running on ${SCAN.hostname}. No ingress/egress filtering active.`,time:'Just now'},
+    {id:3,type:'high',title:'SSH root login enabled',detail:`Direct root SSH access is permitted. Port ${SCAN.ssh_config.port} exposed with ${SCAN.failed_logins.last_24h} failed attempts.`,time:'Just now'},
+    {id:4,type:'high',title:'Critical package outdated',detail:`OpenSSL ${SCAN.outdated_packages[0].current} has CVE-2024-0727 (CVSS 8.7). Update to ${SCAN.outdated_packages[0].latest} immediately.`,time:'Just now'},
+    {id:5,type:'medium',title:'SSH password authentication enabled',detail:'Password-based SSH login is on. Switch to key-based authentication only.',time:'Just now'},
+  ];
+  const active = alerts.filter(a => !dismissed.has(a.id));
+  document.getElementById('alertsPanel').innerHTML = active.length ? active.map(a =>
+    `<div class="alert-box" style="background:${SEV_C[a.type]};border:1px solid ${SEV_B[a.type]}">
+      <div class="alert-bar" style="background:${SEV_COL[a.type]}"></div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:.35rem">
+          ${badge(a.type)}
+          <span style="font-family:var(--mono);font-size:.64rem;color:var(--white);flex:1">${a.title}</span>
+          <span style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${a.time}</span>
+        </div>
+        <div style="font-family:var(--mono);font-size:.59rem;color:var(--muted);line-height:1.65">${a.detail}</div>
+      </div>
+      <button onclick="dismiss(${a.id})" style="font-family:var(--mono);font-size:.55rem;color:var(--muted);background:none;border:none;cursor:pointer;padding:.2rem;align-self:flex-start">✕</button>
+    </div>`).join('') :
+    `<div class="panel"><div class="panel-body"><div style="font-family:var(--mono);font-size:.65rem;color:var(--ok);text-align:center;padding:2rem">✓ All alerts dismissed</div></div></div>`;
+}
+
+function dismiss(id) { dismissed.add(id); renderAlerts(); }
+function dismissAll() { if(SCAN) [1,2,3,4,5].forEach(i=>dismissed.add(i)); renderAlerts(); }
+
+/* ═══════════════ REPORTS ═══════════════ */
+function renderReports() {
+  if (!SCAN) return;
+  document.getElementById('allIssuesBody').innerHTML = SCAN.issues.map(issue =>
+    `<div class="issue-row" style="background:${SEV_C[issue.severity]};border:1px solid ${SEV_B[issue.severity]}">
+      ${badge(issue.severity)}
+      <div style="flex:1;font-family:var(--mono);font-size:.62rem;color:var(--text2)">${issue.title}</div>
+      <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${issue.category}</div>
+      <div style="font-family:var(--mono);font-size:.6rem;color:${SEV_COL[issue.severity]}">CVSS ${issue.cvss}</div>
+    </div>`).join('');
+}
+
+function exportTxt() {
+  if (!SCAN) { alert('Run a scan first.'); return; }
+  const s = SCAN;
+  const txt = `SECURITY AUDIT REPORT
+Generated: ${new Date(s.timestamp).toLocaleString()}
+Host: ${s.hostname} | ${s.os} | Kernel: ${s.kernel}
+Uptime: ${s.uptime}
+Security Score: ${s.security_score}/100
+Audited by: ${SESSION.name}
+
+═══════════════════════════════════
+CRITICAL ISSUES (${s.issues.filter(i=>i.severity==='critical').length})
+═══════════════════════════════════
+${s.issues.filter(i=>i.severity==='critical').map(i=>`• [CVSS ${i.cvss}] ${i.title} (${i.category})`).join('\n')}
+
+HIGH SEVERITY (${s.issues.filter(i=>i.severity==='high').length})
+${s.issues.filter(i=>i.severity==='high').map(i=>`• [CVSS ${i.cvss}] ${i.title} (${i.category})`).join('\n')}
+
+MEDIUM / LOW (${s.issues.filter(i=>['medium','low'].includes(i.severity)).length})
+${s.issues.filter(i=>['medium','low'].includes(i.severity)).map(i=>`• [CVSS ${i.cvss}] ${i.title}`).join('\n')}
+
+═══════════════════════════════════
+OPEN PORTS (${s.open_ports.length})
+═══════════════════════════════════
+${s.open_ports.map(p=>`• Port ${p.port} (${p.service}) — ${p.detail} [${p.risk.toUpperCase()}]`).join('\n')}
+
+═══════════════════════════════════
+SSH CONFIGURATION
+═══════════════════════════════════
+${Object.entries(s.ssh_config).map(([k,v])=>`• ${k}: ${v}`).join('\n')}
+
+FIREWALL STATUS: ${s.firewall.status.toUpperCase()} (${s.firewall.tool})
+FAILED LOGINS (24h): ${s.failed_logins.last_24h} from ${s.failed_logins.unique_ips} IPs
+TOP ATTACKER IP: ${s.failed_logins.top_ip}
+DISK ENCRYPTION: ${s.disk_encryption.status.toUpperCase()}
+
+═══════════════════════════════════
+OUTDATED PACKAGES (${s.outdated_packages.length})
+═══════════════════════════════════
+${s.outdated_packages.map(p=>`• ${p.name}: ${p.current} → ${p.latest} [${p.severity.toUpperCase()}]`).join('\n')}
+
+Report generated by PM::OFFSEC Security Dashboard v2.0
+erprakashmijar.com`;
+  const blob = new Blob([txt], {type:'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download=`security-audit-${s.hostname}-${Date.now()}.txt`; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportJson() {
+  if (!SCAN) { alert('Run a scan first.'); return; }
+  const blob = new Blob([JSON.stringify(SCAN, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download=`scan-data-${Date.now()}.json`; a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ═══════════════ AI CHAT ═══════════════ */
+const SYSTEM = `You are an expert cybersecurity analyst in a Security Audit Dashboard. Analyze Linux system scan results and give:
+1. Clear explanations of vulnerabilities (explain jargon)
+2. Exact remediation commands in bash code blocks
+3. Business impact context
+4. Priority ordering
+
+About Prakash Mijar's portfolio: offensive security professional, penetration tester, SOC analyst. Site: erprakashmijar.com
+
+Be concise, professional, and actionable. Format with clear sections.`;
+
+function initChat() {
+  chatHistory = [];
+  addBotMsg('Hello! I\'m your AI security assistant. Run a scan and ask me about any vulnerability — I\'ll explain the risk and give you exact remediation commands.');
+}
+
+function addBotMsg(text) {
+  const msgs = document.getElementById('chatMsgs');
+  const d = document.createElement('div');
+  d.className = 'msg msg-bot';
+  const now = new Date().toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'});
+  d.innerHTML = `<div class="msg-bubble">${text}</div><div class="msg-time">${now}</div>`;
+  msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addUserMsg(text) {
+  const msgs = document.getElementById('chatMsgs');
+  const d = document.createElement('div');
+  d.className = 'msg msg-user';
+  const now = new Date().toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'});
+  d.innerHTML = `<div class="msg-bubble">${text}</div><div class="msg-time">${now}</div>`;
+  msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('chatMsgs');
+  const d = document.createElement('div');
+  d.className = 'msg msg-bot'; d.id = 'typing';
+  d.innerHTML = `<div class="typing"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+  msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
+}
+
+function hideTyping() { const t=document.getElementById('typing'); if(t)t.remove(); }
+
+async function sendChat(text) {
+  const inp = document.getElementById('chatInput');
+  const msg = text || inp.value.trim();
+  if (!msg) return;
+  inp.value = ''; inp.style.height='auto';
+  document.getElementById('chatSug').style.display='none';
+  addUserMsg(msg);
+  chatHistory.push({role:'user',content: SCAN ? `Context: ${JSON.stringify({score:SCAN.security_score,issues:SCAN.issues.slice(0,5),ports:SCAN.open_ports,ssh:SCAN.ssh_config,firewall:SCAN.firewall,failed_logins:SCAN.failed_logins})}. Question: ${msg}` : msg});
+  showTyping();
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYSTEM,messages:chatHistory})
+    });
+    const data = await res.json();
+    hideTyping();
+    const reply = data.content?.[0]?.text || 'Sorry, I could not get a response.';
+    chatHistory.push({role:'assistant',content:reply});
+    addBotMsg(reply);
+  } catch(e) {
+    hideTyping();
+    addBotMsg('Connection error. Check that the API is accessible from this environment.');
+  }
+}
+
+async function runAI() {
+  if (!SCAN) { document.getElementById('aiOutput').innerHTML='<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">Run a scan first.</div>'; return; }
+  document.getElementById('runAiBtn').textContent = 'ANALYZING...';
+  document.getElementById('aiOutput').innerHTML = `<div style="display:flex;gap:5px;padding:1.5rem;justify-content:center">${[0,1,2].map(i=>`<div style="width:7px;height:7px;border-radius:50%;background:var(--g);animation:td .8s ease ${i*.15}s infinite"></div>`).join('')}</div>`;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',max_tokens:1000,
+        system:SYSTEM,
+        messages:[{role:'user',content:`Analyze this security scan and provide:
+1. Executive Summary (2-3 sentences for a non-technical audience)
+2. Top 3 Critical Risks with business impact
+3. Immediate Actions with exact bash commands
+4. 30-Day Remediation Roadmap
+
+Scan: ${JSON.stringify({score:SCAN.security_score,hostname:SCAN.hostname,issues:SCAN.issues,ssh:SCAN.ssh_config,firewall:SCAN.firewall,failed_logins:SCAN.failed_logins,outdated:SCAN.outdated_packages.slice(0,3)})}`}]
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || 'Analysis unavailable.';
+    document.getElementById('aiOutput').innerHTML = `<div style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85;white-space:pre-wrap;max-height:500px;overflow-y:auto">${reply}</div>`;
+  } catch(e) {
+    document.getElementById('aiOutput').innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted)">Error connecting to AI. Check API access.</div>';
+  }
+  document.getElementById('runAiBtn').textContent = 'RE-ANALYZE →';
+}
+
+/* ═══════════════ ADMIN ═══════════════ */
+function renderAdmin() {
+  const users = AUTH.getAllUsers();
+  document.getElementById('adminUserCount').textContent = users.length;
+  document.getElementById('adminScanCount').textContent = scanCount;
+  const html = `<table class="tbl"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th></tr></thead><tbody>
+    ${users.map(u=>`<tr><td>${u.name}</td><td style="color:var(--g2)">${u.email}</td><td>${badge(u.role==='admin'?'critical':u.role==='client'?'medium':'low').replace(/\bfalse\b/,u.role)}<span class="badge ${u.role==='admin'?'b-critical':u.role==='client'?'b-medium':'b-ok'}">${u.role}</span></td><td>${u.created||'—'}</td></tr>`).join('')}
+  </tbody></table>`;
+  document.getElementById('adminUsersTable').innerHTML = html;
+  document.getElementById('usersTable').innerHTML = html;
+}
+
+/* ═══════════════ PROFILE ═══════════════ */
+function loadProfile() {
+  document.getElementById('profAv').textContent = SESSION.avatar || SESSION.name[0];
+  document.getElementById('profName').textContent = SESSION.name;
+  document.getElementById('profRole').textContent = SESSION.role.toUpperCase() + ' ACCOUNT';
+  document.getElementById('profEmail').textContent = SESSION.email;
+  document.getElementById('profScansCount').textContent = scanCount;
+  const prefs = JSON.parse(localStorage.getItem('pm_prefs_'+SESSION.id)||'{}');
+  document.getElementById('editName').value = SESSION.name;
+  document.getElementById('editEmail').value = SESSION.email;
+  document.getElementById('editGithub').value = prefs.github||'';
+  document.getElementById('editLinkedin').value = prefs.linkedin||'';
+  document.getElementById('editTHM').value = prefs.thm||'';
+}
+
+function saveProfile() {
+  const prefs = { github:document.getElementById('editGithub').value, linkedin:document.getElementById('editLinkedin').value, thm:document.getElementById('editTHM').value };
+  localStorage.setItem('pm_prefs_'+SESSION.id, JSON.stringify(prefs));
+  const msg = document.getElementById('saveMsg');
+  msg.style.display='inline'; setTimeout(()=>msg.style.display='none',2000);
+}
+
+/* ═══════════════ NAVIGATION ═══════════════ */
+function nav(page) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
+  const target = document.getElementById('page-'+page);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(b=>{
+    if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes(`'${page}'`)) b.classList.add('active');
+  });
+  if (page==='admin'||page==='users') renderAdmin();
+  if (page==='profile') loadProfile();
+  window.scrollTo(0,0);
+}
+
+/* ═══════════════ INIT ═══════════════ */
+function init() {
+  // Header
+  const roleClass = {admin:'rb-admin',client:'rb-client',user:'rb-user'};
+  document.getElementById('hdrRole').textContent = SESSION.role.toUpperCase();
+  document.getElementById('hdrRole').className = 'role-badge ' + (roleClass[SESSION.role]||'rb-user');
+  document.getElementById('hdrAvatar').textContent = SESSION.avatar || SESSION.name[0];
+  document.getElementById('hdrName').textContent = SESSION.name.split(' ')[0];
+  document.getElementById('dashWelcome').textContent = `WELCOME BACK — ${SESSION.name.toUpperCase()}`;
+  // Role-based nav
+  if (SESSION.role === 'admin') document.getElementById('adminSection').style.display='block';
+  if (SESSION.role === 'client') document.getElementById('clientSection').style.display='block';
+  // Chat
+  initChat();
+  // Enter key for chat
+  document.getElementById('chatInput').addEventListener('keydown', e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}});
+  document.getElementById('chatInput').addEventListener('input', function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,76)+'px';});
+}
+
+init();
+</script>
+</body>
+</html>

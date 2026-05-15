@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign In — PM::OFFSEC Dashboard</title>
+  <meta name="robots" content="noindex"/>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <meta name="theme-color" content="#00ff88"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/auth.css"/>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<div id="cur"></div><div id="cur2"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">PM<span>::</span>OFFSEC</a>
+  <a href="index.html" class="nav-back">← Back to Portfolio</a>
+</nav>
+
+<main class="auth-main">
+  <div class="auth-wrap">
+    <div class="auth-logo">SEC<span>AUDIT</span></div>
+    <div class="auth-subtitle">CYBERSECURITY DASHBOARD · v2.0</div>
+
+    <div class="auth-card">
+      <div class="auth-card-bar"></div>
+      <div class="auth-card-body">
+
+        <div class="auth-tabs">
+          <a href="login.html"    class="auth-tab active">SIGN IN</a>
+          <a href="register.html" class="auth-tab">REGISTER</a>
+        </div>
+
+        <div class="alert alert-error" id="alertError"></div>
+        <div class="alert alert-success" id="alertSuccess"></div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">EMAIL ADDRESS</label>
+          <input class="form-input" id="email" type="email" placeholder="you@example.com" autocomplete="email"/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">PASSWORD</label>
+          <div class="input-wrap">
+            <input class="form-input" id="password" type="password" placeholder="••••••••" autocomplete="current-password"/>
+            <span class="input-icon" onclick="togglePw('password',this)">👁</span>
+          </div>
+        </div>
+
+        <button class="btn-submit" id="loginBtn" onclick="doLogin()">
+          <span id="loginBtnText">SIGN IN →</span>
+        </button>
+
+        <div class="or-divider"><span>OR TRY A DEMO ROLE</span></div>
+
+        <div class="demo-section">
+          <div class="demo-label">ONE-CLICK DEMO ACCESS</div>
+          <div class="demo-roles">
+            <span class="demo-role dr-admin" onclick="demoLogin('admin')">⬡ ADMIN</span>
+            <span class="demo-role dr-client" onclick="demoLogin('client')">◈ CLIENT</span>
+            <span class="demo-role dr-user" onclick="demoLogin('user')">◉ USER</span>
+          </div>
+          <div class="demo-hint">
+            Admin: <strong>admin@erprakashmijar.com / Admin@2026</strong><br/>
+            Client: <strong>client@demo.com / Client@123</strong>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:1.2rem;font-family:var(--mono);font-size:.6rem;color:var(--muted)">
+      Don't have an account? <a href="register.html" style="color:var(--g2);text-decoration:none">Create one →</a>
+    </div>
+  </div>
+</main>
+
+<div class="auth-footer">
+  &copy; 2026 Prakash Mijar · <a href="index.html">erprakashmijar.com</a>
+</div>
+
+<script src="assets/auth.js"></script>
+<script>
+  /* Redirect if already logged in */
+  AUTH.requireGuest('dashboard/index.html');
+
+  initCanvas('bgCanvas');
+  initCursor();
+
+  function showError(msg) {
+    const el = document.getElementById('alertError');
+    el.textContent = msg; el.classList.add('show');
+    document.getElementById('alertSuccess').classList.remove('show');
+    setTimeout(() => el.classList.remove('show'), 5000);
+  }
+
+  function setLoading(on) {
+    const btn = document.getElementById('loginBtn');
+    const txt = document.getElementById('loginBtnText');
+    btn.disabled = on;
+    txt.innerHTML = on ? '<span class="spinner"></span>SIGNING IN...' : 'SIGN IN →';
+  }
+
+  async function doLogin() {
+    const email = document.getElementById('email').value.trim();
+    const pass  = document.getElementById('password').value;
+    if (!email || !pass) { showError('Please enter your email and password.'); return; }
+    setLoading(true);
+    await new Promise(r => setTimeout(r, 600)); /* brief UX delay */
+    const result = AUTH.login(email, pass);
+    if (result.ok) {
+      const succ = document.getElementById('alertSuccess');
+      succ.textContent = `Welcome back, ${result.session.name.split(' ')[0]}! Redirecting...`;
+      succ.classList.add('show');
+      setTimeout(() => window.location.href = 'dashboard/index.html', 900);
+    } else {
+      setLoading(false);
+      showError(result.error);
+      document.getElementById('password').value = '';
+      document.getElementById('password').classList.add('error');
+      setTimeout(() => document.getElementById('password').classList.remove('error'), 2000);
+    }
+  }
+
+  function demoLogin(role) {
+    const creds = { admin: ['admin@erprakashmijar.com','Admin@2026'], client: ['client@demo.com','Client@123'], user: null };
+    if (role === 'user') {
+      /* Create a quick demo user if not exists */
+      const users = AUTH.getUsers();
+      if (!users.find(u => u.email === 'demo@user.com')) {
+        AUTH.saveUsers([...users, { id:'demo-u', name:'Demo User', email:'demo@user.com', password:'Demo@1234', role:'user', avatar:'DU', created:'2026-01-01' }]);
+      }
+      document.getElementById('email').value = 'demo@user.com';
+      document.getElementById('password').value = 'Demo@1234';
+    } else {
+      document.getElementById('email').value = creds[role][0];
+      document.getElementById('password').value = creds[role][1];
+    }
+    doLogin();
+  }
+
+  function togglePw(id, icon) {
+    const inp = document.getElementById(id);
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    icon.textContent = inp.type === 'password' ? '👁' : '🙈';
+  }
+
+  /* Enter key */
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+</script>
+</body>
+</html>

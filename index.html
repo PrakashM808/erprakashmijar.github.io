@@ -3,602 +3,266 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-  <title>Prakash Mijar — Offensive Cybersecurity</title>
-  <meta name="description" content="Prakash Mijar — offensive cybersecurity professional. Penetration testing, web exploitation, network attacks, red team operations."/>
+  <title>Prakash Mijar — Cybersecurity Professional</title>
+  <meta name="description" content="Prakash Mijar — Cybersecurity professional specialising in SOC analysis, penetration testing, and red team operations. View projects, skills, labs, and case studies."/>
+  <meta name="keywords" content="SOC Analyst, Penetration Tester, Cybersecurity Portfolio, Red Team, Bug Bounty, Ethical Hacking, Web Exploitation, OSINT, Prakash Mijar"/>
   <meta name="author" content="Prakash Mijar"/>
   <meta name="robots" content="index, follow"/>
   <link rel="canonical" href="https://erprakashmijar.com/"/>
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://erprakashmijar.com/"/>
-  <meta property="og:title" content="Prakash Mijar — Offensive Cybersecurity"/>
-  <meta property="og:description" content="Penetration testing, red team operations, and offensive security research."/>
+  <meta property="og:title" content="Prakash Mijar — Cybersecurity Professional | SOC · Pentest · Red Team"/>
+  <meta property="og:description" content="SOC Analyst · Penetration Tester · Security Engineer. Projects, skills, and labs."/>
   <meta property="og:image" content="https://erprakashmijar.com/og-image.png"/>
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="Prakash Mijar — Offensive Cybersecurity"/>
   <meta name="twitter:image" content="https://erprakashmijar.com/og-image.png"/>
   <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
   <meta name="theme-color" content="#00ff88"/>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Prakash Mijar","url":"https://erprakashmijar.com","jobTitle":"Offensive Cybersecurity Professional","knowsAbout":["Penetration Testing","Web Exploitation","OSINT","Network Attacks","Post-Exploitation","API Security"],"contactPoint":{"@type":"ContactPoint","email":"contact@erprakashmijar.com"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Prakash Mijar","url":"https://erprakashmijar.com","jobTitle":"Cybersecurity Professional","description":"SOC Analyst, Penetration Tester, and Security Engineer","knowsAbout":["Penetration Testing","SOC Analysis","Web Exploitation","OSINT","Network Security","Incident Response"],"contactPoint":{"@type":"ContactPoint","email":"contact@erprakashmijar.com"}}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
-
-  <style>
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
-  :root{
-    --bg:#040810;
-    --bg2:#070d18;
-    --g:#00ff88;
-    --g2:#00d4ff;
-    --g3:#7b2fff;
-    --glow:rgba(0,255,136,.15);
-    --glow2:rgba(0,212,255,.12);
-    --border:rgba(0,255,136,.2);
-    --border2:rgba(0,212,255,.15);
-    --muted:#3a5a6a;
-    --text:#b0ccd8;
-    --mono:'Space Mono',monospace;
-    --display:'Bebas Neue',sans-serif;
-    --body:'Inter',sans-serif;
-  }
-
-  html{scroll-behavior:smooth}
-  body{background:var(--bg);color:var(--text);font-family:var(--body);overflow-x:hidden;cursor:none}
-
-  /* ── CANVAS BG ── */
-  #bgCanvas{position:fixed;inset:0;z-index:0;opacity:.6}
-
-  /* ── NOISE GRAIN ── */
-  body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:1;opacity:.4}
-
-  /* ── CURSOR ── */
-  #cur{position:fixed;width:8px;height:8px;background:var(--g);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s;box-shadow:0 0 12px var(--g),0 0 24px rgba(0,255,136,.4)}
-  #cur2{position:fixed;width:32px;height:32px;border:1px solid rgba(0,255,136,.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .2s,height .2s,border-color .2s}
-  @media(hover:none){#cur,#cur2{display:none}body{cursor:auto}}
-
-  /* ── NAV ── */
-  nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 3rem;background:rgba(4,8,16,.7);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid rgba(0,255,136,.08)}
-  .nav-logo{font-family:var(--mono);font-size:.8rem;color:var(--g);letter-spacing:.15em;text-shadow:0 0 20px rgba(0,255,136,.5)}
-  .nav-logo span{color:var(--g2)}
-  .nav-links{display:flex;gap:2rem;list-style:none}
-  .nav-links a{font-family:var(--mono);font-size:.68rem;color:var(--muted);text-decoration:none;letter-spacing:.12em;transition:color .2s,text-shadow .2s;cursor:none}
-  .nav-links a:hover{color:var(--g);text-shadow:0 0 12px rgba(0,255,136,.6)}
-  .nav-toggle{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer}
-  .nav-toggle span{display:block;width:20px;height:1.5px;background:var(--g)}
-  @media(max-width:640px){nav{padding:1rem 1.2rem}.nav-toggle{display:flex}.nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;background:rgba(4,8,16,.97);border-bottom:1px solid var(--border);padding:.5rem 0}.nav-links.open{display:flex}.nav-links li a{display:block;padding:.7rem 1.2rem}}
-
-  /* ── SECTIONS ── */
-  section{position:relative;z-index:2}
-  .wrap{max-width:1200px;margin:0 auto;padding:0 3rem}
-  @media(max-width:640px){.wrap{padding:0 1.2rem}}
-  .s-label{font-family:var(--mono);font-size:.62rem;color:var(--g2);letter-spacing:.3em;margin-bottom:.8rem;text-transform:uppercase}
-  .s-title{font-family:var(--display);font-size:clamp(2.8rem,6vw,5rem);color:#fff;letter-spacing:.03em;line-height:.95;margin-bottom:3rem;text-shadow:0 0 60px rgba(0,255,136,.1)}
-  .s-title span{color:var(--g)}
-  .s-title span.b{color:var(--g2)}
-
-  /* ── HERO ── */
-  .hero{min-height:100vh;display:flex;align-items:center;padding:8rem 0 4rem;position:relative;overflow:hidden}
-  .hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
-  @media(max-width:900px){.hero-inner{grid-template-columns:1fr}}
-
-  .hero-left{position:relative}
-  .hero-eyebrow{font-family:var(--mono);font-size:.68rem;color:var(--g);letter-spacing:.25em;margin-bottom:1.5rem;opacity:0;animation:up .6s .1s forwards;display:flex;align-items:center;gap:.8rem}
-  .hero-eyebrow::before{content:'';display:block;width:32px;height:1px;background:var(--g);box-shadow:0 0 8px var(--g)}
-  .hero-h1{font-family:var(--display);font-size:clamp(4rem,9vw,8.5rem);line-height:.9;letter-spacing:.02em;color:#fff;opacity:0;animation:up .8s .3s forwards}
-  .hero-h1 .line2{color:var(--g);display:block;text-shadow:0 0 80px rgba(0,255,136,.4),0 0 120px rgba(0,255,136,.2)}
-  .hero-h1 .line3{color:var(--g2);display:block;text-shadow:0 0 80px rgba(0,212,255,.3)}
-  .hero-sub{font-family:var(--mono);font-size:.8rem;color:var(--muted);line-height:1.9;max-width:440px;margin-top:1.8rem;opacity:0;animation:up .7s .5s forwards}
-  .hero-ctas{display:flex;gap:1rem;flex-wrap:wrap;margin-top:2.5rem;opacity:0;animation:up .7s .7s forwards}
-
-  .btn{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;padding:.9rem 2rem;text-decoration:none;border-radius:3px;transition:all .25s;display:inline-block;cursor:none;position:relative;overflow:hidden}
-  .btn::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .25s}
-  .btn-g{background:var(--g);color:#040810;font-weight:700}
-  .btn-g::before{background:linear-gradient(135deg,#00ff88,#00d4ff)}
-  .btn-g:hover::before{opacity:1}
-  .btn-g:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,255,136,.35)}
-  .btn-o{border:1px solid var(--border);color:var(--g);background:transparent}
-  .btn-o:hover{background:var(--glow);border-color:var(--g);transform:translateY(-2px);box-shadow:0 0 24px rgba(0,255,136,.15)}
-
-  /* Terminal card */
-  .hero-right{opacity:0;animation:up .9s .5s forwards}
-  .terminal{background:rgba(7,13,24,.9);border:1px solid rgba(0,255,136,.15);border-radius:8px;overflow:hidden;box-shadow:0 0 80px rgba(0,255,136,.08),0 24px 80px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.04)}
-  .term-bar{display:flex;align-items:center;gap:.6rem;padding:.8rem 1rem;background:rgba(0,0,0,.3);border-bottom:1px solid rgba(0,255,136,.08)}
-  .term-dot{width:11px;height:11px;border-radius:50%}
-  .term-dot.r{background:#ff5f57}.term-dot.y{background:#febc2e}.term-dot.g{background:#28c840}
-  .term-title{font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-left:auto;letter-spacing:.1em}
-  .term-body{padding:1.5rem;font-family:var(--mono);font-size:.72rem;line-height:2;min-height:280px}
-  .term-line{display:flex;gap:.5rem;opacity:0;animation:termline .3s forwards}
-  .term-prompt{color:var(--g2)}.term-cmd{color:#e2e8f0}.term-out{color:var(--muted);padding-left:1rem}
-  .term-out.hit{color:var(--g)}
-  .term-cursor{display:inline-block;width:8px;height:13px;background:var(--g);animation:blink 1s step-end infinite;vertical-align:text-bottom}
-
-  /* Hero stats strip */
-  .hero-stats{display:flex;gap:2rem;margin-top:2.5rem;opacity:0;animation:up .7s .9s forwards;flex-wrap:wrap}
-  .hstat{border-left:2px solid var(--border);padding-left:1rem}
-  .hstat-n{font-family:var(--display);font-size:2rem;color:var(--g);line-height:1;text-shadow:0 0 20px rgba(0,255,136,.4)}
-  .hstat-l{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.12em;margin-top:.2rem}
-
-  /* ── STACK SECTION ── */
-  .stack-section{padding:8rem 0;border-top:1px solid rgba(0,255,136,.06)}
-
-  .stack-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.06);margin-bottom:1px}
-  @media(max-width:1000px){.stack-grid{grid-template-columns:repeat(2,1fr)}}
-  @media(max-width:500px){.stack-grid{grid-template-columns:1fr}}
-
-  .stack-cat{background:var(--bg);padding:2rem;cursor:pointer;transition:background .2s;position:relative;overflow:hidden}
-  .stack-cat::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--g),var(--g2));transform:scaleX(0);transform-origin:left;transition:transform .3s}
-  .stack-cat:hover::after,.stack-cat.active::after{transform:scaleX(1)}
-  .stack-cat:hover,.stack-cat.active{background:rgba(0,255,136,.04)}
-  .cat-num{font-family:var(--mono);font-size:.62rem;color:var(--muted);letter-spacing:.15em;margin-bottom:.8rem}
-  .cat-name{font-family:var(--display);font-size:clamp(1rem,1.8vw,1.4rem);color:#fff;letter-spacing:.04em;margin-bottom:.5rem;line-height:1;word-break:keep-all;overflow-wrap:normal;white-space:nowrap}
-  .cat-sub{font-family:var(--mono);font-size:.62rem;color:var(--muted);line-height:1.6}
-  .cat-arrow{position:absolute;top:1.5rem;right:1.5rem;font-size:.7rem;color:var(--border);transition:color .2s,transform .2s}
-  .stack-cat:hover .cat-arrow,.stack-cat.active .cat-arrow{color:var(--g);transform:translateX(3px)}
-
-  /* Detail panel */
-  .stack-detail-wrap{background:var(--bg);border:1px solid rgba(0,255,136,.06);border-top:none;display:none;position:relative;overflow:hidden}
-  .stack-detail-wrap.open{display:block}
-  .stack-detail-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--g),var(--g2),var(--g3))}
-  .stack-detail-inner{display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:340px}
-  @media(max-width:800px){.stack-detail-inner{grid-template-columns:1fr}}
-
-  .detail-left{padding:2.5rem;border-right:1px solid rgba(0,255,136,.06)}
-  .detail-right{padding:2.5rem}
-  .detail-cat-label{font-family:var(--mono);font-size:.6rem;color:var(--g2);letter-spacing:.25em;margin-bottom:1rem}
-  .detail-title{font-family:var(--display);font-size:2.4rem;color:#fff;letter-spacing:.04em;margin-bottom:1rem;line-height:1}
-  .detail-desc{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.9;margin-bottom:1.5rem}
-  .detail-tools-label{font-family:var(--mono);font-size:.6rem;color:var(--g);letter-spacing:.2em;margin-bottom:.6rem}
-  .detail-tools{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.5rem}
-  .tool-tag{font-family:var(--mono);font-size:.6rem;color:var(--g);background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.15);padding:.22rem .55rem;border-radius:2px;letter-spacing:.06em;transition:background .2s,border-color .2s}
-  .tool-tag:hover{background:rgba(0,255,136,.12);border-color:var(--g)}
-
-  .subs-title{font-family:var(--mono);font-size:.6rem;color:var(--g2);letter-spacing:.2em;margin-bottom:1rem}
-  .sub-items{display:flex;flex-direction:column;gap:.5rem}
-  .sub-item{display:flex;align-items:flex-start;gap:.8rem;padding:.8rem 1rem;background:rgba(0,212,255,.03);border:1px solid rgba(0,212,255,.07);border-radius:3px;cursor:pointer;transition:all .2s}
-  .sub-item:hover,.sub-item.active{background:rgba(0,212,255,.06);border-color:rgba(0,212,255,.2)}
-  .sub-item.active .sub-dot{background:var(--g2);box-shadow:0 0 8px var(--g2)}
-  .sub-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);margin-top:4px;flex-shrink:0;transition:all .2s}
-  .sub-name{font-family:var(--mono);font-size:.7rem;color:var(--text);letter-spacing:.06em}
-  .sub-tip{font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-top:.2rem;line-height:1.5}
-
-  /* sub detail */
-  .sub-detail-panel{display:none;margin-top:1.5rem;padding:1.5rem;background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.08);border-radius:4px}
-  .sub-detail-panel.open{display:block}
-  .sdp-title{font-family:var(--display);font-size:1.6rem;color:var(--g);letter-spacing:.04em;margin-bottom:.8rem}
-  .sdp-desc{font-family:var(--mono);font-size:.7rem;color:var(--muted);line-height:1.9;margin-bottom:1rem}
-  .sdp-tools{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1rem}
-  .sdp-list{list-style:none}
-  .sdp-list li{font-family:var(--mono);font-size:.68rem;color:var(--muted);padding:.3rem 0;border-bottom:1px solid rgba(0,255,136,.04);display:flex;gap:.5rem;line-height:1.6}
-  .sdp-list li::before{content:'▸';color:var(--g);flex-shrink:0}
-
-  /* ── PROJECTS ── */
-  .projects{padding:8rem 0;border-top:1px solid rgba(0,255,136,.06)}
-  .projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
-  @media(max-width:900px){.projects-grid{grid-template-columns:1fr}}
-
-  .proj-card{background:var(--bg2);border:1px solid rgba(0,255,136,.08);border-radius:6px;overflow:hidden;transition:transform .25s,box-shadow .25s,border-color .25s;position:relative}
-  .proj-card:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,.4),0 0 40px rgba(0,255,136,.06);border-color:rgba(0,255,136,.25)}
-  .proj-card-top{height:5px;background:linear-gradient(90deg,var(--g),var(--g2))}
-  .proj-card.blue .proj-card-top{background:linear-gradient(90deg,var(--g2),var(--g3))}
-  .proj-card.purple .proj-card-top{background:linear-gradient(90deg,var(--g3),var(--g))}
-  .proj-body{padding:1.8rem}
-  .proj-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem}
-  .proj-tag{font-family:var(--mono);font-size:.58rem;color:var(--g2);background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.15);padding:.15rem .5rem;border-radius:2px;letter-spacing:.08em}
-  .proj-card.blue .proj-tag{color:var(--g);background:rgba(0,255,136,.06);border-color:rgba(0,255,136,.15)}
-  .proj-title{font-family:var(--display);font-size:1.5rem;color:#fff;letter-spacing:.04em;margin-bottom:.7rem;line-height:1.1}
-  .proj-desc{font-family:var(--mono);font-size:.68rem;color:var(--muted);line-height:1.85;margin-bottom:1.2rem}
-  .proj-link{font-family:var(--mono);font-size:.62rem;color:var(--g);text-decoration:none;letter-spacing:.12em;display:inline-flex;align-items:center;gap:.4rem;transition:gap .2s,color .2s;cursor:none}
-  .proj-link:hover{gap:.7rem;color:#fff}
-
-  /* ── PLATFORMS ── */
-  .platforms{padding:8rem 0;border-top:1px solid rgba(0,255,136,.06)}
-  .plat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
-  @media(max-width:900px){.plat-grid{grid-template-columns:repeat(2,1fr)}}
-  @media(max-width:500px){.plat-grid{grid-template-columns:1fr}}
-
-  .plat-card{background:var(--bg2);border:1px solid rgba(0,212,255,.08);border-radius:6px;padding:1.8rem;transition:all .25s;position:relative;overflow:hidden}
-  .plat-card::before{content:'';position:absolute;top:-50%;right:-50%;width:100%;height:100%;background:radial-gradient(circle,rgba(0,212,255,.04) 0%,transparent 60%);pointer-events:none}
-  .plat-card:hover{border-color:rgba(0,212,255,.25);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.3),0 0 30px rgba(0,212,255,.05)}
-  .plat-icon{font-family:var(--mono);font-size:1.3rem;color:var(--g2);margin-bottom:1rem}
-  .plat-name{font-family:var(--display);font-size:1.3rem;color:#fff;letter-spacing:.04em;margin-bottom:.3rem}
-  .plat-rank{font-family:var(--mono);font-size:.62rem;color:var(--g);margin-bottom:.6rem;letter-spacing:.08em}
-  .plat-desc{font-family:var(--mono);font-size:.65rem;color:var(--muted);line-height:1.75;margin-bottom:1rem}
-  .plat-link{font-family:var(--mono);font-size:.6rem;color:var(--g2);text-decoration:none;letter-spacing:.12em;transition:color .2s;cursor:none}
-  .plat-link:hover{color:#fff}
-
-  /* ── BLUE TEAM ── */
-  .blueteam{padding:8rem 0;border-top:1px solid rgba(0,255,136,.06)}
-  .blue-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
-  @media(max-width:900px){.blue-grid{grid-template-columns:repeat(2,1fr)}}
-  @media(max-width:500px){.blue-grid{grid-template-columns:1fr}}
-
-  .blue-card{background:var(--bg2);border:1px solid rgba(123,47,255,.1);border-radius:6px;padding:1.8rem;transition:all .25s;position:relative;overflow:hidden}
-  .blue-card:hover{border-color:rgba(123,47,255,.3);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.3),0 0 30px rgba(123,47,255,.05)}
-  .blue-num{font-family:var(--mono);font-size:.6rem;color:#7b2fff;letter-spacing:.15em;margin-bottom:.8rem}
-  .blue-title{font-family:var(--display);font-size:1.2rem;color:#fff;letter-spacing:.04em;margin-bottom:.6rem}
-  .blue-desc{font-family:var(--mono);font-size:.65rem;color:var(--muted);line-height:1.75}
-
-  /* ── ABOUT ── */
-  .about{padding:8rem 0;border-top:1px solid rgba(0,255,136,.06)}
-  .about-inner{display:grid;grid-template-columns:1.2fr 1fr;gap:5rem;align-items:start}
-  @media(max-width:900px){.about-inner{grid-template-columns:1fr}}
-  .about-name{font-family:var(--display);font-size:clamp(3rem,7vw,6rem);color:#fff;letter-spacing:.03em;line-height:.9;margin-bottom:1.5rem}
-  .about-name span{display:block;color:var(--g);text-shadow:0 0 40px rgba(0,255,136,.3)}
-  .about-bio{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.95;margin-bottom:1.5rem}
-  .skill-grid{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:2rem}
-  .skill-tag{font-family:var(--mono);font-size:.6rem;color:var(--g);background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.12);padding:.3rem .7rem;border-radius:3px;letter-spacing:.08em;transition:all .2s}
-  .skill-tag:hover{background:rgba(0,255,136,.12);border-color:var(--g);transform:translateY(-1px)}
-  .socials{display:flex;gap:.8rem;flex-wrap:wrap}
-  .about-right{position:relative}
-  .stats-box{background:var(--bg2);border:1px solid rgba(0,255,136,.1);border-radius:8px;overflow:hidden}
-  .stats-box-top{padding:1.5rem 2rem;border-bottom:1px solid rgba(0,255,136,.06);display:flex;align-items:center;gap:.8rem}
-  .sb-dot{width:8px;height:8px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:blink 2s infinite}
-  .sb-label{font-family:var(--mono);font-size:.65rem;color:var(--g);letter-spacing:.12em}
-  .stats-grid{display:grid;grid-template-columns:1fr 1fr}
-  .stat-cell{padding:2rem;border-right:1px solid rgba(0,255,136,.06);border-bottom:1px solid rgba(0,255,136,.06);position:relative;overflow:hidden;transition:background .2s}
-  .stat-cell:hover{background:rgba(0,255,136,.03)}
-  .stat-cell:nth-child(even){border-right:none}
-  .stat-cell:nth-child(n+3){border-bottom:none}
-  .stat-n{font-family:var(--display);font-size:2.8rem;color:var(--g);line-height:1;text-shadow:0 0 30px rgba(0,255,136,.3)}
-  .stat-l{font-family:var(--mono);font-size:.58rem;color:var(--muted);letter-spacing:.14em;margin-top:.3rem}
-
-  /* ── CONTACT ── */
-  .contact{padding:8rem 0;border-top:1px solid rgba(0,255,136,.06)}
-  .contact-inner{text-align:center;max-width:700px;margin:0 auto;position:relative}
-  .contact-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(0,255,136,.06) 0%,transparent 70%);pointer-events:none;z-index:-1}
-  .contact-email{display:inline-block;font-family:var(--display);font-size:clamp(1.8rem,4vw,3rem);color:var(--g);text-decoration:none;letter-spacing:.06em;transition:color .2s,text-shadow .2s;text-shadow:0 0 30px rgba(0,255,136,.2);cursor:none}
-  .contact-email:hover{color:#fff;text-shadow:0 0 60px rgba(0,255,136,.5)}
-  .contact-sub{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.8;margin-bottom:2.5rem}
-
-  /* ── FOOTER ── */
-  footer{position:relative;z-index:2;padding:1.8rem 3rem;border-top:1px solid rgba(0,255,136,.06);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
-  footer span{font-family:var(--mono);font-size:.6rem;color:var(--muted)}
-  .f-right{color:var(--g);letter-spacing:.12em}
-  .blink{animation:blink 1s step-end infinite}
-
-  /* ── DIVIDER ── */
-  .sec-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(0,255,136,.15),rgba(0,212,255,.1),transparent);margin:0 auto;position:relative;z-index:2}
-
-  /* ── SCROLL REVEAL ── */
-  .reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
-  .reveal.visible{opacity:1;transform:translateY(0)}
-
-  /* ── KEYFRAMES ── */
-  @keyframes up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
-  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-  @keyframes termline{from{opacity:0}to{opacity:1}}
-  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-  @media(max-width:640px){.hero-inner{gap:2rem}.hero-stats{gap:1.2rem}.about-name{font-size:3rem}.contact-email{font-size:1.8rem}footer{padding:1.5rem 1.2rem}}
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/style.css"/>
+  <link rel="stylesheet" href="assets/home.css"/>
 </head>
 <body>
-
+<a class="skip-nav" href="#main-content">Skip to content</a>
 <canvas id="bgCanvas"></canvas>
 <div id="cur"></div>
 <div id="cur2"></div>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">PM<span>::</span>OFFSEC</div>
+<nav aria-label="Main navigation">
+  <a href="index.html" class="nav-logo">PM<span>::</span>OFFSEC</a>
   <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
   <ul class="nav-links" id="navLinks">
-    <li><a href="#stack">stack</a></li>
-    <li><a href="#projects">projects</a></li>
-    <li><a href="#platforms">platforms</a></li>
-    <li><a href="#about">about</a></li>
-    <li><a href="#contact">contact</a></li>
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="labs.html">Labs</a></li>
+    <li><a href="skills.html">Skills</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="login.html" style="color:var(--g2);border:1px solid rgba(0,212,255,.2);padding:.35rem .8rem;border-radius:3px;font-size:.65rem;letter-spacing:.12em;font-family:var(--mono)">DASHBOARD →</a></li><li><a href="mailto:contact@erprakashmijar.com" class="nav-cta">Contact</a></li>
   </ul>
 </nav>
 
-<main>
+<main id="main-content" role="main">
 
-<!-- ══ HERO ══ -->
+<!-- ── HERO ── -->
 <section class="hero">
   <div class="wrap">
     <div class="hero-inner">
-      <div class="hero-left">
-        <div class="hero-eyebrow">OFFENSIVE CYBERSECURITY</div>
+      <div>
+        <div class="hero-eyebrow">CYBERSECURITY PROFESSIONAL</div>
         <h1 class="hero-h1">
-          THINK<br>
-          <span class="line2">LIKE AN</span>
-          <span class="line3">ATTACKER</span>
+          SOC ANALYST<em>RED TEAM</em><small>PENTEST</small>
         </h1>
-        <p class="hero-sub">Penetration testing · Web exploitation · Network attacks · Red team operations — built to break systems before the bad guys do.</p>
-        <div class="hero-ctas">
-          <a href="#stack" class="btn btn-g">EXPLORE STACK</a>
-          <a href="#contact" class="btn btn-o">HIRE ME</a>
+        <div class="hero-roles">
+          <span class="role-pill">Penetration Testing</span>
+          <span class="role-pill">Web Exploitation</span>
+          <span class="role-pill">Network Security</span>
+          <span class="role-pill">Incident Response</span>
+          <span class="role-pill">OSINT</span>
         </div>
-        <div class="hero-stats">
-          <div class="hstat"><div class="hstat-n">3+</div><div class="hstat-l">PROJECTS</div></div>
-          <div class="hstat"><div class="hstat-n">CTF</div><div class="hstat-l">COMPETITOR</div></div>
-          <div class="hstat"><div class="hstat-n">BB</div><div class="hstat-l">BUG BOUNTY</div></div>
-          <div class="hstat"><div class="hstat-n">8</div><div class="hstat-l">SKILL DOMAINS</div></div>
+        <p class="hero-sub">Breaking systems ethically so they can't be broken maliciously — full-lifecycle offensive security from recon to remediation report.</p>
+        <div class="hero-ctas">
+          <a href="projects.html" class="btn btn-g">VIEW PROJECTS →</a>
+          <a href="about.html" class="btn btn-o">ABOUT ME</a>
+          <a href="assets/Prakash_Mijar_CV.pdf" class="btn btn-b" download aria-label="Download Prakash Mijar CV as PDF">DOWNLOAD CV ↓</a>
         </div>
       </div>
       <div class="hero-right">
         <div class="terminal">
           <div class="term-bar">
-            <div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div>
-            <span class="term-title">prakash@kali ~ pentest</span>
+            <div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot gg"></div>
+            <span class="term-title">prakash@kali ~ live</span>
           </div>
           <div class="term-body" id="termBody"></div>
         </div>
+        <div class="status-pill"><div class="status-dot"></div>AVAILABLE FOR ENGAGEMENTS</div>
       </div>
+    </div>
+
+    <!-- Quick stats -->
+    <div class="qstats reveal">
+      <div class="qstat"><div class="qstat-n">3+</div><div class="qstat-l">Projects</div></div>
+      <div class="qstat"><div class="qstat-n">8</div><div class="qstat-l">Skill Domains</div></div>
+      <div class="qstat"><div class="qstat-n">CTF</div><div class="qstat-l">Competitor</div></div>
+      <div class="qstat"><div class="qstat-n">BB</div><div class="qstat-l">Bug Bounty</div></div>
     </div>
   </div>
 </section>
 
-<div class="sec-divider"></div>
+<div class="divider"></div>
 
-<!-- ══ OFFENSIVE STACK ══ -->
-<section class="stack-section" id="stack">
+<!-- ── PROJECTS ── -->
+<section class="projects-sec" id="projects">
   <div class="wrap">
-    <div class="s-label">// SKILL TREE</div>
-    <h2 class="s-title">OFFENSIVE<br><span>SECURITY</span> <span class="b">STACK</span></h2>
-
-    <div class="stack-grid" id="stackGrid">
-
-      <div class="stack-cat reveal" data-cat="recon">
-        <div class="cat-num">01 ──</div>
-        <div class="cat-name">RECON &amp; ENUM</div>
-        <div class="cat-sub">OSINT · Subdomain · DNS · ASM</div>
-        <span class="cat-arrow">→</span>
-      </div>
-
-      <div class="stack-cat reveal" data-cat="web">
-        <div class="cat-num">02 ──</div>
-        <div class="cat-name">WEB EXPLOIT</div>
-        <div class="cat-sub">OWASP · Auth · IDOR · XSS · SQLi</div>
-        <span class="cat-arrow">→</span>
-      </div>
-
-      <div class="stack-cat reveal" data-cat="api">
-        <div class="cat-num">03 ──</div>
-        <div class="cat-name">API SECURITY</div>
-        <div class="cat-sub">BOLA · Rate Limit · Mass Assign</div>
-        <span class="cat-arrow">→</span>
-      </div>
-
-      <div class="stack-cat reveal" data-cat="network">
-        <div class="cat-num">04 ──</div>
-        <div class="cat-name">NETWORK ATTACKS</div>
-        <div class="cat-sub">Scan · SMB · LDAP · MITM</div>
-        <span class="cat-arrow">→</span>
-      </div>
-
-      <div class="stack-cat reveal" data-cat="exploit">
-        <div class="cat-num">05 ──</div>
-        <div class="cat-name">EXPLOITATION</div>
-        <div class="cat-sub">Metasploit · PrivEsc · Shells</div>
-        <span class="cat-arrow">→</span>
-      </div>
-
-      <div class="stack-cat reveal" data-cat="post">
-        <div class="cat-num">06 ──</div>
-        <div class="cat-name">POST-EXPLOIT</div>
-        <div class="cat-sub">Persist · Lateral · Exfil</div>
-        <span class="cat-arrow">→</span>
-      </div>
-
-      <div class="stack-cat reveal" data-cat="auto">
-        <div class="cat-num">07 ──</div>
-        <div class="cat-name">AUTOMATION</div>
-        <div class="cat-sub">Python · Bash · Fuzzing · Tools</div>
-        <span class="cat-arrow">→</span>
-      </div>
-
-      <div class="stack-cat reveal" data-cat="report">
-        <div class="cat-num">08 ──</div>
-        <div class="cat-name">REPORTING</div>
-        <div class="cat-sub">Bug Reports · CVSS · PoC · Fixes</div>
-        <span class="cat-arrow">→</span>
-      </div>
-
-    </div><!-- /stack-grid -->
-
-    <!-- Detail panel (outside grid, full width) -->
-    <div class="stack-detail-wrap" id="stackDetailWrap">
-      <div class="stack-detail-inner">
-        <div class="detail-left">
-          <div class="detail-cat-label" id="detCatLabel"></div>
-          <div class="detail-title" id="detTitle"></div>
-          <p class="detail-desc" id="detDesc"></p>
-          <div class="detail-tools-label">// TOOLS</div>
-          <div class="detail-tools" id="detTools"></div>
-        </div>
-        <div class="detail-right">
-          <div class="subs-title" id="detSubsTitle">// SUBCATEGORIES</div>
-          <div class="sub-items" id="detSubs"></div>
-          <div class="sub-detail-panel" id="subDetailPanel">
-            <div class="sdp-title" id="sdpTitle"></div>
-            <p class="sdp-desc" id="sdpDesc"></p>
-            <div class="sdp-tools" id="sdpTools"></div>
-            <ul class="sdp-list" id="sdpList"></ul>
-          </div>
-        </div>
-      </div>
+    <div class="s-label">Featured Work</div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;margin-bottom:2.5rem">
+      <h2 class="s-title" style="margin-bottom:0">PROJECTS &amp;<br><span>CASE STUDIES</span></h2>
+      <a href="projects.html" class="btn btn-o" style="white-space:nowrap">ALL PROJECTS →</a>
     </div>
-  </div>
-</section>
-
-<div class="sec-divider"></div>
-
-<!-- ══ PROJECTS ══ -->
-<section class="projects" id="projects">
-  <div class="wrap">
-    <div class="s-label">// SELECTED WORK</div>
-    <h2 class="s-title">PROJECTS &amp;<br><span>RESEARCH</span></h2>
-    <div class="projects-grid">
+    <div class="proj-grid">
 
       <article class="proj-card reveal">
-        <div class="proj-card-top"></div>
+        <div class="proj-card-accent acc-g"></div>
         <div class="proj-body">
-          <div class="proj-tags"><span class="proj-tag">MALWARE ANALYSIS</span><span class="proj-tag">REVERSE ENG</span></div>
-          <h3 class="proj-title">WANNACRY<br>ANALYSIS</h3>
-          <p class="proj-desc">Static and dynamic analysis of WannaCry ransomware. Documented EternalBlue propagation, SMBv1 exploitation chain, AES-RSA encryption routine, and C2 communication in a sandboxed lab.</p>
-          <a href="#" class="proj-link">VIEW REPORT →</a>
-        </div>
-      </article>
-
-      <article class="proj-card blue reveal">
-        <div class="proj-card-top"></div>
-        <div class="proj-body">
-          <div class="proj-tags"><span class="proj-tag">NETWORK SEC</span><span class="proj-tag">WIRESHARK</span><span class="proj-tag">SNORT</span></div>
-          <h3 class="proj-title">NETWORK<br>MONITORING LAB</h3>
-          <p class="proj-desc">Home lab capturing live network traffic. Custom Snort IDS rules to detect port scans, brute-force, and anomalous payloads. Full traffic analysis and alert correlation pipeline.</p>
-          <a href="#" class="proj-link">VIEW WRITEUP →</a>
-        </div>
-      </article>
-
-      <article class="proj-card purple reveal">
-        <div class="proj-card-top"></div>
-        <div class="proj-body">
-          <div class="proj-tags"><span class="proj-tag">LINUX HARDENING</span><span class="proj-tag">LYNIS</span><span class="proj-tag">CIS</span></div>
-          <h3 class="proj-title">LYNIS<br>SECURITY AUDIT</h3>
-          <p class="proj-desc">CIS-benchmark Linux server audit via Lynis. Remediated SSH misconfigs, filesystem permissions, kernel parameters, and service exposure. Full before/after compliance scoring.</p>
-          <a href="#" class="proj-link">VIEW AUDIT →</a>
-        </div>
-      </article>
-
-    </div>
-  </div>
-</section>
-
-<div class="sec-divider"></div>
-
-<!-- ══ PLATFORMS ══ -->
-<section class="platforms" id="platforms">
-  <div class="wrap">
-    <div class="s-label">// ACTIVE PRACTICE</div>
-    <h2 class="s-title">LABS &amp;<br><span>PLATFORMS</span></h2>
-    <div class="plat-grid">
-
-      <div class="plat-card reveal">
-        <div class="plat-icon">[THM]</div>
-        <div class="plat-name">TRYHACKME</div>
-        <div class="plat-rank">Update with your rank</div>
-        <p class="plat-desc">Guided learning paths — web exploitation, Active Directory, privilege escalation, and network security.</p>
-        <a href="https://tryhackme.com/" target="_blank" rel="noopener" class="plat-link">PROFILE →</a>
-      </div>
-
-      <div class="plat-card reveal">
-        <div class="plat-icon">[HTB]</div>
-        <div class="plat-name">HACK THE BOX</div>
-        <div class="plat-rank">Update with your rank</div>
-        <p class="plat-desc">Real-world lab machines and Prolabs simulating enterprise environments and AD attack chains.</p>
-        <a href="https://hackthebox.com/" target="_blank" rel="noopener" class="plat-link">PROFILE →</a>
-      </div>
-
-      <div class="plat-card reveal">
-        <div class="plat-icon">[BB]</div>
-        <div class="plat-name">BUG BOUNTY</div>
-        <div class="plat-rank">HackerOne / Bugcrowd</div>
-        <p class="plat-desc">Responsible disclosure on live programmes. Legal, real-target practice with verifiable impact.</p>
-        <a href="https://hackerone.com/" target="_blank" rel="noopener" class="plat-link">PROFILE →</a>
-      </div>
-
-      <div class="plat-card reveal">
-        <div class="plat-icon">[CTF]</div>
-        <div class="plat-name">CTF COMPETITIONS</div>
-        <div class="plat-rank">CTFtime.org</div>
-        <p class="plat-desc">Timed competitions across forensics, crypto, web, pwn, and reverse engineering challenges.</p>
-        <a href="https://ctftime.org/" target="_blank" rel="noopener" class="plat-link">CTFTIME →</a>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<div class="sec-divider"></div>
-
-<!-- ══ BLUE TEAM AWARENESS ══ -->
-<section class="blueteam" id="defense">
-  <div class="wrap">
-    <div class="s-label">// DEFENDER MINDSET</div>
-    <h2 class="s-title">BLUE TEAM<br><span>AWARENESS</span></h2>
-    <div class="blue-grid">
-
-      <div class="blue-card reveal">
-        <div class="blue-num">01 ──</div>
-        <div class="blue-title">LOG ANALYSIS &amp; SIEM</div>
-        <p class="blue-desc">Reading what defenders see — Windows Event Logs, Syslog, and SIEM alerts (Splunk, Elastic) to improve stealth and surface detection gaps in reports.</p>
-      </div>
-
-      <div class="blue-card reveal">
-        <div class="blue-num">02 ──</div>
-        <div class="blue-title">EDR EVASION AWARENESS</div>
-        <p class="blue-desc">How endpoint detection tools flag behaviour — studied to craft realistic payloads and provide actionable EDR tuning recommendations post-engagement.</p>
-      </div>
-
-      <div class="blue-card reveal">
-        <div class="blue-num">03 ──</div>
-        <div class="blue-title">CVE RESEARCH</div>
-        <p class="blue-desc">Tracking NVD, vendor advisories, and PoC releases to identify newly disclosed CVEs before patches are widely applied. N-day exploitation assessment.</p>
-      </div>
-
-      <div class="blue-card reveal">
-        <div class="blue-num">04 ──</div>
-        <div class="blue-title">MITRE ATT&amp;CK</div>
-        <p class="blue-desc">Mapping attack techniques to ATT&amp;CK framework TTPs — enabling detection rule recommendations and red-to-blue knowledge transfer in final reports.</p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<div class="sec-divider"></div>
-
-<!-- ══ ABOUT ══ -->
-<section class="about" id="about">
-  <div class="wrap">
-    <div class="about-inner">
-      <div class="about-left reveal">
-        <div class="s-label">// ABOUT</div>
-        <div class="about-name">PRAKASH<span>MIJAR</span></div>
-        <p class="about-bio">An offensive cybersecurity professional with hands-on experience across the full attack lifecycle — recon through reporting. I break things ethically so they can't be broken maliciously.</p>
-        <p class="about-bio">Passionate about web exploitation, network attacks, and building automation tooling. Continuously practising on real environments through CTFs, bug bounty, and home labs.</p>
-        <div class="skill-grid">
-          <span class="skill-tag">Kali Linux</span><span class="skill-tag">Burp Suite</span>
-          <span class="skill-tag">Metasploit</span><span class="skill-tag">Nmap</span>
-          <span class="skill-tag">Wireshark</span><span class="skill-tag">BloodHound</span>
-          <span class="skill-tag">Impacket</span><span class="skill-tag">ffuf</span>
-          <span class="skill-tag">sqlmap</span><span class="skill-tag">Python</span>
-          <span class="skill-tag">OWASP Top 10</span><span class="skill-tag">MITRE ATT&amp;CK</span>
-        </div>
-        <div class="socials">
-          <a href="https://github.com/" target="_blank" rel="noopener" class="btn btn-o">GITHUB</a>
-          <a href="https://linkedin.com/in/" target="_blank" rel="noopener" class="btn btn-o">LINKEDIN</a>
-        </div>
-      </div>
-      <div class="about-right reveal">
-        <div class="stats-box">
-          <div class="stats-box-top"><div class="sb-dot"></div><span class="sb-label">PROFILE STATUS // ONLINE</span></div>
-          <div class="stats-grid">
-            <div class="stat-cell"><div class="stat-n">3+</div><div class="stat-l">PROJECTS</div></div>
-            <div class="stat-cell"><div class="stat-n">CTF</div><div class="stat-l">COMPETITOR</div></div>
-            <div class="stat-cell"><div class="stat-n">BB</div><div class="stat-l">BUG BOUNTY</div></div>
-            <div class="stat-cell"><div class="stat-n">24/7</div><div class="stat-l">LEARNING</div></div>
+          <div class="proj-tags">
+            <span class="tag tag-g">MALWARE ANALYSIS</span>
+            <span class="tag tag-g">REVERSE ENG</span>
+          </div>
+          <h3 class="proj-title">WANNACRY ANALYSIS</h3>
+          <p class="proj-desc">Static + dynamic analysis of WannaCry ransomware. Documented EternalBlue propagation chain, AES-RSA encryption routine, and C2 comms in a sandboxed environment.</p>
+          <div class="proj-meta">
+            <span class="proj-impact">↑ Full kill chain documented</span>
+            <a href="projects/wannacry.html" class="proj-link">CASE STUDY →</a>
           </div>
         </div>
+      </article>
+
+      <article class="proj-card reveal">
+        <div class="proj-card-accent acc-b"></div>
+        <div class="proj-body">
+          <div class="proj-tags">
+            <span class="tag tag-b">NETWORK SEC</span>
+            <span class="tag tag-b">IDS</span>
+          </div>
+          <h3 class="proj-title">NETWORK MONITORING LAB</h3>
+          <p class="proj-desc">Home lab with live traffic capture. Custom Snort IDS rules detecting port scans, brute-force attempts, and anomalous payloads with full alert correlation.</p>
+          <div class="proj-meta">
+            <span class="proj-impact">↑ 12 custom IDS rules written</span>
+            <a href="projects/network-lab.html" class="proj-link">CASE STUDY →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="proj-card reveal">
+        <div class="proj-card-accent acc-p"></div>
+        <div class="proj-body">
+          <div class="proj-tags">
+            <span class="tag tag-p">HARDENING</span>
+            <span class="tag tag-p">AUDIT</span>
+          </div>
+          <h3 class="proj-title">LYNIS SECURITY AUDIT</h3>
+          <p class="proj-desc">CIS-benchmark Linux server audit. Identified and remediated SSH misconfigs, kernel parameters, and service exposure with before/after compliance scoring.</p>
+          <div class="proj-meta">
+            <span class="proj-impact">↑ Hardening score +38 pts</span>
+            <a href="projects/lynis-audit.html" class="proj-link">CASE STUDY →</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── SKILLS OVERVIEW ── -->
+<section class="skills-sec" id="skills">
+  <div class="wrap">
+    <div class="s-label">Capabilities</div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;margin-bottom:2.5rem">
+      <h2 class="s-title" style="margin-bottom:0">SKILLS<br><span>OVERVIEW</span></h2>
+      <a href="skills.html" class="btn btn-o" style="white-space:nowrap">FULL STACK →</a>
+    </div>
+    <div class="skills-layout">
+
+      <div class="skill-domain reveal">
+        <div class="skill-domain-name">OFFENSIVE SECURITY</div>
+        <p class="skill-domain-desc">Web exploitation, network attacks, post-exploitation, and red team operations.</p>
+        <div class="skill-bar-wrap"><span class="skill-bar-label">Web Exploitation</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:85%"></div></div></div>
+        <div class="skill-bar-wrap"><span class="skill-bar-label">Network Attacks</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:75%"></div></div></div>
+        <div class="skill-bar-wrap"><span class="skill-bar-label">Privilege Escalation</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:70%"></div></div></div>
+        <div class="skill-bar-wrap"><span class="skill-bar-label">API Security</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:80%"></div></div></div>
+      </div>
+
+      <div class="skill-domain reveal">
+        <div class="skill-domain-name">RECON & OSINT</div>
+        <p class="skill-domain-desc">Passive and active reconnaissance, subdomain enumeration, and attack surface mapping.</p>
+        <div class="skill-bar-wrap"><span class="skill-bar-label">OSINT</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:80%"></div></div></div>
+        <div class="skill-bar-wrap"><span class="skill-bar-label">Subdomain Enum</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:85%"></div></div></div>
+        <div class="skill-bar-wrap"><span class="skill-bar-label">DNS Analysis</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:75%"></div></div></div>
+        <div class="skill-bar-wrap"><span class="skill-bar-label">Attack Surface Map</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:70%"></div></div></div>
+      </div>
+
+      <div class="skill-domain reveal">
+        <div class="skill-domain-name">TOOLS & AUTOMATION</div>
+        <p class="skill-domain-desc">Framework proficiency, scripting, and custom tooling development.</p>
+        <div class="skill-bar-wrap"><span class="skill-bar-label">Burp Suite</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:90%"></div></div></div>
+        <div class="skill-bar-wrap"><span class="skill-bar-label">Metasploit</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:80%"></div></div></div>
+        <div class="skill-bar-wrap"><span class="skill-bar-label">Python Scripting</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:75%"></div></div></div>
+        <div class="skill-bar-wrap"><span class="skill-bar-label">Bash / CLI</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:85%"></div></div></div>
+      </div>
+
+      <div class="skill-domain reveal">
+        <div class="skill-domain-name">DEFENSIVE AWARENESS</div>
+        <p class="skill-domain-desc">Blue team perspective, log analysis, and detection engineering.</p>
+        <div class="skill-bar-wrap"><span class="skill-bar-label">SIEM / Log Analysis</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:65%"></div></div></div>
+        <div class="skill-bar-wrap"><span class="skill-bar-label">Incident Response</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:70%"></div></div></div>
+        <div class="skill-bar-wrap"><span class="skill-bar-label">MITRE ATT&amp;CK</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:75%"></div></div></div>
+        <div class="skill-bar-wrap"><span class="skill-bar-label">Threat Hunting</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:60%"></div></div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── PLATFORMS ── -->
+<section class="platforms-sec">
+  <div class="wrap">
+    <div class="s-label">Active Practice</div>
+    <h2 class="s-title">LABS &amp;<br><span class="b">PLATFORMS</span></h2>
+    <div class="plat-strip">
+      <div class="plat-card reveal">
+        <div class="plat-ico">[THM]</div>
+        <div class="plat-name">TRYHACKME</div>
+        <div class="plat-rank">Add your rank</div>
+        <p class="plat-desc">Guided learning paths — web exploitation, AD, privilege escalation.</p>
+        <a href="https://tryhackme.com/" target="_blank" rel="noopener" class="plat-link">PROFILE →</a>
+      </div>
+      <div class="plat-card reveal">
+        <div class="plat-ico">[HTB]</div>
+        <div class="plat-name">HACK THE BOX</div>
+        <div class="plat-rank">Add your rank</div>
+        <p class="plat-desc">Real-world lab machines simulating enterprise environments.</p>
+        <a href="https://hackthebox.com/" target="_blank" rel="noopener" class="plat-link">PROFILE →</a>
+      </div>
+      <div class="plat-card reveal">
+        <div class="plat-ico">[BB]</div>
+        <div class="plat-name">BUG BOUNTY</div>
+        <div class="plat-rank">HackerOne / Bugcrowd</div>
+        <p class="plat-desc">Responsible disclosure on live programmes with real impact.</p>
+        <a href="https://hackerone.com/" target="_blank" rel="noopener" class="plat-link">PROFILE →</a>
+      </div>
+      <div class="plat-card reveal">
+        <div class="plat-ico">[CTF]</div>
+        <div class="plat-name">CTF COMPETITIONS</div>
+        <div class="plat-rank">CTFtime.org</div>
+        <p class="plat-desc">Forensics, crypto, web, pwn, and reverse engineering challenges.</p>
+        <a href="https://ctftime.org/" target="_blank" rel="noopener" class="plat-link">CTFTIME →</a>
       </div>
     </div>
   </div>
 </section>
 
-<div class="sec-divider"></div>
+<div class="divider"></div>
 
-<!-- ══ CONTACT ══ -->
-<section class="contact" id="contact">
+<!-- ── CONTACT CTA ── -->
+<section class="cta-sec">
   <div class="wrap">
-    <div class="contact-inner reveal">
-      <div class="contact-glow"></div>
-      <div class="s-label" style="text-align:center;justify-content:center;display:flex">// CONTACT</div>
-      <h2 class="s-title" style="text-align:center;margin-bottom:1.5rem">READY TO TEST<br><span>YOUR DEFENCES?</span></h2>
-      <p class="contact-sub">Available for penetration testing engagements, bug bounty collaboration, and security consulting.</p>
-      <!-- Replace with your actual email once configured via Zoho Mail or Google Workspace -->
-      <a href="mailto:contact@erprakashmijar.com" class="contact-email">contact@erprakashmijar.com</a>
+    <div class="cta-inner reveal">
+      <div class="cta-glow"></div>
+      <div class="s-label" style="justify-content:center">Contact</div>
+      <h2 class="s-title" style="text-align:center">AVAILABLE FOR<br><span>ENGAGEMENTS</span></h2>
+      <p class="cta-sub">Open to penetration testing contracts, SOC analyst roles, and bug bounty collaboration. Let's work together.</p>
+      <a href="mailto:contact@erprakashmijar.com" class="cta-email">contact@erprakashmijar.com</a>
+      <div class="hero-ctas" style="justify-content:center">
+        <a href="https://linkedin.com/in/" target="_blank" rel="noopener" class="btn btn-o">LINKEDIN</a>
+        <a href="https://github.com/" target="_blank" rel="noopener" class="btn btn-o">GITHUB</a>
+        <a href="assets/Prakash_Mijar_CV.pdf" class="btn btn-b" download aria-label="Download Prakash Mijar CV as PDF">DOWNLOAD CV ↓</a>
+      </div>
     </div>
   </div>
 </section>
@@ -606,223 +270,61 @@
 </main>
 
 <footer>
-  <span>&copy; 2026 Prakash Mijar — Offensive Cybersecurity</span>
+  <span>&copy; 2026 Prakash Mijar</span>
+  <div class="f-links">
+    <a href="projects.html">Projects</a>
+    <a href="labs.html">Labs</a>
+    <a href="skills.html">Skills</a>
+    <a href="about.html">About</a>
+  </div>
   <span class="f-right">erprakashmijar.com<span class="blink">_</span></span>
 </footer>
 
+<script src="assets/shared.js"></script>
 <script>
-/* ─── PARTICLE CANVAS ─── */
+/* Terminal animation */
 (function(){
-  const c=document.getElementById('bgCanvas'),ctx=c.getContext('2d');
-  let W,H,pts=[];
-  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;init()}
-  function init(){
-    pts=[];
-    const n=Math.floor((W*H)/18000);
-    for(let i=0;i<n;i++) pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.5+.3});
-  }
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    pts.forEach(p=>{
-      p.x+=p.vx;p.y+=p.vy;
-      if(p.x<0)p.x=W;if(p.x>W)p.x=0;
-      if(p.y<0)p.y=H;if(p.y>H)p.y=0;
-      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle='rgba(0,255,136,0.4)';ctx.fill();
-    });
-    pts.forEach((a,i)=>{
-      for(let j=i+1;j<pts.length;j++){
-        const b=pts[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);
-        if(d<120){
-          ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
-          ctx.strokeStyle=`rgba(0,255,136,${.08*(1-d/120)})`;ctx.lineWidth=.5;ctx.stroke();
-        }
-      }
-    });
-    requestAnimationFrame(draw);
-  }
-  window.addEventListener('resize',resize);
-  resize();draw();
-})();
-
-/* ─── CURSOR ─── */
-if(window.matchMedia('(hover:hover) and (pointer:fine)').matches){
-  const cur=document.getElementById('cur'),cur2=document.getElementById('cur2');
-  let mx=0,my=0,rx=0,ry=0;
-  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
-  (function t(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;cur2.style.left=rx+'px';cur2.style.top=ry+'px';requestAnimationFrame(t)})();
-  document.querySelectorAll('a,button,.stack-cat,.sub-item').forEach(el=>{
-    el.addEventListener('mouseenter',()=>{cur.style.width='18px';cur.style.height='18px';cur2.style.width='48px';cur2.style.height='48px';cur2.style.borderColor='rgba(0,212,255,.6)'});
-    el.addEventListener('mouseleave',()=>{cur.style.width='8px';cur.style.height='8px';cur2.style.width='32px';cur2.style.height='32px';cur2.style.borderColor='rgba(0,255,136,.4)'});
-  });
-}
-
-/* ─── NAV TOGGLE ─── */
-const nt=document.getElementById('navToggle'),nl=document.getElementById('navLinks');
-nt.addEventListener('click',()=>{const o=nl.classList.toggle('open');nt.setAttribute('aria-expanded',String(o))});
-nl.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nl.classList.remove('open');nt.setAttribute('aria-expanded','false')}));
-
-/* ─── TERMINAL ANIMATION ─── */
-(function(){
-  const body=document.getElementById('termBody');
+  const b=document.getElementById('termBody');
+  if(!b)return;
   const lines=[
-    {type:'cmd',prompt:'┌──(prakash㉿kali)-[~]',cmd:''},
-    {type:'cmd',prompt:'└─$',cmd:'nmap -sV -sC 192.168.1.0/24'},
-    {type:'out',text:'Starting Nmap 7.94 ...',hit:false},
-    {type:'out',text:'Discovered open port 22/tcp → OpenSSH 8.9',hit:true},
-    {type:'out',text:'Discovered open port 80/tcp → Apache 2.4.52',hit:true},
-    {type:'out',text:'Discovered open port 443/tcp → nginx 1.18',hit:false},
-    {type:'cmd',prompt:'└─$',cmd:'gobuster dir -u http://target -w /usr/share/wordlists/dirb/common.txt'},
-    {type:'out',text:'/admin          (Status: 302) [→ /login]',hit:true},
-    {type:'out',text:'/backup         (Status: 200)',hit:true},
-    {type:'out',text:'/api/v1         (Status: 200)',hit:false},
-    {type:'cmd',prompt:'└─$',cmd:'sqlmap -u "http://target/api?id=1" --dbs'},
-    {type:'out',text:'[CRITICAL] SQL injection found → UNION based',hit:true},
-    {type:'out',text:'[+] Database: users_db → 14,823 records',hit:true},
-    {type:'cursor'},
+    {t:'cmd',p:'┌──(prakash㉿kali)-[~]',c:''},
+    {t:'cmd',p:'└─$',c:'nmap -sV 192.168.1.105'},
+    {t:'out',x:'PORT   STATE  SERVICE  VERSION',h:false},
+    {t:'out',x:'22/tcp open   ssh      OpenSSH 8.9',h:false},
+    {t:'out',x:'80/tcp open   http     Apache 2.4.52',h:true},
+    {t:'cmd',p:'└─$',c:'sqlmap -u "http://target/api?id=1" --dbs'},
+    {t:'out',x:'[CRITICAL] SQL injection found!',h:true},
+    {t:'out',x:'[+] Database: users_db → 14,823 rows',h:true},
+    {t:'cmd',p:'└─$',c:'msfconsole -x "use exploit/..."'},
+    {t:'out',x:'[*] Started reverse TCP handler',h:false},
+    {t:'out',x:'[+] Meterpreter session 1 opened ✓',h:true},
+    {t:'cur'},
   ];
   let i=0;
   function next(){
     if(i>=lines.length)return;
     const l=lines[i++];
-    const div=document.createElement('div');
-    div.classList.add('term-line');
-    div.style.animationDelay='0s';
-    if(l.type==='cmd'){
-      div.innerHTML=`<span class="term-prompt">${l.prompt}</span><span class="term-cmd"> ${l.cmd}</span>`;
-    } else if(l.type==='out'){
-      div.innerHTML=`<span class="term-out${l.hit?' hit':''}">${l.text}</span>`;
-    } else {
-      div.innerHTML=`<span class="term-out"><span class="term-cursor"></span></span>`;
+    const d=document.createElement('div');
+    d.className='term-line';
+    if(l.t==='cmd') d.innerHTML=`<span class="term-prompt">${l.p}</span><span class="term-cmd"> ${l.c}</span>`;
+    else if(l.t==='out') d.innerHTML=`<span class="term-out${l.h?' hit':''}">${l.x}</span>`;
+    else d.innerHTML=`<span class="term-out"><span class="term-cursor"></span></span>`;
+    b.appendChild(d);b.scrollTop=b.scrollHeight;
+    setTimeout(next,l.t==='cmd'?160:80);
+  }
+  setTimeout(next,600);
+})();
+
+/* Skill bar animation */
+const sbIO=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.skill-bar-track').forEach(t=>t.classList.add('animated'));
+      sbIO.unobserve(e.target);
     }
-    body.appendChild(div);
-    body.scrollTop=body.scrollHeight;
-    setTimeout(next,l.type==='cmd'?180:90);
-  }
-  setTimeout(next,800);
-})();
-
-/* ─── STACK DATA ─── */
-const CATS={
-  recon:{label:'01 // RECON & ENUMERATION',title:'RECON &\nENUMERATION',desc:'The foundation of every engagement. Passive and active recon maps the attack surface before a single exploit fires — identifying hosts, services, technologies, and organisational footprint.',tools:['Amass','Subfinder','theHarvester','Shodan','Maltego','Recon-ng','dnsx','httpx'],subs:[
-    {name:'OSINT',tip:'Public intelligence gathering',desc:'Harvesting target data from public sources — social media, WHOIS, cert transparency logs, job postings, and leaked credentials to profile targets without touching their infra.',tools:['theHarvester','Maltego','SpiderFoot','Shodan','crt.sh'],tips:['Certificate transparency log mining','LinkedIn/GitHub employee profiling','Leaked credential lookups via HaveIBeenPwned','Passive DNS historical record analysis']},
-    {name:'Subdomain Enumeration',tip:'Discover hidden attack surface',desc:'Finding forgotten subdomains that expose dev environments, admin panels, or legacy apps with weaker security posture.',tools:['Amass','Subfinder','Assetfinder','dnsx','MassDNS'],tips:['Brute-force with SecLists wordlists','Permutation scanning for derived subdomains','Subdomain takeover detection via CNAME chains']},
-    {name:'DNS Analysis',tip:'DNS record intelligence',desc:'DNS records reveal infrastructure layout, mail servers, SPF/DMARC misconfigs, and zone transfer vulnerabilities.',tools:['dig','dnsenum','fierce','dnsrecon','dnsx'],tips:['Zone transfer attempts (AXFR)','SPF/DMARC misconfiguration for phishing','Reverse lookup mapping']},
-    {name:'Attack Surface Mapping',tip:'Unified asset inventory',desc:'Aggregating all discovered assets into a unified picture of the external attack surface — IPs, domains, open ports, and technologies.',tools:['Amass','Shodan','Censys','Nmap','Nuclei'],tips:['Continuous ASM monitoring','Cloud asset discovery (S3, Azure blobs)','Technology fingerprinting via Wappalyzer']},
-  ]},
-  web:{label:'02 // WEB EXPLOITATION',title:'WEB\nEXPLOITATION',desc:'Web applications are the most common attack surface. Covers logic flaws, injection vulnerabilities, broken access controls, and file handling weaknesses in modern web apps and SPAs.',tools:['Burp Suite','OWASP ZAP','sqlmap','ffuf','Nikto','wfuzz','dalfox','XSStrike'],subs:[
-    {name:'OWASP Top 10',tip:'Core web vulnerability classes',desc:'Industry-standard classification covering the most critical web risks — broken access control, injections, misconfigurations, and supply chain vulnerabilities.',tools:['Burp Suite','OWASP ZAP'],tips:['A01: Broken Access Control — most prevalent risk','A03: Injection — SQLi, CMDi, LDAP injection','A05: Security Misconfiguration — default creds','A07: Auth Failures — session fixation, weak tokens']},
-    {name:'Authentication Bypass',tip:'Breaking login mechanisms',desc:'Circumventing auth via weak sessions, flawed password resets, MFA bypass, JWT manipulation, or default credentials.',tools:['Burp Suite','jwt_tool','Hydra','CyberChef'],tips:['JWT algorithm confusion (RS256→HS256)','Password reset link poisoning via Host header','Response manipulation to skip auth checks','OAuth redirect_uri manipulation']},
-    {name:'IDOR',tip:'Insecure Direct Object References',desc:'Applications exposing internal IDs allow horizontal privilege escalation to access other users\' data via predictable references.',tools:['Burp Suite Intruder','Autorize','ParamMiner'],tips:['ID enumeration in API paths (/api/user/1337)','GUID/UUID prediction and enumeration','Parameter pollution for access bypass']},
-    {name:'XSS / SQLi',tip:'Injection vulnerabilities',desc:'XSS enables session hijacking and phishing. SQL injection can lead to full database compromise and RCE.',tools:['sqlmap','XSStrike','dalfox','Burp Suite'],tips:['Stored, Reflected, and DOM-based XSS with filter bypass','Union-based, Error-based, Blind, Time-based SQLi','Second-order SQLi in stored data flows']},
-    {name:'File Upload Bugs',tip:'Unrestricted upload exploitation',desc:'Improperly validated uploads lead to RCE, XSS, or SSRF depending on how files are processed and served.',tools:['Burp Suite','ExifTool','weevely'],tips:['MIME type and extension bypass (.php5, .phtml)','Magic bytes manipulation to spoof file type','SVG/XML upload for SSRF and XXE']},
-  ]},
-  api:{label:'03 // API SECURITY',title:'API\nSECURITY',desc:'Modern applications are API-first — API vulnerabilities are routinely the highest-impact bugs in bug bounty. OWASP API Top 10 covers broken auth, data exposure, and logic flaws in REST and GraphQL APIs.',tools:['Burp Suite','Postman','jwt_tool','ffuf','kiterunner','Insomnia'],subs:[
-    {name:'Broken Object Level Auth',tip:'BOLA / IDOR in APIs',desc:'OWASP API #1 — APIs failing to verify a user is authorised to access a specific resource ID. Most common and impactful API vuln class.',tools:['Burp Suite','Autorize'],tips:['Replacing user IDs in API paths and body params','Cross-account data access via predictable IDs','Testing v1/v2 version differences']},
-    {name:'Rate Limiting Bypass',tip:'Circumventing throttling',desc:'Bypassing API rate limits to enable brute-force, OTP enumeration, or mass data harvesting through header manipulation.',tools:['Burp Suite Intruder','custom scripts'],tips:['X-Forwarded-For / X-Real-IP header spoofing','Race conditions for OTP bypass','Null byte / case variation in endpoints']},
-    {name:'Mass Assignment',tip:'Injecting privileged properties',desc:'APIs binding user-supplied JSON directly to models may allow attackers to set privileged fields (isAdmin, role, balance).',tools:['Burp Suite','Postman'],tips:['Injecting undocumented fields in POST/PUT bodies','Comparing response schemas vs API docs for hidden fields']},
-    {name:'Token Manipulation',tip:'Forging JWT and OAuth tokens',desc:'Attacking JWT tokens, OAuth flows, and API keys — forging tokens, escalating via claim manipulation, or stealing via CORS.',tools:['jwt_tool','CyberChef','Burp Suite'],tips:['JWT none algorithm attack','RS256 to HS256 confusion','OAuth state parameter CSRF','Bearer token theft via open redirect']},
-  ]},
-  network:{label:'04 // NETWORK ATTACKS',title:'NETWORK\nATTACKS',desc:'Network-layer attacks target infrastructure directly — identifying open services, exploiting protocols, and intercepting traffic at the packet level to gain initial access or move laterally.',tools:['Nmap','Masscan','Wireshark','Responder','CrackMapExec','Bettercap','Impacket'],subs:[
-    {name:'Port Scanning',tip:'Network topology mapping',desc:'Systematic scanning to identify open TCP/UDP ports, map the network, and fingerprint OSes before deeper enumeration.',tools:['Nmap','Masscan','Rustscan','Zmap'],tips:['SYN stealth, full connect, UDP scans','OS and version detection (-sV -O)','Firewall/IDS evasion via fragmentation and decoys']},
-    {name:'Service Enumeration',tip:'Banner grabbing and fingerprinting',desc:'Deep interrogation of services to extract version banners, config details, and misconfigs mapping to known CVEs.',tools:['Nmap NSE scripts','enum4linux','smbclient','nikto'],tips:['Default credential checks','Service-specific NSE scripts (ftp-anon, smb-vuln*)','Version to CVE correlation']},
-    {name:'SMB / LDAP Attacks',tip:'Windows protocol exploitation',desc:'Windows network protocols are rich targets — from null sessions to Pass-the-Hash, Kerberoasting, and LDAP injection against AD.',tools:['CrackMapExec','Responder','Impacket','BloodHound','ldapsearch'],tips:['NTLM hash capture via Responder + offline cracking','Kerberoasting — TGS ticket extraction and cracking','Pass-the-Hash lateral movement','AS-REP Roasting for accounts without pre-auth']},
-    {name:'MITM',tip:'Traffic interception',desc:'Positioning between hosts to intercept, read, or modify traffic — enabling credential capture, session hijacking, and SSL stripping.',tools:['Bettercap','arpspoof','mitmproxy','Wireshark','SSLstrip'],tips:['ARP poisoning for LAN interception','HTTPS downgrade and SSL stripping','DNS spoofing for credential harvesting']},
-  ]},
-  exploit:{label:'05 // EXPLOITATION',title:'EXPLOIT-\nATION',desc:'Turning vulnerabilities into confirmed access — using exploit frameworks, manual CVE research, and custom payloads to gain a foothold on target systems.',tools:['Metasploit','searchsploit','ExploitDB','GDB/pwndbg','pwntools','Ghidra'],subs:[
-    {name:'Metasploit',tip:'Industry exploitation framework',desc:'The standard exploitation framework for rapid vuln validation, payload staging, post-exploitation, and pivoting across complex networks.',tools:['msfconsole','msfvenom','Meterpreter','auxiliary scanners'],tips:['Module selection and customisation','Staged vs stageless payload selection','Post-exploitation module chaining','Session upgrading to Meterpreter']},
-    {name:'Manual Exploits',tip:'CVE adaptation and PoC crafting',desc:'Adapting public PoC exploits from ExploitDB and CVE databases — modifying them for specific target configs without relying on automation.',tools:['ExploitDB','searchsploit','NVD','GitHub PoCs'],tips:['Source analysis before running unknown PoCs','Target-specific payload adaptation','Debugging segfaults and bad characters']},
-    {name:'Privilege Escalation',tip:'Root/SYSTEM access',desc:'Elevating from low-privileged shell to root/SYSTEM — the most critical post-foothold phase covering Linux and Windows vectors.',tools:['LinPEAS','WinPEAS','GTFOBins','LOLBAS','PowerUp.ps1'],tips:['Linux: SUID/SGID, sudo -l, cron jobs, writable /etc/passwd','Windows: Unquoted paths, AlwaysInstallElevated, token impersonation','Kernel exploits: DirtyPipe, Polkit, PrintSpooler']},
-    {name:'Reverse Shells',tip:'C2 channel establishment',desc:'Establishing command-and-control from target to attacker machine — crafting payloads in multiple languages and evading EDR.',tools:['msfvenom','netcat','socat','pwncat','revshells.com'],tips:['Bash, Python, PHP, PowerShell one-liners','Shell stabilisation: pty upgrade, stty raw','Encoded payloads for AV evasion']},
-  ]},
-  post:{label:'06 // POST-EXPLOITATION',title:'POST-\nEXPLOIT',desc:'Actions after foothold to maximise impact, demonstrate business risk, and fulfil pentest objectives — staying undetected for the duration of the engagement.',tools:['Meterpreter','Empire','BloodHound','Impacket','chisel','proxychains'],subs:[
-    {name:'Persistence',tip:'Maintaining access',desc:'Ensuring continued access across reboots and credential changes — demonstrating long-term compromise risk to the client.',tools:['cron','schtasks','reg.exe','ssh-keygen'],tips:['Cron jobs and scheduled tasks for callback payloads','SSH authorised_keys injection','Windows Registry Run keys and services','Web shells in web roots']},
-    {name:'Lateral Movement',tip:'Pivoting through the network',desc:'Moving from initial host to other systems — expanding access to domain controllers and sensitive data stores.',tools:['CrackMapExec','Impacket psexec/wmiexec','BloodHound','chisel','proxychains'],tips:['Pass-the-Hash/Pass-the-Ticket','BloodHound attack path analysis','Port forwarding through compromised hosts']},
-    {name:'Data Exfiltration',tip:'Proving business impact',desc:'Demonstrating extraction of sensitive data to prove full business impact using covert channels that avoid DLP detection.',tools:['curl','dnscat2','chisel','custom Python'],tips:['DNS exfiltration to bypass egress firewalls','HTTPS exfil blending with normal traffic','Staged exfil via cloud storage (S3, Dropbox)']},
-    {name:'Covering Tracks',tip:'Anti-forensics for reporting',desc:'Understanding anti-forensics to improve detection recommendations — log clearing, timestomping, and artifact removal studied for reporting purposes.',tools:['bash history clearing','Windows Event Log APIs'],tips:['Clearing /var/log/auth.log and Windows Event Logs','Timestomping file metadata','Living-off-the-land binaries to avoid EDR']},
-  ]},
-  auto:{label:'07 // AUTOMATION',title:'AUTO-\nMATION',desc:'Writing custom tooling to scale recon, automate testing, and build PoC exploits — the differentiator between script kiddies and professional security researchers.',tools:['Python 3','Bash','ffuf','nuclei','requests','BeautifulSoup','scapy'],subs:[
-    {name:'Python Scripting',tip:'Exploit and recon tooling',desc:'Python is the offensive security lingua franca — exploit PoC development, custom recon automation, output parsing, and lightweight C2 infrastructure.',tools:['requests','scapy','pwntools','paramiko','impacket','BeautifulSoup'],tips:['Exploit PoC development and adaptation','Custom HTTP fuzzing scripts','PCAP parsing with scapy','Async recon pipelines with asyncio']},
-    {name:'Bash',tip:'CLI automation pipelines',desc:'Shell scripting for chaining CLI tools, automating enumeration pipelines, and building quick one-liners integrating Nmap, ffuf, httpx into cohesive workflows.',tools:['bash','xargs','parallel','jq'],tips:['Parallel subdomain enumeration pipelines','Tool output parsing and filtering','Auto-screenshotting discovered web services']},
-    {name:'Fuzzing',tip:'Automated input mutation',desc:'Automated input mutation to discover hidden endpoints, parameters, and vulnerabilities that manual testing would miss.',tools:['ffuf','wfuzz','gobuster','dirsearch','SecLists'],tips:['Directory and file fuzzing','Parameter discovery with Arjun','Virtual host fuzzing','Content-type mutation fuzzing']},
-    {name:'Custom Tools',tip:'Purpose-built tooling',desc:'Building engagement-specific tools — custom Burp extensions, Nuclei templates, and recon automation pipelines tailored to the target stack.',tools:['Burp Extender API','nuclei-templates','Python','Go'],tips:['Custom Nuclei YAML templates for target-specific checks','Burp Suite extensions in Java/Python','Automated report generation scripts']},
-  ]},
-  report:{label:'08 // REPORTING',title:'REPORT-\nING',desc:'A perfect exploit means nothing without a clear, actionable report. Professional pentest reporting translates technical findings into business risk that developers and executives can act on.',tools:['Markdown','LaTeX','Dradis','PlexTrac','CVSS Calculator'],subs:[
-    {name:'Bug Reports',tip:'Professional vulnerability disclosure',desc:'Structured documents covering affected endpoint, attack vector, impact, reproduction steps, and evidence — written for both technical and executive audiences.',tools:['Dradis','PlexTrac','Markdown','custom templates'],tips:['Executive summary in plain business language','Step-by-step reproduction instructions','Screenshots and request/response captures','Affected scope and remediation timeline']},
-    {name:'Risk Severity',tip:'CVSS scoring and business context',desc:'Accurate severity rating using CVSS v3.1 and contextual business impact — preventing over-inflation or under-reporting of risk.',tools:['CVSS Calculator','OWASP Risk Rating'],tips:['CVSS v3.1: Attack Vector, Complexity, Scope, Impact','OWASP Risk Rating: Likelihood × Impact matrix','Business context adjustment for asset criticality']},
-    {name:'Proof of Concept',tip:'Reproducible exploit evidence',desc:'Minimal, reproducible PoC code confirming exploitability — providing undeniable evidence while avoiding unnecessary damage.',tools:['Burp Suite captures','Python PoC scripts','screen recording'],tips:['Minimal impact PoC — demonstrate risk without data extraction','Annotated Burp request/response pairs','Video walkthrough for complex chained vulns']},
-    {name:'Remediation Advice',tip:'Developer-friendly fix guidance',desc:'Actionable fix recommendations addressing root causes, not just symptoms — accelerating time-to-fix and demonstrating attacker-defender fluency.',tools:['OWASP Cheat Sheets','vendor hardening guides'],tips:['Short-term (patch) vs long-term (architecture) fixes','Code-level fix examples where applicable','Verification steps so devs confirm the fix worked']},
-  ]},
-};
-
-/* ─── STACK INTERACTION ─── */
-(function(){
-  const cats=document.querySelectorAll('.stack-cat');
-  const wrap=document.getElementById('stackDetailWrap');
-  let activeCat=null,activeSub=null;
-
-  function renderCat(id){
-    const d=CATS[id];
-    document.getElementById('detCatLabel').textContent=d.label;
-    document.getElementById('detTitle').innerHTML=d.title.replace('\n','<br>');
-    document.getElementById('detDesc').textContent=d.desc;
-    const toolsEl=document.getElementById('detTools');
-    toolsEl.innerHTML=d.tools.map(t=>`<span class="tool-tag">${t}</span>`).join('');
-    document.getElementById('detSubsTitle').textContent='// SUBCATEGORIES';
-    const subsEl=document.getElementById('detSubs');
-    subsEl.innerHTML=d.subs.map((s,i)=>`
-      <div class="sub-item" data-i="${i}">
-        <div class="sub-dot"></div>
-        <div><div class="sub-name">${s.name}</div><div class="sub-tip">${s.tip}</div></div>
-      </div>`).join('');
-    document.getElementById('subDetailPanel').classList.remove('open');
-    activeSub=null;
-    subsEl.querySelectorAll('.sub-item').forEach(el=>{
-      el.addEventListener('click',()=>{
-        const idx=parseInt(el.dataset.i);
-        subsEl.querySelectorAll('.sub-item').forEach(e=>e.classList.remove('active'));
-        el.classList.add('active');
-        renderSub(d.subs[idx]);
-        activeSub=idx;
-      });
-    });
-  }
-
-  function renderSub(s){
-    document.getElementById('sdpTitle').textContent=s.name;
-    document.getElementById('sdpDesc').textContent=s.desc;
-    const t=document.getElementById('sdpTools');
-    t.innerHTML=s.tools?s.tools.map(x=>`<span class="tool-tag">${x}</span>`).join(''):'';
-    const l=document.getElementById('sdpList');
-    l.innerHTML=s.tips?s.tips.map(x=>`<li>${x}</li>`).join(''):'';
-    document.getElementById('subDetailPanel').classList.add('open');
-  }
-
-  cats.forEach(cat=>{
-    cat.addEventListener('click',()=>{
-      const id=cat.dataset.cat;
-      if(activeCat===id){
-        wrap.classList.remove('open');
-        cat.classList.remove('active');
-        activeCat=null;
-        return;
-      }
-      cats.forEach(c=>c.classList.remove('active'));
-      cat.classList.add('active');
-      activeCat=id;
-      renderCat(id);
-      wrap.classList.add('open');
-      setTimeout(()=>wrap.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
-    });
   });
-})();
-
-/* ─── SCROLL REVEAL ─── */
-const io=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}});
-},{threshold:.08});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+},{threshold:.3});
+document.querySelectorAll('.skill-domain').forEach(el=>sbIO.observe(el));
 </script>
 </body>
 </html>
-

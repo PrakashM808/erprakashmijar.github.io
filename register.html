@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Account — PM::OFFSEC Dashboard</title>
+  <meta name="robots" content="noindex"/>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <meta name="theme-color" content="#00ff88"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/auth.css"/>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<div id="cur"></div><div id="cur2"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">PM<span>::</span>OFFSEC</a>
+  <a href="index.html" class="nav-back">← Back to Portfolio</a>
+</nav>
+
+<main class="auth-main">
+  <div class="auth-wrap">
+    <div class="auth-logo">CREATE<span> ACCOUNT</span></div>
+    <div class="auth-subtitle">JOIN THE PM::OFFSEC DASHBOARD</div>
+
+    <div class="auth-card">
+      <div class="auth-card-bar"></div>
+      <div class="auth-card-body">
+
+        <div class="auth-tabs">
+          <a href="login.html"    class="auth-tab">SIGN IN</a>
+          <a href="register.html" class="auth-tab active">REGISTER</a>
+        </div>
+
+        <div class="alert alert-error"   id="alertError"></div>
+        <div class="alert alert-success" id="alertSuccess"></div>
+
+        <div class="form-group">
+          <label class="form-label" for="name">FULL NAME</label>
+          <input class="form-input" id="name" type="text" placeholder="Prakash Mijar" autocomplete="name"/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">EMAIL ADDRESS</label>
+          <input class="form-input" id="email" type="email" placeholder="you@example.com" autocomplete="email"/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">PASSWORD</label>
+          <div class="input-wrap">
+            <input class="form-input" id="password" type="password" placeholder="Min 8 chars, 1 uppercase, 1 number" autocomplete="new-password" oninput="updateStrength(this.value)"/>
+            <span class="input-icon" onclick="togglePw('password',this)">👁</span>
+          </div>
+          <!-- Strength meter -->
+          <div class="pw-strength" id="strengthWrap" style="display:none">
+            <div class="pw-bar">
+              <div class="pw-seg" id="seg1"></div>
+              <div class="pw-seg" id="seg2"></div>
+              <div class="pw-seg" id="seg3"></div>
+              <div class="pw-seg" id="seg4"></div>
+              <div class="pw-seg" id="seg5"></div>
+            </div>
+            <div class="pw-label" id="pwLabel"></div>
+          </div>
+          <!-- Requirements checklist -->
+          <ul class="req-list" style="margin-top:.5rem">
+            <li class="req-item" id="req-len"><span class="req-icon">○</span>At least 8 characters</li>
+            <li class="req-item" id="req-upper"><span class="req-icon">○</span>One uppercase letter</li>
+            <li class="req-item" id="req-num"><span class="req-icon">○</span>One number</li>
+          </ul>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="confirm">CONFIRM PASSWORD</label>
+          <div class="input-wrap">
+            <input class="form-input" id="confirm" type="password" placeholder="••••••••" autocomplete="new-password"/>
+            <span class="input-icon" onclick="togglePw('confirm',this)">👁</span>
+          </div>
+          <div class="form-hint" id="matchHint"></div>
+        </div>
+
+        <div style="background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.12);border-radius:6px;padding:.8rem 1rem;margin-bottom:1rem">
+          <div style="font-family:var(--mono);font-size:.58rem;color:var(--g2);letter-spacing:.12em;margin-bottom:.3rem">ℹ ACCOUNT INFO</div>
+          <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:1.7">New accounts are created as <strong style="color:var(--text2)">USER</strong> role. Accounts persist in your browser session. No data is sent to any server.</div>
+        </div>
+
+        <button class="btn-submit" id="regBtn" onclick="doRegister()">
+          <span id="regBtnText">CREATE ACCOUNT →</span>
+        </button>
+
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:1.2rem;font-family:var(--mono);font-size:.6rem;color:var(--muted)">
+      Already have an account? <a href="login.html" style="color:var(--g2);text-decoration:none">Sign in →</a>
+    </div>
+  </div>
+</main>
+
+<div class="auth-footer">
+  &copy; 2026 Prakash Mijar · <a href="index.html">erprakashmijar.com</a>
+</div>
+
+<script src="assets/auth.js"></script>
+<script>
+  AUTH.requireGuest('dashboard/index.html');
+  initCanvas('bgCanvas');
+  initCursor();
+
+  function showError(msg) {
+    const el = document.getElementById('alertError');
+    el.textContent = msg; el.classList.add('show');
+    document.getElementById('alertSuccess').classList.remove('show');
+  }
+
+  function setLoading(on) {
+    const btn = document.getElementById('regBtn');
+    const txt = document.getElementById('regBtnText');
+    btn.disabled = on;
+    txt.innerHTML = on ? '<span class="spinner"></span>CREATING ACCOUNT...' : 'CREATE ACCOUNT →';
+  }
+
+  function updateStrength(pw) {
+    const wrap = document.getElementById('strengthWrap');
+    if (!pw) { wrap.style.display='none'; return; }
+    wrap.style.display = 'block';
+    const s = AUTH.passwordStrength(pw);
+    ['seg1','seg2','seg3','seg4','seg5'].forEach((id,i) => {
+      const el = document.getElementById(id);
+      el.style.background = i < s.score ? s.color : 'rgba(255,255,255,.06)';
+    });
+    document.getElementById('pwLabel').textContent = s.label;
+    document.getElementById('pwLabel').style.color = s.color;
+    /* Requirements */
+    const reqs = [
+      { id:'req-len',   met: pw.length >= 8 },
+      { id:'req-upper', met: /[A-Z]/.test(pw) },
+      { id:'req-num',   met: /[0-9]/.test(pw) },
+    ];
+    reqs.forEach(r => {
+      const el = document.getElementById(r.id);
+      el.classList.toggle('met', r.met);
+      el.querySelector('.req-icon').textContent = r.met ? '✓' : '○';
+    });
+  }
+
+  document.getElementById('confirm').addEventListener('input', function() {
+    const pw = document.getElementById('password').value;
+    const hint = document.getElementById('matchHint');
+    if (!this.value) { hint.textContent=''; return; }
+    if (this.value === pw) { hint.textContent='✓ Passwords match'; hint.style.color='var(--ok)'; }
+    else { hint.textContent='✗ Passwords do not match'; hint.style.color='var(--danger)'; }
+  });
+
+  async function doRegister() {
+    const name    = document.getElementById('name').value.trim();
+    const email   = document.getElementById('email').value.trim();
+    const pass    = document.getElementById('password').value;
+    const confirm = document.getElementById('confirm').value;
+    if (!name || !email || !pass || !confirm) { showError('Please fill in all fields.'); return; }
+    if (pass !== confirm) { showError('Passwords do not match.'); return; }
+    setLoading(true);
+    await new Promise(r => setTimeout(r, 700));
+    const result = AUTH.register(name, email, pass);
+    if (result.ok) {
+      const succ = document.getElementById('alertSuccess');
+      succ.textContent = `Account created! Welcome, ${result.session.name.split(' ')[0]}. Redirecting to dashboard...`;
+      succ.classList.add('show');
+      setTimeout(() => window.location.href = 'dashboard/index.html', 1200);
+    } else {
+      setLoading(false);
+      showError(result.error);
+    }
+  }
+
+  function togglePw(id, icon) {
+    const inp = document.getElementById(id);
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    icon.textContent = inp.type === 'password' ? '👁' : '🙈';
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') doRegister(); });
+</script>
+</body>
+</html>

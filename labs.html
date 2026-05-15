@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Labs — Prakash Mijar Cybersecurity</title>
+  <meta name="description" content="Active cybersecurity practice labs by Prakash Mijar — TryHackMe, Hack The Box, bug bounty, CTF competitions, and home lab setup."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://erprakashmijar.com/labs.html"/>
+  <meta property="og:title" content="Labs and Platforms — Prakash Mijar Cybersecurity"/>
+  <meta property="og:description" content="TryHackMe, HTB, bug bounty, CTF, and home lab practice environment."/>
+  <meta property="og:image" content="https://erprakashmijar.com/og-image.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Labs and Platforms — Prakash Mijar Cybersecurity"/>
+  <meta name="twitter:image" content="https://erprakashmijar.com/og-image.png"/>
+  <meta name="keywords" content="TryHackMe, Hack The Box, Bug Bounty, CTF, Home Lab, Cybersecurity Practice, Prakash Mijar"/>
+  <link rel="canonical" href="https://erprakashmijar.com/labs.html"/>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <meta name="theme-color" content="#00ff88"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/style.css"/>
+  <style>
+  .page-hero{padding:9rem 0 4rem;border-bottom:1px solid rgba(0,255,136,.06)}
+  .labs-body{padding:5rem 0}
+
+  .plat-full-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;margin-bottom:4rem}
+  @media(max-width:700px){.plat-full-grid{grid-template-columns:1fr}}
+  .plat-big{background:var(--bg2);border:1px solid rgba(0,212,255,.1);border-radius:8px;overflow:hidden;transition:all .25s}
+  .plat-big:hover{border-color:rgba(0,212,255,.25);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.35)}
+  .plat-big-top{height:3px;background:linear-gradient(90deg,var(--g2),var(--g3))}
+  .plat-big-body{padding:2rem}
+  .plat-big-ico{font-family:var(--mono);font-size:1.8rem;color:var(--g2);margin-bottom:1rem;letter-spacing:.1em}
+  .plat-big-name{font-family:var(--display);font-size:2rem;color:#fff;letter-spacing:.05em;margin-bottom:.3rem}
+  .plat-big-rank{font-family:var(--mono);font-size:.65rem;color:var(--g);margin-bottom:.8rem;letter-spacing:.1em}
+  .plat-big-desc{font-family:var(--mono);font-size:.68rem;color:var(--muted);line-height:1.85;margin-bottom:1.5rem}
+  .plat-big-paths{margin-bottom:1.5rem}
+  .path-label{font-family:var(--mono);font-size:.58rem;color:var(--g2);letter-spacing:.18em;margin-bottom:.5rem}
+  .path-list{list-style:none;display:flex;flex-direction:column;gap:.3rem}
+  .path-list li{font-family:var(--mono);font-size:.65rem;color:var(--muted);display:flex;gap:.5rem}
+  .path-list li::before{content:'▸';color:var(--g);flex-shrink:0}
+
+  .home-lab{background:var(--bg2);border:1px solid rgba(0,255,136,.08);border-radius:8px;padding:2.5rem;margin-bottom:4rem}
+  .lab-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:1.5rem}
+  @media(max-width:700px){.lab-grid{grid-template-columns:1fr}}
+  .lab-item{padding:1.2rem;background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.06);border-radius:4px}
+  .lab-item-name{font-family:var(--mono);font-size:.65rem;color:var(--g);letter-spacing:.12em;margin-bottom:.5rem}
+  .lab-item-desc{font-family:var(--mono);font-size:.62rem;color:var(--muted);line-height:1.7}
+
+  .blue-awareness{border-top:1px solid rgba(0,255,136,.06);padding-top:4rem}
+  .blue-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+  @media(max-width:800px){.blue-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:440px){.blue-grid{grid-template-columns:1fr}}
+  .blue-card{background:var(--bg2);border:1px solid rgba(123,47,255,.1);border-radius:6px;padding:1.5rem;transition:all .25s}
+  .blue-card:hover{border-color:rgba(123,47,255,.28);transform:translateY(-3px)}
+  .blue-num{font-family:var(--mono);font-size:.58rem;color:#7b2fff;letter-spacing:.15em;margin-bottom:.7rem}
+  .blue-title{font-family:var(--display);font-size:1.1rem;color:#fff;letter-spacing:.05em;margin-bottom:.5rem}
+  .blue-desc{font-family:var(--mono);font-size:.63rem;color:var(--muted);line-height:1.75}
+  </style>
+</head>
+<body>
+<a class="skip-nav" href="#main-content">Skip to content</a>
+<canvas id="bgCanvas"></canvas>
+<div id="cur"></div><div id="cur2"></div>
+
+<nav aria-label="Main navigation">
+  <a href="index.html" class="nav-logo">PM<span>::</span>OFFSEC</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="labs.html" class="active">Labs</a></li>
+    <li><a href="skills.html">Skills</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="mailto:contact@erprakashmijar.com" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<main id="main-content" role="main">
+  <div class="page-hero">
+    <div class="wrap">
+      <div class="breadcrumb"><a href="index.html">HOME</a><span>/</span><span>LABS</span></div>
+      <div class="s-label">Practice Environments</div>
+      <h1 class="s-title">LABS &amp;<br><span>PLATFORMS</span></h1>
+      <p style="font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.9;max-width:520px">Active practice across dedicated platforms, CTF competitions, bug bounty programmes, and a personal home lab. Continuous real-world skill development.</p>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="labs-body">
+
+      <div class="s-label">Practice Platforms</div>
+      <h2 class="s-title" style="margin-bottom:2rem">ACTIVE<br><span>PLATFORMS</span></h2>
+
+      <div class="plat-full-grid">
+
+        <div class="plat-big reveal">
+          <div class="plat-big-top"></div>
+          <div class="plat-big-body">
+            <div class="plat-big-ico">[THM]</div>
+            <div class="plat-big-name">TRYHACKME</div>
+            <div class="plat-big-rank">Update with your actual rank / points</div>
+            <p class="plat-big-desc">Structured learning paths from beginner to advanced, covering web exploitation, Active Directory attacks, privilege escalation, network security, and SOC operations.</p>
+            <div class="plat-big-paths">
+              <div class="path-label">// COMPLETED PATHS</div>
+              <ul class="path-list">
+                <li>Jr Penetration Tester</li>
+                <li>SOC Level 1</li>
+                <li>Pre-Security</li>
+                <li>Add your completed paths here</li>
+              </ul>
+            </div>
+            <a href="https://tryhackme.com/" target="_blank" rel="noopener" class="btn btn-b">VIEW PROFILE →</a>
+          </div>
+        </div>
+
+        <div class="plat-big reveal">
+          <div class="plat-big-top" style="background:linear-gradient(90deg,var(--g),var(--g3))"></div>
+          <div class="plat-big-body">
+            <div class="plat-big-ico">[HTB]</div>
+            <div class="plat-big-name">HACK THE BOX</div>
+            <div class="plat-big-rank">Update with your actual rank / points</div>
+            <p class="plat-big-desc">Real-world lab machines simulating enterprise environments. Machines ranging from Easy to Insane, requiring full enumeration, exploitation, and privilege escalation chains.</p>
+            <div class="plat-big-paths">
+              <div class="path-label">// NOTABLE MACHINES</div>
+              <ul class="path-list">
+                <li>Add machines you've rooted here</li>
+                <li>e.g. Lame (Easy) — legacy Samba exploit</li>
+                <li>e.g. Blue (Easy) — EternalBlue / MS17-010</li>
+                <li>e.g. Jerry (Easy) — Tomcat manager RCE</li>
+              </ul>
+            </div>
+            <a href="https://hackthebox.com/" target="_blank" rel="noopener" class="btn btn-b">VIEW PROFILE →</a>
+          </div>
+        </div>
+
+        <div class="plat-big reveal">
+          <div class="plat-big-top" style="background:linear-gradient(90deg,#ff8c00,var(--g))"></div>
+          <div class="plat-big-body">
+            <div class="plat-big-ico">[BB]</div>
+            <div class="plat-big-name">BUG BOUNTY</div>
+            <div class="plat-big-rank">HackerOne / Bugcrowd</div>
+            <p class="plat-big-desc">Responsible disclosure on live programmes. Legal, real-target practice on public bug bounty programmes with actual business impact and verifiable findings.</p>
+            <div class="plat-big-paths">
+              <div class="path-label">// FOCUS AREAS</div>
+              <ul class="path-list">
+                <li>Web application vulnerabilities (OWASP Top 10)</li>
+                <li>API security testing (BOLA, mass assignment)</li>
+                <li>Authentication bypass and logic flaws</li>
+                <li>Add any reported/disclosed bugs here</li>
+              </ul>
+            </div>
+            <a href="https://hackerone.com/" target="_blank" rel="noopener" class="btn btn-b">VIEW PROFILE →</a>
+          </div>
+        </div>
+
+        <div class="plat-big reveal">
+          <div class="plat-big-top" style="background:linear-gradient(90deg,var(--g3),var(--g2))"></div>
+          <div class="plat-big-body">
+            <div class="plat-big-ico">[CTF]</div>
+            <div class="plat-big-name">CTF COMPETITIONS</div>
+            <div class="plat-big-rank">CTFtime.org — add your team/solo profile</div>
+            <p class="plat-big-desc">Timed competitions requiring speed and creativity across forensics, cryptography, web exploitation, binary exploitation (pwn), and reverse engineering.</p>
+            <div class="plat-big-paths">
+              <div class="path-label">// CATEGORIES PRACTICED</div>
+              <ul class="path-list">
+                <li>Web — XSS, SQLi, SSRF, JWT attacks</li>
+                <li>Forensics — PCAP analysis, memory forensics</li>
+                <li>Crypto — RSA, base encodings, hash cracking</li>
+                <li>Pwn / Rev — buffer overflow, binary analysis</li>
+              </ul>
+            </div>
+            <a href="https://ctftime.org/" target="_blank" rel="noopener" class="btn btn-b">CTFTIME →</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- HOME LAB -->
+      <div class="home-lab reveal">
+        <div class="s-label">Personal Infrastructure</div>
+        <h2 class="s-title" style="margin-bottom:.5rem">HOME<br><span>LAB SETUP</span></h2>
+        <p style="font-family:var(--mono);font-size:.7rem;color:var(--muted);line-height:1.85;margin-bottom:1rem;max-width:600px">Isolated virtualised environment for malware analysis, network security testing, and Active Directory attack simulation. No live internet exposure.</p>
+        <div class="lab-grid">
+          <div class="lab-item"><div class="lab-item-name">ATTACKER</div><div class="lab-item-desc">Kali Linux VM — primary attack platform. Full toolset: Metasploit, Burp Suite, Nmap, Impacket.</div></div>
+          <div class="lab-item"><div class="lab-item-name">ANALYSIS</div><div class="lab-item-desc">REMnux + FlareVM — malware analysis workstations with sandboxed execution environment.</div></div>
+          <div class="lab-item"><div class="lab-item-name">TARGETS</div><div class="lab-item-desc">Metasploitable 2/3, DVWA, VulnHub machines, Windows Server VM for AD lab practice.</div></div>
+          <div class="lab-item"><div class="lab-item-name">NETWORK</div><div class="lab-item-desc">Isolated VMware host-only network. Wireshark on dedicated monitoring VM for full packet capture.</div></div>
+          <div class="lab-item"><div class="lab-item-name">IDS/IPS</div><div class="lab-item-desc">Snort IDS running custom rules for alert generation and detection engineering practice.</div></div>
+          <div class="lab-item"><div class="lab-item-name">LOGGING</div><div class="lab-item-desc">Syslog collection and basic ELK stack for log analysis and SIEM practice.</div></div>
+        </div>
+      </div>
+
+      <!-- BLUE TEAM -->
+      <div class="blue-awareness">
+        <div class="s-label">Defender Mindset</div>
+        <h2 class="s-title" style="margin-bottom:2rem">BLUE TEAM<br><span>AWARENESS</span></h2>
+        <div class="blue-grid">
+          <div class="blue-card reveal">
+            <div class="blue-num">01 ──</div>
+            <div class="blue-title">LOG ANALYSIS & SIEM</div>
+            <p class="blue-desc">Windows Event Logs, Syslog, and SIEM alerts (Splunk, Elastic) — understanding what defenders see to improve attack stealth and surface detection gaps.</p>
+          </div>
+          <div class="blue-card reveal">
+            <div class="blue-num">02 ──</div>
+            <div class="blue-title">EDR EVASION AWARENESS</div>
+            <p class="blue-desc">How CrowdStrike, Defender ATP, and Carbon Black flag behaviour — studied to craft realistic PoC payloads and provide EDR tuning advice post-engagement.</p>
+          </div>
+          <div class="blue-card reveal">
+            <div class="blue-num">03 ──</div>
+            <div class="blue-title">CVE RESEARCH</div>
+            <p class="blue-desc">Tracking NVD, vendor advisories, and PoC releases. N-day exploitability assessment before patches are widely applied.</p>
+          </div>
+          <div class="blue-card reveal">
+            <div class="blue-num">04 ──</div>
+            <div class="blue-title">MITRE ATT&CK</div>
+            <p class="blue-desc">Mapping attack techniques to ATT&amp;CK TTPs — enabling detection rule recommendations and red-to-blue knowledge transfer in pentest reports.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>&copy; 2026 Prakash Mijar</span>
+  <div class="f-links"><a href="index.html">Home</a><a href="projects.html">Projects</a><a href="skills.html">Skills</a><a href="about.html">About</a></div>
+  <span class="f-right">erprakashmijar.com<span class="blink">_</span></span>
+</footer>
+<script src="assets/shared.js"></script>
+</body>
+</html>

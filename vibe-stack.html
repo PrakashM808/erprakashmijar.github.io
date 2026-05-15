@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vibe Coding Stack 2026 — Prakash Mijar</title>
+  <meta name="description" content="The complete 2026 Vibe Coding Stack — AI agents, no-code builders, frontend, backend, auth, payments, and deployment tools for building fast."/>
+  <meta name="keywords" content="vibe coding, AI coding agents, Claude Code, Lovable, v0, Supabase, Next.js, 2026 stack"/>
+  <meta name="author" content="Prakash Mijar"/>
+  <meta name="robots" content="index, follow"/>
+  <link rel="canonical" href="https://erprakashmijar.com/vibe-stack.html"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://erprakashmijar.com/vibe-stack.html"/>
+  <meta property="og:title" content="Vibe Coding Stack 2026 — Prakash Mijar"/>
+  <meta property="og:description" content="Complete 2026 Vibe Coding Stack — AI agents, builders, frontend, backend, auth, payments, hosting."/>
+  <meta property="og:image" content="https://erprakashmijar.com/og-image.png"/>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <meta name="theme-color" content="#00ff88"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#040810;--bg2:#070d18;--bg3:#0c1525;
+    --g:#00ff88;--g2:#00d4ff;--g3:#7b2fff;
+    --border:rgba(0,255,136,.11);--border2:rgba(0,212,255,.1);
+    --muted:#2a4a62;--text:#7aafc8;--text2:#c0dce8;--white:#e8f4f8;
+    --mono:'Space Mono',monospace;--display:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;
+    /* Category accent colors */
+    --c1:#00ff88; --c2:#00d4ff; --c3:#a855f7;
+    --c4:#f97316; --c5:#3b82f6; --c6:#ec4899;
+    --c7:#10b981; --c8:#f59e0b; --c9:#ef4444;
+  }
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text2);font-family:var(--body);overflow-x:hidden;cursor:none}
+
+  #bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4}
+  body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:1;opacity:.3}
+
+  #cur{position:fixed;width:8px;height:8px;background:var(--g);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s;box-shadow:0 0 10px var(--g)}
+  #cur2{position:fixed;width:30px;height:30px;border:1px solid rgba(0,255,136,.35);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .2s,height .2s,border-color .2s}
+  @media(hover:none){#cur,#cur2{display:none}body{cursor:auto}}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;justify-content:space-between;align-items:center;padding:1.1rem 3rem;background:rgba(4,8,16,.85);backdrop-filter:blur(20px) saturate(160%);border-bottom:1px solid rgba(0,255,136,.07)}
+  .nav-logo{font-family:var(--mono);font-size:.78rem;color:var(--g);letter-spacing:.14em;text-decoration:none;text-shadow:0 0 16px rgba(0,255,136,.4)}
+  .nav-logo span{color:var(--g2)}
+  .nav-links{display:flex;gap:1.6rem;list-style:none;align-items:center}
+  .nav-links a{font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;letter-spacing:.12em;transition:color .2s;cursor:none;border-bottom:1px solid transparent;padding-bottom:1px}
+  .nav-links a:hover{color:var(--g);border-color:rgba(0,255,136,.3)}
+  .nav-links a.active{color:var(--g2);border-color:rgba(0,212,255,.4)}
+  .nav-cta{background:var(--g)!important;color:#040810!important;padding:.4rem 1rem!important;border:none!important;font-weight:700;border-radius:2px}
+  .nav-cta:hover{background:#fff!important}
+  .nav-toggle{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer}
+  .nav-toggle span{display:block;width:20px;height:1.5px;background:var(--g)}
+  @media(max-width:700px){nav{padding:1rem 1.2rem}.nav-toggle{display:flex}.nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;gap:0;background:rgba(4,8,16,.97);border-bottom:1px solid var(--border);padding:.5rem 0}.nav-links.open{display:flex}.nav-links li a{display:block;padding:.75rem 1.5rem;border-bottom:none}}
+
+  .wrap{max-width:1140px;margin:0 auto;padding:0 2.5rem}
+  @media(max-width:640px){.wrap{padding:0 1.2rem}}
+  section{position:relative;z-index:2}
+  .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(0,255,136,.12),rgba(0,212,255,.08),transparent);position:relative;z-index:2}
+  .s-label{font-family:var(--mono);font-size:.6rem;color:var(--g2);letter-spacing:.3em;margin-bottom:.8rem;display:flex;align-items:center;gap:.6rem}
+  .s-label::before{content:'';display:block;width:20px;height:1px;background:var(--g2)}
+  .btn{font-family:var(--mono);font-size:.68rem;letter-spacing:.13em;padding:.85rem 1.8rem;text-decoration:none;border-radius:3px;transition:all .25s;display:inline-flex;align-items:center;gap:.5rem;cursor:none}
+  .btn-g{background:var(--g);color:#040810;font-weight:700}
+  .btn-g:hover{background:#fff;transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,255,136,.3)}
+  .btn-o{border:1px solid var(--border);color:var(--g)}
+  .btn-o:hover{background:rgba(0,255,136,.06);border-color:var(--g);transform:translateY(-2px)}
+  .blink{animation:blink 1s step-end infinite}
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+  @keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+  /* ── HERO ── */
+  .page-hero{padding:9rem 0 5rem;border-bottom:1px solid rgba(0,255,136,.06);position:relative;overflow:hidden}
+  .hero-orb{position:absolute;right:-8rem;top:20%;width:600px;height:600px;background:radial-gradient(circle,rgba(0,255,136,.05) 0%,transparent 65%);border-radius:50%;pointer-events:none}
+  .hero-orb2{position:absolute;left:-6rem;bottom:-10%;width:400px;height:400px;background:radial-gradient(circle,rgba(123,47,255,.05) 0%,transparent 65%);border-radius:50%;pointer-events:none}
+  .breadcrumb{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.12em;margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+  .breadcrumb a{color:var(--g2);text-decoration:none;transition:color .2s;cursor:none}
+  .breadcrumb a:hover{color:#fff}
+  .page-title{font-family:var(--display);font-size:clamp(3.5rem,8vw,7rem);color:var(--white);letter-spacing:.02em;line-height:.88;margin-bottom:1.2rem}
+  .page-title em{font-style:normal;color:var(--g);display:block;text-shadow:0 0 60px rgba(0,255,136,.3)}
+  .page-title small{font-size:clamp(1.8rem,4vw,3.5rem);color:var(--g2);display:block;text-shadow:0 0 40px rgba(0,212,255,.2)}
+  .page-desc{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.9;max-width:560px;margin-bottom:2rem}
+  .year-badge{display:inline-flex;align-items:center;gap:.6rem;font-family:var(--mono);font-size:.65rem;color:var(--g);background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.15);padding:.45rem 1.1rem;border-radius:20px;letter-spacing:.12em;margin-bottom:1.5rem;opacity:0;animation:up .5s .1s forwards}
+  .year-badge::before{content:'';display:block;width:6px;height:6px;background:var(--g);border-radius:50%;box-shadow:0 0 6px var(--g);animation:blink 2s infinite}
+
+  /* ── STATS STRIP ── */
+  .stats-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.06);border-radius:8px;overflow:hidden;margin-top:3rem}
+  @media(max-width:700px){.stats-strip{grid-template-columns:repeat(2,1fr)}}
+  .sstat{background:var(--bg);padding:1.4rem 1.2rem;text-align:center;transition:background .2s}
+  .sstat:hover{background:rgba(0,255,136,.02)}
+  .sstat-n{font-family:var(--display);font-size:2.4rem;color:var(--g);line-height:1;text-shadow:0 0 20px rgba(0,255,136,.25)}
+  .sstat-l{font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:.14em;margin-top:.3rem}
+
+  /* ── SEARCH BAR ── */
+  .search-wrap{padding:2.5rem 0 0;position:relative;z-index:2}
+  .search-inner{position:relative;max-width:520px}
+  .search-inner::before{content:'⌕';position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:1.1rem;pointer-events:none;z-index:1}
+  .search-input{width:100%;background:rgba(0,255,136,.03);border:1px solid var(--border);border-radius:8px;padding:.8rem 1rem .8rem 2.6rem;font-family:var(--mono);font-size:.7rem;color:var(--white);outline:none;transition:border-color .2s,box-shadow .2s;letter-spacing:.05em}
+  .search-input:focus{border-color:rgba(0,255,136,.3);box-shadow:0 0 0 3px rgba(0,255,136,.05)}
+  .search-input::placeholder{color:var(--muted)}
+  #searchCount{font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:.6rem;letter-spacing:.1em}
+
+  /* ── FILTER PILLS ── */
+  .filter-bar{display:flex;gap:.5rem;flex-wrap:wrap;padding:1.5rem 0 0}
+  .fpill{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;padding:.35rem .85rem;border-radius:20px;cursor:pointer;transition:all .2s;border:1px solid rgba(255,255,255,.08);color:var(--muted);background:transparent}
+  .fpill:hover{color:var(--white);border-color:rgba(255,255,255,.2)}
+  .fpill.active{color:var(--bg);font-weight:700;border-color:transparent}
+  .fp1.active{background:var(--c1);box-shadow:0 0 12px rgba(0,255,136,.25)}
+  .fp2.active{background:var(--c2)}
+  .fp3.active{background:var(--c3)}
+  .fp4.active{background:var(--c4)}
+  .fp5.active{background:var(--c5)}
+  .fp6.active{background:var(--c6)}
+  .fp7.active{background:var(--c7)}
+  .fp8.active{background:var(--c8)}
+  .fp9.active{background:var(--c9)}
+  .fpall.active{background:var(--white)}
+
+  /* ── MAIN STACK GRID ── */
+  .stack-section{padding:3rem 0 6rem}
+  .stack-categories{display:flex;flex-direction:column;gap:2rem}
+
+  /* Category block */
+  .cat-block{border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.05);transition:border-color .2s}
+  .cat-block.hidden{display:none}
+  .cat-block:hover{border-color:rgba(255,255,255,.09)}
+
+  .cat-header{display:flex;align-items:center;gap:1rem;padding:1.2rem 1.6rem;cursor:pointer;position:relative;overflow:hidden;user-select:none}
+  .cat-header::before{content:'';position:absolute;inset:0;opacity:.05;transition:opacity .2s}
+  .cat-block:hover .cat-header::before{opacity:.08}
+
+  /* Per-category header bg */
+  .ch1::before{background:var(--c1)}.ch2::before{background:var(--c2)}.ch3::before{background:var(--c3)}
+  .ch4::before{background:var(--c4)}.ch5::before{background:var(--c5)}.ch6::before{background:var(--c6)}
+  .ch7::before{background:var(--c7)}.ch8::before{background:var(--c8)}.ch9::before{background:var(--c9)}
+
+  /* Left accent bar */
+  .cat-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+  .ch1::after{background:var(--c1)}.ch2::after{background:var(--c2)}.ch3::after{background:var(--c3)}
+  .ch4::after{background:var(--c4)}.ch5::after{background:var(--c5)}.ch6::after{background:var(--c6)}
+  .ch7::after{background:var(--c7)}.ch8::after{background:var(--c8)}.ch9::after{background:var(--c9)}
+
+  .cat-icon-big{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+  .ci1{background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2)}
+  .ci2{background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.18)}
+  .ci3{background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2)}
+  .ci4{background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.2)}
+  .ci5{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2)}
+  .ci6{background:rgba(236,72,153,.08);border:1px solid rgba(236,72,153,.2)}
+  .ci7{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2)}
+  .ci8{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2)}
+  .ci9{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2)}
+
+  .cat-meta{flex:1}
+  .cat-num{font-family:var(--mono);font-size:.55rem;letter-spacing:.18em;margin-bottom:.15rem}
+  .cn1{color:rgba(0,255,136,.45)}.cn2{color:rgba(0,212,255,.45)}.cn3{color:rgba(168,85,247,.45)}
+  .cn4{color:rgba(249,115,22,.45)}.cn5{color:rgba(59,130,246,.45)}.cn6{color:rgba(236,72,153,.45)}
+  .cn7{color:rgba(16,185,129,.45)}.cn8{color:rgba(245,158,11,.45)}.cn9{color:rgba(239,68,68,.45)}
+
+  .cat-name{font-family:var(--display);font-size:1.5rem;color:var(--white);letter-spacing:.05em;line-height:1}
+  .cat-tagline{font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:.2rem;letter-spacing:.05em}
+  .cat-count-badge{font-family:var(--mono);font-size:.58rem;padding:.25rem .65rem;border-radius:10px;margin-left:auto;flex-shrink:0;letter-spacing:.08em}
+  .cb1{background:rgba(0,255,136,.07);color:var(--c1);border:1px solid rgba(0,255,136,.15)}
+  .cb2{background:rgba(0,212,255,.06);color:var(--c2);border:1px solid rgba(0,212,255,.14)}
+  .cb3{background:rgba(168,85,247,.07);color:#c084fc;border:1px solid rgba(168,85,247,.18)}
+  .cb4{background:rgba(249,115,22,.07);color:var(--c4);border:1px solid rgba(249,115,22,.18)}
+  .cb5{background:rgba(59,130,246,.07);color:#93c5fd;border:1px solid rgba(59,130,246,.18)}
+  .cb6{background:rgba(236,72,153,.07);color:var(--c6);border:1px solid rgba(236,72,153,.18)}
+  .cb7{background:rgba(16,185,129,.07);color:var(--c7);border:1px solid rgba(16,185,129,.18)}
+  .cb8{background:rgba(245,158,11,.07);color:var(--c8);border:1px solid rgba(245,158,11,.18)}
+  .cb9{background:rgba(239,68,68,.07);color:var(--c9);border:1px solid rgba(239,68,68,.18)}
+
+  .cat-chevron{font-size:.7rem;color:var(--muted);transition:transform .3s,color .2s;flex-shrink:0;margin-left:.5rem}
+  .cat-block.open .cat-chevron{transform:rotate(90deg);color:var(--white)}
+
+  /* Tool cards grid */
+  .cat-body{display:none;background:var(--bg2);border-top:1px solid rgba(255,255,255,.04)}
+  .cat-block.open .cat-body{display:block}
+  .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:1px;background:rgba(255,255,255,.03)}
+
+  .tool-card{
+    background:var(--bg2);padding:1.4rem;
+    transition:background .2s,transform .2s;
+    cursor:pointer;position:relative;overflow:hidden;
+    display:flex;flex-direction:column;gap:.6rem;
+  }
+  .tool-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;transform:scaleX(0);transform-origin:left;transition:transform .3s}
+  .cat-block:nth-child(1) .tool-card::before{background:var(--c1)}
+  .cat-block:nth-child(2) .tool-card::before{background:var(--c2)}
+  .cat-block:nth-child(3) .tool-card::before{background:var(--c3)}
+  .cat-block:nth-child(4) .tool-card::before{background:var(--c4)}
+  .cat-block:nth-child(5) .tool-card::before{background:var(--c5)}
+  .cat-block:nth-child(6) .tool-card::before{background:var(--c6)}
+  .cat-block:nth-child(7) .tool-card::before{background:var(--c7)}
+  .cat-block:nth-child(8) .tool-card::before{background:var(--c8)}
+  .cat-block:nth-child(9) .tool-card::before{background:var(--c9)}
+  .tool-card:hover::before{transform:scaleX(1)}
+  .tool-card:hover{background:rgba(255,255,255,.015)}
+
+  .tool-top{display:flex;align-items:center;gap:.7rem}
+  .tool-emoji{font-size:1.3rem;flex-shrink:0;transition:transform .25s}
+  .tool-card:hover .tool-emoji{transform:scale(1.15) rotate(-5deg)}
+  .tool-name{font-family:var(--display);font-size:1.1rem;color:var(--white);letter-spacing:.04em;line-height:1}
+  .tool-type{font-family:var(--mono);font-size:.52rem;color:var(--muted);letter-spacing:.12em}
+  .tool-desc{font-family:var(--mono);font-size:.62rem;color:var(--muted);line-height:1.7;flex:1}
+  .tool-tags{display:flex;flex-wrap:wrap;gap:.3rem}
+  .ttag{font-family:var(--mono);font-size:.52rem;padding:.15rem .45rem;border-radius:2px;letter-spacing:.06em}
+  .ttag-g{color:var(--g);background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.12)}
+  .ttag-b{color:var(--g2);background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.1)}
+  .ttag-p{color:#c084fc;background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.14)}
+  .ttag-o{color:var(--c4);background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.14)}
+  .ttag-free{color:var(--g);background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.12)}
+  .ttag-paid{color:var(--c8);background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.14)}
+  .ttag-freemium{color:var(--c2);background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.12)}
+  .tool-hot{position:absolute;top:.7rem;right:.7rem;font-family:var(--mono);font-size:.48rem;color:#ff6b35;background:rgba(255,107,53,.1);border:1px solid rgba(255,107,53,.2);padding:.15rem .45rem;border-radius:2px;letter-spacing:.1em}
+
+  /* ── COMPARISON TABLE ── */
+  .compare-section{padding:5rem 0;border-top:1px solid rgba(0,255,136,.06)}
+  .compare-table{width:100%;border-collapse:collapse;margin-top:1.5rem}
+  .compare-table th{font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:.15em;text-align:left;padding:.7rem 1rem;border-bottom:1px solid rgba(0,255,136,.08);text-transform:uppercase}
+  .compare-table td{font-family:var(--mono);font-size:.62rem;color:var(--text2);padding:.75rem 1rem;border-bottom:1px solid rgba(0,255,136,.04)}
+  .compare-table tr:hover td{background:rgba(0,255,136,.02)}
+  .compare-table tr:last-child td{border-bottom:none}
+  .rec-badge{display:inline-block;font-family:var(--mono);font-size:.52rem;padding:.18rem .5rem;border-radius:3px;letter-spacing:.08em}
+  .rec-yes{background:rgba(0,255,136,.08);color:var(--g);border:1px solid rgba(0,255,136,.15)}
+  .rec-no{background:rgba(255,255,255,.03);color:var(--muted);border:1px solid rgba(255,255,255,.06)}
+  .rec-hot{background:rgba(255,107,53,.1);color:#ff6b35;border:1px solid rgba(255,107,53,.2)}
+
+  /* ── HOW TO START ── */
+  .howto-section{padding:5rem 0;border-top:1px solid rgba(0,255,136,.06)}
+  .howto-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:2rem}
+  @media(max-width:800px){.howto-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:440px){.howto-grid{grid-template-columns:1fr}}
+  .hw-card{background:var(--bg2);border:1px solid rgba(0,255,136,.07);border-radius:8px;padding:1.5rem;transition:all .25s;position:relative;overflow:hidden}
+  .hw-card:hover{border-color:rgba(0,255,136,.18);transform:translateY(-3px);box-shadow:0 12px 36px rgba(0,0,0,.3)}
+  .hw-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;transform:scaleX(0);transform-origin:left;transition:transform .3s}
+  .hw-card:hover::after{transform:scaleX(1)}
+  .hw1::after{background:var(--c1)}.hw2::after{background:var(--c2)}.hw3::after{background:var(--c3)}.hw4::after{background:var(--c4)}
+  .hw-step{font-family:var(--display);font-size:3rem;line-height:1;margin-bottom:.5rem;opacity:.12}
+  .hw1 .hw-step{color:var(--c1)}.hw2 .hw-step{color:var(--c2)}.hw3 .hw-step{color:var(--c3)}.hw4 .hw-step{color:var(--c4)}
+  .hw-title{font-family:var(--display);font-size:1rem;color:var(--white);letter-spacing:.05em;margin-bottom:.5rem}
+  .hw-desc{font-family:var(--mono);font-size:.62rem;color:var(--muted);line-height:1.75}
+
+  /* ── CTA ── */
+  .cta-strip{padding:5rem 0;border-top:1px solid rgba(0,255,136,.06);text-align:center}
+  .cta-title{font-family:var(--display);font-size:clamp(2rem,5vw,4rem);color:var(--white);letter-spacing:.03em;margin-bottom:.8rem}
+  .cta-title span{color:var(--g)}
+  .cta-sub{font-family:var(--mono);font-size:.7rem;color:var(--muted);line-height:1.85;margin-bottom:2rem;max-width:480px;margin-left:auto;margin-right:auto}
+  .cta-btns{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap}
+
+  footer{position:relative;z-index:2;padding:2rem 3rem;border-top:1px solid rgba(0,255,136,.06);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+  footer span{font-family:var(--mono);font-size:.6rem;color:var(--muted)}
+  .f-right{color:var(--g);letter-spacing:.1em}
+  .f-links{display:flex;gap:1.5rem}
+  .f-links a{font-family:var(--mono);font-size:.6rem;color:var(--muted);text-decoration:none;transition:color .2s;cursor:none}
+  .f-links a:hover{color:var(--g)}
+  @media(max-width:640px){footer{padding:1.5rem 1.2rem}}
+  </style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<div id="cur"></div><div id="cur2"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">PM<span>::</span>OFFSEC</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="roadmap.html">Roadmap</a></li>
+    <li><a href="vibe-stack.html" class="active">Vibe Stack</a></li>
+    <li><a href="skills.html">Skills</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="mailto:contact@erprakashmijar.com" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<main id="main-content" role="main">
+
+<!-- ── HERO ── -->
+<section class="page-hero">
+  <div class="hero-orb"></div>
+  <div class="hero-orb2"></div>
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">HOME</a><span>/</span><span>VIBE STACK</span></div>
+    <div class="year-badge">2026 EDITION · UPDATED</div>
+    <h1 class="page-title">VIBE<em>CODING</em><small>STACK</small></h1>
+    <p class="page-desc">The complete toolkit for building at the speed of thought in 2026 — AI agents, no-code builders, full-stack infrastructure, payments, and deployment. Everything you need to ship from idea to production.</p>
+    <div class="search-wrap">
+      <div class="search-inner">
+        <input class="search-input" id="searchInput" type="search" placeholder="Search tools, categories, or use cases..." autocomplete="off"/>
+      </div>
+      <div id="searchCount"></div>
+    </div>
+    <div class="filter-bar" id="filterBar">
+      <span class="fpill fpall active" data-filter="all" onclick="setFilter('all',this)">ALL TOOLS</span>
+      <span class="fpill fp1" data-filter="ai-agents" onclick="setFilter('ai-agents',this)">🤖 AI AGENTS</span>
+      <span class="fpill fp2" data-filter="nocode" onclick="setFilter('nocode',this)">⚡ NO-CODE</span>
+      <span class="fpill fp3" data-filter="models" onclick="setFilter('models',this)">🧠 AI MODELS</span>
+      <span class="fpill fp4" data-filter="frontend" onclick="setFilter('frontend',this)">🎨 FRONTEND</span>
+      <span class="fpill fp5" data-filter="backend" onclick="setFilter('backend',this)">⚙️ BACKEND</span>
+      <span class="fpill fp6" data-filter="auth" onclick="setFilter('auth',this)">🔑 AUTH</span>
+      <span class="fpill fp7" data-filter="database" onclick="setFilter('database',this)">🗄️ DATABASE</span>
+      <span class="fpill fp8" data-filter="payments" onclick="setFilter('payments',this)">💳 PAYMENTS</span>
+      <span class="fpill fp9" data-filter="hosting" onclick="setFilter('hosting',this)">🚀 HOSTING</span>
+    </div>
+    <div class="stats-strip reveal">
+      <div class="sstat"><div class="sstat-n">9</div><div class="sstat-l">CATEGORIES</div></div>
+      <div class="sstat"><div class="sstat-n">45</div><div class="sstat-l">TOOLS</div></div>
+      <div class="sstat"><div class="sstat-n">2026</div><div class="sstat-l">EDITION</div></div>
+      <div class="sstat"><div class="sstat-n">∞</div><div class="sstat-l">SHIP SPEED</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── STACK ── -->
+<section class="stack-section">
+  <div class="wrap">
+    <div class="stack-categories" id="stackCategories">
+
+      <!-- ══ 01 AI CODING AGENTS ══ -->
+      <div class="cat-block open reveal" data-category="ai-agents">
+        <div class="cat-header ch1" onclick="toggleCat(this)">
+          <div class="cat-icon-big ci1">🤖</div>
+          <div class="cat-meta">
+            <div class="cat-num cn1">01 // AI CODING</div>
+            <div class="cat-name">AI CODING AGENTS</div>
+            <div class="cat-tagline">Write entire codebases by describing what you want</div>
+          </div>
+          <span class="cat-count-badge cb1">5 TOOLS</span>
+          <span class="cat-chevron">▶</span>
+        </div>
+        <div class="cat-body">
+          <div class="tools-grid">
+            <div class="tool-card" data-name="claude code claude anthropic">
+              <div class="tool-hot">🔥 TOP PICK</div>
+              <div class="tool-top"><span class="tool-emoji">🟣</span><div><div class="tool-name">CLAUDE CODE</div><div class="tool-type">AGENTIC CLI CODING</div></div></div>
+              <div class="tool-desc">Anthropic's agentic coding tool that lives in your terminal. Reads, writes, and edits entire codebases autonomously. Best-in-class for complex multi-file refactors and architecture changes.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">CLI</span><span class="ttag ttag-p">Anthropic</span><span class="ttag ttag-paid">Paid</span><span class="ttag ttag-g">Best for complex tasks</span></div>
+            </div>
+            <div class="tool-card" data-name="openai codex gpt coding agent">
+              <div class="tool-top"><span class="tool-emoji">🟢</span><div><div class="tool-name">OPENAI CODEX</div><div class="tool-type">CLOUD CODING AGENT</div></div></div>
+              <div class="tool-desc">OpenAI's cloud-based coding agent that runs in a sandboxed environment. Handles full feature development tasks, debugging sessions, and codebase navigation asynchronously.</div>
+              <div class="tool-tags"><span class="ttag ttag-b">Cloud</span><span class="ttag ttag-p">OpenAI</span><span class="ttag ttag-paid">Paid</span></div>
+            </div>
+            <div class="tool-card" data-name="manus agent autonomous ai">
+              <div class="tool-top"><span class="tool-emoji">🌐</span><div><div class="tool-name">MANUS AGENT</div><div class="tool-type">AUTONOMOUS AGENT</div></div></div>
+              <div class="tool-desc">General-purpose autonomous AI agent capable of browsing, coding, and executing multi-step tasks without supervision. Strong for research + build workflows.</div>
+              <div class="tool-tags"><span class="ttag ttag-b">Autonomous</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+            <div class="tool-card" data-name="replit agent ide cloud coding">
+              <div class="tool-top"><span class="tool-emoji">🔷</span><div><div class="tool-name">REPLIT AGENT</div><div class="tool-type">BROWSER IDE + AGENT</div></div></div>
+              <div class="tool-desc">AI agent built into Replit's cloud IDE. Builds full apps from prompts, manages dependencies, runs tests, and deploys — all in one browser tab. Great for rapid prototyping.</div>
+              <div class="tool-tags"><span class="ttag ttag-b">Browser</span><span class="ttag ttag-g">Deploy included</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+            <div class="tool-card" data-name="opencode open source coding agent terminal">
+              <div class="tool-top"><span class="tool-emoji">⚡</span><div><div class="tool-name">OPENCODE</div><div class="tool-type">OPEN SOURCE CLI AGENT</div></div></div>
+              <div class="tool-desc">Open-source CLI coding agent. Connect any LLM backend (OpenAI, Anthropic, Ollama) to get an agentic coding workflow without vendor lock-in. Community-driven, fast-moving.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">Open Source</span><span class="ttag ttag-g">CLI</span><span class="ttag ttag-free">Free</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 02 NO-CODE BUILDERS ══ -->
+      <div class="cat-block reveal" data-category="nocode">
+        <div class="cat-header ch2" onclick="toggleCat(this)">
+          <div class="cat-icon-big ci2">⚡</div>
+          <div class="cat-meta">
+            <div class="cat-num cn2">02 // MVP BUILDERS</div>
+            <div class="cat-name">NO-CODE / FAST MVP</div>
+            <div class="cat-tagline">Ship production apps from a prompt in minutes</div>
+          </div>
+          <span class="cat-count-badge cb2">5 TOOLS</span>
+          <span class="cat-chevron">▶</span>
+        </div>
+        <div class="cat-body">
+          <div class="tools-grid">
+            <div class="tool-card" data-name="lovable fullstack app builder react supabase">
+              <div class="tool-hot">🔥 TRENDING</div>
+              <div class="tool-top"><span class="tool-emoji">💜</span><div><div class="tool-name">LOVABLE</div><div class="tool-type">FULLSTACK APP BUILDER</div></div></div>
+              <div class="tool-desc">Generates React + Supabase full-stack apps from prompts. Frontend + backend + auth + DB in one shot. The fastest way from idea to deployed app in 2026. Huge community momentum.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">React</span><span class="ttag ttag-b">Supabase</span><span class="ttag ttag-freemium">Freemium</span><span class="ttag ttag-g">Deploy included</span></div>
+            </div>
+            <div class="tool-card" data-name="bolt stackblitz instant fullstack">
+              <div class="tool-top"><span class="tool-emoji">⚡</span><div><div class="tool-name">BOLT</div><div class="tool-type">INSTANT FULLSTACK</div></div></div>
+              <div class="tool-desc">StackBlitz-powered AI builder. Generates and runs full applications in the browser with zero setup. Excellent for Next.js, React, and Node.js projects with instant preview.</div>
+              <div class="tool-tags"><span class="ttag ttag-b">Next.js</span><span class="ttag ttag-g">Browser-based</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+            <div class="tool-card" data-name="v0 vercel ui component builder shadcn">
+              <div class="tool-top"><span class="tool-emoji">🔲</span><div><div class="tool-name">V0</div><div class="tool-type">UI COMPONENT BUILDER</div></div></div>
+              <div class="tool-desc">Vercel's AI UI builder. Generates polished React components using shadcn/ui and Tailwind. Copy-paste or push directly to your repo. The fastest way to get a production-ready UI.</div>
+              <div class="tool-tags"><span class="ttag ttag-b">Vercel</span><span class="ttag ttag-g">shadcn/ui</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+            <div class="tool-card" data-name="base44 internal tools dashboard builder">
+              <div class="tool-top"><span class="tool-emoji">🟦</span><div><div class="tool-name">BASE44</div><div class="tool-type">INTERNAL TOOLS BUILDER</div></div></div>
+              <div class="tool-desc">AI-powered internal tools and dashboards builder. Connect your data sources and generate admin panels, reporting dashboards, and CRUD interfaces from natural language descriptions.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">No-code</span><span class="ttag ttag-b">Internal tools</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+            <div class="tool-card" data-name="emergent app builder ai agents">
+              <div class="tool-top"><span class="tool-emoji">🌱</span><div><div class="tool-name">EMERGENT</div><div class="tool-type">AGENTIC APP BUILDER</div></div></div>
+              <div class="tool-desc">Next-gen app builder using agentic workflows. Builds complex multi-step applications with persistent state, background jobs, and API integrations from high-level descriptions.</div>
+              <div class="tool-tags"><span class="ttag ttag-p">Agentic</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 03 AI MODELS ══ -->
+      <div class="cat-block reveal" data-category="models">
+        <div class="cat-header ch3" onclick="toggleCat(this)">
+          <div class="cat-icon-big ci3">🧠</div>
+          <div class="cat-meta">
+            <div class="cat-num cn3">03 // AI MODELS</div>
+            <div class="cat-name">AI MODELS FOR BUILDING</div>
+            <div class="cat-tagline">The intelligence powering your vibe coding workflow</div>
+          </div>
+          <span class="cat-count-badge cb3">5 TOOLS</span>
+          <span class="cat-chevron">▶</span>
+        </div>
+        <div class="cat-body">
+          <div class="tools-grid">
+            <div class="tool-card" data-name="claude opus 4 anthropic best coding model">
+              <div class="tool-hot">🔥 BEST CODE</div>
+              <div class="tool-top"><span class="tool-emoji">🟣</span><div><div class="tool-name">CLAUDE OPUS</div><div class="tool-type">FRONTIER MODEL · ANTHROPIC</div></div></div>
+              <div class="tool-desc">Anthropic's most capable model. Exceptional at long-context reasoning, complex architecture decisions, and multi-file refactoring. The gold standard for serious coding tasks in 2026.</div>
+              <div class="tool-tags"><span class="ttag ttag-p">Anthropic</span><span class="ttag ttag-paid">Paid</span><span class="ttag ttag-g">Best for complex code</span></div>
+            </div>
+            <div class="tool-card" data-name="openai gpt-4o chatgpt coding">
+              <div class="tool-top"><span class="tool-emoji">🟢</span><div><div class="tool-name">OPENAI GPT</div><div class="tool-type">FRONTIER MODEL · OPENAI</div></div></div>
+              <div class="tool-desc">GPT-4o and o3 series. Strong multimodal capabilities — analyze screenshots of UI to generate code, describe errors from images. Massive ecosystem and plugin support.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">Multimodal</span><span class="ttag ttag-p">OpenAI</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+            <div class="tool-card" data-name="gemini google 2.5 pro coding">
+              <div class="tool-top"><span class="tool-emoji">💎</span><div><div class="tool-name">GEMINI</div><div class="tool-type">FRONTIER MODEL · GOOGLE</div></div></div>
+              <div class="tool-desc">Google's Gemini 2.5 Pro has the largest context window available (2M tokens). Excellent for analyzing massive codebases, documentation, and long refactoring sessions in a single prompt.</div>
+              <div class="tool-tags"><span class="ttag ttag-b">2M context</span><span class="ttag ttag-p">Google</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+            <div class="tool-card" data-name="deepseek v3 r1 open source cheap api">
+              <div class="tool-top"><span class="tool-emoji">🐳</span><div><div class="tool-name">DEEPSEEK</div><div class="tool-type">OPEN-SOURCE MODEL</div></div></div>
+              <div class="tool-desc">DeepSeek V3 and R1. Frontier-level performance at a fraction of the API cost. The best price-to-performance ratio for high-volume coding tasks. Open weights — self-hostable.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">Open Source</span><span class="ttag ttag-free">Cheap API</span><span class="ttag ttag-g">Self-hostable</span></div>
+            </div>
+            <div class="tool-card" data-name="kimi k2 moonshot multimodal coding">
+              <div class="tool-top"><span class="tool-emoji">🌙</span><div><div class="tool-name">KIMI K2</div><div class="tool-type">MODEL · MOONSHOT AI</div></div></div>
+              <div class="tool-desc">Moonshot AI's Kimi K2 — strong multimodal reasoning and coding capabilities with a competitive API price point. Growing fast as an alternative to western frontier models.</div>
+              <div class="tool-tags"><span class="ttag ttag-b">Moonshot AI</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 04 FRONTEND ══ -->
+      <div class="cat-block reveal" data-category="frontend">
+        <div class="cat-header ch4" onclick="toggleCat(this)">
+          <div class="cat-icon-big ci4">🎨</div>
+          <div class="cat-meta">
+            <div class="cat-num cn4">04 // FRONTEND</div>
+            <div class="cat-name">FRONTEND STACK</div>
+            <div class="cat-tagline">Building fast, beautiful, and production-grade UIs</div>
+          </div>
+          <span class="cat-count-badge cb4">5 TOOLS</span>
+          <span class="cat-chevron">▶</span>
+        </div>
+        <div class="cat-body">
+          <div class="tools-grid">
+            <div class="tool-card" data-name="nextjs react framework vercel ssr fullstack">
+              <div class="tool-hot">🏆 STANDARD</div>
+              <div class="tool-top"><span class="tool-emoji">▲</span><div><div class="tool-name">NEXT.JS</div><div class="tool-type">REACT FRAMEWORK</div></div></div>
+              <div class="tool-desc">The industry-standard React framework for 2026. App Router, Server Components, API routes, edge functions, and seamless Vercel deployment. The default choice for serious web apps.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">React</span><span class="ttag ttag-b">SSR/SSG</span><span class="ttag ttag-free">Open Source</span><span class="ttag ttag-g">Vercel hosted</span></div>
+            </div>
+            <div class="tool-card" data-name="react javascript ui library components">
+              <div class="tool-top"><span class="tool-emoji">⚛️</span><div><div class="tool-name">REACT</div><div class="tool-type">UI LIBRARY</div></div></div>
+              <div class="tool-desc">The foundational UI library powering most of the vibe coding ecosystem. Component-based, hook-driven, and the target output of nearly every AI builder tool in this stack.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">Meta</span><span class="ttag ttag-free">Open Source</span><span class="ttag ttag-b">Ecosystem standard</span></div>
+            </div>
+            <div class="tool-card" data-name="tailwind css utility classes styling">
+              <div class="tool-top"><span class="tool-emoji">🌊</span><div><div class="tool-name">TAILWIND CSS</div><div class="tool-type">UTILITY-FIRST CSS</div></div></div>
+              <div class="tool-desc">Utility-first CSS framework. Style components directly in JSX without writing CSS files. The standard pairing with React in 2026 — AI tools generate Tailwind by default.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">Utility-first</span><span class="ttag ttag-free">Open Source</span><span class="ttag ttag-b">AI-friendly</span></div>
+            </div>
+            <div class="tool-card" data-name="shadcn ui components radix accessible">
+              <div class="tool-top"><span class="tool-emoji">🎯</span><div><div class="tool-name">SHADCN UI</div><div class="tool-type">COMPONENT LIBRARY</div></div></div>
+              <div class="tool-desc">Accessible, copy-paste React components built on Radix UI and Tailwind. Not an npm package — you own the code. The most AI-generated component library in 2026. v0 outputs shadcn by default.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">Radix UI</span><span class="ttag ttag-free">Open Source</span><span class="ttag ttag-b">Accessible</span></div>
+            </div>
+            <div class="tool-card" data-name="framer motion animation react transitions">
+              <div class="tool-top"><span class="tool-emoji">🎬</span><div><div class="tool-name">FRAMER MOTION</div><div class="tool-type">ANIMATION LIBRARY</div></div></div>
+              <div class="tool-desc">Production-grade animation library for React. Declarative animations, gestures, shared layout transitions, and scroll-triggered effects. Makes AI-generated UIs feel alive and polished.</div>
+              <div class="tool-tags"><span class="ttag ttag-p">Animation</span><span class="ttag ttag-freemium">Freemium</span><span class="ttag ttag-g">React native</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 05 BACKEND ══ -->
+      <div class="cat-block reveal" data-category="backend">
+        <div class="cat-header ch5" onclick="toggleCat(this)">
+          <div class="cat-icon-big ci5">⚙️</div>
+          <div class="cat-meta">
+            <div class="cat-num cn5">05 // BACKEND</div>
+            <div class="cat-name">BACKEND STACK</div>
+            <div class="cat-tagline">Database, realtime, and server infrastructure</div>
+          </div>
+          <span class="cat-count-badge cb5">5 TOOLS</span>
+          <span class="cat-chevron">▶</span>
+        </div>
+        <div class="cat-body">
+          <div class="tools-grid">
+            <div class="tool-card" data-name="supabase postgres backend firebase alternative realtime">
+              <div class="tool-hot">🔥 MOST USED</div>
+              <div class="tool-top"><span class="tool-emoji">⚡</span><div><div class="tool-name">SUPABASE</div><div class="tool-type">OPEN-SOURCE BACKEND</div></div></div>
+              <div class="tool-desc">The open-source Firebase alternative. PostgreSQL database, realtime subscriptions, row-level security, edge functions, and storage — all in one platform. The backbone of the vibe coding stack.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">PostgreSQL</span><span class="ttag ttag-b">Realtime</span><span class="ttag ttag-free">Open Source</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+            <div class="tool-card" data-name="firebase google realtime database backend">
+              <div class="tool-top"><span class="tool-emoji">🔥</span><div><div class="tool-name">FIREBASE</div><div class="tool-type">GOOGLE BaaS</div></div></div>
+              <div class="tool-desc">Google's BaaS platform. Firestore NoSQL database, realtime listeners, cloud functions, and hosting. Battle-tested at scale. Better for mobile-first or NoSQL document patterns.</div>
+              <div class="tool-tags"><span class="ttag ttag-b">NoSQL</span><span class="ttag ttag-p">Google</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+            <div class="tool-card" data-name="neon postgres serverless database branching">
+              <div class="tool-top"><span class="tool-emoji">🌿</span><div><div class="tool-name">NEON</div><div class="tool-type">SERVERLESS POSTGRES</div></div></div>
+              <div class="tool-desc">Serverless PostgreSQL with database branching. Scale-to-zero billing, instant branches for dev/staging (like git branches for your DB), and seamless Next.js integration via Vercel.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">Serverless</span><span class="ttag ttag-b">Branching</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+            <div class="tool-card" data-name="prisma orm database typescript typesafe">
+              <div class="tool-top"><span class="tool-emoji">🔺</span><div><div class="tool-name">PRISMA</div><div class="tool-type">TYPE-SAFE ORM</div></div></div>
+              <div class="tool-desc">The most popular ORM for TypeScript. Schema-first, auto-generated type-safe client, and migrations. Makes AI-generated database code reliable — Claude and GPT write excellent Prisma schemas.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">TypeScript</span><span class="ttag ttag-free">Open Source</span><span class="ttag ttag-b">Type-safe</span></div>
+            </div>
+            <div class="tool-card" data-name="convex realtime backend reactive fullstack">
+              <div class="tool-top"><span class="tool-emoji">🔄</span><div><div class="tool-name">CONVEX</div><div class="tool-type">REACTIVE BACKEND</div></div></div>
+              <div class="tool-desc">Full-stack reactive backend. Write TypeScript functions that run on the server — Convex handles scheduling, transactions, and realtime subscriptions automatically. Great for live-updating apps.</div>
+              <div class="tool-tags"><span class="ttag ttag-p">Reactive</span><span class="ttag ttag-b">TypeScript</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 06 AUTH ══ -->
+      <div class="cat-block reveal" data-category="auth">
+        <div class="cat-header ch6" onclick="toggleCat(this)">
+          <div class="cat-icon-big ci6">🔑</div>
+          <div class="cat-meta">
+            <div class="cat-num cn6">06 // AUTHENTICATION</div>
+            <div class="cat-name">AUTHENTICATION</div>
+            <div class="cat-tagline">User identity, sessions, and access control</div>
+          </div>
+          <span class="cat-count-badge cb6">5 TOOLS</span>
+          <span class="cat-chevron">▶</span>
+        </div>
+        <div class="cat-body">
+          <div class="tools-grid">
+            <div class="tool-card" data-name="clerk auth user management nextjs react">
+              <div class="tool-hot">🔥 EASIEST DX</div>
+              <div class="tool-top"><span class="tool-emoji">👤</span><div><div class="tool-name">CLERK</div><div class="tool-type">USER MANAGEMENT PLATFORM</div></div></div>
+              <div class="tool-desc">Drop-in auth for Next.js and React. Pre-built UI components, social logins, MFA, org management, and webhooks. 5-minute integration — the fastest way to add auth to a vibe-coded app.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">Next.js native</span><span class="ttag ttag-b">Pre-built UI</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+            <div class="tool-card" data-name="supabase auth row level security postgres">
+              <div class="tool-top"><span class="tool-emoji">⚡</span><div><div class="tool-name">SUPABASE AUTH</div><div class="tool-type">INTEGRATED AUTH</div></div></div>
+              <div class="tool-desc">Auth baked into Supabase. Tight integration with Row Level Security in PostgreSQL — your auth state directly controls DB access. Best choice when using Supabase as your backend.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">RLS integrated</span><span class="ttag ttag-free">Free tier</span></div>
+            </div>
+            <div class="tool-card" data-name="auth.js next-auth open source oauth sessions">
+              <div class="tool-top"><span class="tool-emoji">🔐</span><div><div class="tool-name">AUTH.JS</div><div class="tool-type">OPEN-SOURCE AUTH LIBRARY</div></div></div>
+              <div class="tool-desc">The open-source auth library (formerly NextAuth). Full control, any adapter, any database. No vendor lock-in. Best when you need complete customization or are self-hosting everything.</div>
+              <div class="tool-tags"><span class="ttag ttag-free">Open Source</span><span class="ttag ttag-g">Self-hosted</span><span class="ttag ttag-b">Any database</span></div>
+            </div>
+            <div class="tool-card" data-name="firebase auth google social login mobile">
+              <div class="tool-top"><span class="tool-emoji">🔥</span><div><div class="tool-name">FIREBASE AUTH</div><div class="tool-type">GOOGLE AUTH SERVICE</div></div></div>
+              <div class="tool-desc">Google's auth service with generous free tier. All major OAuth providers, phone auth, and anonymous auth. Best choice when already using Firebase as your backend.</div>
+              <div class="tool-tags"><span class="ttag ttag-p">Google</span><span class="ttag ttag-free">Free tier</span><span class="ttag ttag-b">Mobile-friendly</span></div>
+            </div>
+            <div class="tool-card" data-name="workos enterprise sso saml b2b auth">
+              <div class="tool-top"><span class="tool-emoji">🏢</span><div><div class="tool-name">WORKOS</div><div class="tool-type">ENTERPRISE AUTH</div></div></div>
+              <div class="tool-desc">Enterprise-grade SSO and user management. SAML, OIDC, directory sync, and audit logs for B2B SaaS products. When your customers need enterprise security compliance.</div>
+              <div class="tool-tags"><span class="ttag ttag-b">Enterprise SSO</span><span class="ttag ttag-paid">Paid</span><span class="ttag ttag-g">B2B SaaS</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 07 DATABASE & STORAGE ══ -->
+      <div class="cat-block reveal" data-category="database">
+        <div class="cat-header ch7" onclick="toggleCat(this)">
+          <div class="cat-icon-big ci7">🗄️</div>
+          <div class="cat-meta">
+            <div class="cat-num cn7">07 // DATA & FILES</div>
+            <div class="cat-name">DATABASE & STORAGE</div>
+            <div class="cat-tagline">Persistent data and file storage for your app</div>
+          </div>
+          <span class="cat-count-badge cb7">5 TOOLS</span>
+          <span class="cat-chevron">▶</span>
+        </div>
+        <div class="cat-body">
+          <div class="tools-grid">
+            <div class="tool-card" data-name="postgresql relational database sql standard">
+              <div class="tool-top"><span class="tool-emoji">🐘</span><div><div class="tool-name">POSTGRESQL</div><div class="tool-type">RELATIONAL DATABASE</div></div></div>
+              <div class="tool-desc">The world's most advanced open-source database. JSON support, full-text search, PostGIS for geo, and the backing engine of Supabase and Neon. The default database choice in 2026.</div>
+              <div class="tool-tags"><span class="ttag ttag-free">Open Source</span><span class="ttag ttag-g">SQL standard</span><span class="ttag ttag-b">ACID compliant</span></div>
+            </div>
+            <div class="tool-card" data-name="supabase storage files s3 compatible images">
+              <div class="tool-top"><span class="tool-emoji">📦</span><div><div class="tool-name">SUPABASE STORAGE</div><div class="tool-type">S3-COMPATIBLE STORAGE</div></div></div>
+              <div class="tool-desc">Object storage built into Supabase. RLS policies control file access using the same auth system as your database. Image transformations on-the-fly. Free tier is generous.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">S3 compatible</span><span class="ttag ttag-b">RLS integrated</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+            <div class="tool-card" data-name="cloudflare r2 s3 storage cheap egress free">
+              <div class="tool-hot">💰 CHEAPEST</div>
+              <div class="tool-top"><span class="tool-emoji">☁️</span><div><div class="tool-name">CLOUDFLARE R2</div><div class="tool-type">OBJECT STORAGE</div></div></div>
+              <div class="tool-desc">S3-compatible object storage with zero egress fees. Dramatically cheaper than AWS S3 for bandwidth-heavy apps. Integrate with Workers for edge-side file processing and transformation.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">Zero egress fees</span><span class="ttag ttag-b">S3 compatible</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+            <div class="tool-card" data-name="backblaze b2 cheap cloud storage backup">
+              <div class="tool-top"><span class="tool-emoji">💾</span><div><div class="tool-name">BACKBLAZE B2</div><div class="tool-type">CLOUD STORAGE</div></div></div>
+              <div class="tool-desc">Extremely cost-effective cloud storage — 1/5 the price of AWS S3. S3-compatible API, 10GB free, and free egress to Cloudflare. Great for backups, media libraries, and archival storage.</div>
+              <div class="tool-tags"><span class="ttag ttag-free">10GB free</span><span class="ttag ttag-g">Cheap egress</span><span class="ttag ttag-b">S3 compatible</span></div>
+            </div>
+            <div class="tool-card" data-name="uploadthing file uploads react nextjs simple">
+              <div class="tool-top"><span class="tool-emoji">📤</span><div><div class="tool-name">UPLOADTHING</div><div class="tool-type">FILE UPLOAD SERVICE</div></div></div>
+              <div class="tool-desc">The simplest file upload solution for Next.js and React. Type-safe file routes, automatic resizing, and a dead-simple API. When you just need uploads to work without infrastructure complexity.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">Type-safe</span><span class="ttag ttag-b">Next.js native</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 08 PAYMENTS ══ -->
+      <div class="cat-block reveal" data-category="payments">
+        <div class="cat-header ch8" onclick="toggleCat(this)">
+          <div class="cat-icon-big ci8">💳</div>
+          <div class="cat-meta">
+            <div class="cat-num cn8">08 // MONETIZATION</div>
+            <div class="cat-name">PAYMENTS & MONETIZATION</div>
+            <div class="cat-tagline">Turn your vibe-coded app into a revenue machine</div>
+          </div>
+          <span class="cat-count-badge cb8">5 TOOLS</span>
+          <span class="cat-chevron">▶</span>
+        </div>
+        <div class="cat-body">
+          <div class="tools-grid">
+            <div class="tool-card" data-name="stripe payments subscriptions checkout saas">
+              <div class="tool-hot">🏆 GOLD STANDARD</div>
+              <div class="tool-top"><span class="tool-emoji">💜</span><div><div class="tool-name">STRIPE</div><div class="tool-type">PAYMENTS PLATFORM</div></div></div>
+              <div class="tool-desc">The undisputed payment standard. One-time payments, subscriptions, invoicing, Stripe Connect for marketplaces, and the best developer DX in payments. Claude writes excellent Stripe integration code.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">Subscriptions</span><span class="ttag ttag-b">150+ currencies</span><span class="ttag ttag-paid">% per transaction</span></div>
+            </div>
+            <div class="tool-card" data-name="lemon squeezy digital products saas merchant of record">
+              <div class="tool-top"><span class="tool-emoji">🍋</span><div><div class="tool-name">LEMON SQUEEZY</div><div class="tool-type">MERCHANT OF RECORD</div></div></div>
+              <div class="tool-desc">Merchant of Record — they handle VAT, sales tax, and international compliance automatically. Ideal for solo founders selling digital products or SaaS globally without a legal entity in every country.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">Tax handled</span><span class="ttag ttag-b">Digital products</span><span class="ttag ttag-paid">% per transaction</span></div>
+            </div>
+            <div class="tool-card" data-name="paddle saas subscriptions tax compliance b2b">
+              <div class="tool-top"><span class="tool-emoji">🏓</span><div><div class="tool-name">PADDLE</div><div class="tool-type">MERCHANT OF RECORD</div></div></div>
+              <div class="tool-desc">Paddle Billing for SaaS subscriptions with full merchant-of-record service. Strong B2B features, dunning management, and annual billing. Preferred by larger SaaS companies over Lemon Squeezy.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">MoR</span><span class="ttag ttag-b">B2B focused</span><span class="ttag ttag-paid">% per transaction</span></div>
+            </div>
+            <div class="tool-card" data-name="polar open source funding sponsorship developers">
+              <div class="tool-top"><span class="tool-emoji">⭕</span><div><div class="tool-name">POLAR</div><div class="tool-type">MONETIZATION FOR DEVS</div></div></div>
+              <div class="tool-desc">Open-source monetization platform built for developers. Sell issues, subscriptions, and digital products directly from GitHub. Perfect for open-source projects and developer-focused products.</div>
+              <div class="tool-tags"><span class="ttag ttag-free">Open Source</span><span class="ttag ttag-g">GitHub native</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+            <div class="tool-card" data-name="paypal payments global consumer checkout">
+              <div class="tool-top"><span class="tool-emoji">🅿️</span><div><div class="tool-name">PAYPAL</div><div class="tool-type">GLOBAL PAYMENTS</div></div></div>
+              <div class="tool-desc">The world's most recognized consumer payment method. Lower conversion for SaaS but essential for reaching customers who don't trust credit card forms. Good as a secondary payment option.</div>
+              <div class="tool-tags"><span class="ttag ttag-b">Global reach</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 09 HOSTING & DEPLOYMENT ══ -->
+      <div class="cat-block reveal" data-category="hosting">
+        <div class="cat-header ch9" onclick="toggleCat(this)">
+          <div class="cat-icon-big ci9">🚀</div>
+          <div class="cat-meta">
+            <div class="cat-num cn9">09 // DEPLOYMENT</div>
+            <div class="cat-name">HOSTING & DEPLOYMENT</div>
+            <div class="cat-tagline">Ship to production in seconds</div>
+          </div>
+          <span class="cat-count-badge cb9">5 TOOLS</span>
+          <span class="cat-chevron">▶</span>
+        </div>
+        <div class="cat-body">
+          <div class="tools-grid">
+            <div class="tool-card" data-name="vercel nextjs deployment edge functions serverless">
+              <div class="tool-hot">🔥 VIBE DEFAULT</div>
+              <div class="tool-top"><span class="tool-emoji">▲</span><div><div class="tool-name">VERCEL</div><div class="tool-type">FRONTEND CLOUD</div></div></div>
+              <div class="tool-desc">The default deployment platform for Next.js. Git push to deploy, preview URLs per branch, edge functions, analytics, and Web Vitals monitoring. The fastest way from code to production URL.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">Git push deploy</span><span class="ttag ttag-b">Edge network</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+            <div class="tool-card" data-name="cloudflare pages workers edge fast cdn global">
+              <div class="tool-top"><span class="tool-emoji">☁️</span><div><div class="tool-name">CLOUDFLARE PAGES</div><div class="tool-type">EDGE DEPLOYMENT</div></div></div>
+              <div class="tool-desc">Deploy to Cloudflare's global edge network (300+ PoPs). Workers for server-side logic, D1 for SQLite database, R2 for storage — a complete edge stack at extremely low cost.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">300+ edge PoPs</span><span class="ttag ttag-b">Workers</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+            <div class="tool-card" data-name="railway deploy backend docker postgres containers">
+              <div class="tool-top"><span class="tool-emoji">🚂</span><div><div class="tool-name">RAILWAY</div><div class="tool-type">INFRASTRUCTURE PLATFORM</div></div></div>
+              <div class="tool-desc">Deploy any backend — Docker containers, Node.js, Python, PostgreSQL, Redis. Git-connected, auto-scaling, and zero-config. The best platform for deploying backends that don't fit the serverless model.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">Any language</span><span class="ttag ttag-b">Docker support</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+            <div class="tool-card" data-name="render web services docker postgres background workers">
+              <div class="tool-top"><span class="tool-emoji">🟣</span><div><div class="tool-name">RENDER</div><div class="tool-type">CLOUD HOSTING</div></div></div>
+              <div class="tool-desc">Simplified cloud hosting — web services, background workers, cron jobs, PostgreSQL, and Redis in one platform. Great free tier, simple pricing, and excellent for full-stack apps with background processing.</div>
+              <div class="tool-tags"><span class="ttag ttag-b">Background workers</span><span class="ttag ttag-g">Cron jobs</span><span class="ttag ttag-freemium">Freemium</span></div>
+            </div>
+            <div class="tool-card" data-name="digital ocean droplets kubernetes managed database vps">
+              <div class="tool-top"><span class="tool-emoji">🌊</span><div><div class="tool-name">DIGITAL OCEAN</div><div class="tool-type">CLOUD INFRASTRUCTURE</div></div></div>
+              <div class="tool-desc">Developer-friendly VPS and managed services. Droplets, managed PostgreSQL, Kubernetes, and App Platform. More control than Vercel/Railway, better DX than AWS. Predictable pricing without the complexity.</div>
+              <div class="tool-tags"><span class="ttag ttag-g">VPS control</span><span class="ttag ttag-b">Managed DB</span><span class="ttag ttag-paid">Hourly billing</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /stack-categories -->
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── QUICK COMPARISON ── -->
+<section class="compare-section">
+  <div class="wrap">
+    <div class="s-label">Quick Reference</div>
+    <h2 style="font-family:var(--display);font-size:clamp(2rem,4vw,3.5rem);color:var(--white);letter-spacing:.03em;margin-bottom:.5rem">STACK COMPARISON<br><span style="color:var(--g)">QUICK PICKS</span></h2>
+    <p style="font-family:var(--mono);font-size:.68rem;color:var(--muted);line-height:1.85;max-width:500px;margin-bottom:1.5rem">The fastest path for common use cases — what to grab first when starting a new project.</p>
+    <div style="overflow-x:auto">
+    <table class="compare-table reveal">
+      <thead><tr><th>Use Case</th><th>Primary Pick</th><th>Alternative</th><th>Why</th><th>Free Tier</th></tr></thead>
+      <tbody>
+        <tr><td>Quick MVP / demo</td><td>Lovable + Supabase</td><td>Bolt + Firebase</td><td>Fullstack from one prompt</td><td><span class="rec-badge rec-yes">YES</span></td></tr>
+        <tr><td>Production SaaS</td><td>Next.js + Supabase + Clerk</td><td>Next.js + Neon + Auth.js</td><td>Scalable, type-safe, battle-tested</td><td><span class="rec-badge rec-yes">YES</span></td></tr>
+        <tr><td>UI components fast</td><td>v0 + shadcn/ui</td><td>Lovable frontend</td><td>Production-ready, copy-paste</td><td><span class="rec-badge rec-yes">YES</span></td></tr>
+        <tr><td>Sell digital products</td><td>Stripe</td><td>Lemon Squeezy</td><td>Best DX; LS handles tax</td><td><span class="rec-badge rec-no">NO</span></td></tr>
+        <tr><td>Global SaaS (solo)</td><td>Lemon Squeezy</td><td>Paddle</td><td>Merchant of Record = no tax headache</td><td><span class="rec-badge rec-no">NO</span></td></tr>
+        <tr><td>Cheapest hosting</td><td>Cloudflare Pages</td><td>Vercel hobby</td><td>Zero egress, free workers</td><td><span class="rec-badge rec-yes">YES</span></td></tr>
+        <tr><td>Backend services</td><td>Railway</td><td>Render</td><td>Any language, auto-scale</td><td><span class="rec-badge rec-yes">YES</span></td></tr>
+        <tr><td>Cheapest storage</td><td>Cloudflare R2</td><td>Backblaze B2</td><td>Zero egress fees</td><td><span class="rec-badge rec-yes">YES</span></td></tr>
+        <tr><td>AI coding terminal</td><td>Claude Code</td><td>OpenCode</td><td>Best complex code understanding</td><td><span class="rec-badge rec-hot">PAID</span></td></tr>
+        <tr><td>Best AI for code</td><td>Claude Opus</td><td>DeepSeek V3</td><td>Opus best quality; DS cheapest</td><td><span class="rec-badge rec-hot">API</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── HOW TO START ── -->
+<section class="howto-section">
+  <div class="wrap">
+    <div class="s-label">Getting Started</div>
+    <h2 style="font-family:var(--display);font-size:clamp(2rem,4vw,3.5rem);color:var(--white);letter-spacing:.03em;margin-bottom:.5rem">BUILD YOUR FIRST<br><span style="color:var(--g)">VIBE APP</span></h2>
+    <p style="font-family:var(--mono);font-size:.68rem;color:var(--muted);line-height:1.85;max-width:500px">From zero to deployed production app using the vibe coding stack. This is the fastest path in 2026.</p>
+    <div class="howto-grid">
+      <div class="hw-card hw1 reveal">
+        <div class="hw-step">01</div>
+        <div class="hw-title">DESCRIBE YOUR APP</div>
+        <div class="hw-desc">Go to Lovable or Bolt. Write a detailed prompt: what the app does, who uses it, what features it needs. Be specific — the more detail, the better the output.</div>
+      </div>
+      <div class="hw-card hw2 reveal">
+        <div class="hw-step">02</div>
+        <div class="hw-title">ADD AUTH + DATABASE</div>
+        <div class="hw-desc">Connect Supabase for your DB and Auth, or add Clerk for drop-in authentication. Your AI builder usually handles this setup — just provide the API keys.</div>
+      </div>
+      <div class="hw-card hw3 reveal">
+        <div class="hw-step">03</div>
+        <div class="hw-title">REFINE WITH CLAUDE</div>
+        <div class="hw-desc">Use Claude Code or Claude in the chat to fix bugs, add features, and refactor. Claude understands the full codebase context — tell it what to change in plain English.</div>
+      </div>
+      <div class="hw-card hw4 reveal">
+        <div class="hw-step">04</div>
+        <div class="hw-title">DEPLOY & MONETIZE</div>
+        <div class="hw-desc">Push to Vercel or Cloudflare Pages. Add Stripe for payments. You now have a live, paying product — built in hours, not weeks. Iterate based on real user feedback.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── CTA ── -->
+<section class="cta-strip">
+  <div class="wrap">
+    <h2 class="cta-title">SEE IT IN<br><span>ACTION</span></h2>
+    <p class="cta-sub">This entire portfolio was built using the vibe coding stack above. Explore the projects, skills, and labs to see what's possible.</p>
+    <div class="cta-btns">
+      <a href="projects.html" class="btn btn-g">VIEW PROJECTS →</a>
+      <a href="roadmap.html" class="btn btn-o">HACKING ROADMAP</a>
+      <a href="skills.html" class="btn btn-o">MY SKILLS</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span>&copy; 2026 Prakash Mijar</span>
+  <div class="f-links">
+    <a href="index.html">Home</a><a href="projects.html">Projects</a>
+    <a href="roadmap.html">Roadmap</a><a href="skills.html">Skills</a><a href="about.html">About</a>
+  </div>
+  <span class="f-right">erprakashmijar.com<span class="blink">_</span></span>
+</footer>
+
+<script>
+/* ── CANVAS ── */
+(function(){
+  const c=document.getElementById('bgCanvas'),ctx=c.getContext('2d');
+  let W,H,pts=[];
+  const resize=()=>{W=c.width=window.innerWidth;H=c.height=window.innerHeight;init()};
+  const init=()=>{pts=[];const n=Math.min(Math.floor((W*H)/22000),65);for(let i=0;i<n;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.2,vy:(Math.random()-.5)*.2,r:Math.random()*1.2+.3})};
+  const draw=()=>{ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(0,255,136,0.45)';ctx.fill()});for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const a=pts[i],b=pts[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<100){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=`rgba(0,255,136,${.05*(1-d/100)})`;ctx.lineWidth=.5;ctx.stroke()}}requestAnimationFrame(draw)};
+  window.addEventListener('resize',resize);resize();draw();
+})();
+
+/* ── CURSOR ── */
+if(window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+  const c=document.getElementById('cur'),r=document.getElementById('cur2');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;c.style.left=mx+'px';c.style.top=my+'px'});
+  (function t(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;r.style.left=rx+'px';r.style.top=ry+'px';requestAnimationFrame(t)})();
+  document.addEventListener('mouseover',e=>{
+    if(e.target.matches('a,button,.tool-card,.cat-header,.fpill,.hw-card')){c.style.width='18px';c.style.height='18px';r.style.width='46px';r.style.height='46px';r.style.borderColor='rgba(0,212,255,.6)'}
+    else{c.style.width='8px';c.style.height='8px';r.style.width='30px';r.style.height='30px';r.style.borderColor='rgba(0,255,136,.35)'}
+  });
+}
+
+/* ── NAV ── */
+const nt=document.getElementById('navToggle'),nl=document.getElementById('navLinks');
+nt.addEventListener('click',()=>{const o=nl.classList.toggle('open');nt.setAttribute('aria-expanded',String(o))});
+nl.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nl.classList.remove('open');nt.setAttribute('aria-expanded','false')}));
+
+/* ── SCROLL REVEAL ── */
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}})},{threshold:.05});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ── CATEGORY TOGGLE ── */
+function toggleCat(header){
+  header.closest('.cat-block').classList.toggle('open');
+}
+
+/* ── FILTER ── */
+let currentFilter='all';
+function setFilter(f,el){
+  currentFilter=f;
+  document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  const blocks=document.querySelectorAll('.cat-block');
+  blocks.forEach(b=>{
+    if(f==='all'||b.dataset.category===f){b.classList.remove('hidden')}
+    else{b.classList.add('hidden')}
+  });
+  updateCount();
+}
+
+/* ── SEARCH ── */
+document.getElementById('searchInput').addEventListener('input',function(){
+  const q=this.value.toLowerCase().trim();
+  const blocks=document.querySelectorAll('.cat-block');
+  let totalVisible=0;
+  blocks.forEach(block=>{
+    if(currentFilter!=='all'&&block.dataset.category!==currentFilter){block.classList.add('hidden');return}
+    const cards=block.querySelectorAll('.tool-card');
+    let blockHasMatch=false;
+    cards.forEach(card=>{
+      const text=(card.dataset.name||'')+(card.textContent||'');
+      const match=!q||text.toLowerCase().includes(q);
+      card.style.display=match?'':'none';
+      if(match)blockHasMatch=true;
+    });
+    block.classList.toggle('hidden',!blockHasMatch);
+    if(blockHasMatch){totalVisible++;if(q)block.classList.add('open')}
+  });
+  const countEl=document.getElementById('searchCount');
+  if(q){countEl.textContent=`Showing results for "${q}" — ${document.querySelectorAll('.tool-card:not([style*="none"])').length} tools found`}
+  else{countEl.textContent='';blocks.forEach(b=>{b.querySelectorAll('.tool-card').forEach(c=>c.style.display='')})}
+});
+
+function updateCount(){
+  const vis=document.querySelectorAll('.cat-block:not(.hidden)').length;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About — Prakash Mijar Cybersecurity</title>
+  <meta name="description" content="About Prakash Mijar — offensive cybersecurity professional specialising in penetration testing, web exploitation, and red team operations. Available for engagements."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://erprakashmijar.com/about.html"/>
+  <meta property="og:title" content="About Prakash Mijar — Cybersecurity Professional"/>
+  <meta property="og:description" content="Offensive cybersecurity professional available for penetration testing and SOC engagements."/>
+  <meta property="og:image" content="https://erprakashmijar.com/og-image.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="About Prakash Mijar — Cybersecurity Professional"/>
+  <meta name="twitter:image" content="https://erprakashmijar.com/og-image.png"/>
+  <meta name="keywords" content="Prakash Mijar, About, Cybersecurity Engineer, Penetration Tester, SOC Analyst, Red Team, Ethical Hacker"/>
+  <link rel="canonical" href="https://erprakashmijar.com/about.html"/>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <meta name="theme-color" content="#00ff88"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/style.css"/>
+  <style>
+  .page-hero{padding:9rem 0 4rem;border-bottom:1px solid rgba(0,255,136,.06)}
+  .about-layout{display:grid;grid-template-columns:1.3fr 1fr;gap:4rem;padding:5rem 0;align-items:start}
+  @media(max-width:900px){.about-layout{grid-template-columns:1fr;gap:3rem}}
+  .about-name{font-family:var(--display);font-size:clamp(3.5rem,8vw,6.5rem);color:#fff;letter-spacing:.02em;line-height:.92;margin-bottom:1.5rem}
+  .about-name em{display:block;font-style:normal;color:var(--g);text-shadow:0 0 40px rgba(0,255,136,.3)}
+  .about-bio{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.95;margin-bottom:1.2rem}
+  .about-right{position:sticky;top:6rem}
+  .profile-card{background:var(--bg2);border:1px solid rgba(0,255,136,.1);border-radius:8px;overflow:hidden;margin-bottom:1.2rem}
+  .profile-card-top{height:3px;background:linear-gradient(90deg,var(--g),var(--g2),var(--g3))}
+  .profile-card-body{padding:1.8rem}
+  .profile-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.06);border-radius:4px;overflow:hidden;margin-bottom:1.5rem}
+  .pstat{background:var(--bg2);padding:1.2rem;text-align:center;transition:background .2s}
+  .pstat:hover{background:rgba(0,255,136,.03)}
+  .pstat-n{font-family:var(--display);font-size:2rem;color:var(--g);text-shadow:0 0 16px rgba(0,255,136,.25)}
+  .pstat-l{font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:.13em;margin-top:.2rem}
+  .availability{display:flex;align-items:center;gap:.6rem;font-family:var(--mono);font-size:.62rem;color:var(--g);background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.12);padding:.6rem 1rem;border-radius:4px;margin-top:1rem;letter-spacing:.1em}
+  .avail-dot{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 6px var(--g);animation:blink 2s infinite;flex-shrink:0}
+
+  .timeline{margin-top:3rem}
+  .tl-item{display:flex;gap:1.2rem;padding-bottom:2rem;position:relative}
+  .tl-item::before{content:'';position:absolute;left:9px;top:20px;bottom:0;width:1px;background:rgba(0,255,136,.1)}
+  .tl-item:last-child::before{display:none}
+  .tl-dot{width:19px;height:19px;border:2px solid var(--g);border-radius:50%;background:var(--bg);flex-shrink:0;margin-top:2px;position:relative;z-index:1;box-shadow:0 0 8px rgba(0,255,136,.2)}
+  .tl-content{padding-top:0}
+  .tl-date{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.12em;margin-bottom:.3rem}
+  .tl-title{font-family:var(--display);font-size:1.2rem;color:#fff;letter-spacing:.04em;margin-bottom:.3rem}
+  .tl-desc{font-family:var(--mono);font-size:.67rem;color:var(--muted);line-height:1.75}
+
+  .contact-form{background:var(--bg2);border:1px solid rgba(0,255,136,.08);border-radius:8px;padding:2rem;margin-top:2rem}
+  .cf-title{font-family:var(--display);font-size:1.4rem;color:#fff;letter-spacing:.05em;margin-bottom:1.5rem}
+  .cf-field{margin-bottom:1rem}
+  .cf-label{font-family:var(--mono);font-size:.6rem;color:var(--g2);letter-spacing:.15em;display:block;margin-bottom:.4rem}
+  .cf-input,.cf-textarea{width:100%;background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.1);border-radius:3px;padding:.75rem 1rem;font-family:var(--mono);font-size:.68rem;color:var(--text2);outline:none;transition:border-color .2s;cursor:text}
+  .cf-input:focus,.cf-textarea:focus{border-color:rgba(0,255,136,.3)}
+  .cf-textarea{resize:vertical;min-height:100px}
+  </style>
+</head>
+<body>
+<a class="skip-nav" href="#main-content">Skip to content</a>
+<canvas id="bgCanvas"></canvas>
+<div id="cur"></div><div id="cur2"></div>
+
+<nav aria-label="Main navigation">
+  <a href="index.html" class="nav-logo">PM<span>::</span>OFFSEC</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="labs.html">Labs</a></li>
+    <li><a href="skills.html">Skills</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="mailto:contact@erprakashmijar.com" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<main id="main-content" role="main">
+  <div class="page-hero">
+    <div class="wrap">
+      <div class="breadcrumb"><a href="index.html">HOME</a><span>/</span><span>ABOUT</span></div>
+      <div class="s-label">The Person Behind The Terminal</div>
+      <h1 class="s-title">ABOUT<br><span>PRAKASH MIJAR</span></h1>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="about-layout">
+
+      <div class="reveal">
+        <div class="about-name">PRAKASH<em>MIJAR</em></div>
+        <p class="about-bio">An offensive cybersecurity professional with hands-on experience across the full attack lifecycle — from initial recon through post-exploitation and reporting. I break things ethically so they can't be broken maliciously.</p>
+        <p class="about-bio">Passionate about web exploitation, Active Directory attack chains, and building automation tooling. Continuously sharpening skills through CTFs, bug bounty programmes, and home lab environments.</p>
+        <p class="about-bio">My approach is methodical: understand the target, enumerate thoroughly, exploit precisely, document completely, and provide actionable remediation — not just a list of vulnerabilities.</p>
+
+        <h2 style="font-family:var(--display);font-size:1.8rem;color:#fff;letter-spacing:.04em;margin:2.5rem 0 1.2rem">SKILLS</h2>
+        <div class="skill-grid" style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:2rem">
+          <span class="skill-tag">Kali Linux</span><span class="skill-tag">Burp Suite</span>
+          <span class="skill-tag">Metasploit</span><span class="skill-tag">Nmap</span>
+          <span class="skill-tag">Wireshark</span><span class="skill-tag">BloodHound</span>
+          <span class="skill-tag">Impacket</span><span class="skill-tag">ffuf</span>
+          <span class="skill-tag">sqlmap</span><span class="skill-tag">Python 3</span>
+          <span class="skill-tag">Bash</span><span class="skill-tag">OWASP Top 10</span>
+          <span class="skill-tag">MITRE ATT&amp;CK</span><span class="skill-tag">CrackMapExec</span>
+          <span class="skill-tag">Responder</span><span class="skill-tag">jwt_tool</span>
+        </div>
+
+        <h2 style="font-family:var(--display);font-size:1.8rem;color:#fff;letter-spacing:.04em;margin:2.5rem 0 1.2rem">JOURNEY</h2>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-content">
+              <div class="tl-date">PRESENT</div>
+              <div class="tl-title">Offensive Security Research</div>
+              <p class="tl-desc">Active CTF competitor, bug bounty hunter, and home lab practitioner. Building this portfolio to document methodology and findings.</p>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-content">
+              <div class="tl-date">ONGOING</div>
+              <div class="tl-title">TryHackMe / Hack The Box</div>
+              <p class="tl-desc">Completing learning paths covering web exploitation, Active Directory attack chains, and privilege escalation on real lab machines.</p>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-content">
+              <div class="tl-date">LAB PROJECTS</div>
+              <div class="tl-title">Security Research Projects</div>
+              <p class="tl-desc">WannaCry malware analysis, network monitoring lab, and Linux hardening audit — all documented as full case studies.</p>
+            </div>
+          </div>
+          <!-- Add your real experience/education here -->
+        </div>
+
+        <div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-top:2rem">
+          <a href="https://github.com/" target="_blank" rel="noopener" class="btn btn-o">GITHUB</a>
+          <a href="https://linkedin.com/in/" target="_blank" rel="noopener" class="btn btn-o">LINKEDIN</a>
+          <a href="assets/Prakash_Mijar_CV.pdf" class="btn btn-b" download aria-label="Download Prakash Mijar CV as PDF">DOWNLOAD CV ↓</a>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="about-right reveal">
+        <div class="profile-card">
+          <div class="profile-card-top"></div>
+          <div class="profile-card-body">
+            <div class="s-label" style="margin-bottom:1rem">Profile</div>
+            <div class="profile-stat-grid">
+              <div class="pstat"><div class="pstat-n">3+</div><div class="pstat-l">PROJECTS</div></div>
+              <div class="pstat"><div class="pstat-n">CTF</div><div class="pstat-l">COMPETITOR</div></div>
+              <div class="pstat"><div class="pstat-n">8</div><div class="pstat-l">DOMAINS</div></div>
+              <div class="pstat"><div class="pstat-n">BB</div><div class="pstat-l">BUG BOUNTY</div></div>
+            </div>
+            <div class="availability"><div class="avail-dot"></div>AVAILABLE FOR ENGAGEMENTS</div>
+          </div>
+        </div>
+
+        <div class="contact-form">
+          <div class="cf-title">GET IN TOUCH</div>
+          <div class="cf-field">
+            <label class="cf-label" for="cf-name">NAME</label>
+            <input class="cf-input" id="cf-name" type="text" placeholder="Your name" autocomplete="name"/>
+          </div>
+          <div class="cf-field">
+            <label class="cf-label" for="cf-email">EMAIL</label>
+            <input class="cf-input" id="cf-email" type="email" placeholder="your@email.com" autocomplete="email"/>
+          </div>
+          <div class="cf-field">
+            <label class="cf-label" for="cf-msg">MESSAGE</label>
+            <textarea class="cf-textarea" id="cf-msg" placeholder="What are you working on?"></textarea>
+          </div>
+          <a href="mailto:contact@erprakashmijar.com" class="btn btn-g" style="width:100%;justify-content:center;text-align:center">SEND MESSAGE →</a>
+          <p style="font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-top:.8rem;text-align:center;line-height:1.6">Or email directly: contact@erprakashmijar.com</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>&copy; 2026 Prakash Mijar</span>
+  <div class="f-links"><a href="index.html">Home</a><a href="projects.html">Projects</a><a href="skills.html">Skills</a><a href="labs.html">Labs</a></div>
+  <span class="f-right">erprakashmijar.com<span class="blink">_</span></span>
+</footer>
+<script src="assets/shared.js"></script>
+</body>
+</html>

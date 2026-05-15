@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Skills — Prakash Mijar Cybersecurity</title>
+  <meta name="description" content="Full offensive cybersecurity skill stack by Prakash Mijar — OSINT, web exploitation, API security, network attacks, post-exploitation, and tooling."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://erprakashmijar.com/skills.html"/>
+  <meta property="og:title" content="Skills — Prakash Mijar Offensive Security Stack"/>
+  <meta property="og:description" content="Full offensive security skill breakdown — recon, web exploitation, network attacks, and automation."/>
+  <meta property="og:image" content="https://erprakashmijar.com/og-image.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Skills — Prakash Mijar Offensive Security Stack"/>
+  <meta name="twitter:image" content="https://erprakashmijar.com/og-image.png"/>
+  <meta name="keywords" content="Offensive Security Skills, OSINT, Web Exploitation, API Security, Metasploit, Burp Suite, Nmap, Penetration Testing Tools, Prakash Mijar"/>
+  <link rel="canonical" href="https://erprakashmijar.com/skills.html"/>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <meta name="theme-color" content="#00ff88"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/style.css"/>
+  <style>
+  .page-hero{padding:9rem 0 4rem;border-bottom:1px solid rgba(0,255,136,.06)}
+  .skills-body{padding:4rem 0}
+  .domain-block{margin-bottom:3rem;background:var(--bg2);border:1px solid rgba(0,255,136,.07);border-radius:8px;overflow:hidden}
+  .domain-header{display:flex;align-items:center;gap:1rem;padding:1.4rem 2rem;background:rgba(0,255,136,.02);border-bottom:1px solid rgba(0,255,136,.06);cursor:pointer}
+  .domain-num{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.15em;width:40px}
+  .domain-name{font-family:var(--display);font-size:1.4rem;color:#fff;letter-spacing:.05em;flex:1}
+  .domain-count{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.1em}
+  .domain-chevron{font-size:.7rem;color:var(--muted);transition:transform .2s;margin-left:.5rem}
+  .domain-header.open .domain-chevron{transform:rotate(90deg);color:var(--g)}
+  .domain-body{display:none;padding:2rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
+  .skill-item{padding:1rem 1.2rem;background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.06);border-radius:4px;transition:border-color .2s,background .2s}
+  .skill-item:hover{border-color:rgba(0,255,136,.18);background:rgba(0,255,136,.03)}
+  .skill-item-name{font-family:var(--mono);font-size:.72rem;color:var(--text2);margin-bottom:.4rem;letter-spacing:.06em}
+  .skill-item-desc{font-family:var(--mono);font-size:.62rem;color:var(--muted);line-height:1.65}
+  .skill-item-tools{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.6rem}
+
+  /* Tools reference grid */
+  .tools-ref{padding:4rem 0;border-top:1px solid rgba(0,255,136,.06)}
+  .tools-cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
+  .tools-cat{background:var(--bg2);border:1px solid rgba(0,212,255,.07);border-radius:6px;padding:1.2rem}
+  .tools-cat-name{font-family:var(--mono);font-size:.62rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.8rem;text-transform:uppercase}
+  .tools-list{list-style:none;display:flex;flex-direction:column;gap:.3rem}
+  .tools-list li{font-family:var(--mono);font-size:.65rem;color:var(--muted);display:flex;gap:.5rem}
+  .tools-list li::before{content:'▸';color:var(--g);flex-shrink:0}
+  </style>
+</head>
+<body>
+<a class="skip-nav" href="#main-content">Skip to content</a>
+<canvas id="bgCanvas"></canvas>
+<div id="cur"></div><div id="cur2"></div>
+
+<nav aria-label="Main navigation">
+  <a href="index.html" class="nav-logo">PM<span>::</span>OFFSEC</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="labs.html">Labs</a></li>
+    <li><a href="skills.html" class="active">Skills</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="mailto:contact@erprakashmijar.com" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<main id="main-content" role="main">
+  <div class="page-hero">
+    <div class="wrap">
+      <div class="breadcrumb"><a href="index.html">HOME</a><span>/</span><span>SKILLS</span></div>
+      <div class="s-label">Knowledge Base</div>
+      <h1 class="s-title">OFFENSIVE SECURITY<br><span>SKILL STACK</span></h1>
+      <p style="font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.9;max-width:520px">Complete breakdown of the offensive cybersecurity methodology — from initial recon through reporting. Click any domain to expand skills and techniques.</p>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="skills-body">
+
+      <div class="domain-block reveal">
+        <div class="domain-header open" data-domain="recon">
+          <span class="domain-num">01</span>
+          <span class="domain-name">RECON & ENUMERATION</span>
+          <span class="domain-count">4 skills</span>
+          <span class="domain-chevron">▶</span>
+        </div>
+        <div class="domain-body" id="domain-recon">
+          <div class="skill-item"><div class="skill-item-name">OSINT</div><div class="skill-item-desc">Public intelligence from social media, WHOIS, cert logs, job postings, and leaked credentials.</div><div class="skill-item-tools"><span class="tool-tag">theHarvester</span><span class="tool-tag">Maltego</span><span class="tool-tag">Shodan</span></div></div>
+          <div class="skill-item"><div class="skill-item-name">Subdomain Enumeration</div><div class="skill-item-desc">Finding forgotten subdomains exposing dev environments and admin panels.</div><div class="skill-item-tools"><span class="tool-tag">Amass</span><span class="tool-tag">Subfinder</span><span class="tool-tag">dnsx</span></div></div>
+          <div class="skill-item"><div class="skill-item-name">DNS Analysis</div><div class="skill-item-desc">Extracting infrastructure layout, mail servers, SPF/DMARC misconfigs, and zone transfers.</div><div class="skill-item-tools"><span class="tool-tag">dig</span><span class="tool-tag">dnsenum</span><span class="tool-tag">fierce</span></div></div>
+          <div class="skill-item"><div class="skill-item-name">Attack Surface Mapping</div><div class="skill-item-desc">Aggregating all discovered assets into a unified external attack surface picture.</div><div class="skill-item-tools"><span class="tool-tag">Shodan</span><span class="tool-tag">Censys</span><span class="tool-tag">Nuclei</span></div></div>
+        </div>
+      </div>
+
+      <div class="domain-block reveal">
+        <div class="domain-header" data-domain="web">
+          <span class="domain-num">02</span>
+          <span class="domain-name">WEB EXPLOITATION</span>
+          <span class="domain-count">5 skills</span>
+          <span class="domain-chevron">▶</span>
+        </div>
+        <div class="domain-body" id="domain-web" style="display:none">
+          <div class="skill-item"><div class="skill-item-name">OWASP Top 10</div><div class="skill-item-desc">Broken access control, injections, misconfigurations, auth failures, and supply chain risks.</div><div class="skill-item-tools"><span class="tool-tag">Burp Suite</span><span class="tool-tag">OWASP ZAP</span></div></div>
+          <div class="skill-item"><div class="skill-item-name">Authentication Bypass</div><div class="skill-item-desc">JWT manipulation, MFA bypass, password reset poisoning, and session fixation.</div><div class="skill-item-tools"><span class="tool-tag">jwt_tool</span><span class="tool-tag">Hydra</span></div></div>
+          <div class="skill-item"><div class="skill-item-name">IDOR</div><div class="skill-item-desc">Horizontal privilege escalation via predictable object references in API paths.</div><div class="skill-item-tools"><span class="tool-tag">Burp Autorize</span><span class="tool-tag">ParamMiner</span></div></div>
+          <div class="skill-item"><div class="skill-item-name">XSS / SQLi</div><div class="skill-item-desc">Stored, reflected, DOM-based XSS. Union-based, blind, time-based SQL injection.</div><div class="skill-item-tools"><span class="tool-tag">sqlmap</span><span class="tool-tag">dalfox</span><span class="tool-tag">XSStrike</span></div></div>
+          <div class="skill-item"><div class="skill-item-name">File Upload Bugs</div><div class="skill-item-desc">MIME bypass, magic bytes spoofing, SVG/XML for SSRF, and web shell upload chains.</div><div class="skill-item-tools"><span class="tool-tag">Burp Suite</span><span class="tool-tag">ExifTool</span></div></div>
+        </div>
+      </div>
+
+      <div class="domain-block reveal">
+        <div class="domain-header" data-domain="api">
+          <span class="domain-num">03</span>
+          <span class="domain-name">API SECURITY</span>
+          <span class="domain-count">4 skills</span>
+          <span class="domain-chevron">▶</span>
+        </div>
+        <div class="domain-body" id="domain-api" style="display:none">
+          <div class="skill-item"><div class="skill-item-name">BOLA</div><div class="skill-item-desc">Broken Object Level Auth — OWASP API #1, cross-account data access via resource IDs.</div><div class="skill-item-tools"><span class="tool-tag">Burp Suite</span><span class="tool-tag">Postman</span></div></div>
+          <div class="skill-item"><div class="skill-item-name">Rate Limiting Bypass</div><div class="skill-item-desc">X-Forwarded-For spoofing, race conditions for OTP bypass, endpoint variation.</div><div class="skill-item-tools"><span class="tool-tag">Burp Intruder</span></div></div>
+          <div class="skill-item"><div class="skill-item-name">Mass Assignment</div><div class="skill-item-desc">Injecting undocumented fields (isAdmin, role) in POST/PUT request bodies.</div><div class="skill-item-tools"><span class="tool-tag">Burp Suite</span><span class="tool-tag">Postman</span></div></div>
+          <div class="skill-item"><div class="skill-item-name">Token Manipulation</div><div class="skill-item-desc">JWT algorithm confusion, none algorithm, OAuth redirect_uri manipulation.</div><div class="skill-item-tools"><span class="tool-tag">jwt_tool</span><span class="tool-tag">CyberChef</span></div></div>
+        </div>
+      </div>
+
+      <div class="domain-block reveal">
+        <div class="domain-header" data-domain="network">
+          <span class="domain-num">04</span>
+          <span class="domain-name">NETWORK ATTACKS</span>
+          <span class="domain-count">4 skills</span>
+          <span class="domain-chevron">▶</span>
+        </div>
+        <div class="domain-body" id="domain-network" style="display:none">
+          <div class="skill-item"><div class="skill-item-name">Port Scanning</div><div class="skill-item-desc">SYN stealth, UDP, OS fingerprinting. Firewall/IDS evasion via fragmentation and decoys.</div><div class="skill-item-tools"><span class="tool-tag">Nmap</span><span class="tool-tag">Masscan</span><span class="tool-tag">Rustscan</span></div></div>
+          <div class="skill-item"><div class="skill-item-name">Service Enumeration</div><div class="skill-item-desc">Banner grabbing, default credential checks, service-specific NSE scripts.</div><div class="skill-item-tools"><span class="tool-tag">Nmap NSE</span><span class="tool-tag">enum4linux</span></div></div>
+          <div class="skill-item"><div class="skill-item-name">SMB / LDAP Attacks</div><div class="skill-item-desc">NTLM capture, Kerberoasting, Pass-the-Hash, AS-REP Roasting, BloodHound AD mapping.</div><div class="skill-item-tools"><span class="tool-tag">CrackMapExec</span><span class="tool-tag">Responder</span><span class="tool-tag">Impacket</span></div></div>
+          <div class="skill-item"><div class="skill-item-name">MITM</div><div class="skill-item-desc">ARP poisoning, HTTPS downgrade, DNS spoofing, credential capture on local networks.</div><div class="skill-item-tools"><span class="tool-tag">Bettercap</span><span class="tool-tag">mitmproxy</span></div></div>
+        </div>
+      </div>
+
+      <div class="domain-block reveal">
+        <div class="domain-header" data-domain="exploit">
+          <span class="domain-num">05</span>
+          <span class="domain-name">EXPLOITATION</span>
+          <span class="domain-count">4 skills</span>
+          <span class="domain-chevron">▶</span>
+        </div>
+        <div class="domain-body" id="domain-exploit" style="display:none">
+          <div class="skill-item"><div class="skill-item-name">Metasploit</div><div class="skill-item-desc">Module selection, staged/stageless payloads, Meterpreter post-exploitation modules.</div><div class="skill-item-tools"><span class="tool-tag">msfconsole</span><span class="tool-tag">msfvenom</span></div></div>
+          <div class="skill-item"><div class="skill-item-name">Manual Exploits</div><div class="skill-item-desc">Adapting public PoCs from ExploitDB and CVE databases for specific target configurations.</div><div class="skill-item-tools"><span class="tool-tag">searchsploit</span><span class="tool-tag">ExploitDB</span></div></div>
+          <div class="skill-item"><div class="skill-item-name">Privilege Escalation</div><div class="skill-item-desc">Linux SUID/sudo/cron. Windows unquoted paths, token impersonation, AlwaysInstallElevated.</div><div class="skill-item-tools"><span class="tool-tag">LinPEAS</span><span class="tool-tag">WinPEAS</span><span class="tool-tag">GTFOBins</span></div></div>
+          <div class="skill-item"><div class="skill-item-name">Reverse Shells</div><div class="skill-item-desc">Multi-language payloads, shell stabilisation, EDR evasion, staged C2 establishment.</div><div class="skill-item-tools"><span class="tool-tag">netcat</span><span class="tool-tag">socat</span><span class="tool-tag">pwncat</span></div></div>
+        </div>
+      </div>
+
+      <div class="domain-block reveal">
+        <div class="domain-header" data-domain="post">
+          <span class="domain-num">06</span>
+          <span class="domain-name">POST-EXPLOITATION</span>
+          <span class="domain-count">4 skills</span>
+          <span class="domain-chevron">▶</span>
+        </div>
+        <div class="domain-body" id="domain-post" style="display:none">
+          <div class="skill-item"><div class="skill-item-name">Persistence</div><div class="skill-item-desc">Cron jobs, scheduled tasks, SSH key injection, Windows Registry Run keys, web shells.</div></div>
+          <div class="skill-item"><div class="skill-item-name">Lateral Movement</div><div class="skill-item-desc">Pass-the-Hash/Ticket, BloodHound attack paths, port forwarding, proxychains pivoting.</div><div class="skill-item-tools"><span class="tool-tag">CrackMapExec</span><span class="tool-tag">chisel</span></div></div>
+          <div class="skill-item"><div class="skill-item-name">Data Exfiltration</div><div class="skill-item-desc">DNS exfil to bypass egress firewalls, HTTPS exfil, staged cloud storage upload.</div></div>
+          <div class="skill-item"><div class="skill-item-name">Covering Tracks</div><div class="skill-item-desc">Log clearing, timestomping, LOTL binaries — studied for detection engineering reporting.</div></div>
+        </div>
+      </div>
+
+      <div class="domain-block reveal">
+        <div class="domain-header" data-domain="auto">
+          <span class="domain-num">07</span>
+          <span class="domain-name">AUTOMATION & TOOLING</span>
+          <span class="domain-count">4 skills</span>
+          <span class="domain-chevron">▶</span>
+        </div>
+        <div class="domain-body" id="domain-auto" style="display:none">
+          <div class="skill-item"><div class="skill-item-name">Python Scripting</div><div class="skill-item-desc">Exploit PoC development, HTTP fuzzing, PCAP analysis with scapy, async recon pipelines.</div><div class="skill-item-tools"><span class="tool-tag">requests</span><span class="tool-tag">scapy</span><span class="tool-tag">pwntools</span></div></div>
+          <div class="skill-item"><div class="skill-item-name">Bash Scripting</div><div class="skill-item-desc">CLI tool chaining, parallel enumeration pipelines, output filtering and parsing.</div><div class="skill-item-tools"><span class="tool-tag">bash</span><span class="tool-tag">xargs</span><span class="tool-tag">jq</span></div></div>
+          <div class="skill-item"><div class="skill-item-name">Fuzzing</div><div class="skill-item-desc">Directory/file fuzzing, parameter discovery, virtual host fuzzing, content-type mutation.</div><div class="skill-item-tools"><span class="tool-tag">ffuf</span><span class="tool-tag">gobuster</span><span class="tool-tag">wfuzz</span></div></div>
+          <div class="skill-item"><div class="skill-item-name">Custom Tools</div><div class="skill-item-desc">Burp Suite extensions, Nuclei YAML templates, automated report generation scripts.</div><div class="skill-item-tools"><span class="tool-tag">Nuclei</span><span class="tool-tag">Burp Extender</span></div></div>
+        </div>
+      </div>
+
+      <div class="domain-block reveal">
+        <div class="domain-header" data-domain="report">
+          <span class="domain-num">08</span>
+          <span class="domain-name">REPORTING</span>
+          <span class="domain-count">4 skills</span>
+          <span class="domain-chevron">▶</span>
+        </div>
+        <div class="domain-body" id="domain-report" style="display:none">
+          <div class="skill-item"><div class="skill-item-name">Bug Reports</div><div class="skill-item-desc">Structured disclosure: executive summary, technical description, reproduction steps, evidence.</div></div>
+          <div class="skill-item"><div class="skill-item-name">Risk Severity</div><div class="skill-item-desc">CVSS v3.1 scoring, OWASP Risk Rating, business context adjustment for asset criticality.</div></div>
+          <div class="skill-item"><div class="skill-item-name">Proof of Concept</div><div class="skill-item-desc">Minimal-impact PoC confirming exploitability, annotated captures, video walkthroughs.</div></div>
+          <div class="skill-item"><div class="skill-item-name">Remediation Advice</div><div class="skill-item-desc">Code-level fix examples, short vs long-term recommendations, verification steps.</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TOOLS REFERENCE -->
+  <div class="tools-ref">
+    <div class="wrap">
+      <div class="s-label">Quick Reference</div>
+      <h2 class="s-title">TOOLS<br><span>ARSENAL</span></h2>
+      <div class="tools-cat-grid">
+        <div class="tools-cat reveal"><div class="tools-cat-name">Recon</div><ul class="tools-list"><li>Amass</li><li>Subfinder</li><li>theHarvester</li><li>Shodan</li><li>Maltego</li><li>dnsx / dig</li></ul></div>
+        <div class="tools-cat reveal"><div class="tools-cat-name">Web Testing</div><ul class="tools-list"><li>Burp Suite</li><li>OWASP ZAP</li><li>sqlmap</li><li>dalfox / XSStrike</li><li>ffuf / gobuster</li><li>Nikto</li></ul></div>
+        <div class="tools-cat reveal"><div class="tools-cat-name">Network</div><ul class="tools-list"><li>Nmap / Masscan</li><li>Wireshark</li><li>Responder</li><li>CrackMapExec</li><li>Bettercap</li><li>enum4linux</li></ul></div>
+        <div class="tools-cat reveal"><div class="tools-cat-name">Exploitation</div><ul class="tools-list"><li>Metasploit / MSFvenom</li><li>searchsploit</li><li>LinPEAS / WinPEAS</li><li>GTFOBins / LOLBAS</li><li>pwncat / socat</li><li>Impacket</li></ul></div>
+        <div class="tools-cat reveal"><div class="tools-cat-name">AD / Windows</div><ul class="tools-list"><li>BloodHound</li><li>CrackMapExec</li><li>Mimikatz</li><li>Rubeus</li><li>PowerView</li><li>ldapsearch</li></ul></div>
+        <div class="tools-cat reveal"><div class="tools-cat-name">Automation</div><ul class="tools-list"><li>Python 3 / requests</li><li>scapy / pwntools</li><li>Nuclei</li><li>Bash scripting</li><li>jq / xargs</li><li>paramiko</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <span>&copy; 2026 Prakash Mijar</span>
+  <div class="f-links"><a href="index.html">Home</a><a href="projects.html">Projects</a><a href="labs.html">Labs</a><a href="about.html">About</a></div>
+  <span class="f-right">erprakashmijar.com<span class="blink">_</span></span>
+</footer>
+
+<script src="assets/shared.js"></script>
+<script>
+document.querySelectorAll('.domain-header').forEach(h=>{
+  h.addEventListener('click',()=>{
+    const id=h.dataset.domain;
+    const body=document.getElementById('domain-'+id);
+    const isOpen=h.classList.contains('open');
+    h.classList.toggle('open',!isOpen);
+    body.style.display=isOpen?'none':'grid';
+  });
+});
+// open first one
+document.querySelector('.domain-header.open')&&(document.getElementById('domain-recon').style.display='grid');
+</script>
+</body>
+</html>

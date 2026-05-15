@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ethical Hacking Roadmap — Prakash Mijar</title>
+  <meta name="description" content="Ultimate Ethical Hacking Roadmap from Beginner to Elite — covering networking, web exploitation, active directory, red team operations, and advanced malware research."/>
+  <meta name="keywords" content="ethical hacking roadmap, penetration testing roadmap, cybersecurity learning path, beginner to elite hacking, OSCP preparation"/>
+  <meta name="author" content="Prakash Mijar"/>
+  <meta name="robots" content="index, follow"/>
+  <link rel="canonical" href="https://erprakashmijar.com/roadmap.html"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://erprakashmijar.com/roadmap.html"/>
+  <meta property="og:title" content="Ethical Hacking Roadmap — Prakash Mijar"/>
+  <meta property="og:description" content="Beginner to Elite ethical hacking roadmap covering all offensive security domains."/>
+  <meta property="og:image" content="https://erprakashmijar.com/og-image.png"/>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <meta name="theme-color" content="#00ff88"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+  <style>
+  /* ── RESET & ROOT ── */
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#040810;--bg2:#070d18;--bg3:#0a1628;
+    --g:#00ff88;--g2:#00d4ff;--g3:#7b2fff;
+    --lvl1:#00ff88; /* green  — beginner */
+    --lvl2:#f59e0b; /* amber  — intermediate */
+    --lvl3:#ef4444; /* red    — advanced */
+    --lvl4:#a855f7; /* purple — elite */
+    --border:rgba(0,255,136,.12);
+    --muted:#2e5068;--text:#7aafc8;--text2:#c0dce8;--white:#e8f4f8;
+    --mono:'Space Mono',monospace;
+    --display:'Bebas Neue',sans-serif;
+    --body:'Inter',sans-serif;
+  }
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text2);font-family:var(--body);overflow-x:hidden;cursor:none}
+
+  /* ── CANVAS ── */
+  #bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.45}
+  body::after{content:'';position:fixed;inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events:none;z-index:1;opacity:.3}
+
+  /* ── CURSOR ── */
+  #cur{position:fixed;width:8px;height:8px;background:var(--g);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s;box-shadow:0 0 10px var(--g)}
+  #cur2{position:fixed;width:30px;height:30px;border:1px solid rgba(0,255,136,.35);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .2s,height .2s,border-color .2s}
+  @media(hover:none){#cur,#cur2{display:none}body{cursor:auto}}
+
+  /* ── NAV ── */
+  nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;justify-content:space-between;align-items:center;padding:1.1rem 3rem;background:rgba(4,8,16,.85);backdrop-filter:blur(20px) saturate(160%);border-bottom:1px solid rgba(0,255,136,.07)}
+  .nav-logo{font-family:var(--mono);font-size:.78rem;color:var(--g);letter-spacing:.14em;text-decoration:none;text-shadow:0 0 16px rgba(0,255,136,.4)}
+  .nav-logo span{color:var(--g2)}
+  .nav-links{display:flex;gap:1.8rem;list-style:none;align-items:center}
+  .nav-links a{font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;letter-spacing:.12em;transition:color .2s;cursor:none;border-bottom:1px solid transparent;padding-bottom:1px}
+  .nav-links a:hover{color:var(--g);border-color:rgba(0,255,136,.3)}
+  .nav-links a.active{color:var(--g2);border-color:rgba(0,212,255,.4)}
+  .nav-cta{background:var(--g)!important;color:#040810!important;padding:.4rem 1rem!important;border:none!important;font-weight:700;border-radius:2px;transition:background .2s!important}
+  .nav-cta:hover{background:#fff!important}
+  .nav-toggle{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:2px}
+  .nav-toggle span{display:block;width:20px;height:1.5px;background:var(--g)}
+  @media(max-width:700px){nav{padding:1rem 1.2rem}.nav-toggle{display:flex}.nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;gap:0;background:rgba(4,8,16,.97);border-bottom:1px solid var(--border);padding:.5rem 0}.nav-links.open{display:flex}.nav-links li a{display:block;padding:.75rem 1.5rem;border-bottom:none}}
+
+  /* ── LAYOUT ── */
+  .wrap{max-width:1100px;margin:0 auto;padding:0 2.5rem}
+  @media(max-width:640px){.wrap{padding:0 1.2rem}}
+  section{position:relative;z-index:2}
+  .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(0,255,136,.12),rgba(0,212,255,.08),transparent);position:relative;z-index:2}
+
+  /* ── PAGE HERO ── */
+  .page-hero{padding:9rem 0 5rem;border-bottom:1px solid rgba(0,255,136,.06);position:relative;overflow:hidden}
+  .hero-glow{position:absolute;top:30%;right:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(0,255,136,.06) 0%,transparent 65%);border-radius:50%;pointer-events:none}
+  .breadcrumb{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.12em;margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+  .breadcrumb a{color:var(--g2);text-decoration:none;transition:color .2s;cursor:none}
+  .breadcrumb a:hover{color:#fff}
+  .s-label{font-family:var(--mono);font-size:.6rem;color:var(--g2);letter-spacing:.3em;margin-bottom:.8rem;display:flex;align-items:center;gap:.6rem}
+  .s-label::before{content:'';display:block;width:20px;height:1px;background:var(--g2)}
+  .page-title{font-family:var(--display);font-size:clamp(3rem,7vw,6rem);color:var(--white);letter-spacing:.03em;line-height:.92;margin-bottom:1.2rem}
+  .page-title span{color:var(--g)}
+  .page-title small{display:block;font-size:clamp(1.6rem,3.5vw,3rem);color:var(--g2)}
+  .page-desc{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.9;max-width:560px;margin-bottom:2rem}
+
+  /* ── LEVEL PILLS ── */
+  .level-pills{display:flex;gap:.7rem;flex-wrap:wrap;margin-bottom:3rem}
+  .level-pill{display:flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;padding:.45rem 1rem;border-radius:20px;cursor:pointer;transition:all .25s;border:1px solid transparent}
+  .lp1{background:rgba(0,255,136,.07);color:var(--lvl1);border-color:rgba(0,255,136,.2)}
+  .lp2{background:rgba(245,158,11,.07);color:var(--lvl2);border-color:rgba(245,158,11,.2)}
+  .lp3{background:rgba(239,68,68,.07);color:var(--lvl3);border-color:rgba(239,68,68,.2)}
+  .lp4{background:rgba(168,85,247,.07);color:var(--lvl4);border-color:rgba(168,85,247,.2)}
+  .level-pill:hover{transform:translateY(-2px);filter:brightness(1.2)}
+  .level-pill.selected{filter:brightness(1.3);box-shadow:0 4px 16px rgba(0,0,0,.3)}
+  .lp-dot{width:8px;height:8px;border-radius:50%}
+  .lp1 .lp-dot{background:var(--lvl1);box-shadow:0 0 6px var(--lvl1)}
+  .lp2 .lp-dot{background:var(--lvl2);box-shadow:0 0 6px var(--lvl2)}
+  .lp3 .lp-dot{background:var(--lvl3);box-shadow:0 0 6px var(--lvl3)}
+  .lp4 .lp-dot{background:var(--lvl4);box-shadow:0 0 6px var(--lvl4)}
+
+  /* ── PROGRESS BAR ── */
+  .roadmap-progress{background:var(--bg2);border:1px solid rgba(0,255,136,.08);border-radius:8px;padding:1.2rem 1.5rem;margin-bottom:3rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+  .rp-label{font-family:var(--mono);font-size:.62rem;color:var(--muted);letter-spacing:.15em;white-space:nowrap}
+  .rp-track{flex:1;min-width:180px;height:6px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden;display:flex;gap:2px}
+  .rp-seg{height:100%;border-radius:2px;flex:1;opacity:.25;transition:opacity .3s}
+  .rp-seg.filled{opacity:1}
+  .seg1{background:var(--lvl1)}.seg2{background:var(--lvl2)}.seg3{background:var(--lvl3)}.seg4{background:var(--lvl4)}
+  .rp-count{font-family:var(--mono);font-size:.65rem;color:var(--white);white-space:nowrap}
+  .rp-count span{color:var(--g)}
+
+  /* ── ROADMAP TIMELINE ── */
+  .roadmap-body{padding:4rem 0 6rem;display:flex;flex-direction:column;gap:2.5rem}
+
+  .level-block{border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.06);transition:border-color .25s}
+  .level-block:hover{border-color:rgba(255,255,255,.1)}
+
+  .level-header{
+    display:flex;align-items:center;gap:1.2rem;padding:1.4rem 1.8rem;
+    cursor:pointer;user-select:none;position:relative;overflow:hidden;
+  }
+  .level-header::before{content:'';position:absolute;inset:0;opacity:.06}
+  .lh1::before{background:var(--lvl1)}.lh2::before{background:var(--lvl2)}
+  .lh3::before{background:var(--lvl3)}.lh4::before{background:var(--lvl4)}
+  .level-badge{
+    width:44px;height:44px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;font-size:1.3rem;flex-shrink:0;
+    box-shadow:0 0 20px rgba(0,0,0,.4);
+  }
+  .lb1{background:linear-gradient(135deg,rgba(0,255,136,.15),rgba(0,255,136,.3));border:1px solid rgba(0,255,136,.4)}
+  .lb2{background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(245,158,11,.25));border:1px solid rgba(245,158,11,.4)}
+  .lb3{background:linear-gradient(135deg,rgba(239,68,68,.12),rgba(239,68,68,.25));border:1px solid rgba(239,68,68,.4)}
+  .lb4{background:linear-gradient(135deg,rgba(168,85,247,.12),rgba(168,85,247,.28));border:1px solid rgba(168,85,247,.4)}
+  .level-meta{flex:1}
+  .level-num{font-family:var(--mono);font-size:.58rem;letter-spacing:.2em;margin-bottom:.2rem}
+  .l1n{color:rgba(0,255,136,.5)}.l2n{color:rgba(245,158,11,.5)}.l3n{color:rgba(239,68,68,.5)}.l4n{color:rgba(168,85,247,.5)}
+  .level-name{font-family:var(--display);font-size:1.6rem;color:var(--white);letter-spacing:.05em;line-height:1}
+  .level-tagline{font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-top:.25rem;letter-spacing:.06em}
+  .level-stats{display:flex;gap:1.2rem;margin-left:auto}
+  .lstat{text-align:center}
+  .lstat-n{font-family:var(--display);font-size:1.4rem;line-height:1}
+  .l1 .lstat-n{color:var(--lvl1)}.l2 .lstat-n{color:var(--lvl2)}.l3 .lstat-n{color:var(--lvl3)}.l4 .lstat-n{color:var(--lvl4)}
+  .lstat-l{font-family:var(--mono);font-size:.5rem;color:var(--muted);letter-spacing:.1em}
+  .level-chevron{font-size:.75rem;color:var(--muted);transition:transform .3s,color .2s;flex-shrink:0}
+  .level-block.open .level-chevron{transform:rotate(90deg);color:var(--white)}
+
+  /* ── LEVEL BODY ── */
+  .level-body{display:none;background:var(--bg2);border-top:1px solid rgba(255,255,255,.05)}
+  .level-block.open .level-body{display:block}
+
+  /* ── CATEGORY GRID ── */
+  .cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:rgba(255,255,255,.04)}
+  .cat-card{background:var(--bg2);padding:1.6rem;transition:background .2s;cursor:pointer}
+  .cat-card:hover{background:rgba(255,255,255,.02)}
+  .cat-card.cat-open{background:rgba(255,255,255,.03)}
+  .cat-top{display:flex;align-items:center;gap:.8rem;margin-bottom:.6rem}
+  .cat-icon{font-size:1.1rem;flex-shrink:0}
+  .cat-name{font-family:var(--display);font-size:1.1rem;color:var(--white);letter-spacing:.05em}
+  .cat-count{font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:.1em;margin-left:auto}
+  .cat-preview{font-family:var(--mono);font-size:.63rem;color:var(--muted);line-height:1.65;margin-bottom:.8rem}
+
+  /* ── TOPIC LIST ── */
+  .topic-list{display:none;flex-direction:column;gap:.35rem;margin-top:.6rem;padding-top:.7rem;border-top:1px solid rgba(255,255,255,.05)}
+  .cat-card.cat-open .topic-list{display:flex}
+  .topic-item{
+    display:flex;align-items:flex-start;gap:.7rem;
+    padding:.6rem .8rem;border-radius:4px;
+    background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.04);
+    transition:all .2s;cursor:pointer;
+  }
+  .topic-item:hover{background:rgba(0,0,0,.35);border-color:rgba(255,255,255,.08)}
+  .topic-item.done{opacity:.5}
+  .topic-item.done .topic-check{background:rgba(0,255,136,.15);border-color:rgba(0,255,136,.4);color:var(--g)}
+  .topic-check{
+    width:18px;height:18px;border-radius:3px;border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.03);display:flex;align-items:center;
+    justify-content:center;font-size:.55rem;flex-shrink:0;margin-top:1px;
+    transition:all .2s;cursor:pointer;
+  }
+  .topic-text{flex:1}
+  .topic-name{font-family:var(--mono);font-size:.68rem;color:var(--text2);line-height:1.4}
+  .topic-desc{font-family:var(--mono);font-size:.59rem;color:var(--muted);margin-top:.25rem;line-height:1.55;display:none}
+  .topic-item.expanded .topic-desc{display:block}
+  .topic-expand{font-size:.55rem;color:var(--muted);margin-top:3px;cursor:pointer;transition:transform .2s;flex-shrink:0}
+  .topic-item.expanded .topic-expand{transform:rotate(90deg)}
+  .topic-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.4rem}
+  .topic-tag{font-family:var(--mono);font-size:.52rem;letter-spacing:.07em;padding:.12rem .4rem;border-radius:2px}
+  .tt-tool{color:var(--g);background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.12)}
+  .tt-cert{color:#f59e0b;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15)}
+  .tt-lab{color:var(--g2);background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.12)}
+
+  /* ── ELITE SPECIAL ── */
+  .elite-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;padding:2rem}
+  .elite-card{background:rgba(168,85,247,.04);border:1px solid rgba(168,85,247,.15);border-radius:8px;padding:1.4rem;transition:all .25s;cursor:pointer}
+  .elite-card:hover{background:rgba(168,85,247,.08);border-color:rgba(168,85,247,.3);transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,.3)}
+  .elite-icon{font-size:1.6rem;margin-bottom:.7rem}
+  .elite-name{font-family:var(--display);font-size:1.1rem;color:var(--white);letter-spacing:.05em;margin-bottom:.4rem}
+  .elite-desc{font-family:var(--mono);font-size:.62rem;color:var(--muted);line-height:1.7}
+
+  /* ── HOW TO USE SECTION ── */
+  .howto-section{padding:5rem 0;border-top:1px solid rgba(0,255,136,.06)}
+  .howto-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.06);border-radius:8px;overflow:hidden;margin-top:2rem}
+  @media(max-width:800px){.howto-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:440px){.howto-grid{grid-template-columns:1fr}}
+  .howto-card{background:var(--bg);padding:1.8rem;transition:background .2s;position:relative}
+  .howto-card:hover{background:rgba(0,255,136,.02)}
+  .howto-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;transform:scaleX(0);transform-origin:left;transition:transform .3s}
+  .hw1::after{background:var(--lvl1)}.hw2::after{background:var(--lvl2)}.hw3::after{background:var(--lvl3)}.hw4::after{background:var(--lvl4)}
+  .howto-card:hover::after{transform:scaleX(1)}
+  .hw-step{font-family:var(--display);font-size:3rem;line-height:1;margin-bottom:.6rem;opacity:.15}
+  .hw1 .hw-step{color:var(--lvl1)}.hw2 .hw-step{color:var(--lvl2)}.hw3 .hw-step{color:var(--lvl3)}.hw4 .hw-step{color:var(--lvl4)}
+  .hw-title{font-family:var(--display);font-size:1rem;color:var(--white);letter-spacing:.05em;margin-bottom:.5rem}
+  .hw-desc{font-family:var(--mono);font-size:.62rem;color:var(--muted);line-height:1.75}
+
+  /* ── CTA STRIP ── */
+  .cta-strip{padding:5rem 0;border-top:1px solid rgba(0,255,136,.06);text-align:center}
+  .cta-title{font-family:var(--display);font-size:clamp(2rem,5vw,4rem);color:var(--white);letter-spacing:.04em;margin-bottom:.8rem}
+  .cta-title span{color:var(--g)}
+  .cta-sub{font-family:var(--mono);font-size:.7rem;color:var(--muted);line-height:1.85;margin-bottom:2rem}
+  .btn{font-family:var(--mono);font-size:.68rem;letter-spacing:.13em;padding:.85rem 1.8rem;text-decoration:none;border-radius:3px;transition:all .25s;display:inline-flex;align-items:center;gap:.5rem;cursor:none}
+  .btn-g{background:var(--g);color:#040810;font-weight:700}
+  .btn-g:hover{background:#fff;transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,255,136,.3)}
+  .btn-o{border:1px solid rgba(0,255,136,.15);color:var(--g)}
+  .btn-o:hover{background:rgba(0,255,136,.07);transform:translateY(-2px)}
+  .cta-btns{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap}
+
+  /* ── FOOTER ── */
+  footer{position:relative;z-index:2;padding:2rem 3rem;border-top:1px solid rgba(0,255,136,.06);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+  footer span{font-family:var(--mono);font-size:.6rem;color:var(--muted)}
+  .f-right{color:var(--g);letter-spacing:.1em}
+  .f-links{display:flex;gap:1.5rem}
+  .f-links a{font-family:var(--mono);font-size:.6rem;color:var(--muted);text-decoration:none;transition:color .2s;cursor:none}
+  .f-links a:hover{color:var(--g)}
+  .blink{animation:blink 1s step-end infinite}
+  @media(max-width:640px){footer{padding:1.5rem 1.2rem}}
+
+  /* ── REVEAL ── */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  /* ── KEYFRAMES ── */
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+  @keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  </style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<div id="cur"></div>
+<div id="cur2"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">PM<span>::</span>OFFSEC</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="labs.html">Labs</a></li>
+    <li><a href="skills.html">Skills</a></li>
+    <li><a href="roadmap.html" class="active">Roadmap</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="mailto:contact@erprakashmijar.com" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<main id="main-content" role="main">
+
+<!-- ── PAGE HERO ── -->
+<section class="page-hero">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">HOME</a><span>/</span><span>ROADMAP</span></div>
+    <div class="s-label">Learning Path</div>
+    <h1 class="page-title">ETHICAL HACKING<br><span>ROADMAP</span><small>Beginner → Elite</small></h1>
+    <p class="page-desc">A complete, structured path from IT fundamentals to full-scale red team operations and zero-day research. Click any level to explore topics, tools, and techniques.</p>
+
+    <!-- Level filter pills -->
+    <div class="level-pills" id="levelPills">
+      <div class="level-pill lp1 selected" data-level="1" onclick="filterLevel(1)"><div class="lp-dot"></div>🟢 BEGINNER</div>
+      <div class="level-pill lp2 selected" data-level="2" onclick="filterLevel(2)"><div class="lp-dot"></div>🟡 INTERMEDIATE</div>
+      <div class="level-pill lp3 selected" data-level="3" onclick="filterLevel(3)"><div class="lp-dot"></div>🔴 ADVANCED</div>
+      <div class="level-pill lp4 selected" data-level="4" onclick="filterLevel(4)"><div class="lp-dot"></div>🟣 ELITE</div>
+    </div>
+
+    <!-- Progress tracker -->
+    <div class="roadmap-progress">
+      <span class="rp-label">YOUR PROGRESS</span>
+      <div class="rp-track" id="progressTrack"></div>
+      <span class="rp-count"><span id="doneCount">0</span> / <span id="totalCount">0</span> topics completed</span>
+      <button style="font-family:var(--mono);font-size:.58rem;color:var(--muted);background:none;border:1px solid rgba(255,255,255,.08);border-radius:3px;padding:.3rem .7rem;cursor:pointer;transition:all .2s;letter-spacing:.1em" onmouseover="this.style.color='var(--g)'" onmouseout="this.style.color='var(--muted)'" onclick="resetProgress()">RESET</button>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── ROADMAP TIMELINE ── -->
+<section>
+  <div class="wrap">
+    <div class="roadmap-body" id="roadmapBody">
+
+      <!-- ══ LEVEL 1: BEGINNER ══ -->
+      <div class="level-block l1 open reveal" data-level="1" id="level-1">
+        <div class="level-header lh1" onclick="toggleLevel('level-1')">
+          <div class="level-badge lb1">🟢</div>
+          <div class="level-meta">
+            <div class="level-num l1n">LEVEL 01 // FOUNDATION</div>
+            <div class="level-name">BEGINNER</div>
+            <div class="level-tagline">Build strong IT, Linux &amp; Networking fundamentals</div>
+          </div>
+          <div class="level-stats">
+            <div class="lstat"><div class="lstat-n">5</div><div class="lstat-l">CATEGORIES</div></div>
+            <div class="lstat"><div class="lstat-n">15</div><div class="lstat-l">TOPICS</div></div>
+          </div>
+          <span class="level-chevron">▶</span>
+        </div>
+        <div class="level-body">
+          <div class="cat-grid">
+
+            <div class="cat-card" onclick="toggleCat(this)">
+              <div class="cat-top"><span class="cat-icon">💻</span><span class="cat-name">IT &amp; Computing Fundamentals</span><span class="cat-count">3 topics</span></div>
+              <div class="cat-preview">How computers work at the hardware and OS level — the bedrock of security.</div>
+              <div class="topic-list">
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">How Computers, CPU &amp; Memory Work</div>
+                    <div class="topic-desc">Understand CPU execution cycles, registers, RAM vs storage, and how data moves between components. Essential for understanding buffer overflows and memory exploitation later.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-lab">TryHackMe: Pre-Security</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Operating Systems (Windows / Linux Basics)</div>
+                    <div class="topic-desc">Learn how OSes manage processes, memory, and files. Understand kernel vs userland, system calls, and why OS knowledge is critical for privilege escalation.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-lab">TryHackMe: Linux Fundamentals</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">File Systems, Processes &amp; System Architecture</div>
+                    <div class="topic-desc">Understand filesystem structure (/etc, /var, /home on Linux; C:\Windows on Windows), process trees, and how attackers target configuration files and process injection.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-lab">OverTheWire: Bandit</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cat-card" onclick="toggleCat(this)">
+              <div class="cat-top"><span class="cat-icon">🌐</span><span class="cat-name">Networking Fundamentals</span><span class="cat-count">3 topics</span></div>
+              <div class="cat-preview">TCP/IP, OSI model, and protocols — the foundation of all network attacks.</div>
+              <div class="topic-list">
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">OSI &amp; TCP/IP Models (Layer-by-Layer)</div>
+                    <div class="topic-desc">Master all 7 OSI layers and their TCP/IP counterparts. Attacks target specific layers — ARP at Layer 2, IP spoofing at Layer 3, TCP SYN floods at Layer 4, HTTP attacks at Layer 7.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-lab">Cisco NetAcad</span><span class="topic-tag tt-lab">Professor Messer</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">IP Addressing, MAC, DNS, DHCP</div>
+                    <div class="topic-desc">IPv4/v6 subnetting, MAC address structure, DNS resolution chain, and DHCP lease process. Critical for understanding ARP spoofing, DNS poisoning, and rogue DHCP attacks.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Wireshark</span><span class="topic-tag tt-lab">subnettingpractice.com</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">TCP vs UDP + Common Protocols</div>
+                    <div class="topic-desc">TCP three-way handshake, UDP stateless communication, and protocols: HTTP/S, FTP, SSH, SMTP, SMB, LDAP. Know default ports — every pentest starts with port enumeration.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Nmap</span><span class="topic-tag tt-tool">Wireshark</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cat-card" onclick="toggleCat(this)">
+              <div class="cat-top"><span class="cat-icon">🐧</span><span class="cat-name">Linux Essentials</span><span class="cat-count">3 topics</span></div>
+              <div class="cat-preview">Linux is the hacker's OS — master the command line before everything else.</div>
+              <div class="topic-list">
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Linux Command Line (Beginner → Pro)</div>
+                    <div class="topic-desc">Navigation, file operations, piping, grep/awk/sed, find, netstat, ps, cron — all essential for post-exploitation enumeration and scripting automation.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-lab">OverTheWire: Bandit</span><span class="topic-tag tt-lab">LinuxCommand.org</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">File Permissions &amp; Ownership</div>
+                    <div class="topic-desc">rwx bits, octal notation, SUID/SGID/sticky bit — SUID binaries are one of the most common Linux privilege escalation vectors. Understand chmod, chown, and find for SUID discovery.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">GTFOBins</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Package Management (APT / YUM)</div>
+                    <div class="topic-desc">Installing, updating, and managing software on Debian/Ubuntu and RHEL-based systems. Critical for setting up Kali tools and managing lab environments.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Kali Linux</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cat-card" onclick="toggleCat(this)">
+              <div class="cat-top"><span class="cat-icon">🛡️</span><span class="cat-name">Cybersecurity Basics</span><span class="cat-count">3 topics</span></div>
+              <div class="cat-preview">Core security concepts, threat landscape, and ethical hacking principles.</div>
+              <div class="topic-list">
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">CIA Triad (Confidentiality, Integrity, Availability)</div>
+                    <div class="topic-desc">The three pillars of information security. Every attack can be mapped to breaking one or more: data theft = confidentiality, tampering = integrity, DDoS = availability.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-cert">CompTIA Security+</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Types of Hackers (White / Grey / Black)</div>
+                    <div class="topic-desc">Legal and ethical distinctions between penetration testers, bug bounty hunters, security researchers, and malicious actors. Know the law before you touch anything.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-cert">CEH</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Common Cyber Attacks &amp; Threat Landscape</div>
+                    <div class="topic-desc">Phishing, ransomware, supply chain attacks, zero-days, social engineering. Understanding attacker motivation and TTPs before you learn the technical execution.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-lab">MITRE ATT&amp;CK</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cat-card" onclick="toggleCat(this)">
+              <div class="cat-top"><span class="cat-icon">🔧</span><span class="cat-name">Beginner Tools &amp; Labs</span><span class="cat-count">3 topics</span></div>
+              <div class="cat-preview">Set up your first hacking lab and learn the essential first tools.</div>
+              <div class="topic-list">
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">VirtualBox / VMware (Lab Environment)</div>
+                    <div class="topic-desc">Build an isolated virtual lab with attacker (Kali) and target (Metasploitable, DVWA) VMs on a host-only network. Never practice on live systems without written permission.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">VirtualBox</span><span class="topic-tag tt-tool">VMware</span><span class="topic-tag tt-lab">Metasploitable 2</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Kali Linux (Introduction)</div>
+                    <div class="topic-desc">The industry-standard penetration testing distribution. Learn to navigate the toolset, understand the purpose of major categories (recon, exploitation, forensics), and customize your environment.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Kali Linux</span><span class="topic-tag tt-lab">TryHackMe</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Nmap Basics (Scanning &amp; Enumeration)</div>
+                    <div class="topic-desc">Port scanning, service version detection, OS fingerprinting, and NSE scripts. Every pentest starts with Nmap. Master -sV, -sC, -O, -A, and stealth scan options.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Nmap</span><span class="topic-tag tt-lab">HackTheBox: Starting Point</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ LEVEL 2: INTERMEDIATE ══ -->
+      <div class="level-block l2 reveal" data-level="2" id="level-2">
+        <div class="level-header lh2" onclick="toggleLevel('level-2')">
+          <div class="level-badge lb2">🟡</div>
+          <div class="level-meta">
+            <div class="level-num l2n">LEVEL 02 // REAL-WORLD SKILLS</div>
+            <div class="level-name">INTERMEDIATE</div>
+            <div class="level-tagline">Practice real-world hacking techniques on lab environments</div>
+          </div>
+          <div class="level-stats">
+            <div class="lstat"><div class="lstat-n">5</div><div class="lstat-l">CATEGORIES</div></div>
+            <div class="lstat"><div class="lstat-n">15</div><div class="lstat-l">TOPICS</div></div>
+          </div>
+          <span class="level-chevron">▶</span>
+        </div>
+        <div class="level-body">
+          <div class="cat-grid">
+
+            <div class="cat-card" onclick="toggleCat(this)">
+              <div class="cat-top"><span class="cat-icon">📡</span><span class="cat-name">Networking Attacks</span><span class="cat-count">3 topics</span></div>
+              <div class="cat-preview">Layer 2/3 attacks — ARP, DNS spoofing, and man-in-the-middle techniques.</div>
+              <div class="topic-list">
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">ARP Spoofing</div>
+                    <div class="topic-desc">Sending forged ARP replies to associate your MAC with another host's IP, redirecting their traffic through your machine. Foundation of LAN-based MITM attacks.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">arpspoof</span><span class="topic-tag tt-tool">Bettercap</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">DNS Spoofing</div>
+                    <div class="topic-desc">Injecting false DNS responses to redirect victims to malicious servers. Used for credential harvesting and phishing infrastructure. Requires MITM position first.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Bettercap</span><span class="topic-tag tt-tool">dnsspoof</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Man-in-the-Middle (MITM) Attacks</div>
+                    <div class="topic-desc">Full MITM chain: ARP poison → intercept → SSL strip → credential capture. Practice in lab with Wireshark to see the full packet flow.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Bettercap</span><span class="topic-tag tt-tool">mitmproxy</span><span class="topic-tag tt-tool">Wireshark</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cat-card" onclick="toggleCat(this)">
+              <div class="cat-top"><span class="cat-icon">🌍</span><span class="cat-name">Web Application Security</span><span class="cat-count">4 topics</span></div>
+              <div class="cat-preview">The most common attack surface — OWASP Top 10, SQLi, XSS, and auth flaws.</div>
+              <div class="topic-list">
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">OWASP Top 10 (In-Depth)</div>
+                    <div class="topic-desc">Deep-dive into all 10 categories: Broken Access Control, Crypto Failures, Injection, Insecure Design, Misconfiguration, Vulnerable Components, Auth Failures, Integrity Failures, Logging Failures, SSRF.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Burp Suite</span><span class="topic-tag tt-lab">OWASP WebGoat</span><span class="topic-tag tt-lab">DVWA</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">SQL Injection (SQLi)</div>
+                    <div class="topic-desc">Union-based, error-based, blind, and time-based SQLi. From basic auth bypass (`' OR '1'='1`) to full DB dump and sometimes OS-level command execution via INTO OUTFILE.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">sqlmap</span><span class="topic-tag tt-tool">Burp Suite</span><span class="topic-tag tt-lab">HackTheBox</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">XSS &amp; CSRF</div>
+                    <div class="topic-desc">Stored, reflected, and DOM-based XSS. CSRF token bypass. XSS can lead to session hijacking, credential theft, and DOM manipulation. Critical for bug bounty.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">XSStrike</span><span class="topic-tag tt-tool">dalfox</span><span class="topic-tag tt-lab">PortSwigger Labs</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Authentication &amp; Authorization Flaws</div>
+                    <div class="topic-desc">JWT attacks (algorithm confusion, none alg), IDOR, broken object-level auth, session fixation, password reset poisoning. Highest-value findings in bug bounty.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">jwt_tool</span><span class="topic-tag tt-tool">Burp Suite</span><span class="topic-tag tt-lab">PortSwigger Labs</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cat-card" onclick="toggleCat(this)">
+              <div class="cat-top"><span class="cat-icon">💻</span><span class="cat-name">System Exploitation</span><span class="cat-count">3 topics</span></div>
+              <div class="cat-preview">Password attacks, privilege escalation, and misconfiguration exploitation.</div>
+              <div class="topic-list">
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Password Cracking Techniques</div>
+                    <div class="topic-desc">Dictionary attacks, brute-force, rule-based attacks, and rainbow tables. Understanding hash types (MD5, SHA1, bcrypt, NTLM) and where to find them (shadow files, SAM database).</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Hashcat</span><span class="topic-tag tt-tool">John the Ripper</span><span class="topic-tag tt-lab">RockYou wordlist</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Privilege Escalation (Linux / Windows)</div>
+                    <div class="topic-desc">Linux: SUID/SGID binaries, sudo -l misconfiguration, writable cron jobs, /etc/passwd writable. Windows: unquoted service paths, AlwaysInstallElevated, token impersonation, DLL hijacking.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">LinPEAS</span><span class="topic-tag tt-tool">WinPEAS</span><span class="topic-tag tt-lab">GTFOBins</span><span class="topic-tag tt-lab">LOLBAS</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Security Misconfiguration Exploits</div>
+                    <div class="topic-desc">Default credentials on services, open admin panels (Tomcat, phpMyAdmin), S3 bucket misconfigs, exposed .git directories, and debug mode endpoints leaking secrets.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Nuclei</span><span class="topic-tag tt-tool">dirsearch</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cat-card" onclick="toggleCat(this)">
+              <div class="cat-top"><span class="cat-icon">📶</span><span class="cat-name">Wireless Attacks</span><span class="cat-count">3 topics</span></div>
+              <div class="cat-preview">Wi-Fi security — WPA cracking, evil twin attacks, and rogue access points.</div>
+              <div class="topic-list">
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Wi-Fi Hacking Fundamentals</div>
+                    <div class="topic-desc">802.11 frame types, monitor mode, packet injection, and the 4-way WPA handshake. Requires a wireless adapter that supports monitor mode and packet injection.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Aircrack-ng suite</span><span class="topic-tag tt-tool">Alfa AWUS036ACH</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">WPA / WPA2 Attacks</div>
+                    <div class="topic-desc">Capture the 4-way handshake via deauth attack, then offline brute-force with Hashcat. PMKID attack for capturing without a connected client. WPS PIN attacks via Reaver.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Aircrack-ng</span><span class="topic-tag tt-tool">Hashcat</span><span class="topic-tag tt-tool">hcxdumptool</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Evil Twin &amp; Rogue AP Attacks</div>
+                    <div class="topic-desc">Clone a legitimate AP's SSID and BSSID, deauth clients from the real AP, capture credentials via captive portal on the fake AP. Advanced social engineering at Layer 2.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">hostapd-wpe</span><span class="topic-tag tt-tool">airbase-ng</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cat-card" onclick="toggleCat(this)">
+              <div class="cat-top"><span class="cat-icon">⚒️</span><span class="cat-name">Intermediate Tools</span><span class="cat-count">3 topics</span></div>
+              <div class="cat-preview">Burp Suite, Metasploit, and password cracking — the core professional toolkit.</div>
+              <div class="topic-list">
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Burp Suite</div>
+                    <div class="topic-desc">The industry-standard web app testing proxy. Master Proxy, Repeater, Intruder, Scanner, Collaborator. Every serious web pentester lives in Burp Suite daily.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Burp Suite Pro</span><span class="topic-tag tt-lab">PortSwigger Web Security Academy</span><span class="topic-tag tt-cert">BSCP</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Metasploit Framework</div>
+                    <div class="topic-desc">msfconsole, modules (auxiliary/exploit/post), msfvenom payload generation, Meterpreter sessions. The most-used exploitation framework in professional pentesting engagements.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Metasploit</span><span class="topic-tag tt-tool">msfvenom</span><span class="topic-tag tt-lab">Metasploitable 2</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Hydra / John the Ripper</div>
+                    <div class="topic-desc">Hydra for online service brute-force (SSH, FTP, HTTP forms, RDP). John for offline hash cracking with wordlists and custom rules. Essential for credential attacks.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Hydra</span><span class="topic-tag tt-tool">John the Ripper</span><span class="topic-tag tt-tool">Hashcat</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ LEVEL 3: ADVANCED ══ -->
+      <div class="level-block l3 reveal" data-level="3" id="level-3">
+        <div class="level-header lh3" onclick="toggleLevel('level-3')">
+          <div class="level-badge lb3">🔴</div>
+          <div class="level-meta">
+            <div class="level-num l3n">LEVEL 03 // PROFESSIONAL</div>
+            <div class="level-name">ADVANCED</div>
+            <div class="level-tagline">Become a job-ready ethical hacker and penetration tester</div>
+          </div>
+          <div class="level-stats">
+            <div class="lstat"><div class="lstat-n">5</div><div class="lstat-l">CATEGORIES</div></div>
+            <div class="lstat"><div class="lstat-n">15</div><div class="lstat-l">TOPICS</div></div>
+          </div>
+          <span class="level-chevron">▶</span>
+        </div>
+        <div class="level-body">
+          <div class="cat-grid">
+
+            <div class="cat-card" onclick="toggleCat(this)">
+              <div class="cat-top"><span class="cat-icon">💥</span><span class="cat-name">Advanced Exploitation</span><span class="cat-count">3 topics</span></div>
+              <div class="cat-preview">Buffer overflows, custom exploits, and post-exploitation techniques.</div>
+              <div class="topic-list">
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Buffer Overflow (Basic → Advanced)</div>
+                    <div class="topic-desc">Stack-based buffer overflow: fuzzing, finding EIP offset, controlling EIP, finding bad characters, locating JMP ESP, generating shellcode. OSCP-level skill — mandatory for the certification.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">pwndbg</span><span class="topic-tag tt-tool">pwntools</span><span class="topic-tag tt-lab">TryHackMe: BOF Prep</span><span class="topic-tag tt-cert">OSCP</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Custom Exploit Development</div>
+                    <div class="topic-desc">Adapting and writing exploits in Python. Understanding ASLR, DEP/NX, and basic ROP chain concepts. Moving beyond public PoCs to target-specific exploitation.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">pwntools</span><span class="topic-tag tt-tool">GDB</span><span class="topic-tag tt-tool">IDA Free</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Post-Exploitation Techniques</div>
+                    <div class="topic-desc">What to do after getting a shell: situational awareness, local enumeration, credential harvesting, pivoting setup, C2 establishment, and evidence-based impact demonstration.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Meterpreter</span><span class="topic-tag tt-tool">Empire</span><span class="topic-tag tt-tool">chisel</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cat-card" onclick="toggleCat(this)">
+              <div class="cat-top"><span class="cat-icon">🏰</span><span class="cat-name">Active Directory Attacks</span><span class="cat-count">3 topics</span></div>
+              <div class="cat-preview">AD is in 90% of enterprises — mastering it is essential for pentesters.</div>
+              <div class="topic-list">
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Kerberoasting</div>
+                    <div class="topic-desc">Request TGS tickets for service accounts as any authenticated domain user, then crack them offline. Highly effective when service accounts have weak passwords — common in real environments.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Rubeus</span><span class="topic-tag tt-tool">Impacket GetUserSPNs</span><span class="topic-tag tt-tool">Hashcat</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Pass-the-Hash / Pass-the-Ticket</div>
+                    <div class="topic-desc">Using captured NTLM hashes or Kerberos tickets without cracking them. PtH works against services using NTLM authentication. PtT impersonates users by injecting TGTs/TGS tickets.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">CrackMapExec</span><span class="topic-tag tt-tool">Mimikatz</span><span class="topic-tag tt-tool">Rubeus</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Domain Privilege Escalation</div>
+                    <div class="topic-desc">ACL abuse, DCSync attack, Golden/Silver ticket attacks, AS-REP Roasting, BloodHound attack path analysis to domain admin. The ultimate goal in AD environments.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">BloodHound</span><span class="topic-tag tt-tool">PowerView</span><span class="topic-tag tt-tool">Mimikatz</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cat-card" onclick="toggleCat(this)">
+              <div class="cat-top"><span class="cat-icon">🔴</span><span class="cat-name">Red Team Techniques</span><span class="cat-count">3 topics</span></div>
+              <div class="cat-preview">Lateral movement, persistence, and evasion — operating like a real threat actor.</div>
+              <div class="topic-list">
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Lateral Movement</div>
+                    <div class="topic-desc">Moving from compromised host to other systems using PtH, PsExec, WMI, WinRM, SMB. Pivoting through networks using port forwarding and SOCKS proxies via chisel or SSH tunneling.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">CrackMapExec</span><span class="topic-tag tt-tool">Impacket</span><span class="topic-tag tt-tool">chisel</span><span class="topic-tag tt-tool">proxychains</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Persistence Mechanisms</div>
+                    <div class="topic-desc">Maintaining access across reboots and credential rotations: cron jobs, registry Run keys, scheduled tasks, SSH key injection, web shells, DLL hijacking for service persistence.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Metasploit post modules</span><span class="topic-tag tt-tool">Empire</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">AV / EDR Evasion Techniques</div>
+                    <div class="topic-desc">Payload obfuscation, AMSI bypass, process injection (DLL injection, process hollowing), living-off-the-land binaries (LOLBAS), and custom C2 profiles to evade signature detection.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">msfvenom encoders</span><span class="topic-tag tt-tool">Shellter</span><span class="topic-tag tt-tool">Donut</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cat-card" onclick="toggleCat(this)">
+              <div class="cat-top"><span class="cat-icon">🐍</span><span class="cat-name">Scripting &amp; Automation</span><span class="cat-count">3 topics</span></div>
+              <div class="cat-preview">Automate attacks and build custom tools to scale your capabilities.</div>
+              <div class="topic-list">
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Bash Scripting</div>
+                    <div class="topic-desc">Automating recon pipelines: parallel subdomain enumeration, auto-screenshotting, log parsing, and chaining Nmap → Nikto → ffuf into single-command workflows.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">bash</span><span class="topic-tag tt-tool">xargs</span><span class="topic-tag tt-tool">parallel</span><span class="topic-tag tt-tool">jq</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Python for Ethical Hackers</div>
+                    <div class="topic-desc">Building custom exploit PoCs, HTTP fuzzing scripts, packet crafting with Scapy, async recon automation, and parsing tool output programmatically for reporting.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Python 3</span><span class="topic-tag tt-tool">requests</span><span class="topic-tag tt-tool">scapy</span><span class="topic-tag tt-tool">pwntools</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Tool Development &amp; Customization</div>
+                    <div class="topic-desc">Writing custom Nuclei templates for target-specific vulnerability detection, building Burp Suite extensions in Python/Java, and developing specialized recon or exploitation tools.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Nuclei YAML</span><span class="topic-tag tt-tool">Burp Extender API</span><span class="topic-tag tt-tool">Go</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cat-card" onclick="toggleCat(this)">
+              <div class="cat-top"><span class="cat-icon">📋</span><span class="cat-name">Reporting &amp; Ethics</span><span class="cat-count">3 topics</span></div>
+              <div class="cat-preview">Professional pentest reports, CVSS scoring, and legal boundaries.</div>
+              <div class="topic-list">
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Professional Pentest Report Writing</div>
+                    <div class="topic-desc">Executive summary, technical findings, reproduction steps, evidence (screenshots/request-response captures), and remediation recommendations. A strong report is what clients actually pay for.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-tool">Dradis</span><span class="topic-tag tt-tool">PlexTrac</span><span class="topic-tag tt-cert">OSCP Report Format</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Risk, Impact &amp; Mitigation Analysis</div>
+                    <div class="topic-desc">CVSS v3.1 scoring, OWASP Risk Rating methodology, business context adjustment for asset criticality, and writing actionable remediation advice developers can actually implement.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-cert">CVSS v3.1</span><span class="topic-tag tt-cert">OWASP Risk Rating</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+                <div class="topic-item" onclick="toggleTopic(event,this)">
+                  <div class="topic-check" onclick="markDone(event,this)">✓</div>
+                  <div class="topic-text">
+                    <div class="topic-name">Legal Boundaries &amp; Ethical Hacking Laws</div>
+                    <div class="topic-desc">Computer Fraud and Abuse Act (USA), Computer Misuse Act (UK), rules of engagement, written authorization requirements, responsible disclosure processes, and bug bounty program rules.</div>
+                    <div class="topic-tags"><span class="topic-tag tt-cert">CEH</span><span class="topic-tag tt-cert">CPEH</span></div>
+                  </div>
+                  <span class="topic-expand">▶</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ LEVEL 4: ELITE ══ -->
+      <div class="level-block l4 reveal" data-level="4" id="level-4">
+        <div class="level-header lh4" onclick="toggleLevel('level-4')">
+          <div class="level-badge lb4">🟣</div>
+          <div class="level-meta">
+            <div class="level-num l4n">LEVEL 04 // MASTERY</div>
+            <div class="level-name">ELITE</div>
+            <div class="level-tagline">Master offensive security research, zero-days, and community leadership</div>
+          </div>
+          <div class="level-stats">
+            <div class="lstat"><div class="lstat-n">5</div><div class="lstat-l">DOMAINS</div></div>
+            <div class="lstat"><div class="lstat-n">∞</div><div class="lstat-l">DEPTH</div></div>
+          </div>
+          <span class="level-chevron">▶</span>
+        </div>
+        <div class="level-body">
+          <div class="elite-grid">
+            <div class="elite-card"><div class="elite-icon">🏴</div><div class="elite-name">Full-Scale Red Team Ops</div><div class="elite-desc">Multi-phase operations simulating nation-state or APT-level adversaries — initial access, persistence, lateral movement, data exfiltration, and full impact reporting across enterprise environments.</div></div>
+            <div class="elite-card"><div class="elite-icon">🔬</div><div class="elite-name">Zero-Day Research</div><div class="elite-desc">Original vulnerability discovery through fuzzing, code auditing, and static/dynamic analysis. CVE assignment, coordinated disclosure, and working with vendor security teams.</div></div>
+            <div class="elite-card"><div class="elite-icon">🦠</div><div class="elite-name">Advanced Malware &amp; Reverse Engineering</div><div class="elite-desc">Full malware analysis pipelines, writing custom implants in C/C++/Go, rootkit development, kernel-level exploitation, and defeating advanced anti-analysis techniques.</div></div>
+            <div class="elite-card"><div class="elite-icon">🌍</div><div class="elite-name">Nation-State Attack Simulations</div><div class="elite-desc">APT-level threat emulation using MITRE ATT&amp;CK for Enterprise. Simulating Lazarus Group, APT29, and FIN7 TTPs in controlled red team exercises with full OPSEC considerations.</div></div>
+            <div class="elite-card"><div class="elite-icon">🎓</div><div class="elite-name">Teaching &amp; Research</div><div class="elite-desc">Writing CVEs, publishing research papers, speaking at DEF CON / Black Hat, building open-source tools used by the community, and mentoring the next generation of security professionals.</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── HOW TO USE ── -->
+<section class="howto-section">
+  <div class="wrap">
+    <div class="s-label">Guidance</div>
+    <h2 style="font-family:var(--display);font-size:clamp(2rem,4vw,3.5rem);color:var(--white);letter-spacing:.03em;margin-bottom:.5rem">HOW TO USE<br><span style="color:var(--g)">THIS ROADMAP</span></h2>
+    <p style="font-family:var(--mono);font-size:.7rem;color:var(--muted);line-height:1.9;max-width:500px;margin-bottom:0">Don't skip levels. Each one builds on the last. Check off topics as you complete them — progress saves automatically in your browser.</p>
+    <div class="howto-grid reveal">
+      <div class="howto-card hw1"><div class="hw-step">01</div><div class="hw-title">BUILD THE BASE</div><div class="hw-desc">Complete every Beginner topic before moving on. Weak foundations create dangerous knowledge gaps at advanced levels.</div></div>
+      <div class="howto-card hw2"><div class="hw-step">02</div><div class="hw-title">PRACTICE DAILY</div><div class="hw-desc">30–60 minutes on TryHackMe, HackTheBox, or DVWA every day beats weekend cramming. Consistency is everything.</div></div>
+      <div class="howto-card hw3"><div class="hw-step">03</div><div class="hw-title">GET CERTIFIED</div><div class="hw-desc">CompTIA Security+ → eJPT → OSCP is the proven path to a hired security professional. Certs open doors, skills keep them open.</div></div>
+      <div class="howto-card hw4"><div class="hw-step">04</div><div class="hw-title">DOCUMENT EVERYTHING</div><div class="hw-desc">Build a portfolio of writeups, lab notes, and custom tools. Employers hire people who can prove they know it — not just claim it.</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── CTA ── -->
+<section class="cta-strip">
+  <div class="wrap">
+    <h2 class="cta-title">READY TO START<br><span>YOUR JOURNEY?</span></h2>
+    <p class="cta-sub">See Prakash's active projects, lab environments, and skill progression built on this exact roadmap.</p>
+    <div class="cta-btns">
+      <a href="projects.html" class="btn btn-g">VIEW PROJECTS →</a>
+      <a href="labs.html" class="btn btn-o">LABS &amp; PLATFORMS</a>
+      <a href="skills.html" class="btn btn-o">SKILL STACK</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span>&copy; 2026 Prakash Mijar</span>
+  <div class="f-links">
+    <a href="index.html">Home</a>
+    <a href="projects.html">Projects</a>
+    <a href="labs.html">Labs</a>
+    <a href="skills.html">Skills</a>
+    <a href="about.html">About</a>
+  </div>
+  <span class="f-right">erprakashmijar.com<span class="blink">_</span></span>
+</footer>
+
+<script>
+/* ── CANVAS ── */
+(function(){
+  const c=document.getElementById('bgCanvas'),ctx=c.getContext('2d');
+  let W,H,pts=[];
+  const resize=()=>{W=c.width=window.innerWidth;H=c.height=window.innerHeight;init()};
+  const init=()=>{pts=[];const n=Math.min(Math.floor((W*H)/22000),65);for(let i=0;i<n;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.2,vy:(Math.random()-.5)*.2,r:Math.random()*1.2+.3})};
+  const draw=()=>{ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(0,255,136,0.45)';ctx.fill()});for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const a=pts[i],b=pts[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<100){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=`rgba(0,255,136,${.05*(1-d/100)})`;ctx.lineWidth=.5;ctx.stroke()}}requestAnimationFrame(draw)};
+  window.addEventListener('resize',resize);resize();draw();
+})();
+
+/* ── CURSOR ── */
+if(window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+  const c=document.getElementById('cur'),r=document.getElementById('cur2');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;c.style.left=mx+'px';c.style.top=my+'px'});
+  (function t(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;r.style.left=rx+'px';r.style.top=ry+'px';requestAnimationFrame(t)})();
+  document.addEventListener('mouseover',e=>{
+    if(e.target.matches('a,button,.cat-card,.topic-item,.level-header,.elite-card,.level-pill')){c.style.width='18px';c.style.height='18px';r.style.width='46px';r.style.height='46px';r.style.borderColor='rgba(0,212,255,.6)'}
+    else{c.style.width='8px';c.style.height='8px';r.style.width='30px';r.style.height='30px';r.style.borderColor='rgba(0,255,136,.35)'}
+  });
+}
+
+/* ── NAV ── */
+const nt=document.getElementById('navToggle'),nl=document.getElementById('navLinks');
+nt.addEventListener('click',()=>{const o=nl.classList.toggle('open');nt.setAttribute('aria-expanded',String(o))});
+nl.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nl.classList.remove('open');nt.setAttribute('aria-expanded','false')}));
+
+/* ── SCROLL REVEAL ── */
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}})},{threshold:.06});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ── LEVEL TOGGLE ── */
+function toggleLevel(id){
+  const block=document.getElementById(id);
+  block.classList.toggle('open');
+}
+
+/* ── CATEGORY TOGGLE ── */
+function toggleCat(card){
+  card.classList.toggle('cat-open');
+}
+
+/* ── TOPIC EXPAND ── */
+function toggleTopic(e,item){
+  if(e.target.classList.contains('topic-check'))return;
+  item.classList.toggle('expanded');
+}
+
+/* ── LEVEL FILTER ── */
+const activeFilters=new Set([1,2,3,4]);
+function filterLevel(level){
+  const pill=document.querySelector(`.level-pill[data-level="${level}"]`);
+  if(activeFilters.has(level)){
+    if(activeFilters.size===1)return; // keep at least one
+    activeFilters.delete(level);
+    pill.classList.remove('selected');
+    document.getElementById('level-'+level).style.display='none';
+  } else {
+    activeFilters.add(level);
+    pill.classList.add('selected');
+    document.getElementById('level-'+level).style.display='block';
+  }
+}
+
+/* ── PROGRESS TRACKING ── */
+const PROGRESS_KEY='pm_roadmap_progress';
+
+function getProgress(){
+  try{return JSON.parse(localStorage.getItem(PROGRESS_KEY))||{}}
+  catch{return{}}
+}
+function saveProgress(p){localStorage.setItem(PROGRESS_KEY,JSON.stringify(p))}
+
+function markDone(e,checkEl){
+  e.stopPropagation();
+  const item=checkEl.closest('.topic-item');
+  const name=item.querySelector('.topic-name').textContent.trim();
+  const prog=getProgress();
+  if(item.classList.contains('done')){
+    item.classList.remove('done');
+    delete prog[name];
+  } else {
+    item.classList.add('done');
+    prog[name]=true;
+  }
+  saveProgress(prog);
+  updateProgress();
+}
+
+function updateProgress(){
+  const prog=getProgress();
+  const allItems=document.querySelectorAll('.topic-item');
+  const total=allItems.length;
+  let done=0;
+  allItems.forEach(item=>{
+    const name=item.querySelector('.topic-name').textContent.trim();
+    if(prog[name]){item.classList.add('done');done++}
+    else{item.classList.remove('done')}
+  });
+  document.getElementById('doneCount').textContent=done;
+  document.getElementById('totalCount').textContent=total;
+  // Rebuild progress segments
+  const track=document.getElementById('progressTrack');
+  track.innerHTML='';
+  // Count per level
+  const levels=[1,2,3,4];
+  const colors=['seg1','seg2','seg3','seg4'];
+  levels.forEach((l,i)=>{
+    const block=document.getElementById('level-'+l);
+    const items=block.querySelectorAll('.topic-item');
+    const doneInLevel=Array.from(items).filter(it=>it.classList.contains('done')).length;
+    const seg=document.createElement('div');
+    seg.className='rp-seg '+colors[i];
+    if(doneInLevel>0)seg.classList.add('filled');
+    seg.style.opacity=items.length>0?(0.15+0.85*(doneInLevel/items.length)).toFixed(2):'0.15';
+    track.appendChild(seg);
+  });
+}
+
+function resetProgress(){
+  if(confirm('Reset all progress? This cannot be undone.')){
+    localStorage.removeItem(PROGRESS_KEY);
+    updateProgress();
+  }
+}
+
+// Init
+updateProgress();
+</script>
+</body>
+</html>
