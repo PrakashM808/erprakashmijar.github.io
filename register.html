@@ -87,6 +87,26 @@
           <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:1.7">New accounts are created as <strong style="color:var(--text2)">USER</strong> role. Accounts persist in your browser session. No data is sent to any server.</div>
         </div>
 
+        <!-- Terms & Agreement -->
+        <div style="background:rgba(255,59,92,.04);border:1px solid rgba(255,59,92,.15);border-radius:6px;padding:.9rem 1rem;margin-bottom:.9rem">
+          <div style="font-family:var(--mono);font-size:.58rem;color:var(--danger);letter-spacing:.1em;margin-bottom:.5rem">⚖️ TERMS OF SERVICE</div>
+          <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:1.7;margin-bottom:.7rem">
+            By creating an account you agree to our terms of service and acknowledge that all security testing must be performed only on systems you own or have explicit written authorization to test. Unauthorized testing is a federal crime under <strong style="color:var(--text2)">CFAA 18 U.S.C. § 1030</strong>.
+          </div>
+          <label style="display:flex;align-items:flex-start;gap:.7rem;cursor:pointer">
+            <input type="checkbox" id="termsCheck" style="width:15px;height:15px;margin-top:2px;accent-color:var(--g);flex-shrink:0"/>
+            <span style="font-family:var(--mono);font-size:.58rem;color:var(--text2);line-height:1.7">
+              I have read and agree to the <a href="legal/agreement.html" target="_blank" style="color:var(--g2);text-decoration:underline">Security Engagement Agreement</a> and confirm I will only scan systems I own or have written permission to test. <span style="color:var(--danger)">*</span>
+            </span>
+          </label>
+          <label style="display:flex;align-items:flex-start;gap:.7rem;cursor:pointer;margin-top:.5rem">
+            <input type="checkbox" id="legalCheck" style="width:15px;height:15px;margin-top:2px;accent-color:var(--g);flex-shrink:0"/>
+            <span style="font-family:var(--mono);font-size:.58rem;color:var(--text2);line-height:1.7">
+              I understand that providing false authorization is a federal crime under <strong style="color:var(--white)">18 U.S.C. § 1001</strong>. <span style="color:var(--danger)">*</span>
+            </span>
+          </label>
+        </div>
+
         <button class="btn-submit" id="regBtn" onclick="doRegister()">
           <span id="regBtnText">CREATE ACCOUNT →</span>
         </button>
@@ -160,8 +180,12 @@
     const email   = document.getElementById('email').value.trim();
     const pass    = document.getElementById('password').value;
     const confirm = document.getElementById('confirm').value;
+    const terms   = document.getElementById('termsCheck')?.checked;
+    const legal   = document.getElementById('legalCheck')?.checked;
     if (!name || !email || !pass || !confirm) { showError('Please fill in all fields.'); return; }
     if (pass !== confirm) { showError('Passwords do not match.'); return; }
+    if (!terms) { showError('You must agree to the Security Engagement Agreement before creating an account.'); return; }
+    if (!legal) { showError('You must acknowledge the legal notice to proceed.'); return; }
     setLoading(true);
     await new Promise(r => setTimeout(r, 700));
     const result = AUTH.register(name, email, pass);

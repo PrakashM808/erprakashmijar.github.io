@@ -272,6 +272,153 @@
   .mob-menu-open #mb2{opacity:0;transform:scaleX(0)}
   .mob-menu-open #mb1{transform:translateY(5.5px) rotate(45deg)}
   .mob-menu-open #mb3{transform:translateY(-5.5px) rotate(-45deg)}
+
+  /* ── PLAN BADGES ── */
+  .plan-badge{font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;padding:.22rem .6rem;border-radius:3px;font-weight:700}
+  .pb-free{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid rgba(255,255,255,.1)}
+  .pb-starter{background:rgba(0,255,136,.1);color:var(--g);border:1px solid rgba(0,255,136,.2)}
+  .pb-professional{background:rgba(0,212,255,.1);color:var(--g2);border:1px solid rgba(0,212,255,.2)}
+  .pb-enterprise{background:rgba(123,47,255,.12);color:#c084fc;border:1px solid rgba(123,47,255,.25)}
+  /* ── USAGE BAR ── */
+  .usage-bar-wrap{background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.08);border-radius:6px;padding:.7rem .9rem;margin:.5rem 0}
+  .usage-bar-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:.35rem}
+  .usage-bar-label{font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:.08em}
+  .usage-bar-val{font-family:var(--mono);font-size:.58rem;color:var(--text2)}
+  .usage-track{height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden}
+  .usage-fill{height:100%;border-radius:2px;transition:width .5s ease}
+  /* ── GATE OVERLAY ── */
+  .feature-gate{position:relative}
+  .gate-overlay{position:absolute;inset:0;background:rgba(4,8,16,.88);backdrop-filter:blur(4px);z-index:10;display:flex;align-items:center;justify-content:center;border-radius:9px;opacity:0;pointer-events:none;transition:opacity .2s}
+  .feature-gate:hover .gate-overlay{opacity:1;pointer-events:auto}
+  .gate-content{text-align:center;padding:1.5rem}
+  .gate-lock{font-size:2rem;margin-bottom:.6rem}
+  .gate-title{font-family:var(--display);font-size:1.2rem;color:var(--white);letter-spacing:.05em;margin-bottom:.4rem}
+  .gate-desc{font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.7;margin-bottom:.9rem;max-width:260px}
+  .gate-btn{font-family:var(--mono);font-size:.62rem;font-weight:700;letter-spacing:.12em;padding:.6rem 1.4rem;background:var(--g);color:#040810;border:none;border-radius:5px;cursor:pointer;transition:all .2s}
+  .gate-btn:hover{background:#fff;transform:translateY(-1px)}
+  /* ── UPGRADE MODAL ── */
+  .upgrade-modal{background:var(--bg2);border:1px solid rgba(0,255,136,.15);border-radius:12px;width:100%;max-width:600px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+  .upgrade-plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-top:1rem}
+  @media(max-width:500px){.upgrade-plans-grid{grid-template-columns:1fr}}
+  .upgrade-plan-card{background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.08);border-radius:8px;padding:1rem;cursor:pointer;transition:all .2s;text-align:center}
+  .upgrade-plan-card:hover{border-color:rgba(0,255,136,.25);transform:translateY(-2px)}
+  .upgrade-plan-card.recommended{border-color:var(--g);background:rgba(0,255,136,.05)}
+  .upc-name{font-family:var(--display);font-size:1.2rem;color:var(--white);letter-spacing:.05em;margin-bottom:.2rem}
+  .upc-price{font-family:var(--display);font-size:1.8rem;color:var(--g);line-height:1}
+  .upc-period{font-family:var(--mono);font-size:.5rem;color:var(--muted);letter-spacing:.1em;margin-bottom:.6rem}
+  .upc-features{font-family:var(--mono);font-size:.56rem;color:var(--muted);line-height:1.9;text-align:left}
+  .upc-btn{width:100%;font-family:var(--mono);font-size:.6rem;font-weight:700;letter-spacing:.1em;padding:.6rem;background:var(--g);color:#040810;border:none;border-radius:5px;cursor:pointer;margin-top:.8rem;transition:all .2s}
+  .upc-btn:hover{background:#fff}
+  /* ── SCAN QUOTA WIDGET ── */
+  .quota-chip{font-family:var(--mono);font-size:.5rem;letter-spacing:.08em;padding:.2rem .55rem;border-radius:10px;display:inline-flex;align-items:center;gap:.3rem;cursor:pointer}
+  .qc-ok{background:rgba(0,255,136,.07);color:var(--g);border:1px solid rgba(0,255,136,.15)}
+  .qc-warn{background:rgba(245,158,11,.08);color:var(--warn);border:1px solid rgba(245,158,11,.18)}
+  .qc-full{background:rgba(255,59,92,.08);color:var(--danger);border:1px solid rgba(255,59,92,.2)}
+  /* ── BILLING PAGE ── */
+  .billing-current{background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.12);border-radius:10px;padding:1.4rem;margin-bottom:1rem}
+  .bc-plan-name{font-family:var(--display);font-size:2rem;color:var(--white);letter-spacing:.05em;margin-bottom:.2rem}
+  .bc-price{font-family:var(--mono);font-size:.65rem;color:var(--muted);margin-bottom:1rem}
+  .bc-features{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+  .bc-feat{font-family:var(--mono);font-size:.6rem;color:var(--text2);display:flex;align-items:center;gap:.5rem}
+  .bc-feat span{color:var(--g)}
+
+  /* ── PLAN ENFORCEMENT STYLES ─────────────────────────────── */
+  .upgrade-overlay{position:fixed;inset:0;background:rgba(3,7,15,.92);backdrop-filter:blur(10px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:1rem}
+  .upgrade-card{background:var(--bg2);border:1px solid rgba(0,255,136,.18);border-radius:14px;width:100%;max-width:500px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.7)}
+  .upgrade-card-bar{height:3px;background:linear-gradient(90deg,var(--g),var(--g2),var(--g3))}
+  .upgrade-card-body{padding:2rem}
+  .upgrade-lock{font-size:2.8rem;margin-bottom:.8rem}
+  .upgrade-title{font-family:var(--display);font-size:1.8rem;color:var(--white);letter-spacing:.04em;margin-bottom:.4rem}
+  .upgrade-desc{font-family:var(--mono);font-size:.63rem;color:var(--muted);line-height:1.85;margin-bottom:1.4rem}
+  .upgrade-plans{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1.4rem}
+  .upgrade-plan{border-radius:7px;padding:.9rem .7rem;text-align:center;cursor:pointer;transition:all .2s;border:1px solid rgba(255,255,255,.06)}
+  .upgrade-plan:hover{transform:translateY(-2px);border-color:rgba(0,255,136,.25)}
+  .upgrade-plan.highlighted{border-color:var(--g);background:rgba(0,255,136,.05);box-shadow:0 0 20px rgba(0,255,136,.08)}
+  .up-name{font-family:var(--display);font-size:1rem;color:var(--white);letter-spacing:.04em}
+  .up-price{font-family:var(--mono);font-size:.65rem;color:var(--g);margin:.2rem 0}
+  .up-btn{font-family:var(--mono);font-size:.58rem;font-weight:700;letter-spacing:.1em;padding:.5rem;background:var(--g);color:#040810;border:none;border-radius:4px;cursor:pointer;width:100%;margin-top:.5rem;transition:all .2s}
+  .up-btn:hover{background:#fff}
+  .up-btn.up-current{background:rgba(255,255,255,.06);color:var(--muted);cursor:default}
+  .up-features{font-family:var(--mono);font-size:.52rem;color:var(--muted);line-height:1.8;margin-top:.4rem;text-align:left}
+  .upgrade-close-btn{font-family:var(--mono);font-size:.6rem;color:var(--muted);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:5px;padding:.45rem 1rem;cursor:pointer;transition:all .2s;display:block;width:100%;text-align:center;margin-top:.2rem}
+  .upgrade-close-btn:hover{color:var(--text2)}
+
+  /* Usage bar in header */
+  .usage-chip{display:flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.52rem;color:var(--muted);background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:.22rem .65rem;cursor:pointer}
+  .usage-chip:hover{border-color:rgba(0,255,136,.2);color:var(--text2)}
+  .usage-bar-mini{width:40px;height:3px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}
+  .usage-bar-fill{height:100%;border-radius:2px;transition:width .4s,background .4s}
+  @media(max-width:768px){.usage-chip{display:none}}
+
+  /* ── AI REMEDIATION ASSISTANT ─────────────────────────────── */
+  .remediation-panel{background:rgba(6,13,26,.95);border:1px solid rgba(0,255,136,.12);border-radius:10px;overflow:hidden;margin-top:.9rem}
+  .rp-header{padding:.9rem 1.2rem;background:linear-gradient(135deg,rgba(0,255,136,.06),rgba(0,212,255,.04));border-bottom:1px solid rgba(0,255,136,.08);display:flex;align-items:center;gap:.8rem}
+  .rp-ai-badge{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--g3),var(--g));display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+  .rp-title{font-family:var(--display);font-size:1.1rem;color:var(--white);letter-spacing:.04em}
+  .rp-sub{font-family:var(--mono);font-size:.56rem;color:var(--muted)}
+  .rp-status{margin-left:auto;display:flex;align-items:center;gap:.3rem;font-family:var(--mono);font-size:.52rem;color:var(--ok)}
+  .rp-status-dot{width:5px;height:5px;border-radius:50%;background:var(--ok);box-shadow:0 0 4px var(--ok);animation:blink2 2s infinite}
+  /* Issue fix cards */
+  .fix-cards{padding:1rem;display:flex;flex-direction:column;gap:.6rem}
+  .fix-card{background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);border-radius:7px;overflow:hidden;transition:border-color .2s}
+  .fix-card:hover{border-color:rgba(0,255,136,.15)}
+  .fix-card-hdr{display:flex;align-items:center;gap:.8rem;padding:.7rem .9rem;cursor:pointer}
+  .fix-card-sev{width:3px;height:100%;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:16px}
+  .fix-card-title{font-family:var(--mono);font-size:.62rem;color:var(--text2);flex:1;line-height:1.4}
+  .fix-card-meta{font-family:var(--mono);font-size:.5rem;color:var(--muted)}
+  .fix-card-actions{display:flex;gap:.4rem;align-items:center}
+  .fix-btn{font-family:var(--mono);font-size:.52rem;letter-spacing:.08em;padding:.25rem .65rem;border-radius:4px;border:none;cursor:pointer;transition:all .2s;white-space:nowrap}
+  .fix-btn-ai{background:linear-gradient(135deg,rgba(123,47,255,.3),rgba(0,255,136,.2));color:var(--g);border:1px solid rgba(0,255,136,.2)}
+  .fix-btn-ai:hover{background:linear-gradient(135deg,rgba(123,47,255,.5),rgba(0,255,136,.35));transform:translateY(-1px)}
+  .fix-card-body{display:none;border-top:1px solid rgba(255,255,255,.05)}
+  .fix-card.expanded .fix-card-body{display:block}
+  .fix-card.expanded .fix-card-hdr{background:rgba(0,255,136,.03)}
+  .fix-content{padding:.9rem 1rem;font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.85;white-space:pre-wrap}
+  .fix-content code,.fix-cmd{display:block;background:rgba(0,0,0,.4);border:1px solid rgba(0,255,136,.1);border-radius:5px;padding:.6rem .9rem;font-family:var(--mono);font-size:.62rem;color:var(--g);margin:.4rem 0;position:relative;cursor:pointer}
+  .fix-cmd::before{content:'$ ';color:rgba(0,255,136,.4)}
+  .fix-cmd:hover{background:rgba(0,0,0,.6);border-color:rgba(0,255,136,.25)}
+  .copy-toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:rgba(0,255,136,.15);border:1px solid rgba(0,255,136,.3);border-radius:6px;padding:.5rem 1.2rem;font-family:var(--mono);font-size:.62rem;color:var(--g);z-index:9999;pointer-events:none;opacity:0;transition:opacity .2s}
+  .copy-toast.show{opacity:1}
+  .fix-skeleton{height:52px;background:rgba(255,255,255,.02);border-radius:7px;animation:shimmer 1.5s infinite}
+  @keyframes shimmer{0%,100%{opacity:.3}50%{opacity:.7}}
+  /* Severity dot colors */
+  .sev-critical{background:var(--danger)}.sev-high{background:#ff8c42}.sev-medium{background:#f5c842}.sev-low{background:#4dd9ac}
+  /* Step progress in report */
+  .fix-steps{counter-reset:step;display:flex;flex-direction:column;gap:.4rem;margin:.5rem 0}
+  .fix-step{display:flex;gap:.8rem;align-items:flex-start;padding:.5rem .7rem;background:rgba(255,255,255,.02);border-radius:4px}
+  .fix-step-num{font-family:var(--display);font-size:1rem;color:var(--g2);flex-shrink:0;line-height:1.2}
+  .fix-step-text{font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.6}
+  /* Billing page plan cards */
+  .billing-plan{background:rgba(6,13,26,.8);border:1px solid rgba(0,255,136,.08);border-radius:9px;padding:1.2rem;transition:all .25s;position:relative}
+  .billing-plan.current-plan{border-color:var(--g);box-shadow:0 0 24px rgba(0,255,136,.08)}
+  .billing-plan:hover{border-color:rgba(0,255,136,.2);transform:translateY(-2px)}
+  .bp-current-badge{position:absolute;top:.7rem;right:.7rem;font-family:var(--mono);font-size:.48rem;background:var(--g);color:#040810;padding:.18rem .5rem;border-radius:3px;font-weight:700;letter-spacing:.08em}
+
+
+  /* ── LIGHT MODE ───────────────────────────────────────────── */
+  body.light-mode {
+    --bg:#f0f4f8; --bg2:#ffffff; --bg3:#e8edf2;
+    --g:#008844; --g2:#0077aa; --g3:#6622cc;
+    --border:rgba(0,136,68,.15);
+    --muted:#6a8aaa; --text:#3a6080; --text2:#1a3050; --white:#0a1828;
+    --danger:#cc2244; --warn:#cc7700; --ok:#008844;
+  }
+  body.light-mode .hdr{background:rgba(255,255,255,.96)!important;border-bottom-color:rgba(0,136,68,.12)!important}
+  body.light-mode .sidebar{background:rgba(240,244,248,.98)!important;border-right-color:rgba(0,136,68,.1)!important}
+  body.light-mode .panel,body.light-mode .sc,body.light-mode .device-card{background:rgba(255,255,255,.9)!important;border-color:rgba(0,136,68,.1)!important}
+  body.light-mode .sb-item{color:#6a8aaa}
+  body.light-mode .sb-item:hover{color:#1a3050;background:rgba(0,136,68,.05)}
+  body.light-mode .sb-item.active{color:#008844;background:rgba(0,136,68,.08);border-left-color:#008844}
+  body.light-mode .tbl td{color:#1a3050}
+  body.light-mode .tbl tr:hover td{background:rgba(0,136,68,.04)}
+  body.light-mode .form-input{background:rgba(255,255,255,.8);border-color:rgba(0,136,68,.2);color:#0a1828}
+  body.light-mode .modal{background:#ffffff}
+  body.light-mode .chat-body,.light-mode .chat-msgs{background:rgba(248,252,255,.9)}
+  body.light-mode .msg-bot .msg-bubble{background:rgba(0,136,68,.06);border-color:rgba(0,136,68,.15);color:#1a3050}
+  body.light-mode .pg-title{color:#0a1828}
+  body.light-mode .sc-value,.light-mode .device-name{color:#0a1828!important}
+  body.light-mode code,.light-mode .fix-cmd{background:rgba(0,0,0,.06);color:#008844}
+
   </style>
 </head>
 <body>
@@ -283,9 +430,12 @@
     <div class="hdr-right">
       <div class="api-status api-offline" id="apiStatusBadge"><div class="api-dot"></div><span id="apiStatusText">API OFFLINE</span></div>
       <span class="role-badge" id="hdrRole"></span>
+      <span class="plan-badge pb-free" id="hdrPlanBadge" onclick="nav('billing')" title="Your current plan — click to upgrade" style="cursor:pointer">FREE</span>
+      <span class="quota-chip qc-ok" id="scanQuotaChip" onclick="nav('billing')" title="Daily scan usage">0/1</span>
       <div class="hdr-avatar" id="hdrAvatar" onclick="nav('profile')">PM</div>
       <span class="hdr-name" id="hdrName">Prakash</span>
       <button class="hdr-btn hdr-scan" id="scanBtn" onclick="openScanModal()">SCAN DEVICE</button>
+      <button id="themeToggle" onclick="toggleTheme()" title="Toggle dark/light mode" style="width:30px;height:30px;border-radius:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.9rem;transition:all .2s;flex-shrink:0" onmouseover="this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.background='rgba(255,255,255,.06)'">🌙</button>
       <button class="hdr-btn hdr-out" onclick="AUTH.logout()">LOGOUT</button>
     </div>
   </header>
@@ -327,10 +477,12 @@
       </div>
       <div class="sb-section">
         <div class="sb-label">Account</div>
+        <button class="sb-item" onclick="nav('billing')"><span class="sb-icon">💳</span>Billing & Plan<span id="sbUpgradeDot" style="display:none;width:6px;height:6px;border-radius:50%;background:var(--warn);margin-left:auto"></span></button>
         <button class="sb-item" onclick="nav('settings')"><span class="sb-icon">⚙</span>API Settings</button>
         <button class="sb-item" onclick="nav('profile')"><span class="sb-icon">◉</span>Profile</button>
         <button class="sb-item" onclick="window.location.href='../index.html'"><span class="sb-icon">🌐</span>Portfolio</button>
         <button class="sb-item" onclick="window.location.href='../legal/agreement.html'" target="_blank"><span class="sb-icon">⚖️</span>Legal Agreement</button>
+        <button class="sb-item" onclick="nav('learn')"><span class="sb-icon">📚</span>Learning Center</button>
       </div>
       <div class="sb-bottom">
         <div class="device-mini" id="currentDeviceMini" style="display:none">
@@ -724,6 +876,77 @@
         </div>
       </div>
 
+      <!-- ── BILLING & PLAN ── -->
+      <div class="page" id="page-billing">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">BILLING &amp; PLAN</div><div class="pg-sub">Manage your subscription and usage</div></div>
+          <a href="../billing/pricing.html" target="_blank" class="btn btn-o btn-sm">VIEW ALL PLANS →</a>
+        </div>
+        <div class="billing-current">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:.8rem">
+            <div>
+              <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted);letter-spacing:.15em;margin-bottom:.3rem">CURRENT PLAN</div>
+              <div class="bc-plan-name" id="billingPlanName">FREE</div>
+              <div class="bc-price" id="billingPlanPrice">$0 / month · No credit card required</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-bottom:.4rem">STATUS</div>
+              <span style="font-family:var(--mono);font-size:.6rem;background:rgba(0,255,136,.08);color:var(--ok);border:1px solid rgba(0,255,136,.18);padding:.25rem .65rem;border-radius:3px">ACTIVE</span>
+            </div>
+          </div>
+          <div class="bc-features" id="billingPlanFeatures"></div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt">TODAY'S USAGE</div><span id="billingUsageDate" style="font-family:var(--mono);font-size:.55rem;color:var(--muted)"></span></div>
+          <div class="pb">
+            <div class="g2">
+              <div>
+                <div class="usage-bar-wrap">
+                  <div class="usage-bar-row"><span class="usage-bar-label">SCANS TODAY</span><span class="usage-bar-val"><span id="usageScansUsed">0</span> / <span id="usageScansLimit">1</span></span></div>
+                  <div class="usage-track"><div class="usage-fill" id="usageScansBar" style="background:var(--g);width:0%"></div></div>
+                </div>
+                <div class="usage-bar-wrap">
+                  <div class="usage-bar-row"><span class="usage-bar-label">DEVICES</span><span class="usage-bar-val"><span id="usageDevicesUsed">0</span> / <span id="usageDevicesLimit">1</span></span></div>
+                  <div class="usage-track"><div class="usage-fill" id="usageDevicesBar" style="background:var(--g2);width:0%"></div></div>
+                </div>
+              </div>
+              <div id="billingUnlockedFeatures" style="background:rgba(0,0,0,.15);border:1px solid rgba(0,255,136,.07);border-radius:6px;padding:1rem">
+                <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.6rem">PLAN FEATURES</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel" id="upgradeSection">
+          <div class="ph"><div class="pt">UPGRADE YOUR PLAN</div></div>
+          <div class="pb"><div class="upgrade-plans-grid" id="upgradePlansGrid"></div></div>
+        </div>
+        <div class="panel" id="manageSubSection" style="display:none">
+          <div class="ph"><div class="pt">MANAGE SUBSCRIPTION</div></div>
+          <div class="pb">
+            <div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);line-height:1.85;margin-bottom:1rem">Changes take effect at end of billing period.</div>
+            <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+              <button onclick="openBillingPortal()" class="btn btn-o btn-sm">MANAGE BILLING →</button>
+              <button onclick="cancelSubscription()" class="btn btn-r btn-sm">CANCEL PLAN</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ══ LEARNING CENTER PAGE ══ -->
+      <div class="page" id="page-learn">
+        <div class="pg-hdr"><div><div class="pg-title">LEARNING CENTER</div><div class="pg-sub">How to use every feature of this platform</div></div></div>
+        <div class="panel" style="margin-bottom:.9rem"><div class="pb">
+          <div style="position:relative">
+            <input id="learnSearch" type="search" placeholder="Search topics — how to scan, what is MITRE, fix SSH..."
+              oninput="filterLearn(this.value)"
+              style="width:100%;background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.1);border-radius:7px;padding:.7rem 1rem .7rem 2.4rem;font-family:var(--mono);font-size:.68rem;color:var(--white);outline:none;transition:border-color .2s"/>
+            <span style="position:absolute;left:.8rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:1rem;pointer-events:none">⌕</span>
+          </div>
+        </div></div>
+        <div id="learnContent"></div>
+      </div>
+
     </main>
   </div>
 </div>
@@ -846,19 +1069,44 @@ function saveScanCount() { localStorage.setItem('pm_scan_count_v3', SCAN_COUNT);
 /* ═══════════════════════════════════════════════════════════════
    API LAYER
 ═══════════════════════════════════════════════════════════════ */
+
 function apiUrl(path) { return SETTINGS.apiUrl.replace(/\/$/, '') + path; }
 
 async function apiGet(path) {
-  const r = await fetch(apiUrl(path), { headers: { 'Accept': 'application/json' } });
-  if (!r.ok) throw new Error(`API error ${r.status}: ${await r.text()}`);
+  const r = await fetch(apiUrl(path), {
+    headers: { 'Accept': 'application/json', 'x-user-plan': getUserPlan(), 'x-user-id': SESSION.id }
+  });
+  if (!r.ok) {
+    const txt = await r.text();
+    // Check for plan upgrade required
+    if (r.status === 403) { handlePlanError(txt); throw new Error(txt); }
+    throw new Error(`API error ${r.status}: ${txt}`);
+  }
   return r.json();
 }
 
 async function apiPost(path, body) {
-  const r = await fetch(apiUrl(path), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-  if (!r.ok) { const t = await r.text(); throw new Error(t); }
+  const r = await fetch(apiUrl(path), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-user-plan': getUserPlan(), 'x-user-id': SESSION.id },
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) {
+    const t = await r.text();
+    if (r.status === 403) { handlePlanError(t); throw new Error(t); }
+    throw new Error(t);
+  }
   return r.json();
 }
+
+function handlePlanError(msg) {
+  // Parse which plan is needed from the error message
+  let requiredPlan = 'starter';
+  if (/professional/i.test(msg)) requiredPlan = 'professional';
+  if (/enterprise/i.test(msg))   requiredPlan = 'enterprise';
+  showUpgradeModal(msg.replace(/\{.*\}/, '').trim(), requiredPlan);
+}
+
 
 async function checkApiStatus() {
   try {
@@ -981,6 +1229,8 @@ async function animateScan(durationMs) {
 }
 
 async function runLocalScan() {
+  if (!requireScanQuota()) return;
+  if (!requireDeviceLimit()) return;
   const btn = document.getElementById('localScanBtn');
   const err = document.getElementById('localScanError');
   err.style.display='none';
@@ -1017,6 +1267,8 @@ async function runLocalScan() {
 }
 
 async function runRemoteScan() {
+  if (!requireScanQuota()) return;
+  if (!requireDeviceLimit()) return;
   const host = document.getElementById('remoteHost').value.trim();
   const port = parseInt(document.getElementById('remoteSshPort').value) || 22;
   const user = document.getElementById('remoteUsername').value.trim() || 'root';
@@ -1067,6 +1319,7 @@ async function runRemoteScan() {
    DEVICE MANAGEMENT
 ═══════════════════════════════════════════════════════════════ */
 function addDevice(scanData) {
+  incrementScanUsage(); // track usage
   // Check if device exists (update) or add new
   const idx = DEVICES.findIndex(d => d.ip === scanData.ip);
   const device = {
@@ -1336,6 +1589,7 @@ function openDiscoverModal() {
 function closeDiscoverModal() { document.getElementById('discoverModal').style.display='none'; }
 
 async function runDiscover() {
+  if (!requireFeature('network_discovery', 'Network Discovery', 'starter')) return;
   const subnet = document.getElementById('discoverSubnet').value.trim();
   const btn=document.getElementById('discoverBtn');
   const err=document.getElementById('discoverError');
@@ -1410,6 +1664,7 @@ function showTyping(){const msgs=document.getElementById('chatMsgs');const d=doc
 function hideTyping(){const t=document.getElementById('typing');if(t)t.remove();}
 
 async function sendChat(text) {
+  if (!requireFeature('ai_analysis', 'AI Chat Assistant', 'starter')) return;
   const inp=document.getElementById('chatInput');
   const msg=text||inp.value.trim();
   if(!msg)return;
@@ -1438,6 +1693,7 @@ async function sendChat(text) {
 }
 
 async function runAI() {
+  if (!requireFeature('ai_analysis', 'AI Security Analysis', 'starter')) return;
   const deviceIp = document.getElementById('aiDeviceSelect').value;
   const device = deviceIp ? DEVICES.find(d=>d.ip===deviceIp) : DEVICES[0];
   if (!device) { document.getElementById('aiOutput').innerHTML='<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">Select a device first.</div>'; return; }
@@ -1759,15 +2015,20 @@ function exportSingleAgreement(id) {
    PROFILE
 ═══════════════════════════════════════════════════════════════ */
 function loadProfile() {
-  document.getElementById('profAv').textContent=SESSION.avatar||SESSION.name[0];
-  document.getElementById('profName').textContent=SESSION.name;
-  document.getElementById('profRole').textContent=SESSION.role.toUpperCase()+' ACCOUNT';
-  document.getElementById('profEmail').textContent=SESSION.email;
+  const users = AUTH.getUsers();
+  const me = users.find(u => u.id === SESSION.id) || SESSION;
+  document.getElementById('profAv').textContent=me.avatar||me.name[0];
+  document.getElementById('profName').textContent=me.name;
+  const plan = getUserPlan();
+  document.getElementById('profRole').textContent=me.role.toUpperCase()+' · '+PLANS_DEF[plan]?.name?.toUpperCase()+' PLAN';
+  document.getElementById('profEmail').textContent=me.email;
   document.getElementById('profDevices').textContent=DEVICES.length;
   document.getElementById('profScans').textContent=SCAN_COUNT;
   const prefs=JSON.parse(localStorage.getItem('pm_prefs_'+SESSION.id)||'{}');
-  document.getElementById('editName').value=SESSION.name;
-  document.getElementById('editEmail').value=SESSION.email;
+  document.getElementById('editName').value=me.name;
+  document.getElementById('editEmail').value=me.email;
+  document.getElementById('editPhone').value=me.phone||'';
+  document.getElementById('editCompany').value=me.company||'';
   document.getElementById('editGithub').value=prefs.github||'';
   document.getElementById('editLinkedin').value=prefs.linkedin||'';
 }
@@ -1868,6 +2129,7 @@ function nav(page) {
   document.querySelectorAll('.sb-item').forEach(b=>{if(b.getAttribute('onclick')?.includes(`'${page}'`))b.classList.add('active');});
   if(page==='admin')renderAdmin();
   if(page==='users'){renderAdmin();renderUsersPage();}
+  if(page==='billing')renderBillingPage();
   if(page==='profile')loadProfile();
   if(page==='settings')loadSettings();
   if(page==='incidents')renderIncidents();
@@ -1875,11 +2137,369 @@ function nav(page) {
   if(page==='mitre')refreshMitre();
   if(page==='playbooks')renderPlaybooks();
   if(page==='wazuh')loadWazuh();
+  if(page==='reports'){renderReports();updateDeviceSelects();}
+  if(page==='learn')renderLearnContent('');
 }
 
 /* ═══════════════════════════════════════════════════════════════
    INIT
 ═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   PLAN SYSTEM — complete feature gating, usage tracking, billing
+═══════════════════════════════════════════════════════════════ */
+
+// ── Plan definitions (mirrors backend billing.py) ─────────────
+const PLANS_DEF = {
+  free: {
+    name: 'Free', price: 0, color: 'var(--muted)',
+    devices: 1, scans_per_day: 1, history_days: 7,
+    ai_analysis: false, email_alerts: false,
+    scheduled_scans: false, network_discovery: false,
+    pdf_reports: false, compliance_reports: false, team_seats: 1,
+    wazuh: false, splunk: false, incidents: false, iocs: false,
+    features: ['1 device','1 scan/day','Security score','TXT export','7-day history'],
+    locked:   ['AI analysis','Email alerts','Scheduled scans','Network discovery','PDF reports','Incidents','IOC database','Wazuh/Splunk'],
+  },
+  starter: {
+    name: 'Starter', price: 19, color: 'var(--g)',
+    devices: 5, scans_per_day: 10, history_days: 30,
+    ai_analysis: true, email_alerts: true,
+    scheduled_scans: false, network_discovery: true,
+    pdf_reports: false, compliance_reports: false, team_seats: 1,
+    wazuh: false, splunk: false, incidents: true, iocs: true,
+    features: ['5 devices','10 scans/day','AI analysis + chat','Email alerts','Network discovery','30-day history','TXT + JSON export','Incidents & IOCs','MITRE ATT&CK'],
+    locked:   ['Scheduled scans','PDF reports','Wazuh/Splunk','Compliance reports'],
+  },
+  professional: {
+    name: 'Professional', price: 79, color: 'var(--g2)',
+    devices: 25, scans_per_day: 100, history_days: 90,
+    ai_analysis: true, email_alerts: true,
+    scheduled_scans: true, network_discovery: true,
+    pdf_reports: true, compliance_reports: false, team_seats: 1,
+    wazuh: true, splunk: true, incidents: true, iocs: true,
+    features: ['25 devices','100 scans/day','Scheduled scans (cron)','PDF reports','Wazuh + Splunk','90-day history','Priority support'],
+    locked:   ['Compliance reports','5 team seats'],
+  },
+  enterprise: {
+    name: 'Enterprise', price: 199, color: '#c084fc',
+    devices: -1, scans_per_day: -1, history_days: 365,
+    ai_analysis: true, email_alerts: true,
+    scheduled_scans: true, network_discovery: true,
+    pdf_reports: true, compliance_reports: true, team_seats: 5,
+    wazuh: true, splunk: true, incidents: true, iocs: true,
+    features: ['Unlimited devices','Unlimited scans','Compliance reports','5 team seats','Webhook alerts','1-year history','Dedicated support'],
+    locked:   [],
+  },
+};
+
+// Plan order for upgrade display
+const PLAN_ORDER = ['free','starter','professional','enterprise'];
+
+// ── Get current user plan ──────────────────────────────────────
+function getUserPlan() {
+  // Check session first, then localStorage override (set after payment)
+  const stored = localStorage.getItem('pm_user_plan_' + SESSION.id);
+  return stored || SESSION.plan || 'free';
+}
+
+function setUserPlan(plan) {
+  localStorage.setItem('pm_user_plan_' + SESSION.id, plan);
+  // Update session
+  const users = AUTH.getUsers();
+  const idx = users.findIndex(u => u.id === SESSION.id);
+  if (idx >= 0) { users[idx].plan = plan; AUTH.saveUsers(users); }
+}
+
+// ── Usage tracking ─────────────────────────────────────────────
+function getUsageKey() {
+  return `pm_usage_${SESSION.id}_${new Date().toISOString().split('T')[0]}`;
+}
+function getScansToday() {
+  return parseInt(localStorage.getItem(getUsageKey()) || '0');
+}
+function incrementScanUsage() {
+  const key = getUsageKey();
+  localStorage.setItem(key, (getScansToday() + 1).toString());
+  updateUsageUI();
+}
+
+// ── Feature check ──────────────────────────────────────────────
+function canUse(feature) {
+  const plan = getUserPlan();
+  const def  = PLANS_DEF[plan] || PLANS_DEF.free;
+  return def[feature] === true || def[feature] === -1 || def[feature] > 0;
+}
+
+function withinDeviceLimit() {
+  const plan = getUserPlan();
+  const def  = PLANS_DEF[plan] || PLANS_DEF.free;
+  if (def.devices === -1) return true;
+  return DEVICES.length < def.devices;
+}
+
+function withinScanLimit() {
+  const plan = getUserPlan();
+  const def  = PLANS_DEF[plan] || PLANS_DEF.free;
+  if (def.scans_per_day === -1) return true;
+  return getScansToday() < def.scans_per_day;
+}
+
+// ── Plan badge CSS class ───────────────────────────────────────
+function planBadgeClass(plan) {
+  return { free:'pb-free', starter:'pb-starter', professional:'pb-professional', enterprise:'pb-enterprise' }[plan] || 'pb-free';
+}
+
+// ── Update header plan badge + quota chip ─────────────────────
+function updatePlanUI() {
+  const plan = getUserPlan();
+  const def  = PLANS_DEF[plan] || PLANS_DEF.free;
+
+  // Header plan badge
+  const badge = document.getElementById('hdrPlanBadge');
+  if (badge) {
+    badge.textContent = def.name.toUpperCase();
+    badge.className = 'plan-badge ' + planBadgeClass(plan);
+  }
+
+  // Upgrade dot in sidebar (show if free or starter)
+  const dot = document.getElementById('sbUpgradeDot');
+  if (dot) dot.style.display = (plan === 'free' || plan === 'starter') ? 'inline-block' : 'none';
+
+  updateUsageUI();
+}
+
+function updateUsageUI() {
+  const plan  = getUserPlan();
+  const def   = PLANS_DEF[plan] || PLANS_DEF.free;
+  const scans = getScansToday();
+  const limit = def.scans_per_day;
+  const unlimited = limit === -1;
+
+  // Quota chip in header
+  const chip = document.getElementById('scanQuotaChip');
+  if (chip) {
+    chip.textContent = unlimited ? '∞ scans' : `${scans}/${limit} scans`;
+    const pct = unlimited ? 0 : scans / limit;
+    chip.className = 'quota-chip ' + (unlimited ? 'qc-ok' : pct >= 1 ? 'qc-full' : pct >= 0.8 ? 'qc-warn' : 'qc-ok');
+  }
+}
+
+// ── Show upgrade modal ─────────────────────────────────────────
+function showUpgradeModal(featureName, requiredPlan) {
+  const plan = getUserPlan();
+  document.getElementById('upgradeLockedText').textContent =
+    `${featureName} requires ${requiredPlan ? PLANS_DEF[requiredPlan]?.name : 'a paid'} plan or higher. You are currently on the ${PLANS_DEF[plan]?.name || 'Free'} plan.`;
+
+  // Build plan cards for plans above current
+  const currentIdx = PLAN_ORDER.indexOf(plan);
+  const upgradePlans = PLAN_ORDER.filter((p,i) => i > currentIdx && p !== 'free');
+  const container = document.getElementById('upgradeModalPlans');
+  container.innerHTML = upgradePlans.map(p => {
+    const d = PLANS_DEF[p];
+    const recommended = p === upgradePlans[0];
+    return `<div class="upgrade-plan-card ${recommended?'recommended':''}">
+      ${recommended ? '<div style="font-family:var(--mono);font-size:.5rem;color:var(--g);letter-spacing:.1em;margin-bottom:.3rem">RECOMMENDED</div>' : ''}
+      <div class="upc-name">${d.name}</div>
+      <div class="upc-price">$${d.price}</div>
+      <div class="upc-period">/MONTH</div>
+      <div class="upc-features">${d.features.slice(0,4).map(f=>`✓ ${f}`).join('\n')}</div>
+      <button class="upc-btn" onclick="startUpgrade('${p}')">UPGRADE TO ${d.name.toUpperCase()} →</button>
+    </div>`;
+  }).join('');
+
+  document.getElementById('upgradeModal').style.display = 'flex';
+}
+
+// ── Feature gate check — call before locked features ──────────
+function requireFeature(feature, featureLabel, requiredPlan) {
+  if (canUse(feature)) return true;
+  showUpgradeModal(featureLabel, requiredPlan);
+  return false;
+}
+
+function requireScanQuota() {
+  if (withinScanLimit()) return true;
+  const plan = getUserPlan();
+  const def  = PLANS_DEF[plan];
+  showUpgradeModal(`Daily scan limit reached (${def.scans_per_day} scans/day on ${def.name} plan)`, getNextPlan(plan));
+  return false;
+}
+
+function requireDeviceLimit() {
+  if (withinDeviceLimit()) return true;
+  const plan = getUserPlan();
+  const def  = PLANS_DEF[plan];
+  showUpgradeModal(`Device limit reached (${def.devices} device${def.devices!==1?'s':''} on ${def.name} plan)`, getNextPlan(plan));
+  return false;
+}
+
+function getNextPlan(current) {
+  const idx = PLAN_ORDER.indexOf(current);
+  return PLAN_ORDER[idx + 1] || 'enterprise';
+}
+
+// ── Start upgrade flow ─────────────────────────────────────────
+async function startUpgrade(planKey) {
+  document.getElementById('upgradeModal').style.display = 'none';
+  const apiUrl2 = SETTINGS.apiUrl?.replace(/\/$/, '') || 'http://localhost:8000';
+  if (!API_ONLINE) {
+    // Demo mode — simulate upgrade
+    if (confirm(`DEMO MODE: Simulate upgrade to ${PLANS_DEF[planKey]?.name} plan?\n\nIn production this opens a Stripe checkout page.`)) {
+      setUserPlan(planKey);
+      updatePlanUI();
+      renderBillingPage();
+      nav('billing');
+      addActivity('ok', `Plan upgraded to ${PLANS_DEF[planKey]?.name}`, 'Just now');
+    }
+    return;
+  }
+  try {
+    const result = await fetch(apiUrl2 + '/api/billing/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        plan: planKey,
+        user_id: SESSION.id,
+        user_email: SESSION.email,
+        provider: 'stripe',
+        success_url: window.location.origin + '/billing/success.html',
+        cancel_url: window.location.href
+      })
+    });
+    const data = await result.json();
+    if (data.checkout_url) window.location.href = data.checkout_url;
+    else alert('Checkout unavailable. Configure Stripe keys in backend .env');
+  } catch(e) {
+    alert('Backend not reachable. Make sure your API is running and Stripe is configured.');
+  }
+}
+
+// ── Billing page render ────────────────────────────────────────
+function renderBillingPage() {
+  const plan    = getUserPlan();
+  const def     = PLANS_DEF[plan] || PLANS_DEF.free;
+  const scans   = getScansToday();
+  const devices = DEVICES.length;
+  const scanLimitUnlimited  = def.scans_per_day === -1;
+  const deviceLimitUnlimited = def.devices === -1;
+  const scanPct   = scanLimitUnlimited  ? 0 : Math.min((scans  / def.scans_per_day) * 100, 100);
+  const devicePct = deviceLimitUnlimited ? 0 : Math.min((devices / def.devices)      * 100, 100);
+
+  // Current plan header
+  const nameEl  = document.getElementById('billingPlanName');
+  const priceEl = document.getElementById('billingPlanPrice');
+  if (nameEl)  nameEl.textContent  = def.name.toUpperCase();
+  if (priceEl) priceEl.textContent = def.price === 0 ? '$0 / month · No credit card required' : `$${def.price} / month`;
+  if (nameEl)  nameEl.style.color  = def.color;
+
+  // Plan features
+  const featEl = document.getElementById('billingPlanFeatures');
+  if (featEl) featEl.innerHTML = def.features.map(f =>
+    `<div class="bc-feat"><span>✓</span>${f}</div>`).join('');
+
+  // Usage bars
+  document.getElementById('billingUsageDate').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+  document.getElementById('usageScansUsed').textContent  = scans;
+  document.getElementById('usageScansLimit').textContent  = scanLimitUnlimited   ? '∞' : def.scans_per_day;
+  document.getElementById('usageDevicesUsed').textContent = devices;
+  document.getElementById('usageDevicesLimit').textContent = deviceLimitUnlimited ? '∞' : def.devices;
+
+  const scansBar   = document.getElementById('usageScansBar');
+  const devicesBar = document.getElementById('usageDevicesBar');
+  if (scansBar) {
+    scansBar.style.width = scanLimitUnlimited ? '5%' : scanPct + '%';
+    scansBar.style.background = scanPct >= 100 ? 'var(--danger)' : scanPct >= 80 ? 'var(--warn)' : 'var(--g)';
+  }
+  if (devicesBar) {
+    devicesBar.style.width = deviceLimitUnlimited ? '5%' : devicePct + '%';
+    devicesBar.style.background = devicePct >= 100 ? 'var(--danger)' : devicePct >= 80 ? 'var(--warn)' : 'var(--g2)';
+  }
+
+  // Unlocked features list
+  const unlockedEl = document.getElementById('billingUnlockedFeatures');
+  if (unlockedEl) {
+    const all = [
+      { key:'ai_analysis',    label:'AI Analysis & Chat' },
+      { key:'email_alerts',   label:'Email Alerts' },
+      { key:'scheduled_scans',label:'Scheduled Scans' },
+      { key:'network_discovery',label:'Network Discovery' },
+      { key:'pdf_reports',    label:'PDF Reports' },
+      { key:'incidents',      label:'Incident Management' },
+      { key:'iocs',           label:'IOC Database' },
+      { key:'wazuh',          label:'Wazuh Integration' },
+      { key:'splunk',         label:'Splunk Integration' },
+      { key:'compliance_reports',label:'Compliance Reports' },
+    ];
+    unlockedEl.innerHTML = `<div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.6rem">FEATURES ON YOUR PLAN</div>` +
+      all.map(f => {
+        const has = def[f.key] === true || def[f.key] === -1 || (typeof def[f.key]==='number' && def[f.key]>0);
+        return `<div style="font-family:var(--mono);font-size:.58rem;${has?'color:var(--text2)':'color:var(--muted);text-decoration:line-through'};padding:.2rem 0;display:flex;align-items:center;gap:.5rem">
+          <span style="color:${has?'var(--ok)':'var(--danger)'};">${has?'✓':'✕'}</span>${f.label}
+        </div>`;
+      }).join('');
+  }
+
+  // Upgrade section — show plans above current
+  const currentIdx = PLAN_ORDER.indexOf(plan);
+  const upgradeEl  = document.getElementById('upgradeSection');
+  const manageEl   = document.getElementById('manageSubSection');
+  if (plan === 'enterprise') {
+    if (upgradeEl) upgradeEl.style.display = 'none';
+    if (manageEl)  manageEl.style.display  = 'block';
+  } else {
+    if (upgradeEl) upgradeEl.style.display = 'block';
+    if (manageEl)  manageEl.style.display  = plan !== 'free' ? 'block' : 'none';
+    const upgradePlans = PLAN_ORDER.filter((p,i) => i > currentIdx);
+    const grid = document.getElementById('upgradePlansGrid');
+    if (grid) grid.innerHTML = upgradePlans.map(p => {
+      const d = PLANS_DEF[p];
+      const recommended = p === upgradePlans[0];
+      return `<div class="upgrade-plan-card ${recommended?'recommended':''}">
+        ${recommended ? '<div style="font-family:var(--mono);font-size:.5rem;color:var(--g);letter-spacing:.1em;margin-bottom:.3rem">BEST UPGRADE</div>' : ''}
+        <div class="upc-name">${d.name}</div>
+        <div class="upc-price">$${d.price}</div>
+        <div class="upc-period">/MONTH</div>
+        <div class="upc-features">${d.features.slice(0,5).map(f=>`✓ ${f}`).join('\n')}</div>
+        <button class="upc-btn" onclick="startUpgrade('${p}')">UPGRADE →</button>
+      </div>`;
+    }).join('');
+  }
+}
+
+function openBillingPortal() {
+  alert('Billing portal requires Stripe Customer Portal to be configured.\nGo to dashboard.stripe.com → Settings → Billing → Customer Portal → Activate.');
+}
+
+function cancelSubscription() {
+  if (!confirm('Cancel your subscription?\nYour plan stays active until the end of the billing period, then downgrades to Free.')) return;
+  // In production: call /api/billing/cancel
+  alert('Cancellation request submitted. Your plan will downgrade to Free at the end of this billing period.\n\nFor immediate help: contact@erprakashmijar.com');
+}
+
+// ── API headers — send plan with every request ─────────────────
+function getPlanHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    'x-user-plan': getUserPlan(),
+    'x-user-id':   SESSION.id,
+  };
+}
+
+// Check if returning from successful payment
+function checkPaymentReturn() {
+  const params = new URLSearchParams(window.location.search);
+  const plan = params.get('plan');
+  const provider = params.get('provider');
+  if (plan && PLANS_DEF[plan]) {
+    setUserPlan(plan);
+    updatePlanUI();
+    addActivity('ok', `Plan upgraded to ${PLANS_DEF[plan].name} via ${provider||'Stripe'}`, 'Just now');
+    // Clean URL
+    window.history.replaceState({}, '', window.location.pathname);
+    nav('billing');
+  }
+}
+
 function init() {
   const roleClass={admin:'rb-admin',client:'rb-client',user:'rb-user'};
   document.getElementById('hdrRole').textContent=SESSION.role.toUpperCase();
@@ -1898,6 +2518,12 @@ function init() {
   checkApiStatus();
   setInterval(checkApiStatus, 30000);
   updateSocMetricsUI();
+  // Apply saved theme
+  darkMode = localStorage.getItem('pm_theme') !== 'light';
+  document.body.classList.toggle('light-mode', !darkMode);
+  applyTheme(darkMode);
+  updatePlanUI();
+  checkPaymentReturn();
   document.getElementById('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}});
   document.getElementById('chatInput').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,72)+'px';});
 }
@@ -2909,6 +3535,459 @@ function exportUsersCSV() {
 
 function closeUserModal() {
   document.getElementById('userDetailModal').style.display = 'none';
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   DARK / LIGHT MODE
+═══════════════════════════════════════════════════════════════ */
+const LIGHT_VARS = {
+  '--bg':'#f0f4f8','--bg2':'#ffffff','--bg3':'#e8edf2',
+  '--g':'#008844','--g2':'#0077aa','--g3':'#6622cc',
+  '--border':'rgba(0,136,68,.15)',
+  '--muted':'#7a9ab0','--text':'#4a7090','--text2':'#1a3050','--white':'#0a1828',
+  '--danger':'#cc2244','--warn':'#cc7700','--ok':'#008844',
+  '--mono-bg':'rgba(0,136,68,.05)',
+};
+const DARK_VARS = {
+  '--bg':'#03070f','--bg2':'#060d1a','--bg3':'#0a1628',
+  '--g':'#00ff88','--g2':'#00d4ff','--g3':'#7b2fff',
+  '--border':'rgba(0,255,136,.1)',
+  '--muted':'#2a4a62','--text':'#7aafc8','--text2':'#c0dce8','--white':'#e8f4f8',
+  '--danger':'#ff3b5c','--warn':'#f59e0b','--ok':'#00ff88',
+};
+let darkMode = localStorage.getItem('pm_theme') !== 'light';
+
+function applyTheme(dark) {
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.textContent = dark ? '🌙' : '☀️';
+  document.body.classList.toggle('light-mode', !dark);
+  // Apply CSS custom properties for smooth transition
+  const root = document.documentElement;
+  if (dark) {
+    Object.entries(DARK_VARS).forEach(([k,v]) => root.style.setProperty(k, v));
+  } else {
+    // Clear inline vars so CSS class takes effect
+    Object.keys(DARK_VARS).forEach(k => root.style.removeProperty(k));
+  }
+}
+
+function toggleTheme() {
+  darkMode = !darkMode;
+  localStorage.setItem('pm_theme', darkMode ? 'dark' : 'light');
+  applyTheme(darkMode);
+  document.body.classList.toggle('light-mode', !darkMode);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   AI REMEDIATION ASSISTANT
+═══════════════════════════════════════════════════════════════ */
+let currentRemIssue = null;
+let currentRemDevice = null;
+let allRemCommands   = [];
+
+const REMEDIATION_SYSTEM = `You are an expert cybersecurity engineer providing step-by-step remediation guidance.
+A client has a security vulnerability and needs EXACT instructions to fix it.
+
+Format your response as JSON with this structure:
+{
+  "summary": "2-sentence plain English explanation of the risk and why it matters",
+  "business_impact": "What could happen if this is not fixed (data breach, downtime, etc.)",
+  "difficulty": "Easy|Medium|Hard",
+  "time_estimate": "e.g. 5 minutes, 30 minutes, 2 hours",
+  "steps": [
+    {"title": "Step title", "description": "What to do and why", "command": "exact bash command or empty string"}
+  ],
+  "verification": "How to verify the fix worked",
+  "prevention": "How to prevent this in future"
+}
+
+Be specific. Use real commands. Assume Ubuntu/Debian Linux unless told otherwise.
+Return ONLY valid JSON, no markdown, no extra text.`;
+
+async function fixIssueWithAI(issue, device) {
+  currentRemIssue  = issue;
+  currentRemDevice = device;
+  allRemCommands   = [];
+
+  document.getElementById('remModalTitle').textContent = '🤖 AI FIX — ' + issue.title.toUpperCase();
+  document.getElementById('remModalSub').textContent   = `${issue.category} · CVSS ${issue.cvss} · ${issue.severity.toUpperCase()}`;
+  document.getElementById('remModalBody').innerHTML = `
+    <div style="text-align:center;padding:2.5rem">
+      <div style="display:flex;gap:5px;justify-content:center;margin-bottom:.8rem">
+        ${[0,1,2].map(i=>`<div style="width:8px;height:8px;border-radius:50%;background:var(--g);animation:td .8s ease ${i*.15}s infinite"></div>`).join('')}
+      </div>
+      <div style="font-family:var(--mono);font-size:.63rem;color:var(--muted)">Analyzing vulnerability and generating fix plan...</div>
+    </div>`;
+  document.getElementById('remediationModal').style.display = 'flex';
+
+  const prompt = `Security vulnerability found on ${device?.hostname||'Linux server'} (${device?.os||'Ubuntu'}):
+Title: ${issue.title}
+Category: ${issue.category}
+CVSS Score: ${issue.cvss}
+Severity: ${issue.severity}
+Detail: ${issue.detail||''}
+Additional context: ${device ? `Firewall: ${device.firewall?.status||'unknown'}, SSH: ${JSON.stringify(device.ssh_config||{})}` : ''}
+
+Generate exact remediation steps.`;
+
+  try {
+    let result;
+    if (API_ONLINE && SETTINGS.apiMode === 'backend') {
+      const r = await apiPost('/api/ai/chat', { scan_data: device||{}, question: prompt });
+      result = r.reply;
+    } else {
+      const apiKey = SETTINGS.apiKey;
+      if (!apiKey) {
+        renderRemediationError('Add your Anthropic API key in Settings to enable AI fix assistant.');
+        return;
+      }
+      const r = await fetch('https://api.anthropic.com/v1/messages', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514', max_tokens: 1200,
+          system: REMEDIATION_SYSTEM,
+          messages: [{ role:'user', content: prompt }]
+        })
+      });
+      const d = await r.json();
+      result = d.content?.[0]?.text || '';
+    }
+    parseAndRenderRemediation(result, issue, device);
+  } catch(e) {
+    renderRemediationError('Error: ' + e.message);
+  }
+}
+
+function parseAndRenderRemediation(raw, issue, device) {
+  let data;
+  try {
+    const clean = raw.replace(/```json|```/g, '').trim();
+    data = JSON.parse(clean);
+  } catch(e) {
+    // If not JSON, show as formatted text
+    renderRemediationText(raw, issue);
+    return;
+  }
+
+  allRemCommands = (data.steps||[]).filter(s=>s.command).map(s=>s.command);
+  const sevColor = { critical:'#ff3b5c', high:'#ff8c42', medium:'#f5c842', low:'#4dd9ac' }[issue.severity] || '#00ff88';
+
+  document.getElementById('remModalBody').innerHTML = `
+    <!-- Summary card -->
+    <div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:8px;padding:1.1rem 1.3rem;margin-bottom:1.1rem">
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:.8rem">
+        <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">Difficulty: <span style="color:var(--text2)">${data.difficulty||'—'}</span></div>
+        <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">Time: <span style="color:var(--text2)">${data.time_estimate||'—'}</span></div>
+        <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">CVSS: <span style="color:${sevColor}">${issue.cvss}</span></div>
+      </div>
+      <div style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.8;margin-bottom:.6rem">${data.summary||''}</div>
+      ${data.business_impact ? `<div style="background:rgba(255,59,92,.06);border:1px solid rgba(255,59,92,.15);border-radius:5px;padding:.6rem .8rem">
+        <div style="font-family:var(--mono);font-size:.52rem;color:var(--danger);letter-spacing:.12em;margin-bottom:.25rem">⚠ BUSINESS IMPACT</div>
+        <div style="font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.7">${data.business_impact}</div>
+      </div>` : ''}
+    </div>
+
+    <!-- Steps -->
+    <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.18em;margin-bottom:.6rem">REMEDIATION STEPS</div>
+    <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem">
+      ${(data.steps||[]).map((step, i) => `
+        <div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);border-radius:7px;overflow:hidden">
+          <div style="display:flex;align-items:center;gap:.8rem;padding:.7rem .9rem;border-bottom:${step.command?'1px solid rgba(255,255,255,.05)':'none'}">
+            <div style="width:22px;height:22px;border-radius:50%;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:.8rem;color:var(--g);flex-shrink:0">${i+1}</div>
+            <div style="flex:1">
+              <div style="font-family:var(--mono);font-size:.62rem;color:var(--white);margin-bottom:.2rem">${step.title}</div>
+              <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:1.65">${step.description}</div>
+            </div>
+          </div>
+          ${step.command ? `<div onclick="copyCmd(this,'${step.command.replace(/'/g,"\\'")}')" style="display:flex;align-items:center;gap:.6rem;padding:.6rem .9rem;background:rgba(0,0,0,.3);cursor:pointer;transition:background .2s" onmouseover="this.style.background='rgba(0,0,0,.5)'" onmouseout="this.style.background='rgba(0,0,0,.3)'" title="Click to copy">
+            <span style="font-family:var(--mono);font-size:.58rem;color:rgba(0,255,136,.4);flex-shrink:0">$</span>
+            <code style="font-family:var(--mono);font-size:.62rem;color:var(--g);flex:1;word-break:break-all">${step.command}</code>
+            <span style="font-family:var(--mono);font-size:.5rem;color:var(--muted);flex-shrink:0">📋 COPY</span>
+          </div>` : ''}
+        </div>`).join('')}
+    </div>
+
+    <!-- Verification -->
+    ${data.verification ? `<div style="background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.12);border-radius:7px;padding:.9rem 1.1rem;margin-bottom:.7rem">
+      <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.4rem">✓ HOW TO VERIFY IT'S FIXED</div>
+      <div style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.8">${data.verification}</div>
+    </div>` : ''}
+
+    <!-- Prevention -->
+    ${data.prevention ? `<div style="background:rgba(123,47,255,.04);border:1px solid rgba(123,47,255,.15);border-radius:7px;padding:.9rem 1.1rem">
+      <div style="font-family:var(--mono);font-size:.52rem;color:#c084fc;letter-spacing:.15em;margin-bottom:.4rem">🛡 PREVENTION</div>
+      <div style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.8">${data.prevention}</div>
+    </div>` : ''}`;
+}
+
+function renderRemediationText(text, issue) {
+  // Fallback: render raw text nicely
+  const lines = text.split('\n');
+  const html = lines.map(line => {
+    if (line.startsWith('```') || line.startsWith('    ') || line.match(/^\$/)) {
+      const cmd = line.replace(/^```bash|^```|^\$/,'').trim();
+      return cmd ? `<div onclick="copyCmd(this,'${cmd.replace(/'/g,"\\'")}')" style="display:flex;align-items:center;gap:.6rem;padding:.55rem .9rem;background:rgba(0,0,0,.3);border:1px solid rgba(0,255,136,.1);border-radius:5px;margin:.3rem 0;cursor:pointer" title="Click to copy"><span style="color:rgba(0,255,136,.4)">$</span><code style="font-family:var(--mono);font-size:.62rem;color:var(--g);flex:1">${cmd}</code><span style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">📋</span></div>` : '';
+    }
+    if (line.startsWith('#')) return `<div style="font-family:var(--display);font-size:1rem;color:var(--white);letter-spacing:.04em;margin:.8rem 0 .3rem">${line.replace(/^#+\s*/,'')}</div>`;
+    if (!line.trim()) return '<div style="height:.4rem"></div>';
+    return `<div style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.8;margin:.15rem 0">${line}</div>`;
+  }).join('');
+  document.getElementById('remModalBody').innerHTML = `<div style="padding:.5rem">${html}</div>`;
+}
+
+function renderRemediationError(msg) {
+  document.getElementById('remModalBody').innerHTML = `<div style="font-family:var(--mono);font-size:.63rem;color:var(--danger);background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.2);border-radius:7px;padding:1.2rem;margin:.5rem">${msg}</div>`;
+}
+
+function closeRemediationModal() {
+  document.getElementById('remediationModal').style.display = 'none';
+  currentRemIssue = null; currentRemDevice = null;
+}
+
+function copyCmd(el, cmd) {
+  navigator.clipboard.writeText(cmd).catch(() => {});
+  showCopyToast();
+}
+
+function copyAllCommands() {
+  if (!allRemCommands.length) return;
+  navigator.clipboard.writeText(allRemCommands.join('\n')).catch(() => {});
+  showCopyToast('All commands copied!');
+}
+
+function showCopyToast(msg) {
+  const t = document.getElementById('copyToast');
+  if (!t) return;
+  t.textContent = msg || '✓ Copied to clipboard';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function addToIncident() {
+  if (!currentRemIssue) return;
+  const inc = {
+    title: 'Fix required: ' + currentRemIssue.title,
+    severity: currentRemIssue.severity,
+    description: `AI-flagged issue on ${currentRemDevice?.hostname||'unknown'}. CVSS: ${currentRemIssue.cvss}. ${currentRemIssue.detail||''}`,
+    source: 'ai_remediation',
+    created_by: SESSION.name,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    status: 'open',
+    id: Math.random().toString(36).substr(2,8).toUpperCase(),
+    timeline: [{ time: new Date().toISOString(), action: 'Incident created from AI remediation', user: SESSION.name }],
+    affected_devices: currentRemDevice ? [currentRemDevice.ip] : [],
+    mitre_techniques: [], iocs: [], tags: ['ai-remediation']
+  };
+  INCIDENTS.unshift(inc);
+  saveIncidents();
+  closeRemediationModal();
+  nav('incidents');
+  addActivity('warn', `Incident created from AI fix: ${currentRemIssue.title}`, 'Just now');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   UPDATED renderReports — with AI fix buttons per issue
+═══════════════════════════════════════════════════════════════ */
+function renderReports() {
+  const sel = document.getElementById('reportDeviceSelect');
+  const selectedIp = sel ? sel.value : 'all';
+  let devices = selectedIp === 'all' ? DEVICES : DEVICES.filter(d => d.ip === selectedIp);
+  const allIssues = devices.flatMap(d =>
+    (d.issues||[]).map(i => ({ ...i, device: d.hostname, ip: d.ip, _dev: d }))
+  ).sort((a,b) => b.cvss - a.cvss);
+
+  const container = document.getElementById('allIssuesBody');
+  if (!container) return;
+  if (!allIssues.length) {
+    container.innerHTML = '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">Scan devices to see issues and get AI-powered fixes.</div>';
+    return;
+  }
+
+  container.innerHTML = allIssues.map(issue => {
+    const sevColor = { critical:'#ff3b5c', high:'#ff8c42', medium:'#f5c842', low:'#4dd9ac' }[issue.severity] || '#00ff88';
+    const sevBg    = { critical:'rgba(255,59,92,.08)', high:'rgba(255,140,66,.08)', medium:'rgba(245,200,66,.06)', low:'rgba(77,217,172,.05)' }[issue.severity] || 'rgba(255,255,255,.03)';
+    const sevBorder= { critical:'rgba(255,59,92,.22)', high:'rgba(255,140,66,.2)', medium:'rgba(245,200,66,.18)', low:'rgba(77,217,172,.15)' }[issue.severity] || 'rgba(255,255,255,.07)';
+    return `
+    <div style="display:flex;align-items:center;gap:.8rem;padding:.7rem .9rem;background:${sevBg};border:1px solid ${sevBorder};border-radius:6px;margin-bottom:.35rem;flex-wrap:wrap">
+      <div style="width:3px;height:100%;min-height:18px;background:${sevColor};border-radius:2px;flex-shrink:0;align-self:stretch"></div>
+      <span class="badge b-${issue.severity}">${issue.severity}</span>
+      <div style="flex:1;min-width:150px">
+        <div style="font-family:var(--mono);font-size:.62rem;color:var(--text2)">${issue.title}</div>
+        <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted);margin-top:.15rem">${issue.device} · ${issue.category} · CVSS ${issue.cvss}</div>
+      </div>
+      <div style="display:flex;gap:.4rem;flex-shrink:0">
+        <button onclick='fixIssueWithAI(${JSON.stringify({id:issue.id,title:issue.title,severity:issue.severity,category:issue.category,cvss:issue.cvss,detail:issue.detail||""})}, ${JSON.stringify({hostname:issue.device,ip:issue.ip,os:issue._dev?.os||"Linux",firewall:issue._dev?.firewall||{},ssh_config:issue._dev?.ssh_config||{}})})'
+          class="fix-btn fix-btn-ai">🤖 AI FIX</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LEARNING CENTER
+═══════════════════════════════════════════════════════════════ */
+const LEARN_CONTENT = [
+  {
+    id: 'getting-started', icon: '🚀', title: 'Getting Started',
+    desc: 'First steps — scan your first device in 2 minutes',
+    tag: 'beginner',
+    sections: [
+      { title: 'What is this dashboard?', body: 'PM::OFFSEC Security Dashboard is a live security auditing platform. It connects to Linux machines via SSH, scans them for vulnerabilities, explains findings in plain English, and gives you exact commands to fix every issue.' },
+      { title: 'Step 1 — Start the backend', body: 'The dashboard needs a Python backend running to do live scans. Open a terminal in the backend/ folder and run:\n\npython main.py\n\nThis starts the API at http://localhost:8000. You can also deploy it to Railway for 24/7 access.', cmd: 'cd backend && python main.py' },
+      { title: 'Step 2 — Connect the dashboard', body: 'Go to Settings in the sidebar. Enter your backend URL (http://localhost:8000 or your Railway URL). Click Test Connection — you should see a green "Connected" status.' },
+      { title: 'Step 3 — Scan your first device', body: 'Click SCAN DEVICE in the header. Choose "This Machine" to scan the server running your backend, or "Remote via SSH" to scan any other Linux machine. The scan takes about 10 seconds.' },
+      { title: 'Step 4 — Read your report', body: 'After scanning, go to Reports in the sidebar. You\'ll see every issue sorted by severity (Critical → High → Medium → Low). Click "🤖 AI FIX" on any issue to get exact bash commands to fix it.' },
+    ]
+  },
+  {
+    id: 'scanner', icon: '🔍', title: 'System Scanner',
+    desc: 'How scanning works and what it checks',
+    tag: 'features',
+    sections: [
+      { title: 'What does the scanner check?', body: 'Every scan checks: Open ports and services, SSH configuration (root login, password auth), Firewall status (ufw/iptables), Outdated packages with known CVEs, File permissions on sensitive paths, Failed login attempts (brute-force detection), Disk encryption status, User accounts and sudo access.' },
+      { title: 'Local vs Remote scanning', body: 'Local scan: scans the machine running your backend API. Use this for your own servers.\n\nRemote scan: connects via SSH to any Linux machine. You provide the IP address, username, and password or SSH key. The machine must have SSH running on port 22 (or another port you specify).' },
+      { title: 'Security score explained', body: 'The score (0–100) starts at 100 and deductions are made for each issue found:\n\n• Critical issue: -12 to -15 points\n• High issue: -6 to -8 points\n• Medium issue: -2 to -4 points\n• Inactive firewall: -15 points\n• SSH root login: -10 points\n\nA score of 80+ is good. 60-80 needs attention. Below 60 is urgent.' },
+      { title: 'Network Discovery', body: 'Go to Devices → Discover Network. The scanner pings every host on your subnet (e.g. 192.168.1.0/24) to find live devices. It shows which ones have SSH open so you can scan them directly with one click.', cmd: '# Manually discover devices on your network:\nnmap -sn 192.168.1.0/24' },
+    ]
+  },
+  {
+    id: 'ai-fix', icon: '🤖', title: 'AI Fix Assistant',
+    desc: 'Let Claude explain and fix every vulnerability',
+    tag: 'features',
+    sections: [
+      { title: 'How the AI Fix Assistant works', body: 'After scanning, go to Reports. Every issue has an "🤖 AI FIX" button. Click it and Claude analyzes that specific vulnerability in the context of your server and generates:\n\n• Plain English explanation of the risk\n• Business impact if left unfixed\n• Step-by-step fix instructions\n• Exact bash commands (click any command to copy)\n• How to verify the fix worked\n• How to prevent it recurring' },
+      { title: 'AI Analysis vs AI Fix', body: 'AI Analysis (AI Analysis page): gives a full report on ALL findings at once — executive summary, top risks, 30-day roadmap.\n\nAI Fix (Reports page): deep-dives into ONE specific issue with exact commands. Use this when you want to fix a specific problem right now.' },
+      { title: 'AI Chat', body: 'The AI Chat on the AI Analysis page is a free-form assistant. You can ask anything:\n\n• "How do I disable root SSH login?"\n• "What is Kerberoasting?"\n• "Is port 6379 dangerous?"\n• "Give me a checklist to harden this server"\n\nThe AI has full context of your scan results.' },
+      { title: 'Requires API key', body: 'AI features need an Anthropic API key. Get one at console.anthropic.com (free $5 credits). Add it in Settings → API Settings → Anthropic API Key. You can also run the backend with the key in .env for security.' },
+    ]
+  },
+  {
+    id: 'website-scanner', icon: '🌐', title: 'Website Scanner',
+    desc: 'Check any website for security issues',
+    tag: 'features',
+    sections: [
+      { title: 'What the website scanner checks', body: 'Go to Website Scanner in the sidebar. Enter any domain (e.g. example.com). The scanner checks:\n\n• SSL/TLS certificate — valid? expired? weak cipher? days until expiry\n• HTTP security headers — HSTS, CSP, X-Frame-Options, etc.\n• DNS security — SPF, DMARC, DKIM records\n• Exposed files — .env, .git, phpMyAdmin, admin panels\n• Technology fingerprint — server, CMS, frameworks, CDN, WAF\n• Open web ports — 80, 443, 8080, 6379, etc.' },
+      { title: 'Understanding SPF and DMARC', body: 'SPF and DMARC are email authentication records. Without them, anyone can send emails pretending to be from your domain (email spoofing).\n\nSPF says which servers can send email for your domain.\nDMARC tells receivers what to do with emails that fail SPF/DKIM checks.\n\nIf either is missing, the scanner flags it as HIGH severity.', cmd: '# Check your SPF record:\ndig TXT yourdomain.com | grep spf\n\n# Check your DMARC record:\ndig TXT _dmarc.yourdomain.com' },
+      { title: 'Missing security headers', body: 'Security headers are HTTP response headers that protect visitors from common attacks:\n\n• Strict-Transport-Security — forces HTTPS\n• Content-Security-Policy — prevents XSS attacks\n• X-Frame-Options — prevents clickjacking\n• X-Content-Type-Options — prevents MIME sniffing\n\nAdd these in your nginx or Apache config, or in your web framework.' },
+    ]
+  },
+  {
+    id: 'osint', icon: '🔎', title: 'OSINT & Threat Intel',
+    desc: 'Investigate emails, IPs, usernames, and threats',
+    tag: 'features',
+    sections: [
+      { title: 'Email breach check', body: 'Enter any email address on the OSINT page. The tool checks Have I Been Pwned to see if that email appeared in known data breaches. It shows which breaches, when, and what data was exposed (emails, passwords, phone numbers, etc.).\n\nRequires HIBP_API_KEY in .env ($3.50/month). Password check is free — uses k-anonymity so the password never leaves your browser.' },
+      { title: 'Username lookup', body: 'Enter a username to check if it exists across 12+ platforms including GitHub, Twitter/X, Reddit, LinkedIn, HackerOne, TryHackMe, HackTheBox, Medium, Dev.to, GitLab, and more.\n\nUseful for: OSINT investigations, brand monitoring, finding a threat actor\'s footprint.' },
+      { title: 'IP reputation check', body: 'Enter an IP address on the Threat Intel page. The tool queries:\n\n• AbuseIPDB — abuse confidence score, country, ISP, report count, TOR/proxy detection\n• VirusTotal — malware detection count across 70+ security vendors\n• Shodan — open ports, known vulnerabilities, organization\n\nAll free API tiers are sufficient for typical use.' },
+    ]
+  },
+  {
+    id: 'soc', icon: '🏢', title: 'SOC Platform',
+    desc: 'Incident management, IOCs, MITRE ATT&CK',
+    tag: 'advanced',
+    sections: [
+      { title: 'Incident Management', body: 'The Incidents page is your SOC ticket system. When the scanner finds critical issues, it can auto-create incidents. You can also create them manually.\n\nEach incident has: title, severity, status (open → investigating → contained → resolved → closed), timeline, affected devices, MITRE techniques, and MTTR tracking.' },
+      { title: 'IOC Database', body: 'IOC = Indicator of Compromise. Store known bad IPs, domains, file hashes, emails, or usernames. When your scanner finds a matching value (e.g. a brute-force IP), it automatically matches it against your IOC database and flags it.' },
+      { title: 'MITRE ATT&CK mapping', body: 'The MITRE ATT&CK framework is a knowledge base of attacker techniques. The dashboard automatically maps your scan findings to MITRE techniques.\n\nExample: "847 failed SSH logins" → maps to T1110 (Brute Force).\n\nThis helps you understand how real attackers would exploit your weaknesses.' },
+      { title: 'Playbooks', body: 'Playbooks are step-by-step response procedures for common incidents. The dashboard includes 4 built-in playbooks:\n\n1. SSH Brute Force Response\n2. Exposed Database Response\n3. Malware/Rootkit Detection\n4. Privilege Escalation Response\n\nEach includes exact bash commands to investigate and remediate.' },
+    ]
+  },
+  {
+    id: 'wazuh-splunk', icon: '📊', title: 'Wazuh & Splunk',
+    desc: 'Connect your SIEM tools',
+    tag: 'advanced',
+    sections: [
+      { title: 'Connecting Wazuh', body: 'Wazuh is an open-source SIEM. To connect:\n1. Install Wazuh manager on a Linux server\n2. Add WAZUH_URL, WAZUH_USER, WAZUH_PASSWORD to backend/.env\n3. Restart the backend\n4. Go to Wazuh page → click Refresh\n\nWithout connection, demo data is shown so you can see what the integration looks like.', cmd: '# Install Wazuh (Ubuntu):\ncurl -sO https://packages.wazuh.com/4.7/wazuh-install.sh\nbash ./wazuh-install.sh -a' },
+      { title: 'Connecting Splunk', body: 'Splunk is a commercial log analysis platform (free 500MB/day tier).\n\n1. Set up Splunk (cloud or on-premise)\n2. Create an API token and HTTP Event Collector token\n3. Add SPLUNK_URL, SPLUNK_TOKEN, SPLUNK_HEC_URL, SPLUNK_HEC_TOKEN to .env\n4. Go to Splunk page → enter a search query\n\nThe backend can also send scan results to Splunk automatically.' },
+    ]
+  },
+  {
+    id: 'plans', icon: '💳', title: 'Plans & Features',
+    desc: 'What each plan includes and how to upgrade',
+    tag: 'account',
+    sections: [
+      { title: 'Free plan limits', body: '• 1 device\n• 1 scan per day\n• 7-day history\n• TXT export only\n• No AI features\n• No email alerts\n• No network discovery\n• No scheduled scans' },
+      { title: 'Starter — $19/month', body: '• 5 devices\n• 10 scans per day\n• 30-day history\n• AI analysis + chat + fix assistant\n• Email alerts on critical findings\n• Network discovery\n• TXT + JSON export\n• Email support' },
+      { title: 'Professional — $79/month', body: '• 25 devices\n• 100 scans per day\n• 90-day history\n• Scheduled automatic scans\n• PDF executive reports\n• Priority support\n• Full Wazuh/Splunk basics' },
+      { title: 'Enterprise — $199/month', body: '• Unlimited devices and scans\n• 1-year history\n• 5 team seats\n• Webhook alerts (Slack, Teams)\n• CIS Compliance reports\n• Full SIEM integration\n• Dedicated support' },
+      { title: 'How to upgrade', body: 'Click your plan badge in the top header (shows FREE/STARTER/etc.) or go to Billing in the sidebar. Choose your plan and payment provider (Stripe or Lemon Squeezy). After payment, your plan upgrades immediately.' },
+    ]
+  },
+  {
+    id: 'legal', icon: '⚖️', title: 'Legal & Authorization',
+    desc: 'Understanding the legal requirements for security testing',
+    tag: 'account',
+    sections: [
+      { title: 'Why authorization matters', body: 'Security scanning without permission is illegal under the Computer Fraud and Abuse Act (CFAA, 18 U.S.C. § 1030). Even if you own the IP range, you need to own or have written permission for the systems at those IPs.\n\nAlways scan only systems you own or have explicit written permission to test.' },
+      { title: 'Signing the engagement agreement', body: 'Before scanning client systems, have them sign the engagement agreement at legal/agreement.html. It legally documents:\n\n• Who authorized the testing\n• What systems are in scope\n• What testing methods are permitted\n• Liability and confidentiality terms\n\nThe agreement is legally binding under the ESIGN Act.' },
+      { title: 'CFAA safe harbor', body: 'You are protected from CFAA liability when you have written authorization from the system owner. This is why the engagement agreement is important — it\'s your legal protection.\n\nNever test:\n• Systems not listed in scope\n• Systems owned by third parties\n• Critical infrastructure\n• Government systems' },
+    ]
+  },
+];
+
+function renderLearnContent(filter) {
+  const container = document.getElementById('learnContent');
+  if (!container) return;
+  let items = LEARN_CONTENT;
+  if (filter) {
+    const q = filter.toLowerCase();
+    items = LEARN_CONTENT.filter(topic =>
+      topic.title.toLowerCase().includes(q) ||
+      topic.desc.toLowerCase().includes(q) ||
+      topic.sections.some(s => s.title.toLowerCase().includes(q) || s.body.toLowerCase().includes(q))
+    );
+  }
+  if (!items.length) {
+    container.innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:3rem">No topics match your search. Try different keywords.</div>';
+    return;
+  }
+  container.innerHTML = items.map(topic => `
+    <div class="panel" style="margin-bottom:.9rem">
+      <div class="ph" style="cursor:pointer" onclick="toggleLearnSection('ls-${topic.id}')">
+        <div style="display:flex;align-items:center;gap:.8rem">
+          <span style="font-size:1.3rem">${topic.icon}</span>
+          <div>
+            <div class="pt">${topic.title}</div>
+            <div style="font-family:var(--mono);font-size:.56rem;color:var(--muted);margin-top:.15rem">${topic.desc}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:.6rem">
+          <span style="font-family:var(--mono);font-size:.5rem;padding:.18rem .5rem;border-radius:10px;${topic.tag==='beginner'?'background:rgba(0,255,136,.08);color:var(--g);border:1px solid rgba(0,255,136,.15)':topic.tag==='advanced'?'background:rgba(123,47,255,.08);color:#c084fc;border:1px solid rgba(123,47,255,.18)':topic.tag==='account'?'background:rgba(0,212,255,.06);color:var(--g2);border:1px solid rgba(0,212,255,.14)':'background:rgba(245,158,11,.07);color:var(--warn);border:1px solid rgba(245,158,11,.18)'}">${topic.tag.toUpperCase()}</span>
+          <span id="lc-${topic.id}" style="font-family:var(--mono);font-size:.65rem;color:var(--muted);transition:transform .2s">▶</span>
+        </div>
+      </div>
+      <div id="ls-${topic.id}" style="display:none">
+        ${topic.sections.map((sec, si) => `
+          <div style="padding:1rem 1.2rem;border-top:1px solid rgba(0,255,136,.05)">
+            <div style="font-family:var(--mono);font-size:.62rem;color:var(--g2);letter-spacing:.1em;margin-bottom:.5rem">${si+1}. ${sec.title}</div>
+            <div style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.85;white-space:pre-wrap;margin-bottom:${sec.cmd?'.6rem':'0'}">${sec.body}</div>
+            ${sec.cmd ? `<div style="position:relative">
+              <div onclick="copyCmd(this,'${sec.cmd.replace(/'/g,"\\'").replace(/\n/g,'\\n')}')" style="background:rgba(0,0,0,.3);border:1px solid rgba(0,255,136,.1);border-radius:5px;padding:.65rem .9rem;font-family:var(--mono);font-size:.6rem;color:var(--g);cursor:pointer;transition:background .2s;white-space:pre;overflow-x:auto" title="Click to copy">
+                ${sec.cmd}
+              </div>
+              <div style="font-family:var(--mono);font-size:.5rem;color:var(--muted);margin-top:.25rem;text-align:right">📋 Click to copy</div>
+            </div>` : ''}
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function toggleLearnSection(id) {
+  const el = document.getElementById(id);
+  const topicId = id.replace('ls-','');
+  const arrow = document.getElementById('lc-'+topicId);
+  if (!el) return;
+  const open = el.style.display === 'none';
+  el.style.display = open ? 'block' : 'none';
+  if (arrow) arrow.style.transform = open ? 'rotate(90deg)' : '';
+  if (arrow) arrow.style.color = open ? 'var(--g)' : 'var(--muted)';
+}
+
+function filterLearn(q) {
+  renderLearnContent(q);
 }
 
 init();
