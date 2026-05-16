@@ -1,118 +1,87 @@
-# PM::OFFSEC — Complete Cybersecurity Portfolio + SOC Dashboard
+# erprakashmijar.com — Complete Portfolio + Security Dashboard
 
 ## Project Structure
 ```
 /
-├── index.html                 Portfolio homepage
-├── projects.html              Projects & case studies
-├── labs.html                  Labs & platforms (THM, HTB, Bug Bounty)
-├── skills.html                Offensive security skill stack
-├── roadmap.html               Interactive ethical hacking roadmap
-├── vibe-stack.html            Vibe coding stack 2026
-├── about.html                 About & contact
-├── login.html                 Login page (auth)
-├── register.html              Register page (auth)
-├── 404.html                   Custom error page
-│
+├── index.html              Homepage dashboard
+├── projects.html           Projects & case studies
+├── labs.html               Labs & platforms
+├── skills.html             Offensive security skill stack
+├── about.html              About & contact
+├── roadmap.html            Ethical hacking roadmap (interactive)
+├── vibe-stack.html         Vibe coding stack 2026
+├── login.html              ← LOGIN PAGE (new)
+├── register.html           ← REGISTER PAGE (new)
 ├── dashboard/
-│   └── index.html             MEGA SOC DASHBOARD (all 17 pages)
-│
-├── billing/
-│   ├── pricing.html           Pricing page (4 tiers, Stripe + LS toggle)
-│   └── success.html           Post-payment success
-│
+│   └── index.html          ← SECURITY DASHBOARD (new)
 ├── projects/
-│   └── wannacry.html          WannaCry malware analysis case study
-│
+│   └── wannacry.html       WannaCry case study
 ├── assets/
-│   ├── style.css              Portfolio shared styles
-│   ├── home.css               Homepage styles
-│   ├── shared.js              Canvas, cursor, nav
-│   ├── auth.css               Login/register styles
-│   └── auth.js                Auth system (register/login/sessions)
-│
-└── backend/                   Python FastAPI backend
-    ├── main.py                REST API (all routes)
-    ├── scanner.py             Local + remote SSH scanner
-    ├── web_scanner.py         Website security scanner
-    ├── osint.py               Email/IP/username OSINT
-    ├── soc.py                 Incidents, IOCs, MITRE, Wazuh, Splunk
-    ├── billing.py             Stripe + Lemon Squeezy payments
-    ├── alerts.py              SendGrid email alerts
-    ├── scheduler.py           APScheduler scheduled scans
-    ├── requirements.txt
-    └── .env.example
+│   ├── style.css           Shared portfolio styles
+│   ├── home.css            Homepage-only styles
+│   ├── shared.js           Canvas, cursor, nav, scroll reveal
+│   ├── auth.css            Login/register styles
+│   ├── auth.js             ← AUTH SYSTEM (new)
+│   └── Prakash_Mijar_CV.pdf  ← ADD YOUR CV HERE
+├── favicon.svg
+├── og-image.png
+├── .htaccess               Apache: HTTPS, caching, security headers
+├── robots.txt
+└── sitemap.xml
 ```
-
-## Dashboard Pages (17 total)
-| Page | Description |
-|------|-------------|
-| Dashboard | Overview, stats, activity feed, top issues |
-| Devices | Multi-device management, re-scan, remove |
-| Scanner | Live scan results (ports, SSH, packages, auth, perms) |
-| Alerts | Security alerts with dismiss |
-| AI Analysis | Claude-powered report + chat assistant |
-| Reports | TXT + JSON export |
-| Website Scanner | SSL, headers, DNS, exposed files, tech fingerprint |
-| OSINT & Recon | Email breach check, password check, username lookup |
-| Threat Intel | IP reputation (AbuseIPDB), VirusTotal, Shodan |
-| Incidents | SOC incident management, timeline, MTTR |
-| IOC Database | Indicators of compromise (IPs, domains, hashes) |
-| MITRE ATT&CK | Automatic technique mapping from scan findings |
-| Playbooks | 4 incident response playbooks with commands |
-| Wazuh | Live Wazuh SIEM alerts and agent status |
-| Splunk | Splunk search and log visualization |
-| Admin Panel | User management, stats |
-| Profile | Account settings |
 
 ## Auth System
-- Register / Login with full validation and password strength
-- 3 roles: admin / client / user
-- Demo: admin@erprakashmijar.com / Admin@2026
-- Sessions stored in localStorage (no server needed for auth)
+- **Register**: `/register.html` — full form with password strength meter & requirements checklist
+- **Login**: `/login.html` — email/password + one-click demo roles
+- **Sessions**: stored in localStorage (browser-side, no server needed)
+- **Roles**: admin / client / user — each sees different sidebar sections
+- **Demo accounts**:
+  - Admin: `admin@erprakashmijar.com` / `Admin@2026`
+  - Client: `client@demo.com` / `Client@123`
 
-## Pricing Tiers
-| Plan | Price | Devices | Key Feature |
-|------|-------|---------|-------------|
-| Free | $0 | 1 | 1 scan/day |
-| Starter | $19/mo | 5 | AI + email alerts |
-| Professional | $79/mo | 25 | Scheduled scans + PDF |
-| Enterprise | $199/mo | Unlimited | Full SOC suite |
+## Security Dashboard Features
+- System Scanner (simulated — connect to real FastAPI backend to scan live systems)
+- Security score gauge + trend chart
+- Open ports, SSH config, outdated packages, file permissions
+- Alert system with dismiss
+- AI Analysis (Claude API — powered by Claude claude-sonnet-4-20250514)
+- AI Chat assistant — ask about any vulnerability
+- Report export (TXT + JSON download)
+- Admin panel (user list, task tracker)
+- Profile editor
+- Role-based views (admin/client/user)
 
-## Backend Quick Start
-```bash
-cd backend
-python3 -m venv venv && source venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env
-# Edit .env — add ANTHROPIC_API_KEY at minimum
-python main.py
-# API at http://localhost:8000 | Docs at http://localhost:8000/docs
+## Deploy (cPanel / Hostinger / Namecheap)
+1. Upload contents of this folder to `public_html/`
+2. Make sure `.htaccess` is uploaded (may be hidden — enable "Show Hidden Files")
+3. Add your CV as `assets/Prakash_Mijar_CV.pdf`
+4. Set up email: Zoho Mail (free) or Namecheap email forwarding
+
+## Deploy (GitHub Pages)
+1. Push to repo `prakashm808.github.io`
+2. Settings → Pages → Source: main, root /
+3. Note: `.htaccess` doesn't work on GitHub Pages — use Cloudflare Pages instead for HTTPS redirect
+
+## DNS (GitHub Pages)
+```
+A     @     185.199.108.153
+A     @     185.199.109.153
+A     @     185.199.110.153
+A     @     185.199.111.153
+CNAME www   prakashm808.github.io
 ```
 
-## API Keys (what you need)
-| Service | Free Tier | Used For |
-|---------|-----------|----------|
-| Anthropic | $5 credits | AI analysis + chat |
-| SendGrid | 100 emails/day | Email alerts |
-| HIBP | $3.50/month | Email breach check |
-| AbuseIPDB | 1000/day free | IP reputation |
-| VirusTotal | 4/min free | Malware lookup |
-| Shodan | Limited free | Port/vuln intel |
-| Stripe | % per transaction | Payments |
-| Lemon Squeezy | % per transaction | Alt payments |
+## TODO Before Going Live
+- [ ] Drop `assets/Prakash_Mijar_CV.pdf` into assets/
+- [ ] Update GitHub links (search `github.com/` in all HTML)
+- [ ] Update LinkedIn links (search `linkedin.com/in/`)
+- [ ] Add TryHackMe / HTB rank in `labs.html`
+- [ ] Set up domain email (Zoho free or Namecheap forwarding)
+- [ ] For real scanning: build FastAPI backend + connect to dashboard
 
-## Deploy Backend to Railway (free)
-```bash
-npm i -g @railway/cli
-railway login && railway init && railway up
-# Add env vars in Railway dashboard
-```
-
-## GitHub Deployment
-Push everything in this folder to your GitHub repo.
-GitHub Pages serves the frontend (HTML/CSS/JS) automatically.
-Deploy the backend separately on Railway/Render/VPS.
-
-## .gitignore (important)
-Never commit backend/.env — it contains your API keys.
+## Making the Scanner Real (Phase 2)
+The scanner currently uses mock data. To connect to a real Linux system:
+1. Build `backend/main.py` with FastAPI
+2. Use `subprocess`, `psutil`, `socket` to collect real data
+3. Expose `/api/scan` endpoint
+4. Replace `mockScan()` in `dashboard/index.html` with a fetch to your API

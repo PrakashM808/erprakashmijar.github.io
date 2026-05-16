@@ -108,16 +108,3 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;justify-content
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .auth-wrap{animation:fadeUp .5s ease forwards}
-
-/* ── AUTH MOBILE ── */
-@media(max-width:600px){
-  nav{padding:.9rem 1rem}
-  .auth-main{padding:6rem 1rem 2rem}
-  .auth-wrap{max-width:100%}
-  .auth-logo{font-size:1.8rem}
-  .auth-card-body{padding:1.4rem 1.2rem}
-  .demo-roles{flex-direction:column;align-items:stretch}
-  .demo-role{text-align:center;padding:.5rem}
-}
-.nav-toggle{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:2px}
-.nav-toggle span{display:block;width:20px;height:1.5px;background:var(--g)}
