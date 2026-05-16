@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payment Successful — PM::OFFSEC</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../assets/auth.css"/>
+  <style>
+  body{display:flex;align-items:center;justify-content:center;min-height:100vh;cursor:auto}
+  .success-wrap{text-align:center;max-width:480px;padding:2rem;position:relative;z-index:2}
+  .success-icon{font-size:4rem;margin-bottom:1rem;animation:pop .5s .2s cubic-bezier(.16,1,.3,1) both}
+  @keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+  .success-title{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:#00ff88;letter-spacing:.04em;margin-bottom:.5rem;text-shadow:0 0 40px rgba(0,255,136,.3)}
+  .success-sub{font-family:'Space Mono',monospace;font-size:.7rem;color:#2a4a62;line-height:1.85;margin-bottom:2rem}
+  .plan-box{background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.15);border-radius:8px;padding:1.2rem 1.6rem;margin-bottom:2rem;text-align:left}
+  .pb-label{font-family:'Space Mono',monospace;font-size:.56rem;color:#00d4ff;letter-spacing:.2em;margin-bottom:.5rem}
+  .pb-plan{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#e8f4f8;letter-spacing:.05em}
+  .pb-desc{font-family:'Space Mono',monospace;font-size:.6rem;color:#2a4a62;margin-top:.25rem}
+  </style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<div id="cur"></div><div id="cur2"></div>
+
+<div class="success-wrap">
+  <div class="success-icon">🎉</div>
+  <div class="success-title">PAYMENT SUCCESSFUL</div>
+  <p class="success-sub">Your subscription is now active. Welcome to PM::OFFSEC — your account has been upgraded and you can start scanning immediately.</p>
+  <div class="plan-box">
+    <div class="pb-label">// ACTIVE PLAN</div>
+    <div class="pb-plan" id="planName">Loading...</div>
+    <div class="pb-desc" id="planDesc">Your plan is being activated...</div>
+  </div>
+  <div style="display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap">
+    <a href="../dashboard/index.html" style="font-family:'Space Mono',monospace;font-size:.68rem;font-weight:700;letter-spacing:.14em;padding:.85rem 2rem;background:#00ff88;color:#040810;text-decoration:none;border-radius:6px">OPEN DASHBOARD →</a>
+    <a href="pricing.html" style="font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.12em;padding:.85rem 1.5rem;background:rgba(0,255,136,.08);color:#00ff88;border:1px solid rgba(0,255,136,.2);text-decoration:none;border-radius:6px">VIEW PLAN DETAILS</a>
+  </div>
+</div>
+
+<script src="../assets/auth.js"></script>
+<script>
+initCanvas('bgCanvas');
+const params = new URLSearchParams(window.location.search);
+const plan = params.get('plan') || 'starter';
+const provider = params.get('provider') || 'stripe';
+const planNames = { free:'Free',starter:'Starter — $19/month',professional:'Professional — $79/month',enterprise:'Enterprise — $199/month' };
+const planDescs = {
+  free:'Basic scanning, 1 device',
+  starter:'5 devices, AI analysis, email alerts, network discovery',
+  professional:'25 devices, scheduled scans, PDF reports, priority support',
+  enterprise:'Unlimited devices, full AI suite, compliance reports, 5 team seats'
+};
+document.getElementById('planName').textContent = planNames[plan] || 'Starter';
+document.getElementById('planDesc').textContent = planDescs[plan] || '';
+// Save plan to local session
+const session = AUTH.getSession();
+if (session) {
+  session.plan = plan;
+  localStorage.setItem('pm_session_v2', JSON.stringify(session));
+}
+</script>
+</body>
+</html>

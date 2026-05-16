@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Security Engagement Agreement — PM::OFFSEC</title>
+  <meta name="description" content="Authorized security testing agreement. All security assessments require written authorization under the Computer Fraud and Abuse Act (CFAA)."/>
+  <meta name="robots" content="noindex"/>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg"/>
+  <meta name="theme-color" content="#00ff88"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#040810;--bg2:#070d18;--bg3:#0c1525;
+    --g:#00ff88;--g2:#00d4ff;--g3:#7b2fff;
+    --border:rgba(0,255,136,.12);
+    --muted:#2a4a62;--text:#7aafc8;--text2:#c0dce8;--white:#e8f4f8;
+    --danger:#ff3b5c;--warn:#f59e0b;--ok:#00ff88;
+    --mono:'Space Mono',monospace;--display:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;
+  }
+  body{background:var(--bg);color:var(--text2);font-family:var(--body);min-height:100vh}
+  body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.3}
+
+  nav{position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1rem 2rem;background:rgba(4,8,16,.9);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,255,136,.07)}
+  .nav-logo{font-family:var(--mono);font-size:.78rem;color:var(--g);letter-spacing:.14em;text-decoration:none}
+  .nav-logo span{color:var(--g2)}
+  .nav-back{font-family:var(--mono);font-size:.62rem;color:var(--muted);text-decoration:none;transition:color .2s}
+  .nav-back:hover{color:var(--g)}
+
+  .main{max-width:820px;margin:0 auto;padding:3rem 1.5rem 5rem;position:relative;z-index:1}
+
+  /* HEADER */
+  .agr-badge{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.58rem;color:var(--warn);background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);padding:.35rem .9rem;border-radius:4px;letter-spacing:.12em;margin-bottom:1.5rem}
+  .agr-title{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.5rem);color:var(--white);letter-spacing:.03em;line-height:.92;margin-bottom:.8rem}
+  .agr-title span{color:var(--g)}
+  .agr-sub{font-family:var(--mono);font-size:.65rem;color:var(--muted);line-height:1.9;max-width:620px;margin-bottom:2.5rem}
+
+  /* LAW PILLS */
+  .law-pills{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:2rem}
+  .law-pill{font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;padding:.3rem .7rem;border-radius:3px;background:rgba(0,212,255,.06);color:var(--g2);border:1px solid rgba(0,212,255,.15)}
+
+  /* SECTION BLOCKS */
+  .agr-section{background:rgba(6,13,26,.8);border:1px solid rgba(0,255,136,.07);border-radius:9px;margin-bottom:1.1rem;overflow:hidden}
+  .agr-section-hdr{display:flex;align-items:center;gap:.8rem;padding:1rem 1.3rem;border-bottom:1px solid rgba(0,255,136,.06);cursor:pointer;user-select:none}
+  .agr-section-hdr::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:0 2px 2px 0}
+  .agr-section{position:relative}
+  .as1::before,.agr-section:nth-child(1)::before{background:var(--danger)}
+  .agr-section:nth-child(2)::before{background:var(--warn)}
+  .agr-section:nth-child(3)::before{background:var(--g2)}
+  .agr-section:nth-child(4)::before{background:var(--g3)}
+  .agr-section:nth-child(5)::before{background:var(--g)}
+  .agr-section:nth-child(6)::before{background:#ec4899}
+  .agr-section:nth-child(7)::before{background:#10b981}
+  .agr-section:nth-child(8)::before{background:var(--warn)}
+  .agr-section-num{font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:.15em;width:22px;flex-shrink:0}
+  .agr-section-title{font-family:var(--display);font-size:1.1rem;color:var(--white);letter-spacing:.05em;flex:1}
+  .agr-chevron{font-size:.65rem;color:var(--muted);transition:transform .25s}
+  .agr-section.open .agr-chevron{transform:rotate(90deg);color:var(--g)}
+  .agr-section-body{display:none;padding:1.2rem 1.3rem;font-family:var(--mono);font-size:.63rem;color:var(--muted);line-height:1.95}
+  .agr-section.open .agr-section-body{display:block}
+  .agr-section-body strong{color:var(--text2)}
+  .agr-section-body .law-cite{display:inline-block;font-family:var(--mono);font-size:.52rem;color:var(--g2);background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.12);padding:.1rem .4rem;border-radius:3px;margin:0 .2rem}
+  .agr-section-body ul{list-style:none;padding:0;margin:.5rem 0}
+  .agr-section-body ul li{padding:.3rem 0;padding-left:1.2rem;position:relative}
+  .agr-section-body ul li::before{content:'▸';position:absolute;left:0;color:var(--g2);font-size:.7rem}
+  .warning-box{background:rgba(255,59,92,.06);border:1px solid rgba(255,59,92,.2);border-radius:6px;padding:.9rem 1.1rem;margin-bottom:1rem}
+  .warning-box-title{font-family:var(--mono);font-size:.6rem;color:var(--danger);letter-spacing:.15em;margin-bottom:.4rem}
+  .warning-box p{font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.8}
+  .info-box{background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.15);border-radius:6px;padding:.9rem 1.1rem;margin:.7rem 0}
+  .info-box-title{font-family:var(--mono);font-size:.58rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.35rem}
+
+  /* FORM */
+  .form-section{background:rgba(6,13,26,.9);border:1px solid rgba(0,255,136,.12);border-radius:10px;padding:1.8rem;margin-top:2rem}
+  .form-title{font-family:var(--display);font-size:1.5rem;color:var(--white);letter-spacing:.05em;margin-bottom:.4rem}
+  .form-sub{font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.8;margin-bottom:1.5rem}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem}
+  @media(max-width:580px){.form-row{grid-template-columns:1fr}}
+  .form-group{margin-bottom:.8rem}
+  .form-label{font-family:var(--mono);font-size:.55rem;color:var(--g2);letter-spacing:.15em;display:block;margin-bottom:.35rem}
+  .form-label .required{color:var(--danger)}
+  .form-input{width:100%;background:rgba(0,0,0,.25);border:1px solid rgba(0,255,136,.09);border-radius:5px;padding:.65rem .9rem;font-family:var(--mono);font-size:.65rem;color:var(--white);outline:none;transition:border-color .2s}
+  .form-input:focus{border-color:rgba(0,255,136,.3)}
+  .form-input::placeholder{color:var(--muted)}
+  textarea.form-input{resize:vertical;min-height:80px}
+  select.form-input{cursor:pointer}
+  .form-hint{font-family:var(--mono);font-size:.52rem;color:var(--muted);margin-top:.3rem;line-height:1.5}
+
+  /* CHECKBOXES */
+  .check-group{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.2rem}
+  .check-item{display:flex;align-items:flex-start;gap:.8rem;cursor:pointer}
+  .check-item input[type="checkbox"]{width:16px;height:16px;margin-top:2px;accent-color:var(--g);flex-shrink:0;cursor:pointer}
+  .check-label{font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7;cursor:pointer}
+  .check-label strong{color:var(--white)}
+  .check-label .law{color:var(--g2);font-size:.55rem}
+
+  /* SIGNATURE */
+  .sig-block{background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.08);border-radius:6px;padding:1.2rem;margin-top:1rem}
+  .sig-title{font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:.15em;margin-bottom:.8rem}
+  .sig-canvas-wrap{position:relative;background:rgba(0,0,0,.15);border:1px solid rgba(0,255,136,.12);border-radius:5px;margin-bottom:.5rem}
+  canvas#sigCanvas{display:block;width:100%;height:100px;cursor:crosshair;touch-action:none}
+  .sig-clear{font-family:var(--mono);font-size:.55rem;color:var(--muted);background:none;border:1px solid rgba(255,255,255,.08);border-radius:3px;padding:.25rem .7rem;cursor:pointer;transition:all .2s;letter-spacing:.1em}
+  .sig-clear:hover{color:var(--danger);border-color:rgba(255,59,92,.3)}
+  .sig-hint{font-family:var(--mono);font-size:.52rem;color:var(--muted);margin-top:.3rem}
+
+  /* SUBMIT */
+  .submit-btn{width:100%;background:var(--g);color:#040810;font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.16em;border:none;border-radius:6px;padding:1rem;cursor:pointer;transition:all .2s;margin-top:1rem;position:relative;overflow:hidden}
+  .submit-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--g),var(--g2));opacity:0;transition:opacity .2s}
+  .submit-btn:hover::before{opacity:1}
+  .submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,255,136,.3)}
+  .submit-btn:disabled{background:rgba(0,255,136,.15);color:rgba(0,255,136,.3);cursor:not-allowed;transform:none}
+  .submit-btn:disabled::before{display:none}
+  .submit-btn span{position:relative;z-index:1}
+  .error-msg{font-family:var(--mono);font-size:.6rem;color:var(--danger);background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.2);border-radius:4px;padding:.6rem .8rem;margin-top:.6rem;display:none}
+  .error-msg.show{display:block}
+
+  /* SUCCESS */
+  .success-panel{display:none;text-align:center;padding:2.5rem 1.5rem}
+  .success-panel.show{display:block}
+  .success-icon{font-size:3rem;margin-bottom:1rem}
+  .success-title{font-family:var(--display);font-size:2rem;color:var(--g);letter-spacing:.04em;margin-bottom:.5rem}
+  .success-sub{font-family:var(--mono);font-size:.63rem;color:var(--muted);line-height:1.85;margin-bottom:1.5rem}
+  .agr-id{font-family:var(--mono);font-size:.65rem;color:var(--g2);background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.15);padding:.5rem 1rem;border-radius:4px;display:inline-block;letter-spacing:.12em}
+
+  /* PROGRESS INDICATOR */
+  .progress-bar{height:3px;background:rgba(255,255,255,.05);border-radius:2px;margin-bottom:2rem;overflow:hidden}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--g),var(--g2));border-radius:2px;transition:width .4s ease;width:0%}
+
+  /* FOOTER */
+  footer{position:relative;z-index:1;padding:1.5rem 2rem;border-top:1px solid rgba(0,255,136,.06);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
+  footer span{font-family:var(--mono);font-size:.58rem;color:var(--muted)}
+  footer a{font-family:var(--mono);font-size:.58rem;color:var(--g2);text-decoration:none}
+  footer a:hover{color:var(--g)}
+  @media(max-width:600px){.main{padding:2rem 1rem 4rem}.agr-title{font-size:2.2rem}.form-section{padding:1.2rem}}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-logo">PM<span>::</span>OFFSEC</a>
+  <a href="../index.html" class="nav-back">← Back to Portfolio</a>
+</nav>
+
+<div class="main">
+
+  <!-- HEADER -->
+  <div class="agr-badge">⚖️ LEGAL AUTHORIZATION REQUIRED</div>
+  <h1 class="agr-title">SECURITY ENGAGEMENT<br><span>AGREEMENT</span></h1>
+  <p class="agr-sub">All security assessments, penetration tests, and vulnerability scans require explicit written authorization. Unauthorized testing is a federal crime under US law. This agreement documents lawful authorization and defines the scope of work.</p>
+
+  <!-- LAW REFERENCE PILLS -->
+  <div class="law-pills">
+    <span class="law-pill">CFAA 18 U.S.C. § 1030</span>
+    <span class="law-pill">ECPA 18 U.S.C. § 2511</span>
+    <span class="law-pill">DMCA 17 U.S.C. § 1201</span>
+    <span class="law-pill">HIPAA 45 CFR § 164</span>
+    <span class="law-pill">PCI DSS v4.0</span>
+    <span class="law-pill">GDPR Art. 32</span>
+    <span class="law-pill">FTC Safeguards Rule</span>
+    <span class="law-pill">NIST SP 800-115</span>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+  <!-- WARNING -->
+  <div class="warning-box">
+    <div class="warning-box-title">⚠ FEDERAL LAW NOTICE</div>
+    <p>Unauthorized access to computer systems is a federal crime under the <strong>Computer Fraud and Abuse Act (CFAA), 18 U.S.C. § 1030</strong>. Penalties include up to 10 years imprisonment for first-time offenders and up to 20 years for subsequent offenses. By signing this agreement, you confirm you have <strong>full legal authority</strong> to authorize security testing on the specified systems.</p>
+  </div>
+
+  <!-- LEGAL SECTIONS -->
+  <div class="agr-section open">
+    <div class="agr-section-hdr" onclick="toggleSection(this)">
+      <span class="agr-section-num">01</span>
+      <span class="agr-section-title">LEGAL FRAMEWORK &amp; APPLICABLE LAW</span>
+      <span class="agr-chevron">▶</span>
+    </div>
+    <div class="agr-section-body">
+      <p>This engagement is governed by the following US federal and state laws. By executing this agreement, all parties acknowledge and agree to comply with these legal frameworks:</p>
+      <ul>
+        <li><strong>Computer Fraud and Abuse Act (CFAA) — 18 U.S.C. § 1030:</strong> The primary federal law governing unauthorized computer access. This agreement serves as explicit written authorization under CFAA, permitting the security professional to access specified systems for authorized testing purposes only.</li>
+        <li><strong>Electronic Communications Privacy Act (ECPA) — 18 U.S.C. § 2511:</strong> Governs interception of electronic communications. All network traffic analysis and packet inspection performed during this engagement is authorized under this agreement and exempt from ECPA prohibition.</li>
+        <li><strong>Digital Millennium Copyright Act (DMCA) — 17 U.S.C. § 1201:</strong> Security research exemption (Section 1201(j)) applies to good-faith security testing. This agreement documents the good-faith research nature of all testing activities.</li>
+        <li><strong>State Computer Crime Laws:</strong> In addition to federal law, various state laws may apply (e.g., California Penal Code § 502, New York Penal Law § 156). This agreement authorizes testing under all applicable state laws.</li>
+        <li><strong>NIST SP 800-115 — Technical Guide to Information Security Testing:</strong> All testing methodologies will adhere to NIST guidelines for technical security testing and assessment.</li>
+      </ul>
+      <div class="info-box">
+        <div class="info-box-title">LEGAL PRECEDENT</div>
+        Key cases defining authorized security testing scope: <em>United States v. Nosal</em> (9th Cir. 2012), <em>Van Buren v. United States</em> (SCOTUS 2021). The Van Buren decision clarified that exceeding authorized access (not just unauthorized access) constitutes a CFAA violation — making precise scope definition critical.
+      </div>
+    </div>
+  </div>
+
+  <div class="agr-section">
+    <div class="agr-section-hdr" onclick="toggleSection(this)">
+      <span class="agr-section-num">02</span>
+      <span class="agr-section-title">SCOPE OF AUTHORIZED TESTING</span>
+      <span class="agr-chevron">▶</span>
+    </div>
+    <div class="agr-section-body">
+      <p>The Client authorizes PM::OFFSEC to perform the following security testing activities, limited strictly to systems and assets explicitly listed in Section 9 (Target Scope) of this agreement:</p>
+      <ul>
+        <li><strong>Network Penetration Testing:</strong> Port scanning, service enumeration, vulnerability identification, and exploitation of authorized network infrastructure.</li>
+        <li><strong>Web Application Security Testing:</strong> OWASP Top 10 assessment, injection testing, authentication bypass attempts, session management analysis, and API security review.</li>
+        <li><strong>System Security Assessment:</strong> Operating system configuration review, privilege escalation testing, patch level assessment, and security misconfiguration identification.</li>
+        <li><strong>Social Engineering (if explicitly authorized):</strong> Phishing simulation, pretexting, and physical security assessment — only if checked and initialed in the scope section.</li>
+        <li><strong>OSINT &amp; Reconnaissance:</strong> Open-source intelligence gathering on authorized domains and IP ranges using publicly available information.</li>
+        <li><strong>Wireless Security Testing (if explicitly authorized):</strong> Only if physical access and explicit written authorization are provided separately.</li>
+      </ul>
+      <div class="warning-box">
+        <div class="warning-box-title">STRICT LIMITATIONS — OUT OF SCOPE</div>
+        <p>The following activities are expressly <strong>PROHIBITED</strong> regardless of technical access:<br>
+        • Testing systems not explicitly listed in scope<br>
+        • Denial of Service (DoS/DDoS) attacks<br>
+        • Destruction or permanent modification of data<br>
+        • Exfiltration of production data outside the engagement<br>
+        • Testing third-party systems without their separate authorization<br>
+        • Physical access to facilities not explicitly authorized<br>
+        • Social engineering of employees without separate authorization</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="agr-section">
+    <div class="agr-section-hdr" onclick="toggleSection(this)">
+      <span class="agr-section-num">03</span>
+      <span class="agr-section-title">DATA PROTECTION &amp; CONFIDENTIALITY</span>
+      <span class="agr-chevron">▶</span>
+    </div>
+    <div class="agr-section-body">
+      <p>All information obtained during this engagement is strictly confidential and governed by the following protections:</p>
+      <ul>
+        <li><strong>Non-Disclosure:</strong> PM::OFFSEC agrees to maintain strict confidentiality of all discovered vulnerabilities, system information, credentials, and business data. Information will not be shared with any third party without explicit written consent.</li>
+        <li><strong>Data Minimization:</strong> Only the minimum data necessary to demonstrate vulnerabilities will be accessed. No production data will be exfiltrated, stored, or retained beyond the engagement period.</li>
+        <li><strong>HIPAA Compliance (if applicable):</strong> If testing systems that process Protected Health Information (PHI), PM::OFFSEC agrees to comply with HIPAA Security Rule <span class="law-cite">45 CFR § 164.306</span> and sign a Business Associate Agreement (BAA) as required.</li>
+        <li><strong>PCI DSS (if applicable):</strong> For systems in scope of PCI DSS, testing will be conducted in accordance with PCI DSS Requirement 11.3 and results will be handled as Level 1 confidential data.</li>
+        <li><strong>Report Retention:</strong> Final reports will be delivered securely via encrypted channels. PM::OFFSEC will retain a copy for professional records for 2 years, after which it will be securely destroyed.</li>
+        <li><strong>GDPR (if EU data is processed):</strong> Testing involving systems that process EU personal data will comply with GDPR Article 32 security requirements and data minimization principles.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="agr-section">
+    <div class="agr-section-hdr" onclick="toggleSection(this)">
+      <span class="agr-section-num">04</span>
+      <span class="agr-section-title">RESPONSIBLE DISCLOSURE &amp; VULNERABILITY HANDLING</span>
+      <span class="agr-chevron">▶</span>
+    </div>
+    <div class="agr-section-body">
+      <p>All discovered vulnerabilities will be handled according to responsible disclosure principles aligned with CERT/CC and ISO 29147:</p>
+      <ul>
+        <li><strong>Immediate Notification:</strong> Critical vulnerabilities (CVSS 9.0+) will be reported to the Client immediately upon discovery, before the formal report is complete.</li>
+        <li><strong>Report Delivery:</strong> A complete written report including all findings, CVSS scores, proof-of-concept evidence, and remediation recommendations will be delivered within the agreed timeframe.</li>
+        <li><strong>No Public Disclosure:</strong> PM::OFFSEC will not publicly disclose any vulnerability findings without explicit written consent from the Client. In cases involving third-party vendor vulnerabilities (e.g., CVEs), coordinated disclosure will be discussed with the Client first.</li>
+        <li><strong>Re-Testing:</strong> A complimentary verification re-test of remediated critical and high severity findings is included within 60 days of report delivery.</li>
+        <li><strong>Zero-Day Policy:</strong> If a previously unknown vulnerability (zero-day) is discovered in a third-party product, PM::OFFSEC will coordinate with the Client on responsible disclosure to the vendor following NIST and CISA guidelines.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="agr-section">
+    <div class="agr-section-hdr" onclick="toggleSection(this)">
+      <span class="agr-section-num">05</span>
+      <span class="agr-section-title">LIABILITY LIMITATIONS &amp; INDEMNIFICATION</span>
+      <span class="agr-chevron">▶</span>
+    </div>
+    <div class="agr-section-body">
+      <p>Both parties acknowledge the inherent risks associated with security testing and agree to the following liability terms:</p>
+      <ul>
+        <li><strong>Good Faith Testing:</strong> PM::OFFSEC will perform all testing in good faith with professional care. Testing activities will be designed to minimize disruption to production systems.</li>
+        <li><strong>Service Disruption:</strong> The Client acknowledges that penetration testing may cause unintended service disruptions. PM::OFFSEC liability for unintended disruptions is limited to the total engagement fee paid.</li>
+        <li><strong>Data Loss:</strong> PM::OFFSEC is not liable for data loss or corruption resulting from authorized testing activities, provided testing was conducted within the agreed scope and methodology.</li>
+        <li><strong>Client Indemnification:</strong> The Client agrees to indemnify and hold harmless PM::OFFSEC against third-party claims arising from testing activities conducted within the authorized scope.</li>
+        <li><strong>Force Majeure:</strong> Neither party is liable for delays or failures caused by circumstances beyond their reasonable control.</li>
+        <li><strong>Maximum Liability Cap:</strong> PM::OFFSEC's total liability under this agreement shall not exceed 2x the total fees paid for the engagement.</li>
+      </ul>
+      <div class="info-box">
+        <div class="info-box-title">PROFESSIONAL INSURANCE NOTE</div>
+        PM::OFFSEC maintains professional liability (E&O) insurance for security consulting engagements. Certificate of insurance available upon request for enterprise engagements exceeding $10,000.
+      </div>
+    </div>
+  </div>
+
+  <div class="agr-section">
+    <div class="agr-section-hdr" onclick="toggleSection(this)">
+      <span class="agr-section-num">06</span>
+      <span class="agr-section-title">PAYMENT TERMS &amp; DELIVERABLES</span>
+      <span class="agr-chevron">▶</span>
+    </div>
+    <div class="agr-section-body">
+      <ul>
+        <li><strong>Payment Schedule:</strong> 50% deposit required before engagement begins. Remaining 50% due upon delivery of the final report. Invoices are payable within 15 days.</li>
+        <li><strong>Deliverables:</strong> Executive summary report, technical findings report (CVSS-scored), remediation roadmap, and re-test report (for resolved critical/high findings).</li>
+        <li><strong>Timeline:</strong> Agreed engagement start and end dates will be confirmed in writing. Scope changes may affect timeline and require a signed change order.</li>
+        <li><strong>Cancellation:</strong> Cancellation within 48 hours of engagement start forfeits the 50% deposit. Cancellation before 48 hours results in a full refund.</li>
+        <li><strong>Taxes:</strong> Client is responsible for any applicable taxes on services rendered. PM::OFFSEC will provide a W-9 upon request for US-based clients.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="agr-section">
+    <div class="agr-section-hdr" onclick="toggleSection(this)">
+      <span class="agr-section-num">07</span>
+      <span class="agr-section-title">GOVERNING LAW &amp; DISPUTE RESOLUTION</span>
+      <span class="agr-chevron">▶</span>
+    </div>
+    <div class="agr-section-body">
+      <ul>
+        <li><strong>Governing Law:</strong> This agreement is governed by the laws of the United States and the state in which PM::OFFSEC is registered. Any conflict of laws provisions shall not apply.</li>
+        <li><strong>Dispute Resolution:</strong> Any disputes arising from this agreement shall first be subject to good-faith negotiation. If unresolved within 30 days, disputes will be submitted to binding arbitration under the American Arbitration Association (AAA) Commercial Arbitration Rules.</li>
+        <li><strong>Jurisdiction:</strong> For matters not subject to arbitration, the parties consent to exclusive jurisdiction in federal and state courts in the applicable US jurisdiction.</li>
+        <li><strong>Attorney Fees:</strong> In any legal proceeding, the prevailing party shall be entitled to recover reasonable attorney fees and costs.</li>
+        <li><strong>Severability:</strong> If any provision of this agreement is found unenforceable, the remaining provisions remain in full effect.</li>
+        <li><strong>Entire Agreement:</strong> This document, together with any signed Statement of Work (SOW), constitutes the entire agreement between the parties and supersedes all prior discussions.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="agr-section">
+    <div class="agr-section-hdr" onclick="toggleSection(this)">
+      <span class="agr-section-num">08</span>
+      <span class="agr-section-title">EMERGENCY CONTACT &amp; RULES OF ENGAGEMENT</span>
+      <span class="agr-chevron">▶</span>
+    </div>
+    <div class="agr-section-body">
+      <ul>
+        <li><strong>Emergency Stop:</strong> The Client may request immediate cessation of all testing activities at any time by contacting PM::OFFSEC via the designated emergency contact method. Testing will stop within 15 minutes of notification.</li>
+        <li><strong>Testing Windows:</strong> Unless otherwise agreed, active exploitation testing will occur during business hours (9 AM – 6 PM Client's local time) on weekdays only. Reconnaissance may occur outside these hours.</li>
+        <li><strong>Communication:</strong> Daily check-ins will be scheduled during active testing phases. All communication will use encrypted channels (Signal or PGP-encrypted email).</li>
+        <li><strong>Incident Response:</strong> If testing inadvertently causes a security incident, PM::OFFSEC will immediately notify the Client and assist with incident response at no additional charge.</li>
+        <li><strong>Third-Party Notification:</strong> If in-scope testing requires interaction with third-party services (cloud providers, CDNs), PM::OFFSEC will notify the Client before proceeding, who bears responsibility for obtaining separate authorization.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- AUTHORIZATION FORM -->
+  <div class="form-section">
+    <div class="success-panel" id="successPanel">
+      <div class="success-icon">✅</div>
+      <div class="success-title">AGREEMENT SIGNED</div>
+      <div class="success-sub">Your signed authorization has been recorded. PM::OFFSEC will contact you within 24 hours to confirm the engagement details and next steps.<br><br>A copy of this agreement will be sent to your email address.</div>
+      <div class="agr-id" id="agrIdDisplay"></div>
+      <div style="margin-top:1.5rem;display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap">
+        <a href="../dashboard/index.html" style="font-family:var(--mono);font-size:.65rem;font-weight:700;letter-spacing:.12em;padding:.75rem 1.8rem;background:var(--g);color:#040810;text-decoration:none;border-radius:5px">OPEN DASHBOARD →</a>
+        <button onclick="window.print()" style="font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;padding:.75rem 1.5rem;background:rgba(0,255,136,.08);color:var(--g);border:1px solid rgba(0,255,136,.18);border-radius:5px;cursor:pointer">PRINT / SAVE PDF</button>
+      </div>
+    </div>
+
+    <div id="formPanel">
+      <div class="form-title">AUTHORIZATION FORM</div>
+      <p class="form-sub">Complete all fields below. This constitutes a legally binding authorization for security testing. All fields marked with <span style="color:var(--danger)">*</span> are required.</p>
+
+      <div class="error-msg" id="formError"></div>
+
+      <!-- Section 9 — Target Scope -->
+      <div style="font-family:var(--mono);font-size:.55rem;color:var(--g2);letter-spacing:.2em;margin-bottom:.8rem;padding-top:.5rem">09 // AUTHORIZING PARTY</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">FULL LEGAL NAME <span class="required">*</span></label>
+          <input class="form-input" id="authName" type="text" placeholder="Full name of authorized representative"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">JOB TITLE / ROLE <span class="required">*</span></label>
+          <input class="form-input" id="authTitle" type="text" placeholder="e.g. CTO, IT Director, Owner"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">ORGANIZATION NAME <span class="required">*</span></label>
+          <input class="form-input" id="authOrg" type="text" placeholder="Legal business name"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">BUSINESS EMAIL <span class="required">*</span></label>
+          <input class="form-input" id="authEmail" type="email" placeholder="your@organization.com"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">PHONE NUMBER <span class="required">*</span></label>
+          <input class="form-input" id="authPhone" type="tel" placeholder="+1 (555) 000-0000"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">BUSINESS ADDRESS <span class="required">*</span></label>
+          <input class="form-input" id="authAddress" placeholder="City, State, ZIP, USA"/>
+        </div>
+      </div>
+
+      <!-- Target scope -->
+      <div style="font-family:var(--mono);font-size:.55rem;color:var(--g2);letter-spacing:.2em;margin-bottom:.8rem;padding-top:.5rem">10 // TARGET SCOPE</div>
+      <div class="form-group">
+        <label class="form-label">SYSTEMS / DOMAINS / IP RANGES IN SCOPE <span class="required">*</span></label>
+        <textarea class="form-input" id="authScope" placeholder="List all systems, domains, IP addresses, and IP ranges authorized for testing&#10;Example:&#10;example.com, *.example.com&#10;192.168.1.0/24&#10;app.example.com&#10;10.0.0.50 - 10.0.0.100"></textarea>
+        <div class="form-hint">Be specific. Any system NOT listed here is explicitly OUT of scope.</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">ENGAGEMENT TYPE <span class="required">*</span></label>
+          <select class="form-input" id="authType">
+            <option value="">Select type...</option>
+            <option>Web Application Penetration Test</option>
+            <option>Network Penetration Test</option>
+            <option>Full Security Audit</option>
+            <option>Red Team Engagement</option>
+            <option>Vulnerability Assessment</option>
+            <option>SOC / SIEM Dashboard Setup</option>
+            <option>Cloud Security Assessment</option>
+            <option>Physical Security Assessment</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">TESTING ENVIRONMENT <span class="required">*</span></label>
+          <select class="form-input" id="authEnv">
+            <option value="">Select environment...</option>
+            <option>Production (live systems)</option>
+            <option>Staging / Pre-production</option>
+            <option>Development / Test environment</option>
+            <option>All environments</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">AUTHORIZED START DATE <span class="required">*</span></label>
+          <input class="form-input" id="authStart" type="date"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">AUTHORIZED END DATE <span class="required">*</span></label>
+          <input class="form-input" id="authEnd" type="date"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">EMERGENCY STOP CONTACT</label>
+        <input class="form-input" id="authEmergency" placeholder="Name and phone number to call for immediate testing halt"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ADDITIONAL NOTES / RESTRICTIONS</label>
+        <textarea class="form-input" id="authNotes" rows="2" placeholder="Any additional restrictions, sensitive systems to avoid, compliance requirements..."></textarea>
+      </div>
+
+      <!-- Checkboxes -->
+      <div style="font-family:var(--mono);font-size:.55rem;color:var(--g2);letter-spacing:.2em;margin-bottom:.8rem;padding-top:.5rem">11 // LEGAL ACKNOWLEDGMENTS</div>
+      <div class="check-group">
+        <label class="check-item">
+          <input type="checkbox" id="ck1" onchange="updateProgress()"/>
+          <span class="check-label"><strong>I have full legal authority</strong> to authorize security testing on all systems listed in Section 10. I am the owner, authorized employee, or have obtained written permission from the owner. <span class="law">[CFAA 18 U.S.C. § 1030]</span></span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" id="ck2" onchange="updateProgress()"/>
+          <span class="check-label"><strong>I understand the scope limitations.</strong> Testing is authorized only for systems explicitly listed above. Any access outside this scope is unauthorized and may constitute a criminal violation. <span class="law">[Van Buren v. United States, 2021]</span></span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" id="ck3" onchange="updateProgress()"/>
+          <span class="check-label"><strong>I authorize network traffic monitoring</strong> and packet analysis on authorized systems during the engagement period. <span class="law">[ECPA 18 U.S.C. § 2511 exemption]</span></span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" id="ck4" onchange="updateProgress()"/>
+          <span class="check-label"><strong>I acknowledge confidentiality obligations.</strong> All vulnerability findings are confidential and may not be disclosed to unauthorized parties. PM::OFFSEC will not publicly disclose findings. <span class="law">[NDA terms apply]</span></span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" id="ck5" onchange="updateProgress()"/>
+          <span class="check-label"><strong>I have read Sections 1–8</strong> of this agreement and agree to all terms including liability limitations, payment terms, and dispute resolution procedures.</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" id="ck6" onchange="updateProgress()"/>
+          <strong class="check-label" style="color:var(--danger)">I understand that providing false authorization is a federal crime under 18 U.S.C. § 1001 (false statements) and 18 U.S.C. § 1030 (CFAA). I certify all information provided is truthful and accurate.</strong>
+        </label>
+      </div>
+
+      <!-- Signature -->
+      <div style="font-family:var(--mono);font-size:.55rem;color:var(--g2);letter-spacing:.2em;margin-bottom:.8rem;padding-top:.5rem">12 // ELECTRONIC SIGNATURE</div>
+      <div class="sig-block">
+        <div class="sig-title">DRAW YOUR SIGNATURE BELOW (or type your name as a digital signature)</div>
+        <div style="margin-bottom:.5rem">
+          <input class="form-input" id="typedSig" placeholder="Type your full name as digital signature..." style="margin-bottom:.4rem" oninput="updateProgress()"/>
+        </div>
+        <div class="sig-canvas-wrap">
+          <canvas id="sigCanvas" width="700" height="100"></canvas>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4rem">
+          <button class="sig-clear" onclick="clearSignature()">CLEAR SIGNATURE</button>
+          <div class="sig-hint">Sign with mouse or touch. Either typed or drawn signature is legally binding under the ESIGN Act (15 U.S.C. § 7001).</div>
+        </div>
+      </div>
+
+      <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:1rem;line-height:1.8;background:rgba(0,0,0,.15);border-radius:5px;padding:.8rem 1rem">
+        By clicking "EXECUTE AGREEMENT" below, you acknowledge that your electronic signature is legally binding under the <strong style="color:var(--text2)">Electronic Signatures in Global and National Commerce Act (ESIGN Act, 15 U.S.C. § 7001)</strong> and the <strong style="color:var(--text2)">Uniform Electronic Transactions Act (UETA)</strong>. This electronic record constitutes a valid, enforceable contract.
+      </div>
+
+      <button class="submit-btn" id="submitBtn" onclick="submitAgreement()">
+        <span>⚖️ EXECUTE AGREEMENT →</span>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span>&copy; 2026 Prakash Mijar · PM::OFFSEC</span>
+  <div style="display:flex;gap:1rem">
+    <a href="../index.html">Portfolio</a>
+    <a href="../dashboard/index.html">Dashboard</a>
+    <a href="mailto:contact@erprakashmijar.com">Contact</a>
+  </div>
+  <span>All rights reserved · Governed by US Federal Law</span>
+</footer>
+
+<script>
+/* SECTION TOGGLE */
+function toggleSection(hdr) {
+  hdr.closest('.agr-section').classList.toggle('open');
+  updateProgress();
+}
+
+/* PROGRESS */
+function updateProgress() {
+  const checks = ['ck1','ck2','ck3','ck4','ck5','ck6'];
+  const fields  = ['authName','authEmail','authOrg','authScope','authType'];
+  const hasSig  = document.getElementById('typedSig').value.trim().length > 0 || sigHasContent;
+  const checkedCount = checks.filter(id => document.getElementById(id)?.checked).length;
+  const filledCount  = fields.filter(id => document.getElementById(id)?.value.trim()).length;
+  const pct = Math.round(((checkedCount / checks.length) * 40) + ((filledCount / fields.length) * 40) + (hasSig ? 20 : 0));
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+/* SIGNATURE CANVAS */
+const canvas = document.getElementById('sigCanvas');
+const ctx = canvas.getContext('2d');
+let drawing = false;
+let sigHasContent = false;
+ctx.strokeStyle = '#00ff88';
+ctx.lineWidth = 2;
+ctx.lineCap = 'round';
+ctx.lineJoin = 'round';
+
+function getPos(e, canvas) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  if (e.touches) {
+    return { x: (e.touches[0].clientX - rect.left) * scaleX, y: (e.touches[0].clientY - rect.top) * scaleY };
+  }
+  return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
+}
+
+canvas.addEventListener('mousedown',  e => { drawing = true; const p = getPos(e, canvas); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
+canvas.addEventListener('mousemove',  e => { if (!drawing) return; const p = getPos(e, canvas); ctx.lineTo(p.x, p.y); ctx.stroke(); sigHasContent = true; updateProgress(); });
+canvas.addEventListener('mouseup',    () => { drawing = false; });
+canvas.addEventListener('mouseleave', () => { drawing = false; });
+canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; const p = getPos(e, canvas); ctx.beginPath(); ctx.moveTo(p.x, p.y); }, {passive:false});
+canvas.addEventListener('touchmove',  e => { e.preventDefault(); if (!drawing) return; const p = getPos(e, canvas); ctx.lineTo(p.x, p.y); ctx.stroke(); sigHasContent = true; updateProgress(); }, {passive:false});
+canvas.addEventListener('touchend',   () => { drawing = false; });
+
+function clearSignature() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  sigHasContent = false; updateProgress();
+}
+
+/* FORM VALIDATION & SUBMIT */
+function submitAgreement() {
+  const required = [
+    { id:'authName',    label:'Full legal name' },
+    { id:'authTitle',   label:'Job title' },
+    { id:'authOrg',     label:'Organization name' },
+    { id:'authEmail',   label:'Business email' },
+    { id:'authPhone',   label:'Phone number' },
+    { id:'authAddress', label:'Business address' },
+    { id:'authScope',   label:'Target scope' },
+    { id:'authType',    label:'Engagement type' },
+    { id:'authEnv',     label:'Testing environment' },
+    { id:'authStart',   label:'Start date' },
+    { id:'authEnd',     label:'End date' },
+  ];
+  const err = document.getElementById('formError');
+  for (const f of required) {
+    const el = document.getElementById(f.id);
+    if (!el || !el.value.trim()) {
+      err.textContent = `Required field missing: ${f.label}`;
+      err.classList.add('show');
+      el?.focus();
+      el?.scrollIntoView({behavior:'smooth',block:'center'});
+      return;
+    }
+  }
+  const checks = ['ck1','ck2','ck3','ck4','ck5','ck6'];
+  const unchecked = checks.find(id => !document.getElementById(id).checked);
+  if (unchecked) {
+    err.textContent = 'You must check all legal acknowledgment boxes before signing.';
+    err.classList.add('show');
+    document.getElementById(unchecked).scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  const typedSig = document.getElementById('typedSig').value.trim();
+  if (!typedSig && !sigHasContent) {
+    err.textContent = 'Please provide your signature — either type your name or draw your signature.';
+    err.classList.add('show');
+    return;
+  }
+  err.classList.remove('show');
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.querySelector('span').textContent = '⏳ PROCESSING...';
+
+  // Generate agreement ID
+  const agrId = 'AGR-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2,4).toUpperCase();
+  const ts = new Date().toLocaleString('en-US',{dateStyle:'long',timeStyle:'short'});
+
+  // Save to localStorage
+  const agreement = {
+    id: agrId, timestamp: ts,
+    name: document.getElementById('authName').value,
+    email: document.getElementById('authEmail').value,
+    org: document.getElementById('authOrg').value,
+    scope: document.getElementById('authScope').value,
+    type: document.getElementById('authType').value,
+    env: document.getElementById('authEnv').value,
+    start: document.getElementById('authStart').value,
+    end: document.getElementById('authEnd').value,
+    signature: typedSig || 'drawn',
+    ip_hint: 'client-browser',
+  };
+  const existing = JSON.parse(localStorage.getItem('pm_agreements') || '[]');
+  existing.push(agreement);
+  localStorage.setItem('pm_agreements', JSON.stringify(existing));
+
+  setTimeout(() => {
+    document.getElementById('formPanel').style.display = 'none';
+    document.getElementById('successPanel').style.display = 'block';
+    document.getElementById('agrIdDisplay').textContent = `Agreement ID: ${agrId}  ·  ${ts}`;
+    document.getElementById('progressFill').style.width = '100%';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }, 1200);
+}
+
+// Set default dates
+const today = new Date().toISOString().split('T')[0];
+const nextMonth = new Date(Date.now() + 30*24*60*60*1000).toISOString().split('T')[0];
+document.getElementById('authStart').value = today;
+document.getElementById('authEnd').value = nextMonth;
+
+// Open first section
+document.querySelectorAll('.agr-section:not(.open)')[0]?.querySelector('.agr-section-hdr')?.click();
+</script>
+</body>
+</html>

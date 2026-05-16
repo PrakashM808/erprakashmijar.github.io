@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pricing — PM::OFFSEC Security Dashboard</title>
+  <meta name="description" content="Simple, transparent pricing for PM::OFFSEC Security Dashboard. Free tier + Starter $19 + Professional $79 + Enterprise $199."/>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg"/>
+  <meta name="theme-color" content="#00ff88"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../assets/auth.css"/>
+  <style>
+  body{overflow-x:hidden;cursor:auto;min-height:100vh;display:block}
+  @media(hover:none){body{cursor:auto}}
+  .pricing-main{position:relative;z-index:2;padding:8rem 1.5rem 5rem}
+  .wrap{max-width:1100px;margin:0 auto}
+
+  /* HERO */
+  .pricing-hero{text-align:center;margin-bottom:3.5rem}
+  .pricing-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,7vw,6rem);color:#e8f4f8;letter-spacing:.03em;line-height:.92;margin-bottom:.8rem}
+  .pricing-title span{color:#00ff88}
+  .pricing-sub{font-family:'Space Mono',monospace;font-size:.72rem;color:#2a4a62;line-height:1.85;max-width:520px;margin:0 auto 2rem}
+
+  /* PROVIDER TOGGLE */
+  .provider-toggle{display:inline-flex;background:rgba(0,0,0,.25);border:1px solid rgba(0,255,136,.12);border-radius:8px;padding:4px;gap:4px;margin-bottom:3rem}
+  .pt-btn{font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.12em;padding:.55rem 1.4rem;border-radius:5px;border:none;cursor:pointer;transition:all .2s;color:#2a4a62;background:transparent}
+  .pt-btn.active{background:var(--active-bg,#00ff88);color:var(--active-color,#040810);font-weight:700}
+  .stripe-active .pt-btn[data-p="stripe"]{background:#635bff;color:#fff}
+  .ls-active .pt-btn[data-p="ls"]{background:#ff8c00;color:#fff}
+
+  /* PLANS GRID */
+  .plans-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:3rem}
+  @media(max-width:1000px){.plans-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:580px){.plans-grid{grid-template-columns:1fr}}
+
+  .plan-card{background:rgba(6,13,26,.85);border:1px solid rgba(0,255,136,.08);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;transition:transform .25s,border-color .25s,box-shadow .25s;position:relative}
+  .plan-card:hover{transform:translateY(-4px);border-color:rgba(0,255,136,.2);box-shadow:0 16px 50px rgba(0,0,0,.4)}
+  .plan-card.popular{border-color:rgba(0,255,136,.35);box-shadow:0 0 30px rgba(0,255,136,.08)}
+  .plan-card-top{height:3px}
+  .pc-free .plan-card-top{background:rgba(0,255,136,.3)}
+  .pc-starter .plan-card-top{background:linear-gradient(90deg,#00ff88,#00d4ff)}
+  .pc-pro .plan-card-top{background:linear-gradient(90deg,#00d4ff,#7b2fff)}
+  .pc-ent .plan-card-top{background:linear-gradient(90deg,#7b2fff,#ff3b5c)}
+
+  .popular-badge{position:absolute;top:1rem;right:1rem;font-family:'Space Mono',monospace;font-size:.5rem;background:#00ff88;color:#040810;padding:.25rem .6rem;border-radius:3px;font-weight:700;letter-spacing:.1em}
+
+  .plan-body{padding:1.6rem;flex:1;display:flex;flex-direction:column}
+  .plan-name{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#e8f4f8;letter-spacing:.05em;margin-bottom:.3rem}
+  .plan-desc{font-family:'Space Mono',monospace;font-size:.58rem;color:#2a4a62;line-height:1.65;margin-bottom:1.2rem}
+  .plan-price{margin-bottom:1.4rem}
+  .plan-price-amount{font-family:'Bebas Neue',sans-serif;font-size:3rem;line-height:1;letter-spacing:.02em}
+  .pc-free .plan-price-amount{color:#4dd9ac}
+  .pc-starter .plan-price-amount{color:#00ff88}
+  .pc-pro .plan-price-amount{color:#00d4ff}
+  .pc-ent .plan-price-amount{color:#a855f7}
+  .plan-price-period{font-family:'Space Mono',monospace;font-size:.6rem;color:#2a4a62;letter-spacing:.1em;margin-top:.2rem}
+
+  .plan-features{flex:1;display:flex;flex-direction:column;gap:.45rem;margin-bottom:1.5rem}
+  .feat{display:flex;align-items:flex-start;gap:.55rem;font-family:'Space Mono',monospace;font-size:.6rem;color:#7aafc8;line-height:1.55}
+  .feat-icon{flex-shrink:0;font-size:.65rem;margin-top:1px}
+  .feat.dim{color:#2a4a62}
+
+  .plan-btn{width:100%;font-family:'Space Mono',monospace;font-size:.68rem;font-weight:700;letter-spacing:.14em;padding:.85rem;border-radius:6px;border:none;cursor:pointer;transition:all .2s;margin-top:auto}
+  .btn-free{background:rgba(77,217,172,.1);color:#4dd9ac;border:1px solid rgba(77,217,172,.2)}
+  .btn-free:hover{background:rgba(77,217,172,.18)}
+  .btn-starter{background:#00ff88;color:#040810}
+  .btn-starter:hover{background:#fff;transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,255,136,.25)}
+  .btn-pro{background:linear-gradient(135deg,#00d4ff,#7b2fff);color:#fff}
+  .btn-pro:hover{opacity:.9;transform:translateY(-1px)}
+  .btn-ent{background:linear-gradient(135deg,#7b2fff,#ff3b5c);color:#fff}
+  .btn-ent:hover{opacity:.9;transform:translateY(-1px)}
+
+  /* COMPARISON TABLE */
+  .compare-section{margin-bottom:4rem}
+  .compare-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:#e8f4f8;letter-spacing:.05em;margin-bottom:1.5rem;text-align:center}
+  .compare-table{width:100%;border-collapse:collapse;background:rgba(6,13,26,.85);border:1px solid rgba(0,255,136,.07);border-radius:10px;overflow:hidden}
+  .compare-table th{font-family:'Space Mono',monospace;font-size:.58rem;color:#00d4ff;letter-spacing:.15em;padding:.8rem 1rem;border-bottom:1px solid rgba(0,255,136,.07);text-align:left;background:rgba(0,0,0,.15)}
+  .compare-table th:first-child{color:#2a4a62}
+  .compare-table td{font-family:'Space Mono',monospace;font-size:.6rem;color:#7aafc8;padding:.7rem 1rem;border-bottom:1px solid rgba(0,255,136,.04)}
+  .compare-table tr:last-child td{border-bottom:none}
+  .compare-table tr:hover td{background:rgba(0,255,136,.015)}
+  .ct-feature{color:#2a4a62}
+  .ct-yes{color:#00ff88}
+  .ct-no{color:#2a4a62}
+  .ct-limit{color:#7aafc8}
+
+  /* FAQ */
+  .faq-section{margin-bottom:4rem}
+  .faq-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:#e8f4f8;letter-spacing:.05em;margin-bottom:1.5rem;text-align:center}
+  .faq-item{background:rgba(6,13,26,.85);border:1px solid rgba(0,255,136,.07);border-radius:7px;margin-bottom:.6rem;overflow:hidden}
+  .faq-q{font-family:'Space Mono',monospace;font-size:.68rem;color:#e8f4f8;padding:1rem 1.2rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;letter-spacing:.05em}
+  .faq-q:hover{background:rgba(0,255,136,.02)}
+  .faq-chevron{color:#2a4a62;transition:transform .2s;font-size:.7rem}
+  .faq-item.open .faq-chevron{transform:rotate(90deg);color:#00ff88}
+  .faq-a{display:none;font-family:'Space Mono',monospace;font-size:.62rem;color:#2a4a62;line-height:1.85;padding:0 1.2rem 1rem;border-top:1px solid rgba(0,255,136,.06)}
+  .faq-item.open .faq-a{display:block}
+
+  /* TOAST */
+  .toast{position:fixed;bottom:2rem;right:2rem;background:rgba(6,13,26,.95);border:1px solid rgba(0,255,136,.2);border-radius:8px;padding:1rem 1.4rem;font-family:'Space Mono',monospace;font-size:.65rem;color:#e8f4f8;z-index:9999;transform:translateY(100px);opacity:0;transition:all .3s;max-width:360px}
+  .toast.show{transform:translateY(0);opacity:1}
+  .toast-title{color:#00ff88;letter-spacing:.1em;margin-bottom:.3rem;font-size:.62rem}
+
+  /* ── PRICING MOBILE ── */
+  @media(max-width:768px){
+    .pricing-main{padding:6rem 1rem 3rem}
+    .pricing-title{font-size:clamp(2.5rem,10vw,5rem)}
+    .plans-grid{grid-template-columns:1fr}
+    .compare-section{overflow-x:auto}
+    .compare-table{min-width:500px}
+    .faq-q{font-size:.62rem}
+  }
+  </style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<div id="cur"></div><div id="cur2"></div>
+
+<nav>
+  <a href="../index.html" class="nav-logo">PM<span>::</span>OFFSEC</a>
+  <a href="../login.html" class="nav-back">Sign In →</a>
+</nav>
+
+<div class="pricing-main">
+  <div class="wrap">
+
+    <!-- HERO -->
+    <div class="pricing-hero">
+      <h1 class="pricing-title">SIMPLE<br><span>PRICING</span></h1>
+      <p class="pricing-sub">Transparent pricing — no hidden fees. Start free, upgrade when you need more devices, AI analysis, or scheduled scans.</p>
+
+      <!-- PROVIDER TOGGLE -->
+      <div>
+        <div style="font-family:'Space Mono',monospace;font-size:.58rem;color:#2a4a62;letter-spacing:.15em;margin-bottom:.7rem">PAY WITH</div>
+        <div class="provider-toggle" id="providerToggle">
+          <button class="pt-btn active" data-p="stripe" onclick="setProvider('stripe')">💳 STRIPE</button>
+          <button class="pt-btn" data-p="ls" onclick="setProvider('ls')">🍋 LEMON SQUEEZY</button>
+        </div>
+        <div style="font-family:'Space Mono',monospace;font-size:.55rem;color:#2a4a62;margin-top:.5rem">
+          Stripe: card payments · Lemon Squeezy: card + PayPal + VAT handled
+        </div>
+      </div>
+    </div>
+
+    <!-- PLANS -->
+    <div class="plans-grid">
+
+      <!-- FREE -->
+      <div class="plan-card pc-free">
+        <div class="plan-card-top"></div>
+        <div class="plan-body">
+          <div class="plan-name">FREE</div>
+          <div class="plan-desc">Perfect for learning security and getting started.</div>
+          <div class="plan-price">
+            <div class="plan-price-amount">$0</div>
+            <div class="plan-price-period">FOREVER FREE</div>
+          </div>
+          <div class="plan-features">
+            <div class="feat"><span class="feat-icon">✓</span>1 device</div>
+            <div class="feat"><span class="feat-icon">✓</span>1 scan per day</div>
+            <div class="feat"><span class="feat-icon">✓</span>Security score</div>
+            <div class="feat"><span class="feat-icon">✓</span>TXT report export</div>
+            <div class="feat"><span class="feat-icon">✓</span>7-day history</div>
+            <div class="feat dim"><span class="feat-icon">✕</span>AI analysis</div>
+            <div class="feat dim"><span class="feat-icon">✕</span>Email alerts</div>
+            <div class="feat dim"><span class="feat-icon">✕</span>Scheduled scans</div>
+          </div>
+          <button class="plan-btn btn-free" onclick="goFree()">GET STARTED FREE →</button>
+        </div>
+      </div>
+
+      <!-- STARTER -->
+      <div class="plan-card pc-starter">
+        <div class="plan-card-top"></div>
+        <div class="plan-body">
+          <div class="plan-name">STARTER</div>
+          <div class="plan-desc">For freelancers auditing client servers and small projects.</div>
+          <div class="plan-price">
+            <div class="plan-price-amount">$19</div>
+            <div class="plan-price-period">PER MONTH</div>
+          </div>
+          <div class="plan-features">
+            <div class="feat"><span class="feat-icon">✓</span>5 devices</div>
+            <div class="feat"><span class="feat-icon">✓</span>10 scans per day</div>
+            <div class="feat"><span class="feat-icon">✓</span>AI vulnerability analysis</div>
+            <div class="feat"><span class="feat-icon">✓</span>Email alerts</div>
+            <div class="feat"><span class="feat-icon">✓</span>Network discovery</div>
+            <div class="feat"><span class="feat-icon">✓</span>30-day history</div>
+            <div class="feat"><span class="feat-icon">✓</span>JSON + TXT export</div>
+            <div class="feat dim"><span class="feat-icon">✕</span>Scheduled scans</div>
+          </div>
+          <button class="plan-btn btn-starter" onclick="checkout('starter')">START STARTER →</button>
+        </div>
+      </div>
+
+      <!-- PROFESSIONAL -->
+      <div class="plan-card pc-pro popular">
+        <div class="plan-card-top"></div>
+        <div class="popular-badge">MOST POPULAR</div>
+        <div class="plan-body">
+          <div class="plan-name">PROFESSIONAL</div>
+          <div class="plan-desc">For security professionals and agencies running client audits.</div>
+          <div class="plan-price">
+            <div class="plan-price-amount">$79</div>
+            <div class="plan-price-period">PER MONTH</div>
+          </div>
+          <div class="plan-features">
+            <div class="feat"><span class="feat-icon">✓</span>25 devices</div>
+            <div class="feat"><span class="feat-icon">✓</span>100 scans per day</div>
+            <div class="feat"><span class="feat-icon">✓</span>AI analysis + chat</div>
+            <div class="feat"><span class="feat-icon">✓</span>Scheduled automatic scans</div>
+            <div class="feat"><span class="feat-icon">✓</span>PDF executive reports</div>
+            <div class="feat"><span class="feat-icon">✓</span>Instant email alerts</div>
+            <div class="feat"><span class="feat-icon">✓</span>90-day history</div>
+            <div class="feat"><span class="feat-icon">✓</span>Priority support</div>
+          </div>
+          <button class="plan-btn btn-pro" onclick="checkout('professional')">START PROFESSIONAL →</button>
+        </div>
+      </div>
+
+      <!-- ENTERPRISE -->
+      <div class="plan-card pc-ent">
+        <div class="plan-card-top"></div>
+        <div class="plan-body">
+          <div class="plan-name">ENTERPRISE</div>
+          <div class="plan-desc">For teams and businesses needing full security monitoring.</div>
+          <div class="plan-price">
+            <div class="plan-price-amount">$199</div>
+            <div class="plan-price-period">PER MONTH</div>
+          </div>
+          <div class="plan-features">
+            <div class="feat"><span class="feat-icon">✓</span>Unlimited devices</div>
+            <div class="feat"><span class="feat-icon">✓</span>Unlimited scans</div>
+            <div class="feat"><span class="feat-icon">✓</span>Full AI suite</div>
+            <div class="feat"><span class="feat-icon">✓</span>Compliance reports (CIS)</div>
+            <div class="feat"><span class="feat-icon">✓</span>Scheduled scans (cron)</div>
+            <div class="feat"><span class="feat-icon">✓</span>1-year history</div>
+            <div class="feat"><span class="feat-icon">✓</span>5 team seats</div>
+            <div class="feat"><span class="feat-icon">✓</span>Dedicated support</div>
+          </div>
+          <button class="plan-btn btn-ent" onclick="checkout('enterprise')">START ENTERPRISE →</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COMPARISON TABLE -->
+    <div class="compare-section">
+      <div class="compare-title">FULL FEATURE COMPARISON</div>
+      <div style="overflow-x:auto">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Free</th>
+              <th>Starter $19</th>
+              <th>Professional $79</th>
+              <th>Enterprise $199</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="ct-feature">Devices</td><td class="ct-limit">1</td><td class="ct-limit">5</td><td class="ct-limit">25</td><td class="ct-yes">Unlimited</td></tr>
+            <tr><td class="ct-feature">Scans per day</td><td class="ct-limit">1</td><td class="ct-limit">10</td><td class="ct-limit">100</td><td class="ct-yes">Unlimited</td></tr>
+            <tr><td class="ct-feature">Remote SSH scanning</td><td class="ct-yes">✓</td><td class="ct-yes">✓</td><td class="ct-yes">✓</td><td class="ct-yes">✓</td></tr>
+            <tr><td class="ct-feature">Network discovery</td><td class="ct-no">✕</td><td class="ct-yes">✓</td><td class="ct-yes">✓</td><td class="ct-yes">✓</td></tr>
+            <tr><td class="ct-feature">AI vulnerability analysis</td><td class="ct-no">✕</td><td class="ct-yes">✓</td><td class="ct-yes">✓</td><td class="ct-yes">✓</td></tr>
+            <tr><td class="ct-feature">AI security chat</td><td class="ct-no">✕</td><td class="ct-yes">✓</td><td class="ct-yes">✓</td><td class="ct-yes">✓</td></tr>
+            <tr><td class="ct-feature">Email alerts</td><td class="ct-no">✕</td><td class="ct-yes">✓</td><td class="ct-yes">✓ (instant)</td><td class="ct-yes">✓ + webhooks</td></tr>
+            <tr><td class="ct-feature">Scheduled scans</td><td class="ct-no">✕</td><td class="ct-no">✕</td><td class="ct-yes">✓</td><td class="ct-yes">✓ (cron)</td></tr>
+            <tr><td class="ct-feature">Report export</td><td class="ct-limit">TXT only</td><td class="ct-limit">TXT + JSON</td><td class="ct-yes">TXT + JSON + PDF</td><td class="ct-yes">All formats</td></tr>
+            <tr><td class="ct-feature">Scan history</td><td class="ct-limit">7 days</td><td class="ct-limit">30 days</td><td class="ct-limit">90 days</td><td class="ct-yes">1 year</td></tr>
+            <tr><td class="ct-feature">Compliance reports</td><td class="ct-no">✕</td><td class="ct-no">✕</td><td class="ct-no">✕</td><td class="ct-yes">CIS Benchmark</td></tr>
+            <tr><td class="ct-feature">Team seats</td><td class="ct-limit">1</td><td class="ct-limit">1</td><td class="ct-limit">1</td><td class="ct-yes">5</td></tr>
+            <tr><td class="ct-feature">Support</td><td class="ct-limit">Community</td><td class="ct-limit">Email</td><td class="ct-limit">Priority</td><td class="ct-yes">Dedicated</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="faq-section">
+      <div class="faq-title">FREQUENTLY ASKED QUESTIONS</div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Can I scan any Linux server? <span class="faq-chevron">▶</span></div>
+        <div class="faq-a">Yes — you can scan any Linux machine via SSH. You provide the IP, username, and password (or SSH key). The scanner connects via SSH and reads port status, SSH config, auth logs, package versions, and file permissions. Works on Ubuntu, Debian, CentOS, RHEL, and most Linux distributions.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Is my server data safe? <span class="faq-chevron">▶</span></div>
+        <div class="faq-a">Your scan data is processed by your own backend API — either running locally or on a server you control (Railway, Render, VPS). No scan results are stored on our servers. SSH credentials are never logged and only used for the scan connection.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What payment methods are accepted? <span class="faq-chevron">▶</span></div>
+        <div class="faq-a">Via Stripe: all major credit and debit cards (Visa, Mastercard, Amex). Via Lemon Squeezy: cards + PayPal + local payment methods. Lemon Squeezy also handles VAT and sales tax automatically — ideal if you're outside the US.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Can I cancel anytime? <span class="faq-chevron">▶</span></div>
+        <div class="faq-a">Yes — cancel anytime from your dashboard. Your plan stays active until the end of the billing period, then downgrades to Free automatically. No cancellation fees.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Do I need to install anything? <span class="faq-chevron">▶</span></div>
+        <div class="faq-a">The dashboard frontend is just a website — no installation needed. To get live scan data (vs demo data), you run the Python backend on your machine or deploy it to Railway/Render. Setup takes about 5 minutes following the README.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What is network discovery? <span class="faq-chevron">▶</span></div>
+        <div class="faq-a">Network discovery pings all hosts on your local subnet (e.g. 192.168.1.0/24) to find live devices. It shows their IP, open ports, and whether SSH is available. You can then click any discovered device to run a full security scan via SSH.</div>
+      </div>
+    </div>
+
+    <!-- CTA STRIP -->
+    <div style="text-align:center;padding:3rem 0;border-top:1px solid rgba(0,255,136,.06)">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#e8f4f8;letter-spacing:.04em;margin-bottom:.6rem">READY TO START?</div>
+      <p style="font-family:'Space Mono',monospace;font-size:.65rem;color:#2a4a62;margin-bottom:1.5rem">Free tier includes everything you need to scan your first device. No card required.</p>
+      <button onclick="goFree()" class="plan-btn btn-starter" style="width:auto;padding:.85rem 2.5rem;font-size:.7rem">START FREE →</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-title" id="toastTitle"></div>
+  <div id="toastMsg"></div>
+</div>
+
+<script src="../assets/auth.js"></script>
+<script>
+let currentProvider = 'stripe';
+const API_URL = localStorage.getItem('pm_settings_v3')
+  ? JSON.parse(localStorage.getItem('pm_settings_v3')).apiUrl || 'http://localhost:8000'
+  : 'http://localhost:8000';
+
+initCanvas('bgCanvas');
+initCursor();
+
+function setProvider(p) {
+  currentProvider = p;
+  document.querySelectorAll('.pt-btn').forEach(b => b.classList.toggle('active', b.dataset.p === p));
+}
+
+function showToast(title, msg, duration = 4000) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastTitle').textContent = title;
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+function goFree() {
+  const session = AUTH.getSession();
+  if (session) { window.location.href = '../dashboard/index.html'; return; }
+  window.location.href = '../register.html';
+}
+
+async function checkout(plan) {
+  const session = AUTH.getSession();
+  if (!session) {
+    showToast('SIGN IN REQUIRED', 'Create a free account first, then upgrade your plan.');
+    setTimeout(() => window.location.href = '../register.html', 1800);
+    return;
+  }
+  showToast('REDIRECTING TO CHECKOUT', `Setting up ${plan} plan via ${currentProvider === 'stripe' ? 'Stripe' : 'Lemon Squeezy'}...`);
+  try {
+    const res = await fetch(`${API_URL}/api/billing/checkout`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        plan,
+        user_id: session.id,
+        user_email: session.email,
+        provider: currentProvider === 'ls' ? 'lemonsqueezy' : 'stripe',
+        success_url: window.location.origin + '/billing/success.html',
+        cancel_url: window.location.href
+      })
+    });
+    const data = await res.json();
+    if (data.checkout_url) {
+      window.location.href = data.checkout_url;
+    } else {
+      showToast('BACKEND NEEDED', 'Start the FastAPI backend and configure payment keys in .env to enable checkout.');
+    }
+  } catch (e) {
+    showToast('BACKEND OFFLINE', 'Start the Python backend at ' + API_URL + ' to enable payments.');
+  }
+}
+
+function toggleFaq(el) {
+  el.closest('.faq-item').classList.toggle('open');
+}
+
+// Nav toggle
+const nt = document.getElementById('navToggle');
+const nl = document.getElementById('navLinks');
+if (nt && nl) {
+  nt.addEventListener('click', () => nl.classList.toggle('open'));
+}
+</script>
+</body>
+</html>
