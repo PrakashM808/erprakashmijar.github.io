@@ -247,6 +247,39 @@
   </div>
 </section>
 
+
+<div class="divider"></div>
+
+<!-- ── CYBERSECURITY NEWS ── -->
+<section class="news-sec">
+  <div class="wrap">
+    <div class="s-label reveal">Live Intelligence</div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:.8rem;margin-bottom:2rem">
+      <h2 class="s-title reveal" style="margin-bottom:0">CYBERSECURITY<br><span>NEWS FEED</span></h2>
+      <div style="display:flex;gap:.5rem;align-items:center" class="reveal">
+        <div class="news-filter-pill active" onclick="filterNews('all',this)">ALL</div>
+        <div class="news-filter-pill" onclick="filterNews('breach',this)">BREACHES</div>
+        <div class="news-filter-pill" onclick="filterNews('vuln',this)">VULNS</div>
+        <div class="news-filter-pill" onclick="filterNews('threat',this)">THREATS</div>
+      </div>
+    </div>
+    <div class="news-grid" id="newsGrid">
+      <!-- populated by JS -->
+      <div class="news-skeleton"></div>
+      <div class="news-skeleton"></div>
+      <div class="news-skeleton"></div>
+      <div class="news-skeleton"></div>
+      <div class="news-skeleton"></div>
+      <div class="news-skeleton"></div>
+    </div>
+    <div style="text-align:center;margin-top:2rem" class="reveal">
+      <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.1em">
+        Sources: CISA · SANS · Krebs on Security · The Hacker News · BleepingComputer · NIST NVD
+      </div>
+    </div>
+  </div>
+</section>
+
 <div class="divider"></div>
 
 <!-- ── CONTACT CTA ── -->
@@ -276,6 +309,7 @@
     <a href="labs.html">Labs</a>
     <a href="skills.html">Skills</a>
     <a href="about.html">About</a>
+    <a href="legal/agreement.html">Legal</a>
   </div>
   <span class="f-right">erprakashmijar.com<span class="blink">_</span></span>
 </footer>
@@ -326,5 +360,222 @@ const sbIO=new IntersectionObserver(entries=>{
 },{threshold:.3});
 document.querySelectorAll('.skill-domain').forEach(el=>sbIO.observe(el));
 </script>
+
+<!-- ── CHAT LAUNCHER ── -->
+<div class="chat-launcher">
+  <div id="chatWin" style="display:none" class="chat-window" role="dialog" aria-label="Chat with Prakash">
+    <div class="chat-win-hdr">
+      <div class="chat-av">🛡️</div>
+      <div>
+        <div class="chat-win-title">PM::OFFSEC ASSISTANT</div>
+        <div class="chat-win-sub"><span class="chat-online-dot"></span>Online now</div>
+      </div>
+      <button class="chat-close" onclick="toggleChat()" aria-label="Close chat">✕</button>
+    </div>
+    <!-- Mode tabs -->
+    <div class="chat-modes">
+      <button class="chat-mode-btn active" data-mode="ai" onclick="setMode('ai')">🤖 AI ASSISTANT</button>
+      <button class="chat-mode-btn" data-mode="live" onclick="setMode('live')">👤 LIVE AGENT</button>
+    </div>
+    <!-- AI Panel -->
+    <div id="chatAiPanel" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+      <div class="chat-body" id="chatMessages"></div>
+      <div class="chat-quick-replies" id="chatQuickReplies">
+        <span class="cqr" onclick="sendChatMsg('What services do you offer?')">Services?</span>
+        <span class="cqr" onclick="sendChatMsg('What are your prices?')">Pricing?</span>
+        <span class="cqr" onclick="sendChatMsg('How do I contact Prakash?')">Contact?</span>
+        <span class="cqr" onclick="sendChatMsg('What certifications do you have?')">Certs?</span>
+      </div>
+      <div class="chat-input-area">
+        <textarea class="chat-inp-field" id="chatInpField" rows="1" placeholder="Ask about services, pricing, or security..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMsg()}"></textarea>
+        <button class="chat-send-btn" onclick="sendChatMsg()" aria-label="Send">➤</button>
+      </div>
+    </div>
+    <!-- Live Agent Panel -->
+    <div id="chatLivePanel" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div class="live-agent-panel">
+        <div class="agent-card">
+          <div class="agent-av">👨‍💻</div>
+          <div class="agent-name">Prakash Mijar</div>
+          <div class="agent-status"><span class="chat-online-dot"></span>Available for engagements</div>
+        </div>
+        <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.8;text-align:center">Connect directly for pentest scoping, security audit inquiries, or urgent security incidents.</div>
+        <a href="mailto:contact@erprakashmijar.com?subject=Security Engagement Inquiry" style="width:100%">
+          <button class="connect-btn">📧 EMAIL DIRECTLY →</button>
+        </a>
+        <a href="https://linkedin.com/in/prakashmijar" target="_blank" rel="noopener" style="width:100%">
+          <button class="connect-btn" style="background:rgba(0,119,181,.9);color:#fff;margin-top:-.4rem">💼 CONNECT ON LINKEDIN →</button>
+        </a>
+        <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:.08em;text-align:center">Avg response time: &lt; 24 hours</div>
+      </div>
+    </div>
+  </div>
+  <!-- FAB button -->
+  <button class="chat-fab" onclick="toggleChat()" aria-label="Open chat">
+    <div class="chat-fab-pulse"></div>
+    <span id="chatFabIcon">💬</span>
+    <div id="chatBadge" class="chat-fab-badge" style="display:none">1</div>
+  </button>
+</div>
+
+
+<script>
+/* ══ CYBERSECURITY NEWS FEED ══════════════════════════════════ */
+const NEWS_FEEDS_SRC = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://feeds.feedburner.com/TheHackersNews') + '&count=9';
+const FALLBACK_NEWS = [
+  { title:'CISA Warns of Actively Exploited Apache HTTP Server Vulnerabilities', summary:'CISA added two Apache HTTP Server vulnerabilities to its Known Exploited Vulnerabilities catalog, urging federal agencies to patch immediately.', tag:'vuln', source:'CISA', date:'May 2026', url:'https://www.cisa.gov/known-exploited-vulnerabilities-catalog' },
+  { title:'Critical Ivanti VPN Zero-Day Exploited by Nation-State Actors', summary:'A pre-authentication remote code execution vulnerability in Ivanti Connect Secure is being actively exploited. Over 1,700 devices compromised globally.', tag:'breach', source:'Bleeping Computer', date:'May 2026', url:'https://www.bleepingcomputer.com' },
+  { title:'New Ransomware Group Targets Healthcare Sector Across US', summary:'Hospitals and medical providers across the US and UK are being targeted by a new ransomware-as-a-service operation with ties to discontinued BlackMatter group.', tag:'threat', source:'The Hacker News', date:'May 2026', url:'https://thehackernews.com' },
+  { title:'NIST Releases SP 800-218A — Secure Software Development for AI Systems', summary:'NIST published new guidance on applying secure development practices specifically to AI and ML systems, extending the Secure Software Development Framework.', tag:'policy', source:'NIST', date:'May 2026', url:'https://csrc.nist.gov' },
+  { title:'Snowflake Data Breach: 165 Organizations Affected via Credential Stuffing', summary:'Attackers used stolen credentials to access Snowflake environments across 165 organizations. No MFA was enabled on any compromised account.', tag:'breach', source:'Mandiant', date:'May 2026', url:'https://cloud.google.com/blog/topics/threat-intelligence' },
+  { title:'CVE-2024-3400: PAN-OS Command Injection Used in Mass Exploitation', summary:'Palo Alto Networks firewall vulnerability actively exploited in the wild. CVSS 10.0. Patch or apply workarounds immediately.', tag:'vuln', source:'UNIT42', date:'May 2026', url:'https://unit42.paloaltonetworks.com' },
+  { title:'FTC Finalizes Amendments to Safeguards Rule for Financial Institutions', summary:'Updated FTC Safeguards Rule requires stronger encryption, MFA, and incident response programs for non-banking financial institutions handling consumer data.', tag:'policy', source:'FTC', date:'May 2026', url:'https://www.ftc.gov/news-events/topics/privacy-security' },
+  { title:'New GhostEngine Malware Terminates EDR Tools Before Deploying Cryptominer', summary:'A sophisticated malware campaign uses vulnerable drivers to terminate endpoint detection software before installing a cryptomining payload on enterprise networks.', tag:'threat', source:'Elastic Security', date:'May 2026', url:'https://www.elastic.co/security-labs' },
+  { title:'SSH-Snake Worm Tool Weaponized for Lateral Movement in Enterprise Networks', summary:'Threat actors are using SSH-Snake, a network mapping tool, to automatically traverse networks using harvested SSH credentials found on compromised hosts.', tag:'threat', source:'Sysdig TRT', date:'May 2026', url:'https://sysdig.com/blog' },
+];
+const TAG_STYLES = {
+  breach:{ cls:'nt-breach', label:'DATA BREACH' },
+  vuln:  { cls:'nt-vuln',   label:'VULNERABILITY' },
+  threat:{ cls:'nt-threat', label:'THREAT ACTOR' },
+  policy:{ cls:'nt-policy', label:'POLICY/LAW' },
+  all:   { cls:'nt-policy', label:'SECURITY NEWS' },
+};
+const CARD_BG = { breach:'nc-breach', vuln:'nc-vuln', threat:'nc-threat', policy:'nc-policy', all:'nc-all' };
+let allNews = [], activeFilter = 'all';
+
+function guessTag(text) {
+  const t = (text||'').toLowerCase();
+  if (/breach|leak|stolen|compromis|hack|exfil/.test(t)) return 'breach';
+  if (/cve|vulnerab|exploit|patch|zero.?day|rce|injection/.test(t)) return 'vuln';
+  if (/ransomware|malware|apt|threat|actor|group|campaign|trojan|worm/.test(t)) return 'threat';
+  if (/law|policy|regulation|compliance|ftc|nist|gdpr|hipaa|sec|executive/.test(t)) return 'policy';
+  return 'all';
+}
+
+async function loadNews() {
+  const grid = document.getElementById('newsGrid');
+  if (!grid) return;
+  let fetched = [];
+  try {
+    const r = await fetch(NEWS_FEEDS_SRC, { signal: AbortSignal.timeout(5000) });
+    const data = await r.json();
+    if (data.status === 'ok' && data.items?.length) {
+      fetched = data.items.map(item => ({
+        title: item.title,
+        summary: (item.description||'').replace(/<[^>]+>/g,'').slice(0,140) + '...',
+        tag: guessTag(item.title + ' ' + (item.description||'')),
+        source: 'The Hacker News',
+        date: new Date(item.pubDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+        url: item.link,
+      }));
+    }
+  } catch(e) {}
+  allNews = fetched.length >= 4 ? fetched : FALLBACK_NEWS;
+  renderNews(allNews);
+}
+
+function renderNews(items) {
+  const grid = document.getElementById('newsGrid');
+  if (!grid) return;
+  grid.innerHTML = items.map(n => {
+    const ts = TAG_STYLES[n.tag] || TAG_STYLES.all;
+    const bg = CARD_BG[n.tag] || 'nc-all';
+    return `<a class="news-card ${bg} reveal" href="${n.url||'#'}" target="_blank" rel="noopener" data-tag="${n.tag}">
+      <span class="news-tag ${ts.cls}">${ts.label}</span>
+      <div class="news-title">${n.title}</div>
+      <div class="news-summary">${n.summary}</div>
+      <div class="news-meta"><span class="news-source">${n.source}</span><span class="news-date">${n.date}</span></div>
+    </a>`;
+  }).join('');
+  document.querySelectorAll('.news-card.reveal').forEach(el => { const io = new IntersectionObserver(e=>{if(e[0].isIntersecting){e[0].target.classList.add('visible');io.unobserve(e[0].target)}},{threshold:.05}); io.observe(el); });
+}
+
+function filterNews(tag, el) {
+  activeFilter = tag;
+  document.querySelectorAll('.news-filter-pill').forEach(p => p.classList.remove('active'));
+  if (el) el.classList.add('active');
+  const filtered = tag === 'all' ? allNews : allNews.filter(n => n.tag === tag);
+  renderNews(filtered.length ? filtered : allNews);
+}
+
+window.addEventListener('load', () => setTimeout(loadNews, 400));
+
+/* ══ CHATBOT ═══════════════════════════════════════════════════ */
+let chatOpen=false, chatMode='ai', chatMsgs=[], chatTyping=false;
+const BOT_KB = {
+  services: "Prakash offers:\n• Penetration Testing (web, network, API)\n• Security Audit & Assessment\n• SOC Analysis & Incident Response\n• Bug Bounty Consultation\n• Security Dashboard Setup\n\nPricing from $300 for a basic audit.",
+  pricing:  "Service pricing:\n\n🔍 Web App Pentest — from $500\n🖧 Network Audit — from $800\n📊 Full Security Assessment — from $1,500\n🔴 Red Team Engagement — custom quote\n\nMonthly monitoring: $299–$999/mo\n\nGet a quote: contact@erprakashmijar.com",
+  cert:     "Certifications:\n• Offensive Security (OSCP path)\n• TryHackMe Top 5%\n• HackTheBox active player\n• SOC Analyst certified\n• Bug Bounty researcher",
+  contact:  "Reach Prakash:\n📧 contact@erprakashmijar.com\n💼 linkedin.com/in/prakashmijar\n🐙 github.com/prakashm808\n\nResponse: within 24 hours.",
+  audit:    "To start an audit:\n\n1. Contact via email with scope\n2. Sign the engagement agreement\n3. Provide authorized access\n4. Receive detailed report + remediation\n\n→ contact@erprakashmijar.com",
+  default:  "For detailed questions, contact Prakash at contact@erprakashmijar.com or switch to the Live Agent tab.",
+};
+function getBotReply(msg) {
+  const m = msg.toLowerCase();
+  if (/hello|hi|hey/.test(m)) return "Hello! I'm Prakash's security assistant. Ask me about services, pricing, or how to get started.";
+  if (/service|offer|pentest|audit|soc/.test(m)) return BOT_KB.services;
+  if (/price|cost|how much|rate|fee/.test(m)) return BOT_KB.pricing;
+  if (/cert|skill|oscp|qualification/.test(m)) return BOT_KB.cert;
+  if (/contact|email|reach|linkedin/.test(m)) return BOT_KB.contact;
+  if (/start|begin|engage|how.*work|process/.test(m)) return BOT_KB.audit;
+  return BOT_KB.default;
+}
+function toggleChat() {
+  chatOpen = !chatOpen;
+  const win = document.getElementById('chatWin');
+  if (!win) return;
+  win.style.display = chatOpen ? 'flex' : 'none';
+  if (chatOpen && !chatMsgs.length) addChatMsg('bot',"Hello! I'm Prakash's security assistant. Ask me about services, pricing, or how to get started. 👇");
+  const badge = document.getElementById('chatBadge');
+  if (chatOpen && badge) badge.style.display = 'none';
+}
+function setMode(mode) {
+  chatMode = mode;
+  document.querySelectorAll('.chat-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+  const ai = document.getElementById('chatAiPanel'), live = document.getElementById('chatLivePanel');
+  if (ai) ai.style.display = mode==='ai'?'flex':'none';
+  if (live) live.style.display = mode==='live'?'flex':'none';
+}
+function addChatMsg(role, text) {
+  const msgs = document.getElementById('chatMessages');
+  if (!msgs) return;
+  const now = new Date().toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'});
+  const d = document.createElement('div');
+  d.className = 'cm cm-' + role;
+  d.innerHTML = `<div class="cm-bubble">${text}</div><div class="cm-time">${now}</div>`;
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+  chatMsgs.push({role,text});
+}
+function showTyping() {
+  const msgs = document.getElementById('chatMessages');
+  if (!msgs) return;
+  const d = document.createElement('div');
+  d.id='chatTyping'; d.className='chat-typing-ind';
+  d.innerHTML='<span></span><span></span><span></span>';
+  msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight;
+}
+function hideTyping() { const t=document.getElementById('chatTyping'); if(t)t.remove(); }
+async function sendChatMsg(text) {
+  const input = document.getElementById('chatInpField');
+  const msg = text || (input ? input.value.trim() : '');
+  if (!msg || chatTyping) return;
+  if (input) input.value = '';
+  addChatMsg('user', msg);
+  const qr = document.getElementById('chatQuickReplies');
+  if (qr) qr.style.display = 'none';
+  chatTyping = true;
+  showTyping();
+  await new Promise(r => setTimeout(r, 600 + Math.random() * 500));
+  hideTyping();
+  addChatMsg('bot', getBotReply(msg));
+  chatTyping = false;
+}
+setTimeout(() => {
+  const badge = document.getElementById('chatBadge');
+  if (badge && !chatOpen) badge.style.display = 'flex';
+}, 3000);
+</script>
+
 </body>
 </html>

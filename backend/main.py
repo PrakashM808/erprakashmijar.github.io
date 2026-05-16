@@ -433,3 +433,209 @@ def _call_ai(scan_data: dict, mode: str):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=int(os.getenv("PORT", 8000)), reload=True)
+
+# ═══════════════════════════════════════════════════════════════
+# NEW ROUTES — v4.0 — Website Scanner, OSINT, SOC, SIEM
+# ═══════════════════════════════════════════════════════════════
+
+from web_scanner import website_scan
+from osint import (full_email_osint, check_email_breaches,
+                   check_password_pwned, check_ip_reputation,
+                   check_virustotal, shodan_lookup, lookup_username, domain_intel)
+from soc import (create_incident, update_incident, get_incidents, get_incident,
+                 auto_create_incident_from_scan, add_ioc, search_iocs,
+                 check_ioc_match, extract_iocs_from_scan, get_wazuh_alerts,
+                 get_wazuh_agents, splunk_search, splunk_send_log,
+                 get_soc_metrics, map_to_mitre, get_playbooks, get_playbook,
+                 MITRE_TECHNIQUES, IOC_TYPES, INCIDENT_STATUSES)
+
+# ── WEBSITE SCANNER ──────────────────────────────────────────────
+class WebScanReq(BaseModel):
+    domain: str
+    user_id: str = "anonymous"
+    alert_email: Optional[str] = None
+
+@app.post("/api/scan/website")
+async def scan_website(req: WebScanReq, background_tasks: BackgroundTasks,
+                       x_user_plan: str = Header(default="free")):
+    _check_scan_quota(req.user_id, x_user_plan)
+    try:
+        result = website_scan(req.domain)
+        _save_history(result)
+        _increment_scan_count(req.user_id)
+        if req.alert_email and check_plan_limit(x_user_plan, "email_alerts"):
+            background_tasks.add_task(send_scan_alert, req.alert_email, result)
+        return result
+    except Exception as e:
+        raise HTTPException(500, str(e))
+
+# ── OSINT ────────────────────────────────────────────────────────
+class OsintEmailReq(BaseModel):
+    email: str
+    user_id: str = "anonymous"
+
+class OsintUsernameReq(BaseModel):
+    username: str
+
+class OsintIpReq(BaseModel):
+    ip: str
+
+class PasswordCheckReq(BaseModel):
+    password: str
+
+@app.post("/api/osint/email")
+async def osint_email(req: OsintEmailReq):
+    try:
+        return full_email_osint(req.email)
+    except Exception as e:
+        raise HTTPException(500, str(e))
+
+@app.post("/api/osint/username")
+async def osint_username(req: OsintUsernameReq):
+    try:
+        results = lookup_username(req.username)
+        return {"username": req.username, "results": results,
+                "found_on": len([r for r in results if r.get("found")])}
+    except Exception as e:
+        raise HTTPException(500, str(e))
+
+@app.post("/api/osint/ip")
+async def osint_ip(req: OsintIpReq):
+    try:
+        rep   = check_ip_reputation(req.ip)
+        vt    = check_virustotal(req.ip, "ip")
+        shod  = shodan_lookup(req.ip)
+        ioc   = check_ioc_match(req.ip)
+        return {"ip": req.ip, "reputation": rep, "virustotal": vt,
+                "shodan": shod, "known_ioc": len(ioc) > 0, "ioc_matches": ioc}
+    except Exception as e:
+        raise HTTPException(500, str(e))
+
+@app.post("/api/osint/password")
+async def check_password(req: PasswordCheckReq):
+    try:
+        return check_password_pwned(req.password)
+    except Exception as e:
+        raise HTTPException(500, str(e))
+
+@app.post("/api/osint/domain")
+async def osint_domain_route(domain: str):
+    try:
+        return domain_intel(domain)
+    except Exception as e:
+        raise HTTPException(500, str(e))
+
+# ── SOC: INCIDENTS ────────────────────────────────────────────────
+class IncidentReq(BaseModel):
+    title: str
+    description: str
+    severity: str
+    source: str = "manual"
+    created_by: str = "analyst"
+    affected_devices: list = []
+    mitre_techniques: list = []
+
+class IncidentUpdateReq(BaseModel):
+    status: Optional[str] = None
+    assigned_to: Optional[str] = None
+    note: Optional[str] = None
+    tags: Optional[list] = None
+    updated_by: str = "analyst"
+
+@app.post("/api/soc/incidents")
+async def create_incident_route(req: IncidentReq, background_tasks: BackgroundTasks):
+    inc = create_incident(**req.dict())
+    return inc
+
+@app.get("/api/soc/incidents")
+def list_incidents(status: Optional[str] = None, severity: Optional[str] = None):
+    return {"incidents": get_incidents(status, severity), "metrics": get_soc_metrics()}
+
+@app.get("/api/soc/incidents/{iid}")
+def get_incident_route(iid: str):
+    inc = get_incident(iid)
+    if not inc: raise HTTPException(404, "Incident not found")
+    return inc
+
+@app.patch("/api/soc/incidents/{iid}")
+def update_incident_route(iid: str, req: IncidentUpdateReq):
+    inc = update_incident(iid, req.dict(exclude_none=True), req.updated_by)
+    if not inc: raise HTTPException(404, "Incident not found")
+    return inc
+
+@app.post("/api/soc/incidents/auto")
+async def auto_incident(scan_data: dict, background_tasks: BackgroundTasks):
+    incidents = auto_create_incident_from_scan(scan_data)
+    return {"created": len(incidents), "incidents": incidents}
+
+# ── SOC: IOCs ────────────────────────────────────────────────────
+class IOCReq(BaseModel):
+    type: str
+    value: str
+    severity: str = "medium"
+    description: str = ""
+    source: str = "manual"
+    added_by: str = "analyst"
+    tags: list = []
+
+@app.post("/api/soc/iocs")
+def add_ioc_route(req: IOCReq):
+    return add_ioc(**req.dict())
+
+@app.get("/api/soc/iocs")
+def list_iocs(query: Optional[str] = None, type: Optional[str] = None):
+    return {"iocs": search_iocs(query, type), "types": IOC_TYPES}
+
+@app.get("/api/soc/iocs/check/{value}")
+def check_ioc_route(value: str):
+    matches = check_ioc_match(value)
+    return {"value": value, "is_ioc": len(matches) > 0, "matches": matches}
+
+# ── SOC: MITRE ATT&CK ────────────────────────────────────────────
+@app.get("/api/soc/mitre")
+def get_mitre():
+    return {"techniques": MITRE_TECHNIQUES}
+
+@app.post("/api/soc/mitre/map")
+def map_mitre(findings: list):
+    return {"mapped_techniques": map_to_mitre(findings)}
+
+# ── SOC: PLAYBOOKS ────────────────────────────────────────────────
+@app.get("/api/soc/playbooks")
+def list_playbooks():
+    return {"playbooks": get_playbooks()}
+
+@app.get("/api/soc/playbooks/{pid}")
+def get_playbook_route(pid: str):
+    pb = get_playbook(pid)
+    if not pb: raise HTTPException(404, "Playbook not found")
+    return pb
+
+# ── SOC: METRICS ─────────────────────────────────────────────────
+@app.get("/api/soc/metrics")
+def soc_metrics():
+    return get_soc_metrics()
+
+# ── WAZUH ────────────────────────────────────────────────────────
+@app.get("/api/siem/wazuh/alerts")
+def wazuh_alerts(limit: int = 50, level: Optional[int] = None):
+    return get_wazuh_alerts(limit, level)
+
+@app.get("/api/siem/wazuh/agents")
+def wazuh_agents():
+    return get_wazuh_agents()
+
+# ── SPLUNK ────────────────────────────────────────────────────────
+class SplunkSearchReq(BaseModel):
+    query: str
+    earliest: str = "-24h"
+    latest: str = "now"
+
+@app.post("/api/siem/splunk/search")
+def splunk_search_route(req: SplunkSearchReq):
+    return splunk_search(req.query, req.earliest, req.latest)
+
+@app.post("/api/siem/splunk/log")
+def splunk_log_route(event: dict):
+    return splunk_send_log(event)
+

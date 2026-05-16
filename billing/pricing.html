@@ -101,6 +101,16 @@
   .toast{position:fixed;bottom:2rem;right:2rem;background:rgba(6,13,26,.95);border:1px solid rgba(0,255,136,.2);border-radius:8px;padding:1rem 1.4rem;font-family:'Space Mono',monospace;font-size:.65rem;color:#e8f4f8;z-index:9999;transform:translateY(100px);opacity:0;transition:all .3s;max-width:360px}
   .toast.show{transform:translateY(0);opacity:1}
   .toast-title{color:#00ff88;letter-spacing:.1em;margin-bottom:.3rem;font-size:.62rem}
+
+  /* ── PRICING MOBILE ── */
+  @media(max-width:768px){
+    .pricing-main{padding:6rem 1rem 3rem}
+    .pricing-title{font-size:clamp(2.5rem,10vw,5rem)}
+    .plans-grid{grid-template-columns:1fr}
+    .compare-section{overflow-x:auto}
+    .compare-table{min-width:500px}
+    .faq-q{font-size:.62rem}
+  }
   </style>
 </head>
 <body>

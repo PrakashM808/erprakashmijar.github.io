@@ -20,26 +20,26 @@
     --mono:'Azeret Mono',monospace;--display:'Bebas Neue',sans-serif;--body:'DM Sans',sans-serif;
     --sidebar:230px;--header:56px;
   }
-  html,body{height:100%;overflow:hidden}
+  html,body{height:100%;overflow:hidden} @media(max-width:768px){html,body{height:auto;overflow:auto}}
   body{background:var(--bg);color:var(--text2);font-family:var(--body)}
   ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(0,255,136,.15);border-radius:2px}
   button,input,select,textarea{font-family:inherit}
-  #app{display:flex;flex-direction:column;height:100vh}
+  #app{display:flex;flex-direction:column;height:100vh} @media(max-width:768px){#app{height:auto;min-height:100vh}}
   /* HEADER */
-  .hdr{height:var(--header);display:flex;align-items:center;padding:0 1.2rem;background:rgba(3,7,15,.92);border-bottom:1px solid rgba(0,255,136,.08);backdrop-filter:blur(16px);flex-shrink:0;gap:.7rem;z-index:100}
+  .hdr{height:var(--header);display:flex;align-items:center;padding:0 1.2rem;background:rgba(3,7,15,.92);border-bottom:1px solid rgba(0,255,136,.08);backdrop-filter:blur(16px);flex-shrink:0;gap:.7rem;z-index:100} @media(max-width:768px){.hdr{padding:0 .9rem;gap:.4rem;position:sticky;top:0}}
   .hdr-logo{font-family:var(--display);font-size:1.2rem;color:var(--white);letter-spacing:.08em;white-space:nowrap}
   .hdr-logo span{color:var(--g)}
-  .hdr-search{flex:1;max-width:300px;position:relative;margin-left:.3rem}
+  .hdr-search{flex:1;max-width:300px;position:relative;margin-left:.3rem} @media(max-width:768px){.hdr-search{display:none}}
   .hdr-search input{width:100%;background:rgba(0,255,136,.03);border:1px solid var(--border);border-radius:6px;padding:.4rem .9rem .4rem 2.1rem;font-family:var(--mono);font-size:.62rem;color:var(--text2);outline:none;transition:border-color .2s}
   .hdr-search input:focus{border-color:rgba(0,255,136,.3)}
   .hdr-search::before{content:'⌕';position:absolute;left:.6rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.9rem}
   .hdr-right{margin-left:auto;display:flex;align-items:center;gap:.6rem}
-  .role-badge{font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;padding:.2rem .5rem;border-radius:3px}
+  .role-badge{font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;padding:.2rem .5rem;border-radius:3px} @media(max-width:768px){.role-badge{display:none}}
   .rb-admin{background:rgba(124,58,237,.12);color:#a78bfa;border:1px solid rgba(124,58,237,.2)}
   .rb-client{background:rgba(0,212,255,.06);color:var(--g2)}
   .rb-user{background:rgba(0,255,136,.06);color:var(--g)}
   .hdr-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--g3),var(--g));display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.58rem;font-weight:700;color:#fff;cursor:pointer;flex-shrink:0}
-  .hdr-name{font-family:var(--mono);font-size:.62rem;color:var(--text2)}
+  .hdr-name{font-family:var(--mono);font-size:.62rem;color:var(--text2)} @media(max-width:768px){.hdr-name{display:none}}
   .hdr-btn{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;padding:.36rem .78rem;border-radius:5px;border:none;cursor:pointer;transition:all .2s}
   .hdr-scan{background:var(--g);color:#040810;font-weight:700}
   .hdr-scan:hover{background:#fff}
@@ -47,9 +47,17 @@
   .hdr-out{background:rgba(255,59,92,.06);color:var(--danger);border:1px solid rgba(255,59,92,.15)}
   .hdr-out:hover{background:rgba(255,59,92,.12)}
   /* BODY */
-  .body{flex:1;display:flex;overflow:hidden}
+  .body{flex:1;display:flex;overflow:hidden} @media(max-width:768px){.body{overflow:visible;flex-direction:column}}
   /* SIDEBAR */
   .sidebar{width:var(--sidebar);flex-shrink:0;background:rgba(6,13,26,.72);border-right:1px solid rgba(0,255,136,.06);display:flex;flex-direction:column;overflow-y:auto}
+  @media(max-width:768px){
+    .sidebar{
+      position:fixed;top:var(--header);left:0;bottom:0;z-index:200;
+      transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
+      box-shadow:4px 0 24px rgba(0,0,0,.5);overflow-y:auto;
+    }
+    .sidebar.mob-open{transform:translateX(0)}
+  }
   .sb-section{padding:.6rem 0}
   .sb-label{font-family:var(--mono);font-size:.47rem;color:var(--muted);letter-spacing:.2em;padding:.2rem .9rem .4rem;text-transform:uppercase}
   .sb-item{display:flex;align-items:center;gap:.55rem;padding:.54rem .9rem;font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.05em;cursor:pointer;border-left:2px solid transparent;transition:all .18s;border:none;background:none;width:100%;text-align:left}
@@ -64,8 +72,8 @@
   .dm-ip{font-family:var(--mono);font-size:.5rem;color:var(--muted)}
   .dm-score{font-family:var(--display);font-size:1.4rem;color:var(--g)}
   /* MAIN */
-  .main{flex:1;overflow-y:auto;overflow-x:hidden}
-  .page{display:none;padding:1.3rem;animation:pgIn .2s ease}
+  .main{flex:1;overflow-y:auto;overflow-x:hidden} @media(max-width:768px){.main{width:100%;overflow:visible}}
+  .page{display:none;padding:1.3rem;animation:pgIn .2s ease} @media(max-width:768px){.page{padding:.9rem .8rem}}
   .page.active{display:block}
   @keyframes pgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
   .pg-hdr{margin-bottom:1.1rem;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:.6rem}
@@ -80,9 +88,9 @@
   .pb{padding:1.1rem}
   /* GRIDS */
   .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:.9rem}
-  .g2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
-  .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem}
-  @media(max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}}
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem} @media(max-width:640px){.g2{grid-template-columns:1fr}}
+  .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem} @media(max-width:640px){.g3{grid-template-columns:1fr}}
+  @media(max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}} @media(max-width:480px){.g4{grid-template-columns:1fr}}
   /* STAT CARD */
   .sc{background:rgba(6,13,26,.72);border:1px solid rgba(0,255,136,.07);border-radius:9px;padding:1rem 1.2rem;position:relative;overflow:hidden;transition:border-color .2s}
   .sc:hover{border-color:rgba(0,255,136,.18)}
@@ -105,7 +113,7 @@
   .b-online{background:rgba(0,255,136,.07);color:var(--ok);border:1px solid rgba(0,255,136,.18)}
   .b-offline{background:rgba(255,59,92,.07);color:var(--danger);border:1px solid rgba(255,59,92,.2)}
   /* TABLE */
-  .tbl{width:100%;border-collapse:collapse}
+  .tbl{width:100%;border-collapse:collapse;min-width:400px} .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
   .tbl th{font-family:var(--mono);font-size:.5rem;color:var(--muted);letter-spacing:.14em;text-align:left;padding:.52rem .75rem;border-bottom:1px solid rgba(0,255,136,.06);text-transform:uppercase}
   .tbl td{font-family:var(--mono);font-size:.58rem;color:var(--text2);padding:.62rem .75rem;border-bottom:1px solid rgba(0,255,136,.03)}
   .tbl tr:last-child td{border-bottom:none}
@@ -122,7 +130,7 @@
   .alert-box{display:flex;gap:.8rem;padding:.8rem .9rem;border-radius:7px;margin-bottom:.35rem}
   .alert-bar{width:3px;border-radius:2px;flex-shrink:0;align-self:stretch}
   /* CHAT */
-  .chat-wrap{display:flex;flex-direction:column;height:480px}
+  .chat-wrap{display:flex;flex-direction:column;height:480px} @media(max-width:640px){.chat-wrap{height:380px}}
   .chat-msgs{flex:1;overflow-y:auto;padding:.8rem;display:flex;flex-direction:column;gap:.5rem}
   .msg{max-width:84%}
   .msg-bot{align-self:flex-start}
@@ -152,7 +160,7 @@
   .scan-stage{font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-top:.4rem;letter-spacing:.1em}
   /* DEVICE MODAL */
   .modal-overlay{position:fixed;inset:0;background:rgba(3,7,15,.85);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center}
-  .modal{background:var(--bg2);border:1px solid rgba(0,255,136,.15);border-radius:12px;width:100%;max-width:520px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+  .modal{background:var(--bg2);border:1px solid rgba(0,255,136,.15);border-radius:12px;width:100%;max-width:520px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.6)} @media(max-width:600px){.modal{border-radius:8px 8px 0 0;position:fixed;bottom:0;left:0;right:0;max-width:100%;max-height:90vh;overflow-y:auto}.modal-overlay{align-items:flex-end}}
   .modal-bar{height:2px;background:linear-gradient(90deg,var(--g),var(--g2),var(--g3))}
   .modal-hdr{padding:1.2rem 1.4rem;border-bottom:1px solid rgba(0,255,136,.06);display:flex;align-items:center;justify-content:space-between}
   .modal-title{font-family:var(--display);font-size:1.3rem;color:var(--white);letter-spacing:.05em}
@@ -180,7 +188,7 @@
   .btn-r:hover{background:rgba(255,59,92,.15)}
   .btn-sm{padding:.38rem .75rem;font-size:.55rem}
   /* DEVICE CARDS */
-  .devices-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.9rem}
+  .devices-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.9rem} @media(max-width:480px){.devices-grid{grid-template-columns:1fr}}
   .device-card{background:var(--bg2);border:1px solid rgba(0,255,136,.08);border-radius:9px;overflow:hidden;transition:all .25s;cursor:pointer}
   .device-card:hover{border-color:rgba(0,255,136,.22);transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,0,0,.35)}
   .device-card.selected{border-color:var(--g);box-shadow:0 0 20px rgba(0,255,136,.1)}
@@ -199,7 +207,7 @@
   .dp-bar{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--g),var(--g2));transition:width .3s ease;animation:scanBar 2s ease infinite}
   @keyframes scanBar{0%{width:0%}50%{width:100%}100%{width:0%;margin-left:100%}}
   /* PROFILE */
-  .profile-layout{display:grid;grid-template-columns:260px 1fr;gap:1rem}
+  .profile-layout{display:grid;grid-template-columns:260px 1fr;gap:1rem} @media(max-width:640px){.profile-layout{grid-template-columns:1fr}}
   .profile-card{background:var(--bg2);border:1px solid rgba(0,255,136,.08);border-radius:9px;padding:1.6rem;text-align:center}
   .profile-av{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--g3),var(--g));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:1.7rem;color:#fff;margin:0 auto 1rem;box-shadow:0 0 24px rgba(0,255,136,.15)}
   .profile-name{font-family:var(--display);font-size:1.4rem;color:var(--white);letter-spacing:.04em}
@@ -229,6 +237,41 @@
   .api-online .api-dot{background:var(--ok)}.api-offline .api-dot{background:var(--danger)}
   @keyframes blink2{0%,100%{opacity:1}50%{opacity:.3}}
   @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ══ MOBILE RESPONSIVE ═══════════════════════════════════════ */
+  @media(max-width:768px){
+    :root{--header:50px;--sidebar:220px}
+    #mobMenuBtn{display:flex!important}
+    .hdr-scan{font-size:.55rem;padding:.32rem .65rem;letter-spacing:.08em}
+    .hdr-out{font-size:.55rem;padding:.32rem .6rem}
+    .hdr-btn{letter-spacing:.06em}
+    .pg-hdr{flex-direction:column;align-items:flex-start}
+    .pg-title{font-size:1.4rem}
+    .sc-value{font-size:1.6rem}
+    .panel-hdr,.ph{flex-wrap:wrap;gap:.4rem}
+    .tbl th,.tbl td{padding:.5rem .55rem;font-size:.52rem}
+    .btn{font-size:.58rem;padding:.55rem 1rem}
+    .form-grid2{grid-template-columns:1fr}
+    .issue-row{flex-wrap:wrap;gap:.4rem}
+    .act-item{gap:.5rem}
+    .device-actions{gap:.3rem}
+    .device-actions .btn{flex:1;text-align:center;justify-content:center}
+    .modal-body{padding:1rem}
+    .modal-hdr{padding:.9rem 1rem}
+  }
+  @media(max-width:480px){
+    .hdr-logo{font-size:1rem}
+    .pg-hdr .btn{width:100%}
+    .chat-sug{display:none}
+    .sb-item{font-size:.58rem;padding:.5rem .8rem}
+    .scan-ring{width:90px;height:90px}
+    .scan-pct-num{font-size:1.7rem}
+  }
+  /* Mobile sidebar slide animation */
+  .sidebar.mob-open ~ #mobOverlay{display:block!important}
+  .mob-menu-open #mb2{opacity:0;transform:scaleX(0)}
+  .mob-menu-open #mb1{transform:translateY(5.5px) rotate(45deg)}
+  .mob-menu-open #mb3{transform:translateY(-5.5px) rotate(-45deg)}
   </style>
 </head>
 <body>
@@ -259,6 +302,24 @@
         <button class="sb-item" onclick="nav('ai')"><span class="sb-icon">🤖</span>AI Analysis</button>
         <button class="sb-item" onclick="nav('reports')"><span class="sb-icon">⬙</span>Reports</button>
       </div>
+      <div class="sb-section">
+        <div class="sb-label">Security Tools</div>
+        <button class="sb-item" onclick="nav('webscan')"><span class="sb-icon">🌐</span>Website Scanner</button>
+        <button class="sb-item" onclick="nav('osint')"><span class="sb-icon">🔍</span>OSINT &amp; Recon</button>
+        <button class="sb-item" onclick="nav('threat')"><span class="sb-icon">🛡️</span>Threat Intel</button>
+      </div>
+      <div class="sb-section">
+        <div class="sb-label">SOC Platform</div>
+        <button class="sb-item" onclick="nav('incidents')"><span class="sb-icon">🚨</span>Incidents<span class="sb-badge" id="sbIncidentBadge" style="display:none">0</span></button>
+        <button class="sb-item" onclick="nav('iocs')"><span class="sb-icon">☠️</span>IOC Database</button>
+        <button class="sb-item" onclick="nav('mitre')"><span class="sb-icon">⚔️</span>MITRE ATT&amp;CK</button>
+        <button class="sb-item" onclick="nav('playbooks')"><span class="sb-icon">📋</span>Playbooks</button>
+      </div>
+      <div class="sb-section">
+        <div class="sb-label">SIEM</div>
+        <button class="sb-item" onclick="nav('wazuh')"><span class="sb-icon">🔴</span>Wazuh</button>
+        <button class="sb-item" onclick="nav('splunk')"><span class="sb-icon">🟢</span>Splunk</button>
+      </div>
       <div class="sb-section" id="adminSection" style="display:none">
         <div class="sb-label">Admin</div>
         <button class="sb-item" onclick="nav('admin')"><span class="sb-icon">⚙</span>Admin Panel</button>
@@ -269,6 +330,7 @@
         <button class="sb-item" onclick="nav('settings')"><span class="sb-icon">⚙</span>API Settings</button>
         <button class="sb-item" onclick="nav('profile')"><span class="sb-icon">◉</span>Profile</button>
         <button class="sb-item" onclick="window.location.href='../index.html'"><span class="sb-icon">🌐</span>Portfolio</button>
+        <button class="sb-item" onclick="window.location.href='../legal/agreement.html'" target="_blank"><span class="sb-icon">⚖️</span>Legal Agreement</button>
       </div>
       <div class="sb-bottom">
         <div class="device-mini" id="currentDeviceMini" style="display:none">
@@ -482,20 +544,129 @@
 
       <!-- ── ADMIN ── -->
       <div class="page" id="page-admin">
-        <div class="pg-hdr"><div><div class="pg-title">ADMIN PANEL</div><div class="pg-sub">Site management</div></div></div>
-        <div class="g4">
-          <div class="sc sc-g"><div class="sc-label">Registered Users</div><div class="sc-value" id="adminUserCount" style="color:var(--g)">—</div></div>
-          <div class="sc sc-b"><div class="sc-label">Devices Scanned</div><div class="sc-value" id="adminDevCount" style="color:var(--g2)">—</div></div>
-          <div class="sc sc-p"><div class="sc-label">Total Scans Run</div><div class="sc-value" id="adminScanCount" style="color:var(--g3)">—</div></div>
-          <div class="sc sc-r"><div class="sc-label">API Status</div><div class="sc-value" id="adminApiStatus" style="color:var(--danger);font-size:1.2rem;margin-top:.2rem">OFFLINE</div></div>
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">ADMIN PANEL</div><div class="pg-sub">Site management and signed agreements</div></div>
+          <div style="display:flex;gap:.5rem">
+            <button onclick="exportAgreements()" class="btn btn-o btn-sm">⬇ EXPORT CSV</button>
+            <button onclick="clearAllAgreements()" class="btn btn-r btn-sm">🗑 CLEAR ALL</button>
+          </div>
         </div>
-        <div class="panel"><div class="ph"><div class="pt">Registered Users</div></div><div class="pb" id="adminUsersTable"></div></div>
+        <div class="g4">
+          <div class="sc sc-g"><div class="sc-icon">👥</div><div class="sc-label">Registered Users</div><div class="sc-value" id="adminUserCount" style="color:var(--g)">—</div></div>
+          <div class="sc sc-b"><div class="sc-icon">📡</div><div class="sc-label">Devices Scanned</div><div class="sc-value" id="adminDevCount" style="color:var(--g2)">—</div></div>
+          <div class="sc sc-p"><div class="sc-icon">🔢</div><div class="sc-label">Total Scans</div><div class="sc-value" id="adminScanCount" style="color:var(--g3)">—</div></div>
+          <div class="sc sc-r"><div class="sc-icon">⚖️</div><div class="sc-label">Signed Agreements</div><div class="sc-value" id="adminAgrCount" style="color:var(--warn)">—</div></div>
+        </div>
+
+        <!-- AGREEMENTS PANEL -->
+        <div class="panel" style="margin-bottom:.9rem">
+          <div class="ph">
+            <div class="pt">⚖️ SIGNED ENGAGEMENT AGREEMENTS</div>
+            <div style="display:flex;gap:.5rem;align-items:center">
+              <input id="agrSearch" type="search" placeholder="Search by name, email, org..." oninput="renderAgreements()"
+                style="font-family:var(--mono);font-size:.58rem;background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.1);color:var(--text2);border-radius:4px;padding:.3rem .6rem;outline:none;width:220px"/>
+              <span id="agrCount" style="font-family:var(--mono);font-size:.55rem;color:var(--muted)"></span>
+            </div>
+          </div>
+          <div class="pb" id="agreementsPanel">
+            <div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">
+              No signed agreements yet. Agreements are stored when clients sign at <a href="../legal/agreement.html" target="_blank" style="color:var(--g2)">legal/agreement.html</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- USERS PANEL -->
+        <div class="panel">
+          <div class="ph"><div class="pt">Registered Users</div></div>
+          <div class="pb" id="adminUsersTable"></div>
+        </div>
+
+        <!-- AGREEMENT DETAIL MODAL TRIGGER -->
+        <div id="agrDetailModal" style="display:none" class="modal-overlay" onclick="if(event.target===this)document.getElementById('agrDetailModal').style.display='none'">
+          <div class="modal" style="max-width:640px">
+            <div class="modal-bar"></div>
+            <div class="modal-hdr">
+              <div class="modal-title">AGREEMENT DETAIL</div>
+              <button class="modal-close" onclick="document.getElementById('agrDetailModal').style.display='none'">✕</button>
+            </div>
+            <div class="modal-body" id="agrDetailBody" style="max-height:70vh;overflow-y:auto"></div>
+          </div>
+        </div>
       </div>
 
       <!-- ── USERS ── -->
       <div class="page" id="page-users">
-        <div class="pg-hdr"><div><div class="pg-title">USERS</div></div></div>
-        <div class="panel"><div class="ph"><div class="pt">All Accounts</div></div><div class="pb" id="usersTable"></div></div>
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">USER MANAGEMENT</div><div class="pg-sub">View, edit, create and manage all accounts</div></div>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+            <input id="userSearchInput" type="search" placeholder="Search users..." oninput="renderUsersPage()"
+              style="font-family:var(--mono);font-size:.58rem;background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.1);color:var(--text2);border-radius:4px;padding:.35rem .7rem;outline:none;width:180px"/>
+            <select id="userRoleFilter" onchange="renderUsersPage()"
+              style="font-family:var(--mono);font-size:.58rem;background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.1);color:var(--text2);border-radius:4px;padding:.35rem .6rem;outline:none">
+              <option value="">All Roles</option>
+              <option value="admin">Admin</option>
+              <option value="client">Client</option>
+              <option value="user">User</option>
+            </select>
+            <button onclick="openCreateUserModal()" class="btn btn-g btn-sm">+ NEW USER</button>
+            <button onclick="exportUsersCSV()" class="btn btn-o btn-sm">⬇ CSV</button>
+          </div>
+        </div>
+        <!-- Stats row -->
+        <div class="g4" id="userStatsRow" style="margin-bottom:.9rem"></div>
+        <!-- Users table panel -->
+        <div class="panel">
+          <div class="ph"><div class="pt">All Accounts</div><span id="userCount" style="font-family:var(--mono);font-size:.55rem;color:var(--muted)"></span></div>
+          <div class="pb" id="usersTable"></div>
+        </div>
+        <!-- User Detail Modal -->
+        <div id="userDetailModal" style="display:none" class="modal-overlay" onclick="if(event.target===this)closeUserModal()">
+          <div class="modal" style="max-width:560px">
+            <div class="modal-bar"></div>
+            <div class="modal-hdr">
+              <div class="modal-title" id="userModalTitle">USER DETAILS</div>
+              <button class="modal-close" onclick="closeUserModal()">✕</button>
+            </div>
+            <div class="modal-body" id="userModalBody" style="max-height:75vh;overflow-y:auto"></div>
+          </div>
+        </div>
+        <!-- Create User Modal -->
+        <div id="createUserModal" style="display:none" class="modal-overlay" onclick="if(event.target===this)document.getElementById('createUserModal').style.display='none'">
+          <div class="modal" style="max-width:480px">
+            <div class="modal-bar"></div>
+            <div class="modal-hdr">
+              <div class="modal-title">CREATE USER</div>
+              <button class="modal-close" onclick="document.getElementById('createUserModal').style.display='none'">✕</button>
+            </div>
+            <div class="modal-body">
+              <div id="createUserAlert" style="display:none;font-family:var(--mono);font-size:.6rem;padding:.6rem .8rem;border-radius:5px;margin-bottom:.8rem"></div>
+              <div class="form-grid2">
+                <div class="form-group"><label class="form-label">FULL NAME *</label><input class="form-input" id="cu-name" placeholder="Full name"/></div>
+                <div class="form-group"><label class="form-label">EMAIL *</label><input class="form-input" id="cu-email" type="email" placeholder="email@example.com"/></div>
+              </div>
+              <div class="form-grid2">
+                <div class="form-group"><label class="form-label">PASSWORD *</label><input class="form-input" id="cu-password" type="password" placeholder="Min 8 chars, 1 uppercase, 1 number"/></div>
+                <div class="form-group"><label class="form-label">ROLE</label>
+                  <select class="form-input" id="cu-role"><option value="user">User</option><option value="client">Client</option><option value="admin">Admin</option></select>
+                </div>
+              </div>
+              <div class="form-grid2">
+                <div class="form-group"><label class="form-label">PHONE</label><input class="form-input" id="cu-phone" placeholder="+1 (555) 000-0000"/></div>
+                <div class="form-group"><label class="form-label">COMPANY</label><input class="form-input" id="cu-company" placeholder="Organization"/></div>
+              </div>
+              <div class="form-grid2">
+                <div class="form-group"><label class="form-label">PLAN</label>
+                  <select class="form-input" id="cu-plan"><option value="free">Free</option><option value="starter">Starter</option><option value="professional">Professional</option><option value="enterprise">Enterprise</option></select>
+                </div>
+                <div class="form-group"><label class="form-label">STATUS</label>
+                  <select class="form-input" id="cu-status"><option value="active">Active</option><option value="suspended">Suspended</option></select>
+                </div>
+              </div>
+              <div class="form-group"><label class="form-label">NOTES</label><textarea class="form-input" id="cu-notes" rows="2" placeholder="Internal notes about this user..."></textarea></div>
+              <button onclick="submitCreateUser()" class="btn btn-g" style="width:100%;margin-top:.3rem">CREATE USER →</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- ── PROFILE ── -->
@@ -518,10 +689,36 @@
             <div class="panel"><div class="ph"><div class="pt">Edit Profile</div></div><div class="pb">
               <div class="form-group"><label class="form-label">NAME</label><input class="form-input" id="editName"/></div>
               <div class="form-group"><label class="form-label">EMAIL</label><input class="form-input" id="editEmail" type="email"/></div>
+              <div class="form-group"><label class="form-label">PHONE</label><input class="form-input" id="editPhone" placeholder="+1 (555) 000-0000"/></div>
+              <div class="form-group"><label class="form-label">COMPANY</label><input class="form-input" id="editCompany" placeholder="Your organization"/></div>
               <div class="form-group"><label class="form-label">GITHUB</label><input class="form-input" id="editGithub" placeholder="https://github.com/handle"/></div>
               <div class="form-group"><label class="form-label">LINKEDIN</label><input class="form-input" id="editLinkedin" placeholder="https://linkedin.com/in/handle"/></div>
-              <button class="save-btn" onclick="saveProfile()">SAVE</button>
+              <button class="save-btn" onclick="saveProfile()">SAVE PROFILE</button>
               <span id="saveMsg" style="font-family:var(--mono);font-size:.55rem;color:var(--ok);margin-left:.8rem;display:none">✓ Saved</span>
+            </div></div>
+            <div class="panel" style="margin-top:.9rem"><div class="ph"><div class="pt">Change Password</div></div><div class="pb">
+              <div id="pwChangeAlert" style="display:none;font-family:var(--mono);font-size:.6rem;padding:.6rem .8rem;border-radius:5px;margin-bottom:.8rem"></div>
+              <div class="form-group"><label class="form-label">CURRENT PASSWORD</label>
+                <div style="position:relative">
+                  <input class="form-input" id="curPw" type="password" placeholder="Your current password"/>
+                  <span onclick="toggleDashPw('curPw',this)" style="position:absolute;right:.8rem;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--muted);font-size:.8rem">👁</span>
+                </div>
+              </div>
+              <div class="form-group"><label class="form-label">NEW PASSWORD</label>
+                <div style="position:relative">
+                  <input class="form-input" id="newPwDash" type="password" placeholder="Min 8 chars, 1 uppercase, 1 number" oninput="updateDashPwStrength(this.value)"/>
+                  <span onclick="toggleDashPw('newPwDash',this)" style="position:absolute;right:.8rem;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--muted);font-size:.8rem">👁</span>
+                </div>
+                <div style="display:flex;gap:3px;margin-top:.4rem" id="dashPwBar">
+                  ${[1,2,3,4,5].map(i=>`<div id="dps${i}" style="flex:1;height:3px;background:rgba(255,255,255,.06);border-radius:2px;transition:background .3s"></div>`).join('')}
+                </div>
+                <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted);margin-top:.2rem" id="dashPwLabel"></div>
+              </div>
+              <div class="form-group"><label class="form-label">CONFIRM NEW PASSWORD</label>
+                <input class="form-input" id="confPwDash" type="password" placeholder="Re-enter new password"/>
+                <div style="font-family:var(--mono);font-size:.52rem;margin-top:.25rem" id="dashPwMatch"></div>
+              </div>
+              <button class="save-btn" onclick="changePasswordDash()" style="background:var(--g2);color:#040810">CHANGE PASSWORD</button>
             </div></div>
           </div>
         </div>
@@ -559,6 +756,10 @@
       </div>
       <!-- REMOTE TAB -->
       <div id="dtab-remote" style="display:none">
+        <div style="background:rgba(255,59,92,.06);border:1px solid rgba(255,59,92,.18);border-radius:6px;padding:.8rem 1rem;margin-bottom:.7rem">
+          <div style="font-family:var(--mono);font-size:.56rem;color:var(--danger);letter-spacing:.1em;margin-bottom:.3rem">⚖️ LEGAL REQUIREMENT</div>
+          <div style="font-family:var(--mono);font-size:.58rem;color:var(--text2);line-height:1.65">Remote scanning requires written authorization under the CFAA (18 U.S.C. § 1030). Unauthorized testing is a federal crime. <a href="../legal/agreement.html" target="_blank" style="color:var(--g2);text-decoration:underline">Sign the Engagement Agreement →</a></div>
+        </div>
         <div style="background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.12);border-radius:6px;padding:.8rem 1rem;margin-bottom:1rem">
           <div style="font-family:var(--mono);font-size:.57rem;color:var(--g2);line-height:1.6">Connects to any Linux machine via SSH and runs a full security audit remotely — from your machine to theirs.</div>
         </div>
@@ -1327,9 +1528,231 @@ function renderAdmin() {
   document.getElementById('adminUserCount').textContent=users.length;
   document.getElementById('adminDevCount').textContent=DEVICES.length;
   document.getElementById('adminScanCount').textContent=SCAN_COUNT;
-  const html=`<table class="tbl"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th></tr></thead><tbody>${users.map(u=>`<tr><td>${u.name}</td><td style="color:var(--g2)">${u.email}</td><td><span class="badge b-${u.role==='admin'?'critical':u.role==='client'?'medium':'ok'}">${u.role}</span></td><td>${u.created||'—'}</td></tr>`).join('')}</tbody></table>`;
-  document.getElementById('adminUsersTable').innerHTML=html;
-  if(document.getElementById('usersTable'))document.getElementById('usersTable').innerHTML=html;
+  // Agreements count
+  const agrs = getAgreements();
+  const agrCountEl = document.getElementById('adminAgrCount');
+  if(agrCountEl) agrCountEl.textContent = agrs.length;
+  // Users table
+  // Simple summary in admin panel
+  const adminHtml = `<table class="tbl"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Plan</th><th>Status</th><th>Last Login</th><th>Logins</th></tr></thead><tbody>${users.map(u=>`
+    <tr onclick="openUserDetail('${u.id}')" style="cursor:pointer">
+      <td style="color:var(--white)">${u.name}</td>
+      <td style="color:var(--g2)">${u.email}</td>
+      <td><span class="badge b-${u.role==='admin'?'critical':u.role==='client'?'medium':'ok'}">${u.role}</span></td>
+      <td style="color:var(--muted);font-size:.55rem">${u.plan||'free'}</td>
+      <td><span style="font-family:var(--mono);font-size:.5rem;padding:.15rem .4rem;border-radius:3px;background:${u.status==='active'?'rgba(0,255,136,.08)':'rgba(255,59,92,.08)'};color:${u.status==='active'?'var(--ok)':'var(--danger)'};border:1px solid ${u.status==='active'?'rgba(0,255,136,.18)':'rgba(255,59,92,.2)'}">${(u.status||'active').toUpperCase()}</span></td>
+      <td style="color:var(--muted);font-size:.52rem">${u.lastLogin ? new Date(u.lastLogin).toLocaleDateString() : 'Never'}</td>
+      <td style="color:var(--muted)">${u.loginCount||0}</td>
+    </tr>`).join('')}</tbody></table>`;
+  document.getElementById('adminUsersTable').innerHTML = adminHtml;
+  if (document.getElementById('usersTable')) renderUsersPage();
+  // Render agreements
+  renderAgreements();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   AGREEMENTS MANAGEMENT
+═══════════════════════════════════════════════════════════════ */
+function getAgreements() {
+  try { return JSON.parse(localStorage.getItem('pm_agreements') || '[]'); }
+  catch { return []; }
+}
+
+function renderAgreements() {
+  const panel = document.getElementById('agreementsPanel');
+  if (!panel) return;
+  const query = (document.getElementById('agrSearch')?.value || '').toLowerCase();
+  let agrs = getAgreements();
+  if (query) {
+    agrs = agrs.filter(a =>
+      (a.name||'').toLowerCase().includes(query) ||
+      (a.email||'').toLowerCase().includes(query) ||
+      (a.org||'').toLowerCase().includes(query) ||
+      (a.id||'').toLowerCase().includes(query) ||
+      (a.scope||'').toLowerCase().includes(query)
+    );
+  }
+  const countEl = document.getElementById('agrCount');
+  if (countEl) countEl.textContent = agrs.length ? `${agrs.length} agreement${agrs.length!==1?'s':''}` : '';
+  if (!agrs.length) {
+    panel.innerHTML = `<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">
+      ${query ? 'No agreements match your search.' : 'No signed agreements yet. Agreements are stored when clients sign at <a href="../legal/agreement.html" target="_blank" style="color:var(--g2)">legal/agreement.html</a>'}
+    </div>`;
+    return;
+  }
+  // Sort newest first
+  const sorted = [...agrs].sort((a,b) => (b.timestamp||'').localeCompare(a.timestamp||''));
+  panel.innerHTML = `
+    <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Organization</th>
+            <th>Email</th>
+            <th>Type</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Signed</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${sorted.map(a => {
+            const now = new Date();
+            const end = new Date(a.end);
+            const start = new Date(a.start);
+            const status = end < now ? 'expired' : start > now ? 'upcoming' : 'active';
+            const statusStyle = {
+              active:   'background:rgba(0,255,136,.08);color:var(--ok);border:1px solid rgba(0,255,136,.18)',
+              upcoming: 'background:rgba(0,212,255,.06);color:var(--g2);border:1px solid rgba(0,212,255,.15)',
+              expired:  'background:rgba(255,255,255,.04);color:var(--muted);border:1px solid rgba(255,255,255,.08)',
+            }[status];
+            return `<tr>
+              <td style="font-family:var(--mono);font-size:.52rem;color:var(--g2)">${a.id||'—'}</td>
+              <td style="font-weight:500;color:var(--white)">${a.name||'—'}</td>
+              <td>${a.org||'—'}</td>
+              <td style="color:var(--g2)">${a.email||'—'}</td>
+              <td style="font-size:.54rem">${(a.type||'—').replace(' Penetration Test','').replace(' Assessment','').replace(' Engagement','')}</td>
+              <td>${a.start||'—'}</td>
+              <td>${a.end||'—'}</td>
+              <td style="font-size:.52rem;color:var(--muted)">${(a.timestamp||'').split(',')[0]||'—'}</td>
+              <td><span style="font-family:var(--mono);font-size:.5rem;padding:.18rem .45rem;border-radius:3px;${statusStyle}">${status.toUpperCase()}</span></td>
+              <td>
+                <div style="display:flex;gap:.3rem">
+                  <button onclick="viewAgreement('${a.id}')" class="btn btn-o btn-sm" style="font-size:.5rem;padding:.2rem .5rem">VIEW</button>
+                  <button onclick="deleteAgreement('${a.id}')" class="btn btn-r btn-sm" style="font-size:.5rem;padding:.2rem .5rem">DEL</button>
+                </div>
+              </td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+function viewAgreement(id) {
+  const agrs = getAgreements();
+  const a = agrs.find(ag => ag.id === id);
+  if (!a) return;
+  const now = new Date();
+  const end = new Date(a.end);
+  const start = new Date(a.start);
+  const status = end < now ? 'EXPIRED' : start > now ? 'UPCOMING' : 'ACTIVE';
+  const statusColor = { ACTIVE:'var(--ok)', UPCOMING:'var(--g2)', EXPIRED:'var(--muted)' }[status];
+  document.getElementById('agrDetailBody').innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:.6rem">
+      <div>
+        <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:.15em;margin-bottom:.3rem">AGREEMENT ID</div>
+        <div style="font-family:var(--mono);font-size:.75rem;color:var(--g2)">${a.id}</div>
+      </div>
+      <span style="font-family:var(--mono);font-size:.6rem;padding:.3rem .7rem;border-radius:4px;background:rgba(0,0,0,.2);color:${statusColor};border:1px solid ${statusColor}40">${status}</span>
+    </div>
+
+    ${[
+      ['Authorizing Party', ''],
+      ['Full Name', a.name],
+      ['Job Title', a.title],
+      ['Organization', a.org],
+      ['Business Email', a.email],
+      ['Phone', a.phone],
+      ['Address', a.address],
+      ['Engagement Details', ''],
+      ['Engagement Type', a.type],
+      ['Testing Environment', a.env],
+      ['Authorized Start', a.start],
+      ['Authorized End', a.end],
+      ['Emergency Contact', a.emergency||'Not provided'],
+      ['Signature', a.signature||'drawn'],
+      ['Signed At', a.timestamp],
+      ['Target Scope', ''],
+    ].map(([k, v]) => {
+      if (!v) return `<div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.18em;margin:1rem 0 .4rem;padding-top:.4rem;border-top:1px solid rgba(0,255,136,.06)">${k}</div>`;
+      return `<div style="display:flex;gap:.8rem;padding:.45rem .6rem;background:rgba(255,255,255,.02);border-radius:4px;margin-bottom:.25rem;flex-wrap:wrap">
+        <span style="font-family:var(--mono);font-size:.55rem;color:var(--muted);width:140px;flex-shrink:0">${k}</span>
+        <span style="font-family:var(--mono);font-size:.6rem;color:var(--text2);flex:1;word-break:break-all">${v}</span>
+      </div>`;
+    }).join('')}
+
+    <div style="background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.08);border-radius:5px;padding:.8rem;margin-top:.5rem">
+      <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted);margin-bottom:.4rem;letter-spacing:.12em">SCOPE OF SYSTEMS</div>
+      <div style="font-family:var(--mono);font-size:.6rem;color:var(--g2);white-space:pre-wrap;line-height:1.8">${a.scope||'Not specified'}</div>
+    </div>
+
+    ${a.notes ? `<div style="background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.1);border-radius:5px;padding:.8rem;margin-top:.6rem">
+      <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);margin-bottom:.4rem">NOTES</div>
+      <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.75">${a.notes}</div>
+    </div>` : ''}
+
+    <div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:5px;padding:.8rem;margin-top:.6rem">
+      <div style="font-family:var(--mono);font-size:.55rem;color:var(--g);letter-spacing:.12em;margin-bottom:.3rem">⚖️ LEGAL CERTIFICATION</div>
+      <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:1.75">
+        Signed electronically under ESIGN Act (15 U.S.C. § 7001). All CFAA, ECPA, and applicable law acknowledgments checked and accepted by <strong style="color:var(--text2)">${a.name}</strong> on ${a.timestamp}.
+      </div>
+    </div>
+
+    <div style="display:flex;gap:.6rem;margin-top:1.2rem;flex-wrap:wrap">
+      <button onclick="window.print()" class="btn btn-o btn-sm">🖨 PRINT</button>
+      <button onclick="exportSingleAgreement('${a.id}')" class="btn btn-o btn-sm">⬇ EXPORT JSON</button>
+      <button onclick="deleteAgreement('${a.id}');document.getElementById('agrDetailModal').style.display='none'" class="btn btn-r btn-sm">🗑 DELETE</button>
+    </div>`;
+  document.getElementById('agrDetailModal').style.display = 'flex';
+}
+
+function deleteAgreement(id) {
+  if (!confirm('Delete this agreement? This cannot be undone.')) return;
+  const agrs = getAgreements().filter(a => a.id !== id);
+  localStorage.setItem('pm_agreements', JSON.stringify(agrs));
+  renderAgreements();
+  const agrCountEl = document.getElementById('adminAgrCount');
+  if (agrCountEl) agrCountEl.textContent = agrs.length;
+  document.getElementById('agrDetailModal').style.display = 'none';
+}
+
+function clearAllAgreements() {
+  if (!confirm('Delete ALL agreements? This cannot be undone.')) return;
+  localStorage.removeItem('pm_agreements');
+  renderAgreements();
+  const agrCountEl = document.getElementById('adminAgrCount');
+  if (agrCountEl) agrCountEl.textContent = '0';
+}
+
+function exportAgreements() {
+  const agrs = getAgreements();
+  if (!agrs.length) { alert('No agreements to export.'); return; }
+  const headers = ['ID','Name','Title','Organization','Email','Phone','Address','Type','Environment','Start','End','Scope','Notes','Signature','Signed At'];
+  const rows = agrs.map(a => [
+    a.id, a.name, a.title, a.org, a.email, a.phone, a.address,
+    a.type, a.env, a.start, a.end,
+    (a.scope||'').replace(/
+/g,' | '),
+    (a.notes||'').replace(/
+/g,' '),
+    a.signature, a.timestamp
+  ].map(v => `"${(v||'').replace(/"/g,'""')}"`).join(','));
+  const csv = [headers.join(','), ...rows].join('
+');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `pm-offsec-agreements-${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportSingleAgreement(id) {
+  const a = getAgreements().find(ag => ag.id === id);
+  if (!a) return;
+  const blob = new Blob([JSON.stringify(a, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const el = document.createElement('a');
+  el.href = url;
+  el.download = `agreement-${a.id}.json`;
+  el.click();
+  URL.revokeObjectURL(url);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1350,9 +1773,81 @@ function loadProfile() {
 }
 
 function saveProfile() {
-  const prefs={github:document.getElementById('editGithub').value,linkedin:document.getElementById('editLinkedin').value};
-  localStorage.setItem('pm_prefs_'+SESSION.id,JSON.stringify(prefs));
-  const msg=document.getElementById('saveMsg');msg.style.display='inline';setTimeout(()=>msg.style.display='none',2000);
+  // Save extended profile fields
+  const users = AUTH.getUsers();
+  const idx = users.findIndex(u => u.id === SESSION.id);
+  if (idx >= 0) {
+    users[idx].name    = document.getElementById('editName').value.trim()  || users[idx].name;
+    users[idx].phone   = document.getElementById('editPhone').value.trim()   || '';
+    users[idx].company = document.getElementById('editCompany').value.trim() || '';
+    AUTH.saveUsers(users);
+    // Update session name
+    const s = AUTH.getSession();
+    if (s) { s.name = users[idx].name; localStorage.setItem('pm_session_v2', JSON.stringify(s)); }
+  }
+  const prefs = {
+    github:   document.getElementById('editGithub').value,
+    linkedin: document.getElementById('editLinkedin').value,
+  };
+  localStorage.setItem('pm_prefs_' + SESSION.id, JSON.stringify(prefs));
+  const msg = document.getElementById('saveMsg');
+  msg.style.display = 'inline';
+  setTimeout(() => msg.style.display = 'none', 2000);
+}
+
+function toggleDashPw(id, icon) {
+  const inp = document.getElementById(id);
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  icon.textContent = inp.type === 'password' ? '👁' : '🙈';
+}
+
+function updateDashPwStrength(pw) {
+  const s = AUTH.passwordStrength(pw);
+  [1,2,3,4,5].forEach((n,i) => {
+    const el = document.getElementById('dps'+n);
+    if (el) el.style.background = i < s.score ? s.color : 'rgba(255,255,255,.06)';
+  });
+  const lbl = document.getElementById('dashPwLabel');
+  if (lbl) { lbl.textContent = s.label; lbl.style.color = s.color; }
+  // Match check
+  const conf = document.getElementById('confPwDash').value;
+  if (conf) {
+    const match = document.getElementById('dashPwMatch');
+    if (match) {
+      match.textContent = conf === pw ? '✓ Passwords match' : '✗ Passwords do not match';
+      match.style.color  = conf === pw ? 'var(--ok)' : 'var(--danger)';
+    }
+  }
+}
+
+function changePasswordDash() {
+  const cur  = document.getElementById('curPw').value;
+  const nw   = document.getElementById('newPwDash').value;
+  const conf = document.getElementById('confPwDash').value;
+  const alertEl = document.getElementById('pwChangeAlert');
+
+  function showAlert(msg, ok) {
+    alertEl.textContent = msg;
+    alertEl.style.display = 'block';
+    alertEl.style.background = ok ? 'rgba(0,255,136,.08)' : 'rgba(255,59,92,.08)';
+    alertEl.style.border = ok ? '1px solid rgba(0,255,136,.2)' : '1px solid rgba(255,59,92,.2)';
+    alertEl.style.color  = ok ? 'var(--ok)' : 'var(--danger)';
+    if (ok) setTimeout(() => { alertEl.style.display='none'; }, 3000);
+  }
+
+  if (!cur || !nw || !conf) { showAlert('Please fill in all password fields.', false); return; }
+  if (nw !== conf)           { showAlert('New passwords do not match.', false); return; }
+
+  const result = AUTH.changePassword(SESSION.id, cur, nw);
+  if (result.ok) {
+    showAlert('✓ Password changed successfully.', true);
+    ['curPw','newPwDash','confPwDash'].forEach(id => document.getElementById(id).value = '');
+    [1,2,3,4,5].forEach(n => { const el = document.getElementById('dps'+n); if(el) el.style.background='rgba(255,255,255,.06)'; });
+    const lbl = document.getElementById('dashPwLabel'); if(lbl) lbl.textContent='';
+    const match = document.getElementById('dashPwMatch'); if(match) match.textContent='';
+  } else {
+    showAlert(result.error, false);
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1371,9 +1866,15 @@ function nav(page) {
   const target=document.getElementById('page-'+page);
   if(target)target.classList.add('active');
   document.querySelectorAll('.sb-item').forEach(b=>{if(b.getAttribute('onclick')?.includes(`'${page}'`))b.classList.add('active');});
-  if(page==='admin'||page==='users')renderAdmin();
+  if(page==='admin')renderAdmin();
+  if(page==='users'){renderAdmin();renderUsersPage();}
   if(page==='profile')loadProfile();
   if(page==='settings')loadSettings();
+  if(page==='incidents')renderIncidents();
+  if(page==='iocs')renderIocs();
+  if(page==='mitre')refreshMitre();
+  if(page==='playbooks')renderPlaybooks();
+  if(page==='wazuh')loadWazuh();
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1396,8 +1897,1018 @@ function init() {
   loadSettings();
   checkApiStatus();
   setInterval(checkApiStatus, 30000);
+  updateSocMetricsUI();
   document.getElementById('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}});
   document.getElementById('chatInput').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,72)+'px';});
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   IN-MEMORY SOC STORES (front-end side)
+═══════════════════════════════════════════════════════════════ */
+let INCIDENTS = JSON.parse(localStorage.getItem('pm_incidents_v1') || '[]');
+let IOCS      = JSON.parse(localStorage.getItem('pm_iocs_v1')      || '[]');
+function saveIncidents(){ localStorage.setItem('pm_incidents_v1', JSON.stringify(INCIDENTS)); }
+function saveIocs(){ localStorage.setItem('pm_iocs_v1', JSON.stringify(IOCS)); }
+
+/* ═══════════════════════════════════════════════════════════════
+   WEBSITE SCANNER
+═══════════════════════════════════════════════════════════════ */
+async function runWebScan() {
+  const target = document.getElementById('webScanTarget').value.trim();
+  if (!target) { alert('Enter a domain or URL'); return; }
+  const btn = document.getElementById('webScanBtn');
+  btn.disabled = true; btn.textContent = 'SCANNING...';
+  document.getElementById('webScanResults').style.display = 'none';
+  try {
+    let data;
+    if (API_ONLINE) {
+      const r = await apiPost('/api/scan/website', { domain: target, user_id: SESSION.id });
+      data = r;
+    } else {
+      await new Promise(r => setTimeout(r, 1800));
+      data = mockWebScan(target);
+    }
+    renderWebScanResults(data);
+    document.getElementById('webScanResults').style.display = 'block';
+    addActivity('info', `Website scan complete: ${target} — Score: ${data.security_score}/100`, 'Just now');
+  } catch(e) {
+    alert('Scan failed: ' + e.message);
+  }
+  btn.disabled = false; btn.textContent = 'SCAN WEBSITE →';
+}
+
+function mockWebScan(domain) {
+  return {
+    domain, scan_type: 'website', security_score: 62, timestamp: new Date().toISOString(),
+    ssl: { valid: true, days_left: 45, expires: '2025-12-01', version: 'TLSv1.3', cipher: 'TLS_AES_256_GCM_SHA384', issuer: { organizationName: "Let's Encrypt" } },
+    headers: {
+      headers_present: [
+        { header: 'X-Content-Type-Options', desc: 'Prevents MIME-type sniffing', severity: 'medium' },
+        { header: 'Referrer-Policy', desc: 'Controls referrer leakage', severity: 'low' },
+      ],
+      headers_missing: [
+        { header: 'Strict-Transport-Security', desc: 'Forces HTTPS', severity: 'high', recommendation: 'Add: Strict-Transport-Security: max-age=31536000; includeSubDomains' },
+        { header: 'Content-Security-Policy', desc: 'Prevents XSS', severity: 'high', recommendation: "Add CSP: Content-Security-Policy: default-src 'self'" },
+        { header: 'X-Frame-Options', desc: 'Prevents clickjacking', severity: 'medium', recommendation: 'Add: X-Frame-Options: DENY' },
+        { header: 'Permissions-Policy', desc: 'Controls browser features', severity: 'low', recommendation: 'Add: Permissions-Policy: geolocation=()' },
+      ]
+    },
+    dns: {
+      spf: { valid: true, record: 'v=spf1 include:_spf.google.com ~all', hard_fail: false },
+      dmarc: { valid: false, record: null },
+      mx: ['10 mail.google.com'],
+      issues: [
+        { severity: 'high', issue: 'No DMARC record', detail: 'Domain can be spoofed for email phishing', fix: `Add TXT at _dmarc.${domain}: v=DMARC1; p=quarantine` }
+      ]
+    },
+    exposed_files: [
+      { path: '/robots.txt', severity: 'low', description: 'Robots.txt found — review for sensitive path disclosures', url: `https://${domain}/robots.txt` }
+    ],
+    tech: { server: 'nginx/1.24.0', cms: null, frameworks: ['React/Next.js'], cdn: 'Cloudflare', waf: 'Cloudflare WAF' },
+    open_ports: [{ port: 80, service: 'HTTP', risk: 'medium', detail: 'HTTP open — redirect to HTTPS' }, { port: 443, service: 'HTTPS', risk: 'low', detail: 'TLS OK' }],
+    issues: [
+      { id:1, severity:'high', category:'Headers', title:'Missing: Strict-Transport-Security', cvss:7.0, detail:'Forces HTTPS' },
+      { id:2, severity:'high', category:'DNS/Email', title:'No DMARC record', cvss:7.2, detail:'Domain spoofing risk' },
+      { id:3, severity:'high', category:'Headers', title:'Missing: Content-Security-Policy', cvss:7.0, detail:'XSS protection' },
+      { id:4, severity:'medium', category:'Headers', title:'Missing: X-Frame-Options', cvss:5.0, detail:'Clickjacking risk' },
+    ]
+  };
+}
+
+function renderWebScanResults(data) {
+  const sc = data.security_score;
+  const scCol = sc>=80?'var(--g)':sc>=60?'#f5c842':'var(--danger)';
+  document.getElementById('webScanStats').innerHTML = `
+    <div class="sc sc-g"><div class="sc-label">Security Score</div><div class="sc-value" style="color:${scCol}">${sc}</div><div class="sc-delta">/100</div></div>
+    <div class="sc sc-r"><div class="sc-label">Issues Found</div><div class="sc-value" style="color:var(--danger)">${(data.issues||[]).length}</div><div class="sc-delta">${(data.issues||[]).filter(i=>i.severity==='critical').length} critical</div></div>
+    <div class="sc sc-b"><div class="sc-label">Headers Missing</div><div class="sc-value" style="color:var(--g2)">${(data.headers?.headers_missing||[]).length}</div><div class="sc-delta">security headers</div></div>
+    <div class="sc sc-p"><div class="sc-label">SSL Days Left</div><div class="sc-value" style="color:${(data.ssl?.days_left||0)<30?'var(--danger)':'var(--g)'}">${data.ssl?.days_left??'—'}</div><div class="sc-delta">until expiry</div></div>`;
+
+  // SSL Panel
+  const ssl = data.ssl || {};
+  const sslColor = ssl.valid && !ssl.expired ? 'var(--ok)' : 'var(--danger)';
+  document.getElementById('sslPanel').innerHTML = `
+    <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:1rem">
+      <div style="font-size:1.8rem">${ssl.valid && !ssl.expired ? '🔒' : '🔓'}</div>
+      <div>
+        <div style="font-family:var(--mono);font-size:.8rem;color:${sslColor};font-weight:700">${ssl.valid && !ssl.expired ? 'VALID' : ssl.expired ? 'EXPIRED' : 'INVALID'}</div>
+        <div style="font-family:var(--mono);font-size:.57rem;color:var(--muted)">${ssl.version || 'Unknown'} · ${ssl.cipher || '—'}</div>
+      </div>
+    </div>
+    ${[
+      ['Issuer', ssl.issuer?.organizationName || '—'],
+      ['Expires', ssl.expires || '—'],
+      ['Days Left', ssl.days_left !== null ? ssl.days_left + ' days' : '—'],
+      ['TLS Version', ssl.version || '—'],
+    ].map(([k,v]) => `<div style="display:flex;justify-content:space-between;padding:.4rem .6rem;background:rgba(255,255,255,.02);border-radius:4px;margin-bottom:.25rem">
+      <span style="font-family:var(--mono);font-size:.57rem;color:var(--muted)">${k}</span>
+      <span style="font-family:var(--mono);font-size:.57rem;color:var(--text2)">${v}</span></div>`).join('')}`;
+
+  // DNS Panel
+  const dns = data.dns || {};
+  const spfOk = dns.spf?.valid;
+  const dmarcOk = dns.dmarc?.valid;
+  document.getElementById('dnsPanel').innerHTML = `
+    ${[
+      ['SPF Record', spfOk ? '✓ ' + (dns.spf?.record||'') : '✕ Not configured', spfOk ? 'var(--ok)' : 'var(--danger)'],
+      ['DMARC Record', dmarcOk ? '✓ ' + (dns.dmarc?.policy||'') : '✕ Not configured', dmarcOk ? 'var(--ok)' : 'var(--danger)'],
+      ['MX Records', (dns.mx||[]).join(', ') || 'None', 'var(--muted)'],
+    ].map(([k,v,c]) => `<div style="padding:.5rem .6rem;background:rgba(255,255,255,.02);border-radius:4px;margin-bottom:.3rem">
+      <div style="font-family:var(--mono);font-size:.53rem;color:var(--muted);margin-bottom:.2rem">${k}</div>
+      <div style="font-family:var(--mono);font-size:.6rem;color:${c};word-break:break-all">${v}</div></div>`).join('')}
+    ${(dns.issues||[]).map(i => `<div style="background:${SEV_C[i.severity]};border:1px solid ${SEV_B[i.severity]};border-radius:5px;padding:.6rem .8rem;margin-top:.4rem">
+      <div style="font-family:var(--mono);font-size:.6rem;color:var(--text2);margin-bottom:.2rem">${i.issue}</div>
+      <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">${i.fix||''}</div></div>`).join('')}`;
+
+  // Headers
+  const missing = data.headers?.headers_missing || [];
+  const present = data.headers?.headers_present || [];
+  document.getElementById('headersPanel').innerHTML = `
+    <div style="display:flex;gap:.8rem;margin-bottom:.8rem;flex-wrap:wrap">
+      <span style="font-family:var(--mono);font-size:.6rem;color:var(--ok)">✓ ${present.length} present</span>
+      <span style="font-family:var(--mono);font-size:.6rem;color:var(--danger)">✕ ${missing.length} missing</span>
+    </div>
+    ${missing.map(h => `<div style="background:${SEV_C[h.severity]};border:1px solid ${SEV_B[h.severity]};border-radius:5px;padding:.6rem .8rem;margin-bottom:.3rem">
+      <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.2rem">${badge(h.severity)}<span style="font-family:var(--mono);font-size:.62rem;color:var(--text2)">${h.header}</span></div>
+      <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">${h.desc}</div>
+      <div style="font-family:var(--mono);font-size:.54rem;color:var(--g2);margin-top:.25rem">${h.recommendation||''}</div>
+    </div>`).join('')}
+    ${present.map(h => `<div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:5px;padding:.5rem .8rem;margin-bottom:.3rem;display:flex;align-items:center;gap:.6rem">
+      <span style="color:var(--ok)">✓</span><span style="font-family:var(--mono);font-size:.6rem;color:var(--text2)">${h.header}</span>
+    </div>`).join('')}`;
+
+  // Exposed files
+  const exposed = data.exposed_files || [];
+  document.getElementById('exposedPanel').innerHTML = exposed.length
+    ? exposed.map(f => `<div style="display:flex;align-items:center;gap:.8rem;padding:.5rem .7rem;background:${SEV_C[f.severity]||'rgba(255,255,255,.02)'};border:1px solid ${SEV_B[f.severity]||'rgba(255,255,255,.04)'};border-radius:5px;margin-bottom:.3rem">
+        ${badge(f.severity)}<span style="font-family:var(--mono);font-size:.6rem;color:var(--g2);flex-shrink:0">${f.path}</span>
+        <span style="font-family:var(--mono);font-size:.57rem;color:var(--muted);flex:1">${f.description}</span>
+        <a href="${f.url||'#'}" target="_blank" style="font-family:var(--mono);font-size:.52rem;color:var(--g2);text-decoration:none">↗</a>
+      </div>`).join('')
+    : '<div style="font-family:var(--mono);font-size:.62rem;color:var(--ok);text-align:center;padding:1rem">✓ No exposed sensitive files found</div>';
+
+  // Tech
+  const tech = data.tech || {};
+  document.getElementById('techPanel').innerHTML = [
+    ['Server', tech.server || 'Unknown'],
+    ['CMS', tech.cms || 'Not detected'],
+    ['Frameworks', (tech.frameworks||[]).join(', ') || 'None detected'],
+    ['CDN', tech.cdn || 'None'],
+    ['WAF', tech.waf || 'Not detected'],
+  ].map(([k,v]) => `<div style="display:flex;justify-content:space-between;padding:.4rem .6rem;background:rgba(255,255,255,.02);border-radius:4px;margin-bottom:.25rem">
+    <span style="font-family:var(--mono);font-size:.57rem;color:var(--muted)">${k}</span>
+    <span style="font-family:var(--mono);font-size:.57rem;color:var(--text2)">${v}</span></div>`).join('');
+
+  // Web ports
+  document.getElementById('webPortsPanel').innerHTML = (data.open_ports||[]).map(p =>
+    `<div style="display:flex;align-items:center;gap:.7rem;padding:.45rem .65rem;background:${SEV_C[p.risk]};border:1px solid ${SEV_B[p.risk]};border-radius:5px;margin-bottom:.28rem">
+      <span style="font-family:var(--mono);font-size:.6rem;color:${SEV_COL[p.risk]};width:36px">${p.port}</span>
+      <span style="font-family:var(--mono);font-size:.58rem;color:var(--text2);width:62px">${p.service}</span>
+      <span style="font-family:var(--mono);font-size:.55rem;color:var(--muted);flex:1">${p.detail}</span>
+      ${badge(p.risk)}</div>`).join('') || '<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">No web ports scanned</div>';
+
+  // Issues
+  document.getElementById('webIssuesPanel').innerHTML = (data.issues||[]).map(i =>
+    `<div class="issue-row" style="background:${SEV_C[i.severity]};border:1px solid ${SEV_B[i.severity]}">
+      ${badge(i.severity)}<div style="flex:1;font-family:var(--mono);font-size:.6rem;color:var(--text2)">${i.title}</div>
+      <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${i.category}</div>
+      <div style="font-family:var(--mono);font-size:.58rem;color:${SEV_COL[i.severity]}">CVSS ${i.cvss}</div>
+    </div>`).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   OSINT
+═══════════════════════════════════════════════════════════════ */
+async function runEmailOsint() {
+  const email = document.getElementById('emailOsintInput').value.trim();
+  if (!email) return;
+  const out = document.getElementById('emailOsintResult');
+  out.innerHTML = '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">Checking breaches...</div>';
+  try {
+    let data;
+    if (API_ONLINE) {
+      data = await apiPost('/api/osint/email', { email, user_id: SESSION.id });
+    } else {
+      await new Promise(r=>setTimeout(r,900));
+      data = { email, breach_check: { breached: true, breach_count: 3, breaches: [
+        { Name:'LinkedIn', BreachDate:'2016-05-05', DataClasses:['Emails','Passwords'] },
+        { Name:'Adobe', BreachDate:'2013-10-04', DataClasses:['Emails','Password hints'] },
+        { Name:'Collection1', BreachDate:'2019-01-07', DataClasses:['Emails','Passwords'] },
+      ], demo: true } };
+    }
+    const bc = data.breach_check || data;
+    const breached = bc.breached || bc.breach_count > 0;
+    out.innerHTML = `
+      <div style="background:${breached?'rgba(255,59,92,.08)':'rgba(0,255,136,.06)'};border:1px solid ${breached?'rgba(255,59,92,.2)':'rgba(0,255,136,.15)'};border-radius:6px;padding:.9rem 1rem">
+        <div style="font-family:var(--mono);font-size:.75rem;color:${breached?'var(--danger)':'var(--ok)'};margin-bottom:.5rem">
+          ${breached ? `⚠ FOUND IN ${bc.breach_count} BREACH${bc.breach_count!==1?'ES':''}` : '✓ NOT FOUND IN ANY BREACHES'}
+        </div>
+        ${bc.demo?'<div style="font-family:var(--mono);font-size:.52rem;color:var(--warn);margin-bottom:.5rem">DEMO DATA — Add HIBP_API_KEY to .env for live results</div>':''}
+        ${(bc.breaches||[]).slice(0,5).map(b=>`<div style="padding:.4rem .5rem;background:rgba(0,0,0,.15);border-radius:4px;margin-bottom:.25rem">
+          <div style="font-family:var(--mono);font-size:.6rem;color:var(--text2)">${b.Name} <span style="color:var(--muted)">(${b.BreachDate?.split('-')[0]||'—'})</span></div>
+          <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${(b.DataClasses||[]).join(', ')}</div>
+        </div>`).join('')}
+      </div>`;
+  } catch(e) {
+    out.innerHTML = `<div style="font-family:var(--mono);font-size:.6rem;color:var(--danger)">${e.message}</div>`;
+  }
+}
+
+async function runPwCheck() {
+  const pw = document.getElementById('pwCheckInput').value;
+  if (!pw) return;
+  const out = document.getElementById('pwCheckResult');
+  out.innerHTML = '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">Checking (k-anonymity — password never sent)...</div>';
+  try {
+    let data;
+    if (API_ONLINE) {
+      data = await apiPost('/api/osint/password', { password: pw });
+    } else {
+      await new Promise(r=>setTimeout(r,600));
+      data = { pwned: true, count: 52038 };
+    }
+    out.innerHTML = `
+      <div style="background:${data.pwned?'rgba(255,59,92,.08)':'rgba(0,255,136,.06)'};border:1px solid ${data.pwned?'rgba(255,59,92,.2)':'rgba(0,255,136,.15)'};border-radius:6px;padding:.9rem 1rem">
+        <div style="font-family:var(--mono);font-size:.72rem;color:${data.pwned?'var(--danger)':'var(--ok)'}">
+          ${data.pwned ? `⚠ PWNED — seen ${data.count.toLocaleString()} times in breaches` : '✓ Not found in any breach database'}
+        </div>
+        ${data.pwned?'<div style="font-family:var(--mono);font-size:.57rem;color:var(--muted);margin-top:.4rem">This password is unsafe. Change it everywhere you use it.</div>':''}
+      </div>`;
+  } catch(e) {
+    out.innerHTML = `<div style="font-family:var(--mono);font-size:.6rem;color:var(--danger)">${e.message}</div>`;
+  }
+}
+
+async function runUsernameLookup() {
+  const username = document.getElementById('usernameInput').value.trim();
+  if (!username) return;
+  const btn = document.getElementById('usernameBtn');
+  btn.disabled = true; btn.textContent = 'SEARCHING...';
+  const out = document.getElementById('usernameResults');
+  out.innerHTML = '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);text-align:center;padding:1rem">Checking 12+ platforms...</div>';
+  try {
+    let results;
+    if (API_ONLINE) {
+      const data = await apiPost('/api/osint/username', { username });
+      results = data.results;
+    } else {
+      await new Promise(r=>setTimeout(r,1400));
+      results = [
+        { platform:'GitHub', url:`https://github.com/${username}`, found:true },
+        { platform:'Twitter/X', url:`https://x.com/${username}`, found:false },
+        { platform:'Reddit', url:`https://reddit.com/user/${username}`, found:true },
+        { platform:'LinkedIn', url:`https://linkedin.com/in/${username}`, found:false },
+        { platform:'TryHackMe', url:`https://tryhackme.com/p/${username}`, found:true },
+        { platform:'HackTheBox', url:`https://hackthebox.com/user/${username}`, found:false },
+        { platform:'Medium', url:`https://medium.com/@${username}`, found:false },
+        { platform:'Dev.to', url:`https://dev.to/${username}`, found:false },
+        { platform:'GitLab', url:`https://gitlab.com/${username}`, found:false },
+        { platform:'HackerOne', url:`https://hackerone.com/${username}`, found:false },
+        { platform:'Bugcrowd', url:`https://bugcrowd.com/${username}`, found:false },
+        { platform:'Instagram', url:`https://instagram.com/${username}`, found:false },
+      ];
+    }
+    const found = results.filter(r=>r.found);
+    out.innerHTML = `
+      <div style="font-family:var(--mono);font-size:.6rem;color:var(--g2);margin-bottom:.8rem">Found on ${found.length}/${results.length} platforms</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.4rem">
+        ${results.map(r=>`<a href="${r.url}" target="_blank" style="display:flex;align-items:center;gap:.5rem;padding:.5rem .7rem;background:${r.found?'rgba(0,255,136,.06)':'rgba(255,255,255,.02)'};border:1px solid ${r.found?'rgba(0,255,136,.18)':'rgba(255,255,255,.05)'};border-radius:5px;text-decoration:none;transition:all .2s">
+          <span style="font-size:.7rem">${r.found?'✓':'✕'}</span>
+          <span style="font-family:var(--mono);font-size:.58rem;color:${r.found?'var(--g)':'var(--muted)'}">${r.platform}</span>
+        </a>`).join('')}
+      </div>`;
+  } catch(e) {
+    out.innerHTML = `<div style="font-family:var(--mono);font-size:.6rem;color:var(--danger)">${e.message}</div>`;
+  }
+  btn.disabled = false; btn.textContent = 'SEARCH →';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   THREAT INTEL
+═══════════════════════════════════════════════════════════════ */
+async function runThreatLookup() {
+  const target = document.getElementById('threatTarget').value.trim();
+  const type   = document.getElementById('threatType').value;
+  if (!target) return;
+  const btn = document.getElementById('threatBtn');
+  btn.disabled = true; btn.textContent = 'CHECKING...';
+  const out = document.getElementById('threatResults');
+  out.innerHTML = '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);text-align:center;padding:1rem">Querying threat databases...</div>';
+  try {
+    let rep, vt, shodan;
+    if (API_ONLINE) {
+      const data = await apiPost('/api/osint/ip', { ip: target });
+      rep = data.reputation; vt = data.virustotal; shodan = data.shodan;
+    } else {
+      await new Promise(r=>setTimeout(r,1000));
+      rep = { ip:target, abusive:target.startsWith('185'), abuse_score:target.startsWith('185')?87:2, country:'US', isp:'Example ISP', reports:target.startsWith('185')?234:0, is_tor:false, demo:true };
+      vt  = { target, malicious:0, suspicious:0, harmless:45, total:72 };
+      shodan = { ip:target, ports:[22,80,443], vulns:[], org:'Example Org', country:'United States' };
+    }
+    const abuseColor = (rep?.abuse_score||0) > 50 ? 'var(--danger)' : (rep?.abuse_score||0) > 20 ? '#f5c842' : 'var(--ok)';
+    const vtMal = vt?.malicious || 0;
+    const vtColor = vtMal > 5 ? 'var(--danger)' : vtMal > 0 ? '#f5c842' : 'var(--ok)';
+    out.innerHTML = `
+      <div class="g3" style="margin-top:.8rem">
+        <div style="background:rgba(255,255,255,.02);border:1px solid rgba(0,255,136,.07);border-radius:8px;padding:1rem">
+          <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.6rem">ABUSEIPDB${rep?.demo?' (DEMO)':''}</div>
+          <div style="font-family:var(--display);font-size:2rem;color:${abuseColor};margin-bottom:.3rem">${rep?.abuse_score||0}%</div>
+          <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">Abuse confidence score</div>
+          <div style="font-family:var(--mono);font-size:.57rem;color:var(--text2);margin-top:.5rem;line-height:1.7">
+            Country: ${rep?.country||'—'}<br>ISP: ${rep?.isp||'—'}<br>Reports: ${rep?.reports||0}<br>
+            Tor: ${rep?.is_tor?'<span style="color:var(--danger)">YES</span>':'No'} · Proxy: ${rep?.is_proxy?'<span style="color:var(--danger)">YES</span>':'No'}
+          </div>
+        </div>
+        <div style="background:rgba(255,255,255,.02);border:1px solid rgba(0,255,136,.07);border-radius:8px;padding:1rem">
+          <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.6rem">VIRUSTOTAL</div>
+          <div style="font-family:var(--display);font-size:2rem;color:${vtColor};margin-bottom:.3rem">${vtMal}/${vt?.total||0}</div>
+          <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">Malicious detections</div>
+          <div style="font-family:var(--mono);font-size:.57rem;color:var(--text2);margin-top:.5rem;line-height:1.7">
+            Malicious: <span style="color:${vtColor}">${vt?.malicious||0}</span><br>
+            Suspicious: ${vt?.suspicious||0}<br>Harmless: ${vt?.harmless||0}
+          </div>
+        </div>
+        <div style="background:rgba(255,255,255,.02);border:1px solid rgba(0,255,136,.07);border-radius:8px;padding:1rem">
+          <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.6rem">SHODAN</div>
+          <div style="font-family:var(--display);font-size:2rem;color:var(--g);margin-bottom:.3rem">${(shodan?.ports||[]).length}</div>
+          <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">Open ports indexed</div>
+          <div style="font-family:var(--mono);font-size:.57rem;color:var(--text2);margin-top:.5rem;line-height:1.7">
+            Ports: ${(shodan?.ports||[]).join(', ')||'—'}<br>Org: ${shodan?.org||'—'}<br>
+            Vulns: <span style="color:${(shodan?.vulns||[]).length?'var(--danger)':'var(--ok)'}">${(shodan?.vulns||[]).length||0}</span>
+          </div>
+        </div>
+      </div>`;
+    addActivity('info', `Threat lookup: ${target} — AbuseScore: ${rep?.abuse_score||0}%`, 'Just now');
+  } catch(e) {
+    out.innerHTML = `<div style="font-family:var(--mono);font-size:.6rem;color:var(--danger)">${e.message}</div>`;
+  }
+  btn.disabled = false; btn.textContent = 'LOOKUP →';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   INCIDENTS
+═══════════════════════════════════════════════════════════════ */
+function openIncidentModal() { document.getElementById('incidentModal').style.display='flex'; }
+
+async function submitIncident() {
+  const title    = document.getElementById('incTitle').value.trim();
+  const severity = document.getElementById('incSeverity').value;
+  const source   = document.getElementById('incSource').value.trim();
+  const desc     = document.getElementById('incDesc').value.trim();
+  const devices  = document.getElementById('incDevices').value.split(',').map(s=>s.trim()).filter(Boolean);
+  if (!title) { alert('Enter a title'); return; }
+  const inc = {
+    id: Math.random().toString(36).substr(2,8).toUpperCase(),
+    title, severity, source: source||'manual', description: desc,
+    affected_devices: devices, status: 'open',
+    created_by: SESSION.name, created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(), resolved_at: null, mttr: null,
+    timeline: [{ time: new Date().toISOString(), action: 'Incident created', user: SESSION.name, note: desc }],
+    mitre_techniques: [], iocs: [], tags: []
+  };
+  if (API_ONLINE) {
+    try { await apiPost('/api/soc/incidents', inc); } catch(e) {}
+  }
+  INCIDENTS.unshift(inc); saveIncidents();
+  document.getElementById('incidentModal').style.display='none';
+  ['incTitle','incDesc','incDevices'].forEach(id => document.getElementById(id).value='');
+  renderIncidents();
+  updateSocMetricsUI();
+  addActivity('danger', `Incident created: ${title} (${severity})`, 'Just now');
+}
+
+function renderIncidents() {
+  const statusFilter = document.getElementById('incFilterStatus')?.value || '';
+  const sevFilter    = document.getElementById('incFilterSev')?.value    || '';
+  let list = [...INCIDENTS];
+  if (statusFilter) list = list.filter(i => i.status === statusFilter);
+  if (sevFilter)    list = list.filter(i => i.severity === sevFilter);
+  const STATUS_COL = { open:'var(--danger)', investigating:'#f5c842', contained:'#00d4ff', resolved:'var(--ok)', closed:'var(--muted)' };
+  document.getElementById('incidentList').innerHTML = list.length ? list.map(inc => `
+    <div style="padding:.9rem 1rem;background:${SEV_C[inc.severity]};border:1px solid ${SEV_B[inc.severity]};border-radius:7px;margin-bottom:.4rem">
+      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.4rem;flex-wrap:wrap">
+        ${badge(inc.severity)}
+        <span style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">#${inc.id}</span>
+        <span style="font-family:var(--mono);font-size:.64rem;color:var(--white);flex:1">${inc.title}</span>
+        <span style="font-family:var(--mono);font-size:.52rem;padding:.15rem .45rem;border-radius:3px;background:rgba(0,0,0,.2);color:${STATUS_COL[inc.status]||'var(--muted)'}">${inc.status.toUpperCase()}</span>
+      </div>
+      <div style="font-family:var(--mono);font-size:.57rem;color:var(--muted);line-height:1.65;margin-bottom:.5rem">${inc.description||''}</div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        ${['open','investigating','contained','resolved','closed'].filter(s=>s!==inc.status).slice(0,3).map(s=>
+          `<button onclick="updateIncidentStatus('${inc.id}','${s}')" class="btn btn-o btn-sm" style="font-size:.5rem;padding:.2rem .5rem">${s.toUpperCase()}</button>`
+        ).join('')}
+        <span style="font-family:var(--mono);font-size:.52rem;color:var(--muted);margin-left:auto">${new Date(inc.created_at).toLocaleString()}</span>
+      </div>
+    </div>`).join('') :
+    '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">No incidents matching filters.</div>';
+  updateSocMetricsUI();
+}
+
+function updateIncidentStatus(id, newStatus) {
+  const inc = INCIDENTS.find(i => i.id === id);
+  if (!inc) return;
+  inc.status = newStatus;
+  inc.updated_at = new Date().toISOString();
+  if (newStatus === 'resolved') {
+    inc.resolved_at = new Date().toISOString();
+    const mins = Math.round((new Date(inc.resolved_at) - new Date(inc.created_at)) / 60000);
+    inc.mttr = mins;
+  }
+  inc.timeline.push({ time: new Date().toISOString(), action: `Status → ${newStatus}`, user: SESSION.name });
+  saveIncidents();
+  renderIncidents();
+}
+
+function updateSocMetricsUI() {
+  const open  = INCIDENTS.filter(i => i.status === 'open').length;
+  const inv   = INCIDENTS.filter(i => i.status === 'investigating').length;
+  const res   = INCIDENTS.filter(i => i.status === 'resolved').length;
+  const resolved = INCIDENTS.filter(i => i.mttr);
+  const avgMttr = resolved.length ? Math.round(resolved.reduce((s,i)=>s+i.mttr,0)/resolved.length) : 0;
+  const badge2 = document.getElementById('sbIncidentBadge');
+  if (badge2) { badge2.textContent = open+inv; badge2.style.display = (open+inv) ? 'inline-block' : 'none'; }
+  if (document.getElementById('si-open'))  document.getElementById('si-open').textContent = open;
+  if (document.getElementById('si-inv'))   document.getElementById('si-inv').textContent = inv;
+  if (document.getElementById('si-res'))   document.getElementById('si-res').textContent = res;
+  if (document.getElementById('si-mttr'))  document.getElementById('si-mttr').textContent = avgMttr || '—';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   IOC DATABASE
+═══════════════════════════════════════════════════════════════ */
+function openIocModal() { document.getElementById('iocModal').style.display='flex'; }
+
+async function submitIoc() {
+  const type    = document.getElementById('iocType').value;
+  const value   = document.getElementById('iocValue').value.trim();
+  const severity= document.getElementById('iocSeverity').value;
+  const desc    = document.getElementById('iocDesc').value.trim();
+  const source  = document.getElementById('iocSource').value.trim();
+  if (!value) { alert('Enter an IOC value'); return; }
+  const ioc = {
+    id: Math.random().toString(36).substr(2,8),
+    type, value, severity, description:desc, source:source||'manual',
+    added_by: SESSION.name, created_at: new Date().toISOString(),
+    last_seen: new Date().toISOString(), hit_count:0, active:true, tags:[]
+  };
+  if (API_ONLINE) {
+    try { await apiPost('/api/soc/iocs', ioc); } catch(e) {}
+  }
+  IOCS.unshift(ioc); saveIocs();
+  document.getElementById('iocModal').style.display = 'none';
+  ['iocValue','iocDesc'].forEach(id => document.getElementById(id).value='');
+  renderIocs();
+  addActivity('warn', `IOC added: ${type}/${value} (${severity})`, 'Just now');
+}
+
+function renderIocs() {
+  const q    = (document.getElementById('iocSearch')?.value||'').toLowerCase();
+  const type = document.getElementById('iocTypeFilter')?.value || '';
+  let list = [...IOCS];
+  if (q)    list = list.filter(i => i.value.toLowerCase().includes(q) || (i.description||'').toLowerCase().includes(q));
+  if (type) list = list.filter(i => i.type === type);
+  document.getElementById('iocList').innerHTML = list.length
+    ? `<table class="tbl"><thead><tr><th>Type</th><th>Value</th><th>Severity</th><th>Description</th><th>Source</th><th>Added</th></tr></thead><tbody>
+        ${list.map(i=>`<tr>
+          <td><span class="badge b-ok" style="font-size:.48rem">${i.type}</span></td>
+          <td style="font-family:var(--mono);font-size:.6rem;color:var(--g2);word-break:break-all;max-width:160px">${i.value}</td>
+          <td>${badge(i.severity)}</td>
+          <td style="font-family:var(--mono);font-size:.57rem;color:var(--muted);max-width:200px">${i.description||'—'}</td>
+          <td style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">${i.source}</td>
+          <td style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${new Date(i.created_at).toLocaleDateString()}</td>
+        </tr>`).join('')}
+       </tbody></table>`
+    : '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">No IOCs found.</div>';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MITRE ATT&CK
+═══════════════════════════════════════════════════════════════ */
+const MITRE_MAP = {
+  'ssh root': ['T1078','T1133'], 'brute': ['T1110'], 'failed password': ['T1110'],
+  'port scan': ['T1046'], 'firewall': ['T1562'], 'cron': ['T1053'],
+  'redis': ['T1552'], 'mysql': ['T1190'], 'exposed': ['T1190'],
+  'privilege': ['T1068','T1548'], 'lateral': ['T1021'],
+  'reverse shell': ['T1059'], 'persistence': ['T1543'],
+  'credential': ['T1552','T1003'], 'encrypt': ['T1486'],
+};
+const MITRE_DATA = {
+  'T1190':{'name':'Exploit Public-Facing App','tactic':'Initial Access','color':'#ff3b5c'},
+  'T1133':{'name':'External Remote Services','tactic':'Initial Access','color':'#ff3b5c'},
+  'T1566':{'name':'Phishing','tactic':'Initial Access','color':'#ff3b5c'},
+  'T1078':{'name':'Valid Accounts','tactic':'Initial Access','color':'#ff3b5c'},
+  'T1059':{'name':'Command & Scripting Interpreter','tactic':'Execution','color':'#ff8c42'},
+  'T1053':{'name':'Scheduled Task/Job','tactic':'Execution','color':'#ff8c42'},
+  'T1543':{'name':'Create/Modify System Process','tactic':'Persistence','color':'#f5c842'},
+  'T1136':{'name':'Create Account','tactic':'Persistence','color':'#f5c842'},
+  'T1548':{'name':'Abuse Elevation Control','tactic':'Privilege Escalation','color':'#a855f7'},
+  'T1068':{'name':'Exploitation for Privesc','tactic':'Privilege Escalation','color':'#a855f7'},
+  'T1562':{'name':'Impair Defenses','tactic':'Defense Evasion','color':'#3b82f6'},
+  'T1070':{'name':'Indicator Removal','tactic':'Defense Evasion','color':'#3b82f6'},
+  'T1110':{'name':'Brute Force','tactic':'Credential Access','color':'#ec4899'},
+  'T1003':{'name':'OS Credential Dumping','tactic':'Credential Access','color':'#ec4899'},
+  'T1552':{'name':'Unsecured Credentials','tactic':'Credential Access','color':'#ec4899'},
+  'T1046':{'name':'Network Service Discovery','tactic':'Discovery','color':'#10b981'},
+  'T1082':{'name':'System Info Discovery','tactic':'Discovery','color':'#10b981'},
+  'T1021':{'name':'Remote Services','tactic':'Lateral Movement','color':'#f59e0b'},
+  'T1048':{'name':'Exfiltration Over Alt Protocol','tactic':'Exfiltration','color':'#7b2fff'},
+  'T1486':{'name':'Data Encrypted for Impact','tactic':'Impact','color':'#ff3b5c'},
+  'T1490':{'name':'Inhibit System Recovery','tactic':'Impact','color':'#ff3b5c'},
+};
+
+function refreshMitre() {
+  const allIssues = DEVICES.flatMap(d => d.issues||[]);
+  const mapped = {};
+  allIssues.forEach(issue => {
+    const title = (issue.title||'').toLowerCase();
+    Object.entries(MITRE_MAP).forEach(([kw, ids]) => {
+      if (title.includes(kw)) ids.forEach(id => {
+        if (MITRE_DATA[id]) mapped[id] = { ...MITRE_DATA[id], id, triggered_by: issue.title };
+      });
+    });
+  });
+  const techniques = Object.values(mapped);
+  const grid = document.getElementById('mitreGrid');
+  grid.innerHTML = techniques.length
+    ? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.5rem">
+        ${techniques.map(t=>`
+          <div style="background:rgba(255,255,255,.02);border:1px solid ${t.color}30;border-left:3px solid ${t.color};border-radius:5px;padding:.7rem .9rem">
+            <div style="font-family:var(--mono);font-size:.52rem;color:${t.color};letter-spacing:.1em;margin-bottom:.2rem">${t.id}</div>
+            <div style="font-family:var(--mono);font-size:.6rem;color:var(--text2);margin-bottom:.2rem">${t.name}</div>
+            <div style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">${t.tactic}</div>
+            <div style="font-family:var(--mono);font-size:.5rem;color:var(--muted);margin-top:.25rem;font-style:italic">via: ${t.triggered_by}</div>
+          </div>`).join('')}
+      </div>`
+    : '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">No findings to map. Scan devices first.</div>';
+
+  // Matrix by tactic
+  const tactics = [...new Set(Object.values(MITRE_DATA).map(t=>t.tactic))];
+  const matrix  = document.getElementById('mitreMatrix');
+  matrix.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.4rem">
+    ${tactics.map(tactic => {
+      const inTactic = Object.values(MITRE_DATA).filter(t=>t.tactic===tactic);
+      const hit = inTactic.filter(t=>mapped[t.id]);
+      return `<div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:6px;padding:.7rem;text-align:center">
+        <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.1em;margin-bottom:.4rem">${tactic}</div>
+        <div style="font-family:var(--display);font-size:1.4rem;color:${hit.length?'var(--danger)':'var(--muted)'}">${hit.length}</div>
+        <div style="font-family:var(--mono);font-size:.48rem;color:var(--muted)">/${inTactic.length} techniques</div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PLAYBOOKS
+═══════════════════════════════════════════════════════════════ */
+const PLAYBOOKS = [
+  { id:'pb-001', name:'SSH Brute Force Response', trigger:'Multiple failed SSH logins', severity:'high',
+    mitre:['T1110'],
+    steps:['Identify source IP from /var/log/auth.log','Block IP with ufw','Check if any login succeeded','Enable fail2ban','Harden SSH config — disable root login','Use key-based auth only','Document and close incident'],
+    commands:["grep 'Failed password' /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -rn","sudo ufw deny from ATTACKER_IP to any","sudo apt install fail2ban -y","sudo systemctl enable fail2ban --now"] },
+  { id:'pb-002', name:'Exposed Database Response', trigger:'Database port exposed to internet', severity:'critical',
+    mitre:['T1190','T1048'],
+    steps:['Block port immediately with ufw','Check active connections to DB','Review DB logs for unauthorized access','Change all DB passwords','Bind DB to localhost only','Enable DB audit logging','Check for data exfiltration'],
+    commands:["sudo ufw deny 3306","sudo ss -tnp | grep 3306","sudo grep 'Access denied' /var/log/mysql/error.log","echo 'bind-address = 127.0.0.1' >> /etc/mysql/mysql.conf.d/mysqld.cnf"] },
+  { id:'pb-003', name:'Malware / Rootkit Detection', trigger:'Suspicious process or rootkit alert', severity:'critical',
+    mitre:['T1543','T1562','T1070'],
+    steps:['DO NOT reboot — preserve volatile memory','Isolate machine from network','Capture running processes and connections','Run rkhunter and chkrootkit','Check for modified system files','Preserve all logs','Rebuild from clean backup if compromise confirmed'],
+    commands:["ps aux | sort -k3 -rn | head -20","sudo rkhunter --check --skip-keypress","sudo chkrootkit","find /tmp /var/tmp -name '*.sh' -o -name '*.py' 2>/dev/null"] },
+  { id:'pb-004', name:'Privilege Escalation Response', trigger:'Unauthorized privilege escalation', severity:'critical',
+    mitre:['T1068','T1548','T1136'],
+    steps:['Identify which user escalated and when','Review sudo log','Check for new SUID binaries','Review /etc/sudoers','Check for new user accounts','Disable compromised account','Reset all privileged passwords','Audit cron jobs'],
+    commands:["grep sudo /var/log/auth.log | tail -50","find / -perm /4000 -newer /etc/passwd 2>/dev/null","awk -F: '$3==0' /etc/passwd","sudo usermod -L compromised_username"] },
+];
+
+function renderPlaybooks() {
+  document.getElementById('playbookList').innerHTML = PLAYBOOKS.map(pb => `
+    <div class="panel" style="margin-bottom:.9rem">
+      <div class="ph">
+        <div style="display:flex;align-items:center;gap:.7rem">
+          ${badge(pb.severity)}
+          <div class="pt">${pb.name}</div>
+        </div>
+        <div style="display:flex;gap:.4rem;align-items:center">
+          ${pb.mitre.map(t=>`<span style="font-family:var(--mono);font-size:.5rem;color:var(--g2);background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.1);padding:.15rem .4rem;border-radius:3px">${t}</span>`).join('')}
+        </div>
+      </div>
+      <div class="pb">
+        <div style="font-family:var(--mono);font-size:.57rem;color:var(--muted);margin-bottom:.9rem">Trigger: ${pb.trigger}</div>
+        <div class="g2">
+          <div>
+            <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.5rem">RESPONSE STEPS</div>
+            ${pb.steps.map((s,i)=>`<div style="display:flex;gap:.6rem;padding:.4rem .6rem;background:rgba(255,255,255,.02);border-radius:4px;margin-bottom:.25rem">
+              <span style="font-family:var(--mono);font-size:.52rem;color:var(--muted);flex-shrink:0;width:16px">${i+1}</span>
+              <span style="font-family:var(--mono);font-size:.6rem;color:var(--text2)">${s}</span>
+            </div>`).join('')}
+          </div>
+          <div>
+            <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.5rem">KEY COMMANDS</div>
+            ${pb.commands.map(cmd=>`<div style="background:rgba(0,0,0,.3);border:1px solid rgba(0,255,136,.08);border-radius:4px;padding:.5rem .8rem;margin-bottom:.3rem;font-family:var(--mono);font-size:.58rem;color:var(--g);word-break:break-all">${cmd}</div>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   WAZUH
+═══════════════════════════════════════════════════════════════ */
+async function loadWazuh() {
+  document.getElementById('wazuhAlerts').innerHTML = '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:1.5rem">Loading Wazuh alerts...</div>';
+  try {
+    let alertData, agentData;
+    if (API_ONLINE) {
+      [alertData, agentData] = await Promise.all([apiGet('/api/siem/wazuh/alerts'), apiGet('/api/siem/wazuh/agents')]);
+    } else {
+      alertData = { demo:true, alerts:[
+        {id:'1',rule:{description:'User login failed',level:5,groups:['authentication_failed']},agent:{name:'prod-server-01',ip:'192.168.1.100'},data:{srcip:'185.224.128.42'},timestamp:new Date().toISOString()},
+        {id:'2',rule:{description:'File modified in /etc',level:7,groups:['syscheck']},agent:{name:'prod-server-01',ip:'192.168.1.100'},data:{},timestamp:new Date().toISOString()},
+        {id:'3',rule:{description:'Port scan detected',level:8,groups:['scan']},agent:{name:'web-server-01',ip:'192.168.1.101'},data:{srcip:'45.33.32.156'},timestamp:new Date().toISOString()},
+        {id:'4',rule:{description:'Rootkit: suspicious process',level:12,groups:['rootcheck']},agent:{name:'prod-server-01',ip:'192.168.1.100'},data:{},timestamp:new Date().toISOString()},
+        {id:'5',rule:{description:'Multiple auth failures',level:10,groups:['authentication_failures']},agent:{name:'db-server-01',ip:'192.168.1.102'},data:{srcip:'103.35.74.45'},timestamp:new Date().toISOString()},
+      ]};
+      agentData = { demo:true, agents:[
+        {id:'001',name:'prod-server-01',ip:'192.168.1.100',status:'active',os:{platform:'ubuntu',version:'22.04'}},
+        {id:'002',name:'web-server-01',ip:'192.168.1.101',status:'active',os:{platform:'ubuntu',version:'20.04'}},
+        {id:'003',name:'db-server-01',ip:'192.168.1.102',status:'disconnected',os:{platform:'centos',version:'8'}},
+      ]};
+    }
+    // Agents
+    document.getElementById('wazuhAgents').innerHTML = (agentData.agents||[]).map(a=>`
+      <div style="display:flex;align-items:center;gap:.7rem;padding:.55rem .7rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:5px;margin-bottom:.3rem">
+        <span style="width:7px;height:7px;border-radius:50%;background:${a.status==='active'?'var(--ok)':'var(--danger)'};box-shadow:0 0 5px ${a.status==='active'?'var(--ok)':'var(--danger)'};flex-shrink:0"></span>
+        <span style="font-family:var(--mono);font-size:.6rem;color:var(--text2);flex:1">${a.name}</span>
+        <span style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">${a.ip}</span>
+        <span style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${a.os?.platform||'—'} ${a.os?.version||''}</span>
+        <span class="badge ${a.status==='active'?'b-ok':'b-offline'}">${a.status}</span>
+      </div>`).join('');
+    // Alert stats
+    const levels = (alertData.alerts||[]).map(a=>a.rule?.level||0);
+    const high = levels.filter(l=>l>=10).length, med = levels.filter(l=>l>=7&&l<10).length, low = levels.filter(l=>l<7).length;
+    document.getElementById('wazuhStats').innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;margin-bottom:.6rem">
+        <div style="background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.2);border-radius:5px;padding:.7rem;text-align:center"><div style="font-family:var(--display);font-size:1.6rem;color:var(--danger)">${high}</div><div style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">HIGH (≥10)</div></div>
+        <div style="background:rgba(245,200,66,.07);border:1px solid rgba(245,200,66,.18);border-radius:5px;padding:.7rem;text-align:center"><div style="font-family:var(--display);font-size:1.6rem;color:#f5c842">${med}</div><div style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">MED (7-9)</div></div>
+        <div style="background:rgba(77,217,172,.06);border:1px solid rgba(77,217,172,.15);border-radius:5px;padding:.7rem;text-align:center"><div style="font-family:var(--display);font-size:1.6rem;color:#4dd9ac">${low}</div><div style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">LOW (&lt;7)</div></div>
+      </div>
+      ${agentData.demo?'<div style="font-family:var(--mono);font-size:.52rem;color:var(--warn);margin-bottom:.4rem">DEMO DATA — Configure WAZUH_URL in .env for live alerts</div>':''}`;
+    // Alerts list
+    document.getElementById('wazuhAlerts').innerHTML = (alertData.alerts||[]).map(a => {
+      const lvl = a.rule?.level||0;
+      const sev = lvl>=12?'critical':lvl>=8?'high':lvl>=5?'medium':'low';
+      return `<div style="padding:.65rem .9rem;background:${SEV_C[sev]};border:1px solid ${SEV_B[sev]};border-radius:6px;margin-bottom:.35rem">
+        <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.3rem">
+          ${badge(sev)}<span style="font-family:var(--mono);font-size:.6rem;color:var(--g2)">${a.agent?.name||'—'}</span>
+          <span style="font-family:var(--mono);font-size:.62rem;color:var(--text2);flex:1">${a.rule?.description||'Alert'}</span>
+          <span style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">Level ${lvl}</span>
+        </div>
+        ${a.data?.srcip?`<div style="font-family:var(--mono);font-size:.57rem;color:var(--muted)">Source IP: <span style="color:var(--danger)">${a.data.srcip}</span></div>`:''}
+      </div>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('wazuhAlerts').innerHTML = `<div style="font-family:var(--mono);font-size:.62rem;color:var(--danger);padding:1rem">${e.message}</div>`;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SPLUNK
+═══════════════════════════════════════════════════════════════ */
+async function runSplunkSearch() {
+  const query = document.getElementById('splunkQuery').value.trim();
+  const time  = document.getElementById('splunkTime').value;
+  if (!query) return;
+  const btn = document.getElementById('splunkBtn');
+  btn.disabled = true; btn.textContent = 'SEARCHING...';
+  const out = document.getElementById('splunkResults');
+  out.innerHTML = '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:1.5rem">Running Splunk search...</div>';
+  try {
+    let results;
+    if (API_ONLINE) {
+      const data = await apiPost('/api/siem/splunk/search', { query, earliest: time, latest: 'now' });
+      results = data.results;
+    } else {
+      await new Promise(r=>setTimeout(r,800));
+      results = [
+        { _time: new Date().toISOString(), host:'prod-server-01', source:'/var/log/auth.log', _raw:'Failed password for root from 185.224.128.42 port 54321 ssh2' },
+        { _time: new Date().toISOString(), host:'web-server-01', source:'/var/log/nginx/access.log', _raw:'45.33.32.156 - - GET /admin 404' },
+        { _time: new Date().toISOString(), host:'prod-server-01', source:'/var/log/syslog', _raw:'UFW BLOCK: IN=eth0 SRC=103.35.74.45 DPT=3306' },
+      ];
+    }
+    out.innerHTML = results.length
+      ? `<div style="font-family:var(--mono);font-size:.57rem;color:var(--muted);margin-bottom:.6rem">${results.length} result${results.length!==1?'s':''} · ${!API_ONLINE?'DEMO DATA — configure SPLUNK_URL in .env':'Live Splunk data'}</div>
+        <div style="display:flex;flex-direction:column;gap:.3rem">
+          ${results.map(r=>`<div style="background:rgba(0,0,0,.25);border:1px solid rgba(0,255,136,.07);border-radius:5px;padding:.6rem .8rem">
+            <div style="display:flex;gap:.8rem;margin-bottom:.25rem;flex-wrap:wrap">
+              <span style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${new Date(r._time||Date.now()).toLocaleTimeString()}</span>
+              <span style="font-family:var(--mono);font-size:.52rem;color:var(--g2)">${r.host||'—'}</span>
+              <span style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${r.source||'—'}</span>
+            </div>
+            <div style="font-family:var(--mono);font-size:.6rem;color:var(--text2);word-break:break-all">${r._raw||JSON.stringify(r)}</div>
+          </div>`).join('')}
+        </div>`
+      : '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">No results found.</div>';
+  } catch(e) {
+    out.innerHTML = `<div style="font-family:var(--mono);font-size:.62rem;color:var(--danger);padding:1rem">${e.message}</div>`;
+  }
+  btn.disabled = false; btn.textContent = 'SEARCH →';
+}
+
+
+/* ── MOBILE SIDEBAR ── */
+function toggleMobileSidebar(){
+  const sb = document.querySelector('.sidebar');
+  const ov = document.getElementById('mobOverlay');
+  const btn = document.getElementById('mobMenuBtn');
+  const isOpen = sb.classList.toggle('mob-open');
+  ov.style.display = isOpen ? 'block' : 'none';
+  document.body.classList.toggle('mob-menu-open', isOpen);
+}
+function closeMobileSidebar(){
+  document.querySelector('.sidebar').classList.remove('mob-open');
+  document.getElementById('mobOverlay').style.display='none';
+  document.body.classList.remove('mob-menu-open');
+}
+// Close sidebar on nav (mobile)
+const _origNav = nav;
+window.nav = function(page){
+  _origNav(page);
+  if(window.innerWidth<=768) closeMobileSidebar();
+};
+
+
+/* ═══════════════════════════════════════════════════════════════
+   USER MANAGEMENT (Admin)
+═══════════════════════════════════════════════════════════════ */
+function renderUsersPage() {
+  if (!document.getElementById('usersTable')) return;
+  if (SESSION.role !== 'admin') {
+    document.getElementById('usersTable').innerHTML = '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">Admin access required.</div>';
+    return;
+  }
+  const query      = (document.getElementById('userSearchInput')?.value || '').toLowerCase();
+  const roleFilter = document.getElementById('userRoleFilter')?.value || '';
+  let users = AUTH.getAllUsersAdmin();
+
+  if (query) users = users.filter(u =>
+    (u.name||'').toLowerCase().includes(query)   ||
+    (u.email||'').toLowerCase().includes(query)  ||
+    (u.company||'').toLowerCase().includes(query)||
+    (u.phone||'').toLowerCase().includes(query)
+  );
+  if (roleFilter) users = users.filter(u => u.role === roleFilter);
+
+  // Stats
+  const allU = AUTH.getAllUsersAdmin();
+  const statsEl = document.getElementById('userStatsRow');
+  if (statsEl) {
+    statsEl.innerHTML = `
+      <div class="sc sc-g"><div class="sc-icon">👥</div><div class="sc-label">Total Users</div><div class="sc-value" style="color:var(--g)">${allU.length}</div></div>
+      <div class="sc sc-r"><div class="sc-icon">🔴</div><div class="sc-label">Admins</div><div class="sc-value" style="color:var(--danger)">${allU.filter(u=>u.role==='admin').length}</div></div>
+      <div class="sc sc-b"><div class="sc-icon">🟡</div><div class="sc-label">Clients</div><div class="sc-value" style="color:var(--g2)">${allU.filter(u=>u.role==='client').length}</div></div>
+      <div class="sc sc-p"><div class="sc-icon">🟢</div><div class="sc-label">Suspended</div><div class="sc-value" style="color:var(--warn)">${allU.filter(u=>u.status==='suspended').length}</div></div>`;
+  }
+  const countEl = document.getElementById('userCount');
+  if (countEl) countEl.textContent = `${users.length} of ${allU.length} users`;
+
+  if (!users.length) {
+    document.getElementById('usersTable').innerHTML = '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">No users match your search.</div>';
+    return;
+  }
+
+  document.getElementById('usersTable').innerHTML = `
+    <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr>
+          <th>User</th><th>Contact</th><th>Role</th><th>Plan</th>
+          <th>Status</th><th>Joined</th><th>Last Login</th><th>Logins</th><th>Actions</th>
+        </tr></thead>
+        <tbody>
+          ${users.map(u => `<tr>
+            <td>
+              <div style="display:flex;align-items:center;gap:.6rem">
+                <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--g3),var(--g));display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.55rem;font-weight:700;color:#fff;flex-shrink:0">${u.avatar||u.name[0]}</div>
+                <div>
+                  <div style="font-family:var(--mono);font-size:.6rem;color:var(--white)">${u.name}</div>
+                  <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2)">${u.email}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);line-height:1.6">${u.phone||'—'}<br>${u.company||'—'}</div>
+            </td>
+            <td><span class="badge b-${u.role==='admin'?'critical':u.role==='client'?'medium':'ok'}">${u.role}</span></td>
+            <td><span style="font-family:var(--mono);font-size:.52rem;color:var(--muted);background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.1);padding:.15rem .4rem;border-radius:3px">${(u.plan||'free').toUpperCase()}</span></td>
+            <td><span style="font-family:var(--mono);font-size:.5rem;padding:.15rem .4rem;border-radius:3px;background:${u.status==='active'?'rgba(0,255,136,.08)':'rgba(255,59,92,.08)'};color:${u.status==='active'?'var(--ok)':'var(--danger)'};border:1px solid ${u.status==='active'?'rgba(0,255,136,.18)':'rgba(255,59,92,.2)'}">${(u.status||'active').toUpperCase()}</span></td>
+            <td style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${u.created||'—'}</td>
+            <td style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${u.lastLogin ? new Date(u.lastLogin).toLocaleString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : 'Never'}</td>
+            <td style="font-family:var(--mono);font-size:.55rem;color:var(--muted);text-align:center">${u.loginCount||0}</td>
+            <td>
+              <div style="display:flex;gap:.3rem">
+                <button onclick="openUserDetail('${u.id}')" class="btn btn-o btn-sm" style="font-size:.5rem;padding:.2rem .5rem">VIEW</button>
+                <button onclick="openEditUser('${u.id}')" class="btn btn-o btn-sm" style="font-size:.5rem;padding:.2rem .5rem;color:var(--g2)">EDIT</button>
+                ${u.id !== SESSION.id ? `<button onclick="toggleSuspend('${u.id}')" class="btn btn-sm" style="font-size:.5rem;padding:.2rem .5rem;background:${u.status==='active'?'rgba(245,158,11,.1)':'rgba(0,255,136,.08)'};color:${u.status==='active'?'var(--warn)':'var(--ok)'};border:1px solid ${u.status==='active'?'rgba(245,158,11,.2)':'rgba(0,255,136,.18)'}">${u.status==='active'?'SUSPEND':'ACTIVATE'}</button>
+                <button onclick="deleteUserAdmin('${u.id}')" class="btn btn-r btn-sm" style="font-size:.5rem;padding:.2rem .5rem">DEL</button>` : '<span style="font-family:var(--mono);font-size:.48rem;color:var(--muted)">(you)</span>'}
+              </div>
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+/* View full user details */
+function openUserDetail(userId) {
+  const users = AUTH.getAllUsersAdmin();
+  const u = users.find(u => u.id === userId);
+  if (!u) return;
+  document.getElementById('userModalTitle').textContent = 'USER — ' + u.name.toUpperCase();
+  const agrs = JSON.parse(localStorage.getItem('pm_agreements')||'[]').filter(a => a.email === u.email);
+  document.getElementById('userModalBody').innerHTML = `
+    <!-- Avatar + name header -->
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;padding:.9rem;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:8px">
+      <div style="width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--g3),var(--g));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:1.4rem;color:#fff;flex-shrink:0">${u.avatar||u.name[0]}</div>
+      <div style="flex:1">
+        <div style="font-family:var(--display);font-size:1.3rem;color:var(--white);letter-spacing:.04em">${u.name}</div>
+        <div style="font-family:var(--mono);font-size:.58rem;color:var(--g2)">${u.email}</div>
+        <div style="display:flex;gap:.4rem;margin-top:.4rem">
+          <span class="badge b-${u.role==='admin'?'critical':u.role==='client'?'medium':'ok'}">${u.role}</span>
+          <span style="font-family:var(--mono);font-size:.5rem;padding:.15rem .4rem;border-radius:3px;background:${u.status==='active'?'rgba(0,255,136,.08)':'rgba(255,59,92,.08)'};color:${u.status==='active'?'var(--ok)':'var(--danger)'};border:1px solid ${u.status==='active'?'rgba(0,255,136,.18)':'rgba(255,59,92,.2)'}">${(u.status||'active').toUpperCase()}</span>
+          <span style="font-family:var(--mono);font-size:.5rem;color:var(--muted);background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.1);padding:.15rem .4rem;border-radius:3px">${(u.plan||'free').toUpperCase()}</span>
+        </div>
+      </div>
+    </div>
+    <!-- Stats row -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1.2rem">
+      <div style="background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.07);border-radius:6px;padding:.8rem;text-align:center">
+        <div style="font-family:var(--display);font-size:1.6rem;color:var(--g)">${u.loginCount||0}</div>
+        <div style="font-family:var(--mono);font-size:.48rem;color:var(--muted)">TOTAL LOGINS</div>
+      </div>
+      <div style="background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.07);border-radius:6px;padding:.8rem;text-align:center">
+        <div style="font-family:var(--display);font-size:1.6rem;color:var(--g2)">${agrs.length}</div>
+        <div style="font-family:var(--mono);font-size:.48rem;color:var(--muted)">AGREEMENTS</div>
+      </div>
+      <div style="background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.07);border-radius:6px;padding:.8rem;text-align:center">
+        <div style="font-family:var(--display);font-size:.8rem;color:var(--muted);margin-top:.4rem">${u.lastLogin ? new Date(u.lastLogin).toLocaleDateString() : 'Never'}</div>
+        <div style="font-family:var(--mono);font-size:.48rem;color:var(--muted)">LAST LOGIN</div>
+      </div>
+    </div>
+    <!-- Full info rows -->
+    ${[
+      ['User ID',      u.id],
+      ['Full Name',    u.name],
+      ['Email',        u.email],
+      ['Phone',        u.phone||'—'],
+      ['Company',      u.company||'—'],
+      ['Role',         u.role],
+      ['Plan',         u.plan||'free'],
+      ['Status',       u.status||'active'],
+      ['Joined',       u.created||'—'],
+      ['Last Login',   u.lastLogin ? new Date(u.lastLogin).toLocaleString() : 'Never'],
+      ['Login Count',  u.loginCount||0],
+      ['Avatar',       u.avatar||u.name[0]],
+    ].map(([k,v]) => `<div style="display:flex;gap:.8rem;padding:.42rem .6rem;background:rgba(255,255,255,.02);border-radius:4px;margin-bottom:.22rem;flex-wrap:wrap">
+      <span style="font-family:var(--mono);font-size:.55rem;color:var(--muted);width:110px;flex-shrink:0">${k}</span>
+      <span style="font-family:var(--mono);font-size:.6rem;color:var(--text2);flex:1;word-break:break-all">${v}</span>
+    </div>`).join('')}
+    ${u.notes ? `<div style="background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.1);border-radius:5px;padding:.7rem .9rem;margin-top:.5rem">
+      <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);margin-bottom:.3rem">NOTES</div>
+      <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">${u.notes}</div>
+    </div>` : ''}
+    ${agrs.length ? `<div style="margin-top:.8rem">
+      <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.4rem">SIGNED AGREEMENTS (${agrs.length})</div>
+      ${agrs.map(a => `<div style="display:flex;align-items:center;gap:.7rem;padding:.45rem .6rem;background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.08);border-radius:5px;margin-bottom:.3rem">
+        <span style="font-family:var(--mono);font-size:.52rem;color:var(--g2)">${a.id}</span>
+        <span style="font-family:var(--mono);font-size:.55rem;color:var(--text2);flex:1">${a.type||'—'}</span>
+        <span style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">${(a.timestamp||'').split(',')[0]}</span>
+        <button onclick="viewAgreement('${a.id}')" class="btn btn-o btn-sm" style="font-size:.48rem;padding:.15rem .4rem">VIEW</button>
+      </div>`).join('')}
+    </div>` : ''}
+    <!-- Actions -->
+    <div style="display:flex;gap:.5rem;margin-top:1.1rem;flex-wrap:wrap">
+      <button onclick="openEditUser('${u.id}');closeUserModal()" class="btn btn-o btn-sm">✏️ EDIT USER</button>
+      ${u.id !== SESSION.id ? `
+      <button onclick="toggleSuspend('${u.id}');closeUserModal()" class="btn btn-sm" style="background:${u.status==='active'?'rgba(245,158,11,.1)':'rgba(0,255,136,.08)'};color:${u.status==='active'?'var(--warn)':'var(--ok)'};border:1px solid ${u.status==='active'?'rgba(245,158,11,.2)':'rgba(0,255,136,.18)'}">
+        ${u.status==='active'?'🔒 SUSPEND':'✅ ACTIVATE'}
+      </button>
+      <button onclick="adminResetPw('${u.id}');closeUserModal()" class="btn btn-o btn-sm" style="color:var(--g2)">🔑 RESET PW</button>
+      <button onclick="deleteUserAdmin('${u.id}');closeUserModal()" class="btn btn-r btn-sm">🗑 DELETE</button>` : ''}
+    </div>`;
+  document.getElementById('userDetailModal').style.display = 'flex';
+}
+
+/* Edit user modal (reuses create modal with pre-filled data) */
+function openEditUser(userId) {
+  const users = AUTH.getAllUsersAdmin();
+  const u = users.find(u => u.id === userId);
+  if (!u) return;
+  document.getElementById('cu-name').value    = u.name;
+  document.getElementById('cu-email').value   = u.email;
+  document.getElementById('cu-password').value = '';
+  document.getElementById('cu-phone').value   = u.phone||'';
+  document.getElementById('cu-company').value = u.company||'';
+  document.getElementById('cu-notes').value   = u.notes||'';
+  document.getElementById('cu-role').value    = u.role;
+  document.getElementById('cu-plan').value    = u.plan||'free';
+  document.getElementById('cu-status').value  = u.status||'active';
+  document.getElementById('createUserModal').style.display = 'flex';
+  document.getElementById('createUserModal').dataset.editId = userId;
+  document.querySelector('#createUserModal .modal-title').textContent = 'EDIT USER';
+}
+
+function openCreateUserModal() {
+  ['cu-name','cu-email','cu-password','cu-phone','cu-company','cu-notes'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('cu-role').value   = 'user';
+  document.getElementById('cu-plan').value   = 'free';
+  document.getElementById('cu-status').value = 'active';
+  delete document.getElementById('createUserModal').dataset.editId;
+  document.querySelector('#createUserModal .modal-title').textContent = 'CREATE USER';
+  document.getElementById('createUserModal').style.display = 'flex';
+}
+
+function submitCreateUser() {
+  const modal  = document.getElementById('createUserModal');
+  const editId = modal.dataset.editId;
+  const alertEl = document.getElementById('createUserAlert');
+  const data = {
+    name:     document.getElementById('cu-name').value.trim(),
+    email:    document.getElementById('cu-email').value.trim(),
+    password: document.getElementById('cu-password').value,
+    phone:    document.getElementById('cu-phone').value.trim(),
+    company:  document.getElementById('cu-company').value.trim(),
+    notes:    document.getElementById('cu-notes').value.trim(),
+    role:     document.getElementById('cu-role').value,
+    plan:     document.getElementById('cu-plan').value,
+    status:   document.getElementById('cu-status').value,
+  };
+  let result;
+  if (editId) {
+    if (data.password) data.newPassword = data.password;
+    result = AUTH.adminUpdateUser(editId, data, SESSION.id);
+  } else {
+    result = AUTH.adminCreateUser(data, SESSION.id);
+  }
+  if (!result.ok) {
+    alertEl.textContent = result.error;
+    alertEl.style.cssText = 'display:block;background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.2);color:var(--danger)';
+    return;
+  }
+  modal.style.display = 'none';
+  renderUsersPage();
+  renderAdmin();
+  addActivity('info', `${editId?'Updated':'Created'} user: ${data.name} (${data.email})`, 'Just now');
+}
+
+function toggleSuspend(userId) {
+  const users = AUTH.getAllUsersAdmin();
+  const u = users.find(u => u.id === userId);
+  if (!u) return;
+  const newStatus = u.status === 'active' ? 'suspended' : 'active';
+  AUTH.adminUpdateUser(userId, { status: newStatus }, SESSION.id);
+  renderUsersPage();
+  renderAdmin();
+  addActivity('warn', `User ${u.name} ${newStatus === 'suspended' ? 'suspended' : 'reactivated'}`, 'Just now');
+}
+
+function adminResetPw(userId) {
+  const newPw = prompt('Set new password for this user:\n(Min 8 chars, 1 uppercase, 1 number)');
+  if (!newPw) return;
+  const result = AUTH.adminUpdateUser(userId, { newPassword: newPw }, SESSION.id);
+  if (!result.ok) { alert('Error: ' + result.error); return; }
+  const u = AUTH.getAllUsersAdmin().find(u => u.id === userId);
+  addActivity('warn', `Admin reset password for ${u?.name||userId}`, 'Just now');
+  alert('Password reset successfully.');
+}
+
+function deleteUserAdmin(userId) {
+  const users = AUTH.getAllUsersAdmin();
+  const u = users.find(u => u.id === userId);
+  if (!confirm(`Delete user "${u?.name}"?\n\nThis permanently removes their account and cannot be undone.`)) return;
+  const result = AUTH.adminDeleteUser(userId, SESSION.id);
+  if (!result.ok) { alert('Error: ' + result.error); return; }
+  renderUsersPage();
+  renderAdmin();
+  addActivity('danger', `User deleted: ${u?.name||userId}`, 'Just now');
+}
+
+function exportUsersCSV() {
+  const users = AUTH.getAllUsersAdmin();
+  const headers = ['ID','Name','Email','Phone','Company','Role','Plan','Status','Joined','Last Login','Login Count','Notes'];
+  const rows = users.map(u => [
+    u.id, u.name, u.email, u.phone||'', u.company||'',
+    u.role, u.plan||'free', u.status||'active', u.created||'',
+    u.lastLogin ? new Date(u.lastLogin).toLocaleDateString() : 'Never',
+    u.loginCount||0, (u.notes||'').replace(/"/g,"''")
+  ].map(v => `"${v}"`).join(','));
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = `pm-users-${new Date().toISOString().split('T')[0]}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function closeUserModal() {
+  document.getElementById('userDetailModal').style.display = 'none';
 }
 
 init();
