@@ -947,6 +947,145 @@
         <div id="learnContent"></div>
       </div>
 
+
+      <!-- ══ SCANNER ══ -->
+      <div class="page" id="page-scan">
+        <div class="pg-hdr"><div><div class="pg-title">SCANNER</div><div class="pg-sub">Live scan results</div></div></div>
+        <div id="scannerBody"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:3rem">Click SCAN DEVICE in the header to run a scan.</div></div>
+      </div>
+
+      <!-- ══ WEBSITE SCANNER ══ -->
+      <div class="page" id="page-webscan">
+        <div class="pg-hdr"><div><div class="pg-title">WEBSITE SCANNER</div><div class="pg-sub">SSL · HTTP Headers · DNS · Exposed Files</div></div></div>
+        <div class="panel"><div class="ph"><div class="pt">Target Domain</div></div><div class="pb">
+          <div style="display:flex;gap:.7rem;align-items:flex-end;flex-wrap:wrap">
+            <div style="flex:1;min-width:200px"><label class="form-label">DOMAIN OR URL</label><input class="form-input" id="webScanTarget" placeholder="example.com" style="margin-top:.3rem"/></div>
+            <button onclick="runWebScan()" class="btn btn-g" id="webScanBtn">SCAN WEBSITE</button>
+          </div>
+        </div></div>
+        <div id="webScanResults" style="display:none">
+          <div class="g4" id="webScanStats"></div>
+          <div class="g2">
+            <div class="panel"><div class="ph"><div class="pt">SSL Certificate</div></div><div class="pb" id="sslPanel"></div></div>
+            <div class="panel"><div class="ph"><div class="pt">DNS Security</div></div><div class="pb" id="dnsPanel"></div></div>
+          </div>
+          <div class="panel"><div class="ph"><div class="pt">HTTP Security Headers</div></div><div class="pb" id="headersPanel"></div></div>
+          <div class="panel"><div class="ph"><div class="pt">Exposed Files</div></div><div class="pb" id="exposedPanel"></div></div>
+          <div class="g2">
+            <div class="panel"><div class="ph"><div class="pt">Technology Fingerprint</div></div><div class="pb" id="techPanel"></div></div>
+            <div class="panel"><div class="ph"><div class="pt">Open Ports</div></div><div class="pb" id="webPortsPanel"></div></div>
+          </div>
+          <div class="panel"><div class="ph"><div class="pt">All Issues</div></div><div class="pb" id="webIssuesPanel"></div></div>
+        </div>
+      </div>
+
+      <!-- ══ OSINT ══ -->
+      <div class="page" id="page-osint">
+        <div class="pg-hdr"><div><div class="pg-title">OSINT &amp; RECON</div><div class="pg-sub">Email breaches · Username lookup · Password check</div></div></div>
+        <div class="g2" style="margin-bottom:.9rem">
+          <div class="panel"><div class="ph"><div class="pt">Email Breach Check</div></div><div class="pb">
+            <div style="display:flex;gap:.6rem;margin-bottom:.6rem"><input class="form-input" id="emailOsintInput" placeholder="email@example.com" type="email" style="flex:1"/><button onclick="runEmailOsint()" class="btn btn-g btn-sm">CHECK</button></div>
+            <div id="emailOsintResult"></div>
+          </div></div>
+          <div class="panel"><div class="ph"><div class="pt">Password Breach Check</div></div><div class="pb">
+            <div style="display:flex;gap:.6rem;margin-bottom:.6rem"><input class="form-input" id="pwCheckInput" placeholder="Enter password..." type="password" style="flex:1"/><button onclick="runPwCheck()" class="btn btn-o btn-sm">CHECK</button></div>
+            <div id="pwCheckResult"></div>
+          </div></div>
+        </div>
+        <div class="panel"><div class="ph"><div class="pt">Username Lookup</div></div><div class="pb">
+          <div style="display:flex;gap:.6rem;margin-bottom:.8rem"><input class="form-input" id="usernameInput" placeholder="username..." style="flex:1"/><button onclick="runUsernameLookup()" class="btn btn-g btn-sm" id="usernameBtn">SEARCH</button></div>
+          <div id="usernameResults"></div>
+        </div></div>
+      </div>
+
+      <!-- ══ THREAT INTEL ══ -->
+      <div class="page" id="page-threat">
+        <div class="pg-hdr"><div><div class="pg-title">THREAT INTELLIGENCE</div><div class="pg-sub">IP reputation · VirusTotal · Shodan</div></div></div>
+        <div class="panel"><div class="ph"><div class="pt">IP / Domain Lookup</div></div><div class="pb">
+          <div style="display:flex;gap:.6rem;margin-bottom:.6rem;flex-wrap:wrap">
+            <input class="form-input" id="threatTarget" placeholder="IP or domain..." style="flex:1;min-width:200px"/>
+            <select class="form-input" id="threatType" style="width:140px"><option value="ip">IP Address</option><option value="domain">Domain</option></select>
+            <button onclick="runThreatLookup()" class="btn btn-g btn-sm" id="threatBtn">LOOKUP</button>
+          </div>
+          <div id="threatResults"></div>
+        </div></div>
+      </div>
+
+      <!-- ══ INCIDENTS ══ -->
+      <div class="page" id="page-incidents">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">INCIDENTS</div><div class="pg-sub">SOC incident management</div></div>
+          <button onclick="openIncidentModal()" class="btn btn-g btn-sm">+ NEW INCIDENT</button>
+        </div>
+        <div class="g4" id="incidentStats">
+          <div class="sc sc-r"><div class="sc-icon">🚨</div><div class="sc-label">Open</div><div class="sc-value" id="si-open" style="color:var(--danger)">0</div></div>
+          <div class="sc sc-p"><div class="sc-icon">🔍</div><div class="sc-label">Investigating</div><div class="sc-value" id="si-inv" style="color:var(--g3)">0</div></div>
+          <div class="sc sc-g"><div class="sc-icon">✓</div><div class="sc-label">Resolved</div><div class="sc-value" id="si-res" style="color:var(--ok)">0</div></div>
+          <div class="sc sc-b"><div class="sc-icon">⏱</div><div class="sc-label">Avg MTTR</div><div class="sc-value" id="si-mttr" style="color:var(--g2)">—</div></div>
+        </div>
+        <div class="panel"><div class="ph"><div class="pt">All Incidents</div>
+          <div style="display:flex;gap:.5rem">
+            <select id="incFilterStatus" onchange="renderIncidents()" class="form-input" style="width:130px;padding:.3rem .5rem;font-size:.55rem"><option value="">All Status</option><option>open</option><option>investigating</option><option>contained</option><option>resolved</option><option>closed</option></select>
+            <select id="incFilterSev" onchange="renderIncidents()" class="form-input" style="width:120px;padding:.3rem .5rem;font-size:.55rem"><option value="">All Severity</option><option>critical</option><option>high</option><option>medium</option><option>low</option></select>
+          </div>
+        </div><div class="pb" id="incidentList"><div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">No incidents yet.</div></div></div>
+      </div>
+
+      <!-- ══ IOC DATABASE ══ -->
+      <div class="page" id="page-iocs">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">IOC DATABASE</div><div class="pg-sub">Indicators of Compromise</div></div>
+          <button onclick="openIocModal()" class="btn btn-g btn-sm">+ ADD IOC</button>
+        </div>
+        <div class="panel"><div class="ph"><div class="pt">Search IOCs</div></div><div class="pb">
+          <div style="display:flex;gap:.6rem;margin-bottom:.8rem;flex-wrap:wrap">
+            <input class="form-input" id="iocSearch" placeholder="Search IOCs..." style="flex:1" oninput="renderIocs()"/>
+            <select id="iocTypeFilter" onchange="renderIocs()" class="form-input" style="width:120px;padding:.3rem .5rem;font-size:.6rem"><option value="">All Types</option><option>ip</option><option>domain</option><option>url</option><option>hash</option><option>email</option></select>
+          </div>
+          <div id="iocList"><div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">No IOCs yet.</div></div>
+        </div></div>
+      </div>
+
+      <!-- ══ MITRE ATT&CK ══ -->
+      <div class="page" id="page-mitre">
+        <div class="pg-hdr"><div><div class="pg-title">MITRE ATT&amp;CK</div><div class="pg-sub">Technique mapping from scan findings</div></div></div>
+        <div class="panel"><div class="ph"><div class="pt">Mapped Techniques</div><button class="pa" onclick="refreshMitre()">REFRESH</button></div><div class="pb" id="mitreGrid"><div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">Scan devices to map MITRE ATT&amp;CK techniques.</div></div></div>
+        <div class="panel"><div class="ph"><div class="pt">ATT&amp;CK Matrix</div></div><div class="pb" id="mitreMatrix"></div></div>
+      </div>
+
+      <!-- ══ PLAYBOOKS ══ -->
+      <div class="page" id="page-playbooks">
+        <div class="pg-hdr"><div><div class="pg-title">PLAYBOOKS</div><div class="pg-sub">Incident response procedures</div></div></div>
+        <div id="playbookList"></div>
+      </div>
+
+      <!-- ══ WAZUH ══ -->
+      <div class="page" id="page-wazuh">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">WAZUH SIEM</div><div class="pg-sub">Real-time alerts from Wazuh agents</div></div>
+          <button onclick="loadWazuh()" class="btn btn-o btn-sm">REFRESH</button>
+        </div>
+        <div class="g2" style="margin-bottom:.9rem">
+          <div class="panel"><div class="ph"><div class="pt">Agents</div></div><div class="pb" id="wazuhAgents"><div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:1.5rem">Click Refresh to load</div></div></div>
+          <div class="panel"><div class="ph"><div class="pt">Alert Statistics</div></div><div class="pb" id="wazuhStats"></div></div>
+        </div>
+        <div class="panel"><div class="ph"><div class="pt">Recent Alerts</div></div><div class="pb" id="wazuhAlerts"><div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:1.5rem">Click Refresh to load</div></div></div>
+      </div>
+
+      <!-- ══ SPLUNK ══ -->
+      <div class="page" id="page-splunk">
+        <div class="pg-hdr"><div><div class="pg-title">SPLUNK</div><div class="pg-sub">Search and visualize log data</div></div></div>
+        <div class="panel"><div class="ph"><div class="pt">Splunk Search</div></div><div class="pb">
+          <div style="display:flex;gap:.6rem;margin-bottom:.5rem;flex-wrap:wrap">
+            <input class="form-input" id="splunkQuery" placeholder='index=main sourcetype=syslog "Failed password"' style="flex:1"/>
+            <select id="splunkTime" class="form-input" style="width:130px;padding:.3rem .5rem;font-size:.6rem"><option value="-1h">Last 1 hour</option><option value="-24h" selected>Last 24h</option><option value="-7d">Last 7 days</option></select>
+            <button onclick="runSplunkSearch()" class="btn btn-g btn-sm" id="splunkBtn">SEARCH</button>
+          </div>
+          <div class="form-hint">Configure SPLUNK_URL in backend .env to connect live Splunk.</div>
+        </div></div>
+        <div class="panel"><div class="ph"><div class="pt">Results</div></div><div class="pb" id="splunkResults"><div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">Enter a search query above.</div></div></div>
+      </div>
+
     </main>
   </div>
 </div>
@@ -1559,18 +1698,7 @@ function renderAlerts() {
 function dismissAlert(key) { DISMISSED.add(key); renderAlerts(); }
 function dismissAll() { DEVICES.forEach(d=>(d.issues||[]).forEach(i=>DISMISSED.add(d.ip+'-'+i.id))); renderAlerts(); }
 
-function renderReports() {
-  document.getElementById('allIssuesBody').innerHTML = DEVICES.length ?
-    DEVICES.flatMap(d=>(d.issues||[]).map(i=>({...i,device:d.hostname,ip:d.ip}))).sort((a,b)=>b.cvss-a.cvss).map(i=>
-      `<div class="issue-row" style="background:${SEV_C[i.severity]};border:1px solid ${SEV_B[i.severity]}">
-        ${badge(i.severity)}
-        <div style="flex:1;font-family:var(--mono);font-size:.6rem;color:var(--text2)">${i.title}</div>
-        <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2)">${i.device}</div>
-        <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${i.category}</div>
-        <div style="font-family:var(--mono);font-size:.58rem;color:${SEV_COL[i.severity]}">CVSS ${i.cvss}</div>
-      </div>`).join('') :
-    '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">Scan devices to see issues</div>';
-}
+/* renderReports moved to AI Remediation section below */
 
 function updateDeviceSelects() {
   const opts = `<option value="all">All Devices</option>`+DEVICES.map(d=>`<option value="${d.ip}">${d.hostname} (${d.ip})</option>`).join('');
@@ -1979,26 +2107,24 @@ function exportAgreements() {
   const agrs = getAgreements();
   if (!agrs.length) { alert('No agreements to export.'); return; }
   const headers = ['ID','Name','Title','Organization','Email','Phone','Address','Type','Environment','Start','End','Scope','Notes','Signature','Signed At'];
-  const rows = agrs.map(a => [
-    a.id, a.name, a.title, a.org, a.email, a.phone, a.address,
-    a.type, a.env, a.start, a.end,
-    (a.scope||'').replace(/
-/g,' | '),
-    (a.notes||'').replace(/
-/g,' '),
-    a.signature, a.timestamp
-  ].map(v => `"${(v||'').replace(/"/g,'""')}"`).join(','));
-  const csv = [headers.join(','), ...rows].join('
-');
+  const rows = agrs.map(function(a) {
+    return [
+      a.id, a.name, a.title, a.org, a.email, a.phone, a.address,
+      a.type, a.env, a.start, a.end,
+      (a.scope||'').replace(/\n/g,' | '),
+      (a.notes||'').replace(/\n/g,' '),
+      a.signature, a.timestamp
+    ].map(function(v) { return '"' + String(v||'').replace(/"/g,'""') + '"'; }).join(',');
+  });
+  const csv = [headers.join(',')].concat(rows).join('\n');
   const blob = new Blob([csv], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `pm-offsec-agreements-${new Date().toISOString().split('T')[0]}.csv`;
+  a.download = 'pm-offsec-agreements-' + new Date().toISOString().split('T')[0] + '.csv';
   a.click();
   URL.revokeObjectURL(url);
 }
-
 function exportSingleAgreement(id) {
   const a = getAgreements().find(ag => ag.id === id);
   if (!a) return;
@@ -3519,20 +3645,23 @@ function deleteUserAdmin(userId) {
 function exportUsersCSV() {
   const users = AUTH.getAllUsersAdmin();
   const headers = ['ID','Name','Email','Phone','Company','Role','Plan','Status','Joined','Last Login','Login Count','Notes'];
-  const rows = users.map(u => [
-    u.id, u.name, u.email, u.phone||'', u.company||'',
-    u.role, u.plan||'free', u.status||'active', u.created||'',
-    u.lastLogin ? new Date(u.lastLogin).toLocaleDateString() : 'Never',
-    u.loginCount||0, (u.notes||'').replace(/"/g,"''")
-  ].map(v => `"${v}"`).join(','));
-  const csv = [headers.join(','), ...rows].join('\n');
+  const rows = users.map(function(u) {
+    return [
+      u.id, u.name, u.email, u.phone||'', u.company||'',
+      u.role, u.plan||'free', u.status||'active', u.created||'',
+      u.lastLogin ? new Date(u.lastLogin).toLocaleDateString() : 'Never',
+      u.loginCount||0, (u.notes||'').replace(/"/g,"''")
+    ].map(function(v) { return '"' + String(v||'') + '"'; }).join(',');
+  });
+  const csv = [headers.join(',')].concat(rows).join('\n');
   const blob = new Blob([csv], { type: 'text/csv' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url; a.download = `pm-users-${new Date().toISOString().split('T')[0]}.csv`;
-  a.click(); URL.revokeObjectURL(url);
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'pm-users-' + new Date().toISOString().split('T')[0] + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
 }
-
 function closeUserModal() {
   document.getElementById('userDetailModal').style.display = 'none';
 }
@@ -3661,84 +3790,104 @@ Generate exact remediation steps.`;
 }
 
 function parseAndRenderRemediation(raw, issue, device) {
-  let data;
+  var data;
   try {
-    const clean = raw.replace(/```json|```/g, '').trim();
+    var clean = raw.replace(/`{3}json|`{3}/g, '').trim();
     data = JSON.parse(clean);
   } catch(e) {
-    // If not JSON, show as formatted text
     renderRemediationText(raw, issue);
     return;
   }
-
-  allRemCommands = (data.steps||[]).filter(s=>s.command).map(s=>s.command);
-  const sevColor = { critical:'#ff3b5c', high:'#ff8c42', medium:'#f5c842', low:'#4dd9ac' }[issue.severity] || '#00ff88';
-
-  document.getElementById('remModalBody').innerHTML = `
-    <!-- Summary card -->
-    <div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:8px;padding:1.1rem 1.3rem;margin-bottom:1.1rem">
-      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:.8rem">
-        <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">Difficulty: <span style="color:var(--text2)">${data.difficulty||'—'}</span></div>
-        <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">Time: <span style="color:var(--text2)">${data.time_estimate||'—'}</span></div>
-        <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">CVSS: <span style="color:${sevColor}">${issue.cvss}</span></div>
-      </div>
-      <div style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.8;margin-bottom:.6rem">${data.summary||''}</div>
-      ${data.business_impact ? `<div style="background:rgba(255,59,92,.06);border:1px solid rgba(255,59,92,.15);border-radius:5px;padding:.6rem .8rem">
-        <div style="font-family:var(--mono);font-size:.52rem;color:var(--danger);letter-spacing:.12em;margin-bottom:.25rem">⚠ BUSINESS IMPACT</div>
-        <div style="font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.7">${data.business_impact}</div>
-      </div>` : ''}
-    </div>
-
-    <!-- Steps -->
-    <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.18em;margin-bottom:.6rem">REMEDIATION STEPS</div>
-    <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem">
-      ${(data.steps||[]).map((step, i) => `
-        <div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);border-radius:7px;overflow:hidden">
-          <div style="display:flex;align-items:center;gap:.8rem;padding:.7rem .9rem;border-bottom:${step.command?'1px solid rgba(255,255,255,.05)':'none'}">
-            <div style="width:22px;height:22px;border-radius:50%;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:.8rem;color:var(--g);flex-shrink:0">${i+1}</div>
-            <div style="flex:1">
-              <div style="font-family:var(--mono);font-size:.62rem;color:var(--white);margin-bottom:.2rem">${step.title}</div>
-              <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:1.65">${step.description}</div>
-            </div>
-          </div>
-          ${step.command ? `<div onclick="copyCmd(this,'${step.command.replace(/'/g,"\\'")}')" style="display:flex;align-items:center;gap:.6rem;padding:.6rem .9rem;background:rgba(0,0,0,.3);cursor:pointer;transition:background .2s" onmouseover="this.style.background='rgba(0,0,0,.5)'" onmouseout="this.style.background='rgba(0,0,0,.3)'" title="Click to copy">
-            <span style="font-family:var(--mono);font-size:.58rem;color:rgba(0,255,136,.4);flex-shrink:0">$</span>
-            <code style="font-family:var(--mono);font-size:.62rem;color:var(--g);flex:1;word-break:break-all">${step.command}</code>
-            <span style="font-family:var(--mono);font-size:.5rem;color:var(--muted);flex-shrink:0">📋 COPY</span>
-          </div>` : ''}
-        </div>`).join('')}
-    </div>
-
-    <!-- Verification -->
-    ${data.verification ? `<div style="background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.12);border-radius:7px;padding:.9rem 1.1rem;margin-bottom:.7rem">
-      <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.4rem">✓ HOW TO VERIFY IT'S FIXED</div>
-      <div style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.8">${data.verification}</div>
-    </div>` : ''}
-
-    <!-- Prevention -->
-    ${data.prevention ? `<div style="background:rgba(123,47,255,.04);border:1px solid rgba(123,47,255,.15);border-radius:7px;padding:.9rem 1.1rem">
-      <div style="font-family:var(--mono);font-size:.52rem;color:#c084fc;letter-spacing:.15em;margin-bottom:.4rem">🛡 PREVENTION</div>
-      <div style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.8">${data.prevention}</div>
-    </div>` : ''}`;
+  allRemCommands = (data.steps||[]).filter(function(s){return s.command;}).map(function(s){return s.command;});
+  var sevColor = ({critical:'#ff3b5c',high:'#ff8c42',medium:'#f5c842',low:'#4dd9ac'})[issue.severity] || '#00ff88';
+  var html = '';
+  // Summary
+  html += '<div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:8px;padding:1.1rem 1.3rem;margin-bottom:1.1rem">';
+  html += '<div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:.8rem">';
+  html += '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">Difficulty: <span style="color:var(--text2)">'+(data.difficulty||'—')+'</span></div>';
+  html += '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">Time: <span style="color:var(--text2)">'+(data.time_estimate||'—')+'</span></div>';
+  html += '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">CVSS: <span style="color:'+sevColor+'">'+issue.cvss+'</span></div>';
+  html += '</div>';
+  html += '<div style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.8;margin-bottom:.6rem">'+(data.summary||'')+'</div>';
+  if (data.business_impact) {
+    html += '<div style="background:rgba(255,59,92,.06);border:1px solid rgba(255,59,92,.15);border-radius:5px;padding:.6rem .8rem">';
+    html += '<div style="font-family:var(--mono);font-size:.52rem;color:var(--danger);letter-spacing:.12em;margin-bottom:.25rem">&#9888; BUSINESS IMPACT</div>';
+    html += '<div style="font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.7">'+data.business_impact+'</div></div>';
+  }
+  html += '</div>';
+  // Steps
+  html += '<div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.18em;margin-bottom:.6rem">REMEDIATION STEPS</div>';
+  html += '<div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem">';
+  (data.steps||[]).forEach(function(step, i) {
+    html += '<div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);border-radius:7px;overflow:hidden">';
+    var hasBorder = step.command ? '1px solid rgba(255,255,255,.05)' : 'none';
+    html += '<div style="display:flex;align-items:center;gap:.8rem;padding:.7rem .9rem;border-bottom:'+hasBorder+'">';
+    html += '<div style="width:22px;height:22px;border-radius:50%;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:.8rem;color:var(--g);flex-shrink:0">'+(i+1)+'</div>';
+    html += '<div style="flex:1"><div style="font-family:var(--mono);font-size:.62rem;color:var(--white);margin-bottom:.2rem">'+step.title+'</div>';
+    html += '<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:1.65">'+step.description+'</div></div></div>';
+    if (step.command) {
+      var cmdId = 'cmd_' + i + '_' + Date.now();
+      html += '<div id="'+cmdId+'" data-cmd="'+step.command.replace(/"/g,'&quot;')+'" onclick="copyFromId(this)" ';
+      html += 'style="display:flex;align-items:center;gap:.6rem;padding:.6rem .9rem;background:rgba(0,0,0,.3);cursor:pointer;transition:background .2s" ';
+      html += 'onmouseover="this.style.background=\'rgba(0,0,0,.5)\'" onmouseout="this.style.background=\'rgba(0,0,0,.3)\'" title="Click to copy">';
+      html += '<span style="font-family:var(--mono);font-size:.58rem;color:rgba(0,255,136,.4);flex-shrink:0">$</span>';
+      html += '<code style="font-family:var(--mono);font-size:.62rem;color:var(--g);flex:1;word-break:break-all">'+step.command+'</code>';
+      html += '<span style="font-family:var(--mono);font-size:.5rem;color:var(--muted);flex-shrink:0">&#128203; COPY</span></div>';
+    }
+    html += '</div>';
+  });
+  html += '</div>';
+  // Verify
+  if (data.verification) {
+    html += '<div style="background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.12);border-radius:7px;padding:.9rem 1.1rem;margin-bottom:.7rem">';
+    html += '<div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.4rem">&#10003; HOW TO VERIFY</div>';
+    html += '<div style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.8">'+data.verification+'</div></div>';
+  }
+  // Prevention
+  if (data.prevention) {
+    html += '<div style="background:rgba(123,47,255,.04);border:1px solid rgba(123,47,255,.15);border-radius:7px;padding:.9rem 1.1rem">';
+    html += '<div style="font-family:var(--mono);font-size:.52rem;color:#c084fc;letter-spacing:.15em;margin-bottom:.4rem">&#128737; PREVENTION</div>';
+    html += '<div style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.8">'+data.prevention+'</div></div>';
+  }
+  document.getElementById('remModalBody').innerHTML = html;
 }
+
+function copyFromId(el) {
+  var cmd = el.getAttribute('data-cmd').replace(/&quot;/g, '"');
+  navigator.clipboard.writeText(cmd).catch(function(){});
+  showCopyToast('Command copied!');
+}
+
 
 function renderRemediationText(text, issue) {
-  // Fallback: render raw text nicely
-  const lines = text.split('\n');
-  const html = lines.map(line => {
-    if (line.startsWith('```') || line.startsWith('    ') || line.match(/^\$/)) {
-      const cmd = line.replace(/^```bash|^```|^\$/,'').trim();
-      return cmd ? `<div onclick="copyCmd(this,'${cmd.replace(/'/g,"\\'")}')" style="display:flex;align-items:center;gap:.6rem;padding:.55rem .9rem;background:rgba(0,0,0,.3);border:1px solid rgba(0,255,136,.1);border-radius:5px;margin:.3rem 0;cursor:pointer" title="Click to copy"><span style="color:rgba(0,255,136,.4)">$</span><code style="font-family:var(--mono);font-size:.62rem;color:var(--g);flex:1">${cmd}</code><span style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">📋</span></div>` : '';
+  var html = '<div style="padding:.5rem">';
+  var lines = text.split('\n');
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i];
+    var isFence = (line.indexOf('```') === 0);
+    var isIndent = (line.indexOf('    ') === 0 && line.trim().length > 0);
+    var isDollar = (line.trim().indexOf('$ ') === 0);
+    if (isFence || isDollar) {
+      var cmd = line.replace('```bash','').replace('```','').replace(/^\$\s*/,'').trim();
+      if (cmd) {
+        html += '<div data-cmd="'+cmd.replace(/"/g,'&quot;')+'" onclick="copyFromId(this)" ';
+        html += 'style="display:flex;align-items:center;gap:.6rem;padding:.55rem .9rem;';
+        html += 'background:rgba(0,0,0,.3);border:1px solid rgba(0,255,136,.1);border-radius:5px;margin:.3rem 0;cursor:pointer">';
+        html += '<span style="color:rgba(0,255,136,.4)">$ </span>';
+        html += '<code style="font-family:var(--mono);font-size:.62rem;color:var(--g);flex:1">'+cmd+'</code>';
+        html += '<span style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">&#128203;</span></div>';
+      }
+    } else if (line.indexOf('#') === 0) {
+      var heading = line.replace(/^#+\s*/, '');
+      html += '<div style="font-family:var(--display);font-size:1rem;color:var(--white);letter-spacing:.04em;margin:.8rem 0 .3rem">'+heading+'</div>';
+    } else if (!line.trim()) {
+      html += '<div style="height:.4rem"></div>';
+    } else {
+      html += '<div style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.8;margin:.15rem 0">'+line+'</div>';
     }
-    if (line.startsWith('#')) return `<div style="font-family:var(--display);font-size:1rem;color:var(--white);letter-spacing:.04em;margin:.8rem 0 .3rem">${line.replace(/^#+\s*/,'')}</div>`;
-    if (!line.trim()) return '<div style="height:.4rem"></div>';
-    return `<div style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.8;margin:.15rem 0">${line}</div>`;
-  }).join('');
-  document.getElementById('remModalBody').innerHTML = `<div style="padding:.5rem">${html}</div>`;
-}
-
-function renderRemediationError(msg) {
-  document.getElementById('remModalBody').innerHTML = `<div style="font-family:var(--mono);font-size:.63rem;color:var(--danger);background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.2);border-radius:7px;padding:1.2rem;margin:.5rem">${msg}</div>`;
+  }
+  html += '</div>';
+  document.getElementById('remModalBody').innerHTML = html;
 }
 
 function closeRemediationModal() {
@@ -3929,51 +4078,57 @@ const LEARN_CONTENT = [
 ];
 
 function renderLearnContent(filter) {
-  const container = document.getElementById('learnContent');
+  var container = document.getElementById("learnContent");
   if (!container) return;
-  let items = LEARN_CONTENT;
-  if (filter) {
-    const q = filter.toLowerCase();
-    items = LEARN_CONTENT.filter(topic =>
-      topic.title.toLowerCase().includes(q) ||
-      topic.desc.toLowerCase().includes(q) ||
-      topic.sections.some(s => s.title.toLowerCase().includes(q) || s.body.toLowerCase().includes(q))
-    );
-  }
+  var items = filter ? LEARN_CONTENT.filter(function(t) {
+    var q = filter.toLowerCase();
+    return t.title.toLowerCase().indexOf(q) >= 0 || t.desc.toLowerCase().indexOf(q) >= 0 ||
+      t.sections.some(function(s) { return s.title.toLowerCase().indexOf(q) >= 0 || s.body.toLowerCase().indexOf(q) >= 0; });
+  }) : LEARN_CONTENT;
   if (!items.length) {
-    container.innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:3rem">No topics match your search. Try different keywords.</div>';
+    container.innerHTML = "<div style=\"font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:3rem\">No topics match your search.</div>";
     return;
   }
-  container.innerHTML = items.map(topic => `
-    <div class="panel" style="margin-bottom:.9rem">
-      <div class="ph" style="cursor:pointer" onclick="toggleLearnSection('ls-${topic.id}')">
-        <div style="display:flex;align-items:center;gap:.8rem">
-          <span style="font-size:1.3rem">${topic.icon}</span>
-          <div>
-            <div class="pt">${topic.title}</div>
-            <div style="font-family:var(--mono);font-size:.56rem;color:var(--muted);margin-top:.15rem">${topic.desc}</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:.6rem">
-          <span style="font-family:var(--mono);font-size:.5rem;padding:.18rem .5rem;border-radius:10px;${topic.tag==='beginner'?'background:rgba(0,255,136,.08);color:var(--g);border:1px solid rgba(0,255,136,.15)':topic.tag==='advanced'?'background:rgba(123,47,255,.08);color:#c084fc;border:1px solid rgba(123,47,255,.18)':topic.tag==='account'?'background:rgba(0,212,255,.06);color:var(--g2);border:1px solid rgba(0,212,255,.14)':'background:rgba(245,158,11,.07);color:var(--warn);border:1px solid rgba(245,158,11,.18)'}">${topic.tag.toUpperCase()}</span>
-          <span id="lc-${topic.id}" style="font-family:var(--mono);font-size:.65rem;color:var(--muted);transition:transform .2s">▶</span>
-        </div>
-      </div>
-      <div id="ls-${topic.id}" style="display:none">
-        ${topic.sections.map((sec, si) => `
-          <div style="padding:1rem 1.2rem;border-top:1px solid rgba(0,255,136,.05)">
-            <div style="font-family:var(--mono);font-size:.62rem;color:var(--g2);letter-spacing:.1em;margin-bottom:.5rem">${si+1}. ${sec.title}</div>
-            <div style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.85;white-space:pre-wrap;margin-bottom:${sec.cmd?'.6rem':'0'}">${sec.body}</div>
-            ${sec.cmd ? `<div style="position:relative">
-              <div onclick="copyCmd(this,'${sec.cmd.replace(/'/g,"\\'").replace(/\n/g,'\\n')}')" style="background:rgba(0,0,0,.3);border:1px solid rgba(0,255,136,.1);border-radius:5px;padding:.65rem .9rem;font-family:var(--mono);font-size:.6rem;color:var(--g);cursor:pointer;transition:background .2s;white-space:pre;overflow-x:auto" title="Click to copy">
-                ${sec.cmd}
-              </div>
-              <div style="font-family:var(--mono);font-size:.5rem;color:var(--muted);margin-top:.25rem;text-align:right">📋 Click to copy</div>
-            </div>` : ''}
-          </div>`).join('')}
-      </div>
-    </div>`).join('');
+  var tagColors = { beginner:"#00ff88", advanced:"#c084fc", account:"#00d4ff", features:"#f59e0b" };
+  var tagBgs    = { beginner:"rgba(0,255,136,.08)", advanced:"rgba(123,47,255,.08)", account:"rgba(0,212,255,.06)", features:"rgba(245,158,11,.07)" };
+  var out = "";
+  items.forEach(function(topic) {
+    var color = tagColors[topic.tag] || "#f59e0b";
+    var bg    = tagBgs[topic.tag] || tagBgs.features;
+    var secs  = "";
+    topic.sections.forEach(function(sec, si) {
+      var cmdBlock = "";
+      if (sec.cmd) {
+        var safe = sec.cmd.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+        cmdBlock = "<div data-cmd=\"" + safe + "\" onclick=\"copyFromId(this)\" "
+          + "style=\"background:rgba(0,0,0,.3);border:1px solid rgba(0,255,136,.1);border-radius:5px;"
+          + "padding:.65rem .9rem;font-family:var(--mono);font-size:.6rem;color:#00ff88;"
+          + "cursor:pointer;white-space:pre;overflow-x:auto;margin:.4rem 0\" title=\"Click to copy\">"
+          + safe + "</div>"
+          + "<div style=\"font-family:var(--mono);font-size:.5rem;color:#2a4a62;text-align:right;margin-bottom:.3rem\">&#128203; Click to copy</div>";
+      }
+      secs += "<div style=\"padding:1rem 1.2rem;border-top:1px solid rgba(0,255,136,.05)\">"
+        + "<div style=\"font-family:var(--mono);font-size:.62rem;color:#00d4ff;letter-spacing:.1em;margin-bottom:.5rem\">" + (si+1) + ". " + sec.title + "</div>"
+        + "<div style=\"font-family:var(--mono);font-size:.62rem;color:#c0dce8;line-height:1.85;white-space:pre-wrap;margin-bottom:" + (sec.cmd ? ".6rem" : "0") + "\">"
+        + sec.body.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;") + "</div>"
+        + cmdBlock + "</div>";
+    });
+    out += "<div class=\"panel\" style=\"margin-bottom:.9rem\">"
+      + "<div class=\"ph\" style=\"cursor:pointer\" onclick=\"toggleLearnSection('ls-" + topic.id + "')\">"
+      + "<div style=\"display:flex;align-items:center;gap:.8rem\">"
+      + "<span style=\"font-size:1.3rem\">" + topic.icon + "</span>"
+      + "<div><div class=\"pt\">" + topic.title + "</div>"
+      + "<div style=\"font-family:var(--mono);font-size:.56rem;color:#2a4a62;margin-top:.15rem\">" + topic.desc + "</div>"
+      + "</div></div>"
+      + "<div style=\"display:flex;align-items:center;gap:.6rem\">"
+      + "<span style=\"font-family:var(--mono);font-size:.5rem;padding:.18rem .5rem;border-radius:10px;background:" + bg + ";color:" + color + ";border:1px solid " + color + "30\">" + topic.tag.toUpperCase() + "</span>"
+      + "<span id=\"lc-" + topic.id + "\" style=\"font-family:var(--mono);font-size:.65rem;color:#2a4a62;transition:transform .2s\">&#9654;</span>"
+      + "</div></div>"
+      + "<div id=\"ls-" + topic.id + "\" style=\"display:none\">" + secs + "</div></div>";
+  });
+  container.innerHTML = out;
 }
+
 
 function toggleLearnSection(id) {
   const el = document.getElementById(id);
