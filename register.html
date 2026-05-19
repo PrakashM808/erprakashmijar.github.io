@@ -3,210 +3,367 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Create Account — PM::OFFSEC Dashboard</title>
-  <meta name="robots" content="noindex"/>
+  <title>Create Account — PM::OFFSEC Security Dashboard</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
   <meta name="theme-color" content="#00ff88"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="assets/auth.css"/>
+  <style>
+  .reg-page{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;position:relative;z-index:1}
+  @media(max-width:900px){.reg-page{grid-template-columns:1fr}}
+  /* PRICING PANEL */
+  .pricing-panel{background:rgba(4,8,16,.97);border-right:1px solid rgba(0,255,136,.08);padding:2.5rem 2rem;display:flex;flex-direction:column;overflow-y:auto}
+  @media(max-width:900px){.pricing-panel{display:none}}
+  .pp-logo{font-family:var(--mono);font-size:.75rem;color:var(--g);letter-spacing:.14em;margin-bottom:2.5rem;text-decoration:none}
+  .pp-logo span{color:var(--g2)}
+  .pp-title{font-family:var(--display);font-size:2.2rem;color:var(--white);letter-spacing:.04em;line-height:.92;margin-bottom:.5rem}
+  .pp-sub{font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.8;margin-bottom:2rem}
+  .plan-cards{display:flex;flex-direction:column;gap:.7rem;flex:1}
+  .plan-card{border-radius:8px;padding:1rem 1.2rem;border:1.5px solid rgba(255,255,255,.07);cursor:pointer;transition:all .22s;position:relative;background:rgba(6,13,26,.6)}
+  .plan-card:hover{border-color:rgba(0,255,136,.25)}
+  .plan-card.sel{border-color:var(--g);background:rgba(0,255,136,.06);box-shadow:0 0 20px rgba(0,255,136,.07)}
+  .pct{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
+  .pname{font-family:var(--display);font-size:1.1rem;color:var(--white);letter-spacing:.05em}
+  .pprice{font-family:var(--mono);font-size:.72rem;color:var(--g)}
+  .pdot{width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(0,255,136,.4);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.52rem;color:transparent;transition:all .2s}
+  .plan-card.sel .pdot{background:var(--g);border-color:var(--g);color:#040810}
+  .plan-feats{display:flex;flex-direction:column;gap:.22rem}
+  .pf{font-family:var(--mono);font-size:.57rem;color:var(--muted);display:flex;align-items:center;gap:.45rem}
+  .pf .ok{color:var(--ok)}.pf .no{color:#1a3050}
+  .pf.dim{color:#1a3050}
+  .pbadge{position:absolute;top:.65rem;right:2.8rem;font-family:var(--mono);font-size:.46rem;background:var(--g);color:#040810;padding:.15rem .45rem;border-radius:3px;font-weight:700;letter-spacing:.08em}
+  .pp-note{font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:1.5rem;line-height:1.7;padding:.8rem;background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.07);border-radius:6px}
+  /* FORM PANEL */
+  .form-panel{display:flex;align-items:flex-start;justify-content:center;padding:2.5rem 2rem;overflow-y:auto}
+  .form-inner{width:100%;max-width:420px}
+  .mob-logo{font-family:var(--mono);font-size:.75rem;color:var(--g);letter-spacing:.14em;margin-bottom:1.5rem;text-decoration:none;display:none}
+  .mob-logo span{color:var(--g2)}
+  @media(max-width:900px){.mob-logo{display:block}.form-panel{padding:1.5rem 1.2rem}}
+  /* Mobile plan tabs */
+  .mob-plan{display:none;margin-bottom:1.5rem}
+  @media(max-width:900px){.mob-plan{display:block}}
+  .mpl-lbl{font-family:var(--mono);font-size:.55rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.45rem}
+  .mpl-tabs{display:flex;gap:.35rem;flex-wrap:wrap}
+  .mpt{font-family:var(--mono);font-size:.58rem;padding:.35rem .75rem;border-radius:5px;border:1px solid rgba(0,255,136,.12);color:var(--muted);cursor:pointer;transition:all .2s;background:none}
+  .mpt.on{background:rgba(0,255,136,.1);color:var(--g);border-color:rgba(0,255,136,.3);font-weight:700}
+  /* Form elements */
+  .reg-title{font-family:var(--display);font-size:2rem;color:var(--white);letter-spacing:.04em;margin-bottom:.3rem}
+  .reg-sub{font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.75;margin-bottom:1.2rem}
+  .plan-pill{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.55rem;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);color:var(--g);padding:.22rem .7rem;border-radius:10px;margin-bottom:1.2rem;letter-spacing:.08em}
+  .fg2{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+  @media(max-width:480px){.fg2{grid-template-columns:1fr}}
+  .fdiv{display:flex;align-items:center;gap:.8rem;margin:.8rem 0}
+  .fdiv::before,.fdiv::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.07)}
+  .fdiv span{font-family:var(--mono);font-size:.52rem;color:var(--muted);letter-spacing:.1em}
+  .terms-block{background:rgba(255,59,92,.04);border:1px solid rgba(255,59,92,.12);border-radius:7px;padding:.9rem 1rem;margin:.9rem 0}
+  .terms-hdr{font-family:var(--mono);font-size:.55rem;color:var(--danger);letter-spacing:.12em;margin-bottom:.5rem}
+  .tchk{display:flex;align-items:flex-start;gap:.7rem;margin-bottom:.45rem;cursor:pointer}
+  .tchk input{width:15px;height:15px;margin-top:2px;accent-color:var(--g);cursor:pointer;flex-shrink:0}
+  .tchk-lbl{font-family:var(--mono);font-size:.58rem;color:var(--text2);line-height:1.65;cursor:pointer}
+  .tchk-lbl a{color:var(--g2)}
+  .signin-note{text-align:center;font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:1rem}
+  .signin-note a{color:var(--g2);text-decoration:none}
+  .demo-box{margin-top:1.5rem;background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.1);border-radius:6px;padding:.8rem 1rem}
+  .demo-lbl{font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.4rem}
+  .demo-txt{font-family:var(--mono);font-size:.57rem;color:var(--muted);line-height:1.75}
+  .demo-txt strong{color:var(--text2)}
+  .alert{font-family:var(--mono);font-size:.6rem;padding:.65rem .9rem;border-radius:6px;margin-bottom:.8rem;display:none}
+  .alert.show{display:block}
+  .alert-error{background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.2);color:var(--danger)}
+  .alert-ok{background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);color:var(--ok)}
+  .spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(0,0,0,.2);border-top-color:#040810;border-radius:50%;animation:sp .6s linear infinite;margin-right:.4rem;vertical-align:middle}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  </style>
 </head>
 <body>
 <canvas id="bgCanvas"></canvas>
-<div id="cur"></div><div id="cur2"></div>
+<div class="reg-page">
 
-<nav>
-  <a href="index.html" class="nav-logo">PM<span>::</span>OFFSEC</a>
-  <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button><a href="index.html" class="nav-back">← Back to Portfolio</a>
-</nav>
+  <!-- LEFT: PRICING -->
+  <div class="pricing-panel">
+    <a href="index.html" class="pp-logo">PM<span>::</span>OFFSEC</a>
+    <div class="pp-title">CHOOSE<br>YOUR PLAN</div>
+    <p class="pp-sub">Start free. Upgrade anytime for more devices, AI analysis, and automated scanning.</p>
+    <div class="plan-cards">
 
-<main class="auth-main">
-  <div class="auth-wrap">
-    <div class="auth-logo">CREATE<span> ACCOUNT</span></div>
-    <div class="auth-subtitle">JOIN THE PM::OFFSEC DASHBOARD</div>
-
-    <div class="auth-card">
-      <div class="auth-card-bar"></div>
-      <div class="auth-card-body">
-
-        <div class="auth-tabs">
-          <a href="login.html"    class="auth-tab">SIGN IN</a>
-          <a href="register.html" class="auth-tab active">REGISTER</a>
+      <div class="plan-card sel" data-plan="free" onclick="selectPlan('free',this)">
+        <div class="pct"><div><div class="pname">FREE</div><div class="pprice">$0 / forever</div></div><div class="pdot">&#10003;</div></div>
+        <div class="plan-feats">
+          <div class="pf"><span class="ok">&#10003;</span>1 device · 1 scan per day</div>
+          <div class="pf"><span class="ok">&#10003;</span>Security score + issue list</div>
+          <div class="pf"><span class="ok">&#10003;</span>TXT report export</div>
+          <div class="pf dim"><span class="no">&#10005;</span>AI analysis</div>
+          <div class="pf dim"><span class="no">&#10005;</span>Email alerts</div>
         </div>
-
-        <div class="alert alert-error"   id="alertError"></div>
-        <div class="alert alert-success" id="alertSuccess"></div>
-
-        <div class="form-group">
-          <label class="form-label" for="name">FULL NAME</label>
-          <input class="form-input" id="name" type="text" placeholder="Prakash Mijar" autocomplete="name"/>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="email">EMAIL ADDRESS</label>
-          <input class="form-input" id="email" type="email" placeholder="you@example.com" autocomplete="email"/>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="password">PASSWORD</label>
-          <div class="input-wrap">
-            <input class="form-input" id="password" type="password" placeholder="Min 8 chars, 1 uppercase, 1 number" autocomplete="new-password" oninput="updateStrength(this.value)"/>
-            <span class="input-icon" onclick="togglePw('password',this)">👁</span>
-          </div>
-          <!-- Strength meter -->
-          <div class="pw-strength" id="strengthWrap" style="display:none">
-            <div class="pw-bar">
-              <div class="pw-seg" id="seg1"></div>
-              <div class="pw-seg" id="seg2"></div>
-              <div class="pw-seg" id="seg3"></div>
-              <div class="pw-seg" id="seg4"></div>
-              <div class="pw-seg" id="seg5"></div>
-            </div>
-            <div class="pw-label" id="pwLabel"></div>
-          </div>
-          <!-- Requirements checklist -->
-          <ul class="req-list" style="margin-top:.5rem">
-            <li class="req-item" id="req-len"><span class="req-icon">○</span>At least 8 characters</li>
-            <li class="req-item" id="req-upper"><span class="req-icon">○</span>One uppercase letter</li>
-            <li class="req-item" id="req-num"><span class="req-icon">○</span>One number</li>
-          </ul>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="confirm">CONFIRM PASSWORD</label>
-          <div class="input-wrap">
-            <input class="form-input" id="confirm" type="password" placeholder="••••••••" autocomplete="new-password"/>
-            <span class="input-icon" onclick="togglePw('confirm',this)">👁</span>
-          </div>
-          <div class="form-hint" id="matchHint"></div>
-        </div>
-
-        <div style="background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.12);border-radius:6px;padding:.8rem 1rem;margin-bottom:1rem">
-          <div style="font-family:var(--mono);font-size:.58rem;color:var(--g2);letter-spacing:.12em;margin-bottom:.3rem">ℹ ACCOUNT INFO</div>
-          <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:1.7">New accounts are created as <strong style="color:var(--text2)">USER</strong> role. Accounts persist in your browser session. No data is sent to any server.</div>
-        </div>
-
-        <!-- Terms & Agreement -->
-        <div style="background:rgba(255,59,92,.04);border:1px solid rgba(255,59,92,.15);border-radius:6px;padding:.9rem 1rem;margin-bottom:.9rem">
-          <div style="font-family:var(--mono);font-size:.58rem;color:var(--danger);letter-spacing:.1em;margin-bottom:.5rem">⚖️ TERMS OF SERVICE</div>
-          <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:1.7;margin-bottom:.7rem">
-            By creating an account you agree to our terms of service and acknowledge that all security testing must be performed only on systems you own or have explicit written authorization to test. Unauthorized testing is a federal crime under <strong style="color:var(--text2)">CFAA 18 U.S.C. § 1030</strong>.
-          </div>
-          <label style="display:flex;align-items:flex-start;gap:.7rem;cursor:pointer">
-            <input type="checkbox" id="termsCheck" style="width:15px;height:15px;margin-top:2px;accent-color:var(--g);flex-shrink:0"/>
-            <span style="font-family:var(--mono);font-size:.58rem;color:var(--text2);line-height:1.7">
-              I have read and agree to the <a href="legal/agreement.html" target="_blank" style="color:var(--g2);text-decoration:underline">Security Engagement Agreement</a> and confirm I will only scan systems I own or have written permission to test. <span style="color:var(--danger)">*</span>
-            </span>
-          </label>
-          <label style="display:flex;align-items:flex-start;gap:.7rem;cursor:pointer;margin-top:.5rem">
-            <input type="checkbox" id="legalCheck" style="width:15px;height:15px;margin-top:2px;accent-color:var(--g);flex-shrink:0"/>
-            <span style="font-family:var(--mono);font-size:.58rem;color:var(--text2);line-height:1.7">
-              I understand that providing false authorization is a federal crime under <strong style="color:var(--white)">18 U.S.C. § 1001</strong>. <span style="color:var(--danger)">*</span>
-            </span>
-          </label>
-        </div>
-
-        <button class="btn-submit" id="regBtn" onclick="doRegister()">
-          <span id="regBtnText">CREATE ACCOUNT →</span>
-        </button>
-
       </div>
-    </div>
 
-    <div style="text-align:center;margin-top:1.2rem;font-family:var(--mono);font-size:.6rem;color:var(--muted)">
-      Already have an account? <a href="login.html" style="color:var(--g2);text-decoration:none">Sign in →</a>
+      <div class="plan-card" data-plan="starter" onclick="selectPlan('starter',this)">
+        <div class="pbadge">POPULAR</div>
+        <div class="pct"><div><div class="pname">STARTER</div><div class="pprice">$19 / month</div></div><div class="pdot">&#10003;</div></div>
+        <div class="plan-feats">
+          <div class="pf"><span class="ok">&#10003;</span>5 devices · 10 scans/day</div>
+          <div class="pf"><span class="ok">&#10003;</span>AI vulnerability analysis + chat</div>
+          <div class="pf"><span class="ok">&#10003;</span>Email alerts · Network discovery</div>
+          <div class="pf"><span class="ok">&#10003;</span>30-day history · JSON export</div>
+          <div class="pf dim"><span class="no">&#10005;</span>Scheduled scans</div>
+        </div>
+      </div>
+
+      <div class="plan-card" data-plan="professional" onclick="selectPlan('professional',this)">
+        <div class="pct"><div><div class="pname">PROFESSIONAL</div><div class="pprice">$79 / month</div></div><div class="pdot">&#10003;</div></div>
+        <div class="plan-feats">
+          <div class="pf"><span class="ok">&#10003;</span>25 devices · 100 scans/day</div>
+          <div class="pf"><span class="ok">&#10003;</span>Scheduled automatic scans</div>
+          <div class="pf"><span class="ok">&#10003;</span>PDF executive reports</div>
+          <div class="pf"><span class="ok">&#10003;</span>90-day history · Priority support</div>
+        </div>
+      </div>
+
+      <div class="plan-card" data-plan="enterprise" onclick="selectPlan('enterprise',this)">
+        <div class="pct"><div><div class="pname">ENTERPRISE</div><div class="pprice">$199 / month</div></div><div class="pdot">&#10003;</div></div>
+        <div class="plan-feats">
+          <div class="pf"><span class="ok">&#10003;</span>Unlimited devices + scans</div>
+          <div class="pf"><span class="ok">&#10003;</span>Full SOC platform + SIEM</div>
+          <div class="pf"><span class="ok">&#10003;</span>Compliance reports · 5 seats</div>
+          <div class="pf"><span class="ok">&#10003;</span>1-year history · Dedicated support</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="pp-note">Free plan needs no credit card. Paid plans billed monthly, cancel anytime from your dashboard.</div>
+  </div>
+
+  <!-- RIGHT: FORM -->
+  <div class="form-panel">
+    <div class="form-inner">
+
+      <a href="index.html" class="mob-logo">PM<span>::</span>OFFSEC</a>
+
+      <div class="mob-plan">
+        <div class="mpl-lbl">SELECT PLAN</div>
+        <div class="mpl-tabs">
+          <button class="mpt on" onclick="selectPlan('free',null);mobTab(this)">Free $0</button>
+          <button class="mpt" onclick="selectPlan('starter',null);mobTab(this)">Starter $19</button>
+          <button class="mpt" onclick="selectPlan('professional',null);mobTab(this)">Pro $79</button>
+          <button class="mpt" onclick="selectPlan('enterprise',null);mobTab(this)">Ent $199</button>
+        </div>
+      </div>
+
+      <div class="reg-title">CREATE ACCOUNT</div>
+      <p class="reg-sub">Join PM::OFFSEC Security Dashboard. Free to start — no credit card required.</p>
+
+      <div class="plan-pill" id="planPill">&#10003; FREE PLAN &#8212; $0/month</div>
+
+      <div class="alert alert-error" id="regErr"></div>
+      <div class="alert alert-ok"    id="regOk"></div>
+
+      <div class="fg2">
+        <div class="form-group">
+          <label class="form-label">FIRST NAME <span style="color:var(--danger)">*</span></label>
+          <input class="form-input" id="fn" type="text" placeholder="Prakash" autocomplete="given-name"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">LAST NAME</label>
+          <input class="form-input" id="ln" type="text" placeholder="Mijar" autocomplete="family-name"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">EMAIL ADDRESS <span style="color:var(--danger)">*</span></label>
+        <input class="form-input" id="em" type="email" placeholder="you@example.com" autocomplete="email"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">PASSWORD <span style="color:var(--danger)">*</span></label>
+        <div style="position:relative">
+          <input class="form-input" id="pw" type="password" placeholder="Min 8 chars, 1 uppercase, 1 number" autocomplete="new-password" oninput="pwStr(this.value)"/>
+          <span onclick="toggleVis()" style="position:absolute;right:.8rem;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--muted);font-size:.85rem;user-select:none" id="eyeIco">&#128065;</span>
+        </div>
+        <div id="strWrap" style="display:none;margin-top:.4rem">
+          <div style="display:flex;gap:3px">
+            <div id="s1" style="flex:1;height:3px;background:rgba(255,255,255,.07);border-radius:2px;transition:background .3s"></div>
+            <div id="s2" style="flex:1;height:3px;background:rgba(255,255,255,.07);border-radius:2px;transition:background .3s"></div>
+            <div id="s3" style="flex:1;height:3px;background:rgba(255,255,255,.07);border-radius:2px;transition:background .3s"></div>
+            <div id="s4" style="flex:1;height:3px;background:rgba(255,255,255,.07);border-radius:2px;transition:background .3s"></div>
+            <div id="s5" style="flex:1;height:3px;background:rgba(255,255,255,.07);border-radius:2px;transition:background .3s"></div>
+          </div>
+          <div id="strLbl" style="font-family:var(--mono);font-size:.5rem;color:var(--muted);margin-top:.2rem"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">CONFIRM PASSWORD <span style="color:var(--danger)">*</span></label>
+        <input class="form-input" id="pw2" type="password" placeholder="Re-enter password" autocomplete="new-password" oninput="chkMatch()"/>
+        <div id="mhint" style="font-family:var(--mono);font-size:.52rem;margin-top:.25rem"></div>
+      </div>
+
+      <div class="fdiv"><span>OPTIONAL</span></div>
+      <div class="fg2">
+        <div class="form-group">
+          <label class="form-label">COMPANY</label>
+          <input class="form-input" id="co" type="text" placeholder="Your organization"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">PHONE</label>
+          <input class="form-input" id="ph" type="tel" placeholder="+1 (555) 000-0000"/>
+        </div>
+      </div>
+
+      <div class="terms-block">
+        <div class="terms-hdr">&#9878; LEGAL AGREEMENT &#8212; REQUIRED</div>
+        <label class="tchk">
+          <input type="checkbox" id="t1"/>
+          <span class="tchk-lbl">I agree to the <a href="legal/agreement.html" target="_blank">Security Engagement Agreement</a> and will only scan systems I own or have written authorization to test. <span style="color:var(--danger);font-size:.52rem">[CFAA 18 U.S.C. &#167; 1030]</span></span>
+        </label>
+        <label class="tchk">
+          <input type="checkbox" id="t2"/>
+          <span class="tchk-lbl">I understand providing false authorization is a federal crime under <strong style="color:var(--white)">18 U.S.C. &#167; 1001</strong>.</span>
+        </label>
+      </div>
+
+      <button class="btn-submit" id="regBtn" onclick="doRegister()">
+        <span id="regBtnTxt">CREATE ACCOUNT &#8594;</span>
+      </button>
+
+      <p class="signin-note">Already have an account? <a href="login.html">Sign in &#8594;</a></p>
+
+      <div class="demo-box">
+        <div class="demo-lbl">DEMO ACCOUNTS</div>
+        <div class="demo-txt">
+          Admin: <strong>admin@erprakashmijar.com</strong> / <strong>Admin@2026</strong><br>
+          Client: <strong>client@demo.com</strong> / <strong>Client@123</strong>
+        </div>
+      </div>
+
     </div>
   </div>
-</main>
-
-<div class="auth-footer">
-  &copy; 2026 Prakash Mijar · <a href="index.html">erprakashmijar.com</a>
 </div>
 
 <script src="assets/auth.js"></script>
 <script>
-  AUTH.requireGuest('dashboard/index.html');
-  initCanvas('bgCanvas');
-  initCursor();
+AUTH.requireGuest('dashboard/index.html');
+initCanvas('bgCanvas');
 
-  function showError(msg) {
-    const el = document.getElementById('alertError');
-    el.textContent = msg; el.classList.add('show');
-    document.getElementById('alertSuccess').classList.remove('show');
+var selPlan = 'free';
+var PLAN_LABELS = {
+  free:         'FREE PLAN — $0/month',
+  starter:      'STARTER PLAN — $19/month',
+  professional: 'PROFESSIONAL PLAN — $79/month',
+  enterprise:   'ENTERPRISE PLAN — $199/month'
+};
+
+function selectPlan(plan, el) {
+  selPlan = plan;
+  document.querySelectorAll('.plan-card').forEach(function(c){ c.classList.remove('sel'); });
+  if (el) { el.classList.add('sel'); }
+  else { var m = document.querySelector('.plan-card[data-plan="'+plan+'"]'); if(m) m.classList.add('sel'); }
+  var pill = document.getElementById('planPill');
+  if (pill) pill.textContent = '\u2713 ' + PLAN_LABELS[plan];
+}
+
+function mobTab(btn) {
+  document.querySelectorAll('.mpt').forEach(function(b){ b.classList.remove('on'); });
+  btn.classList.add('on');
+}
+
+function pwStr(pw) {
+  var w = document.getElementById('strWrap');
+  if (!pw) { w.style.display = 'none'; return; }
+  w.style.display = 'block';
+  var s = AUTH.passwordStrength(pw);
+  for (var i = 1; i <= 5; i++) {
+    var el = document.getElementById('s'+i);
+    if (el) el.style.background = (i <= s.score) ? s.color : 'rgba(255,255,255,.07)';
   }
+  var lbl = document.getElementById('strLbl');
+  if (lbl) { lbl.textContent = s.label; lbl.style.color = s.color; }
+}
 
-  function setLoading(on) {
-    const btn = document.getElementById('regBtn');
-    const txt = document.getElementById('regBtnText');
-    btn.disabled = on;
-    txt.innerHTML = on ? '<span class="spinner"></span>CREATING ACCOUNT...' : 'CREATE ACCOUNT →';
-  }
+function chkMatch() {
+  var pw = document.getElementById('pw').value;
+  var c  = document.getElementById('pw2').value;
+  var h  = document.getElementById('mhint');
+  if (!c) { h.textContent = ''; return; }
+  h.textContent = (c === pw) ? '\u2713 Passwords match' : '\u2717 Does not match';
+  h.style.color  = (c === pw) ? 'var(--ok)' : 'var(--danger)';
+}
 
-  function updateStrength(pw) {
-    const wrap = document.getElementById('strengthWrap');
-    if (!pw) { wrap.style.display='none'; return; }
-    wrap.style.display = 'block';
-    const s = AUTH.passwordStrength(pw);
-    ['seg1','seg2','seg3','seg4','seg5'].forEach((id,i) => {
-      const el = document.getElementById(id);
-      el.style.background = i < s.score ? s.color : 'rgba(255,255,255,.06)';
-    });
-    document.getElementById('pwLabel').textContent = s.label;
-    document.getElementById('pwLabel').style.color = s.color;
-    /* Requirements */
-    const reqs = [
-      { id:'req-len',   met: pw.length >= 8 },
-      { id:'req-upper', met: /[A-Z]/.test(pw) },
-      { id:'req-num',   met: /[0-9]/.test(pw) },
-    ];
-    reqs.forEach(r => {
-      const el = document.getElementById(r.id);
-      el.classList.toggle('met', r.met);
-      el.querySelector('.req-icon').textContent = r.met ? '✓' : '○';
-    });
-  }
+function toggleVis() {
+  var inp = document.getElementById('pw');
+  var ico = document.getElementById('eyeIco');
+  inp.type = (inp.type === 'password') ? 'text' : 'password';
+  ico.textContent = (inp.type === 'password') ? '\u{1F441}' : '\u{1F648}';
+}
 
-  document.getElementById('confirm').addEventListener('input', function() {
-    const pw = document.getElementById('password').value;
-    const hint = document.getElementById('matchHint');
-    if (!this.value) { hint.textContent=''; return; }
-    if (this.value === pw) { hint.textContent='✓ Passwords match'; hint.style.color='var(--ok)'; }
-    else { hint.textContent='✗ Passwords do not match'; hint.style.color='var(--danger)'; }
-  });
+function showErr(msg) {
+  var e = document.getElementById('regErr');
+  e.textContent = msg; e.classList.add('show');
+  document.getElementById('regOk').classList.remove('show');
+}
+function showOk(msg) {
+  var e = document.getElementById('regOk');
+  e.textContent = msg; e.classList.add('show');
+  document.getElementById('regErr').classList.remove('show');
+}
 
-  async function doRegister() {
-    const name    = document.getElementById('name').value.trim();
-    const email   = document.getElementById('email').value.trim();
-    const pass    = document.getElementById('password').value;
-    const confirm = document.getElementById('confirm').value;
-    const terms   = document.getElementById('termsCheck')?.checked;
-    const legal   = document.getElementById('legalCheck')?.checked;
-    if (!name || !email || !pass || !confirm) { showError('Please fill in all fields.'); return; }
-    if (pass !== confirm) { showError('Passwords do not match.'); return; }
-    if (!terms) { showError('You must agree to the Security Engagement Agreement before creating an account.'); return; }
-    if (!legal) { showError('You must acknowledge the legal notice to proceed.'); return; }
-    setLoading(true);
-    await new Promise(r => setTimeout(r, 700));
-    const result = AUTH.register(name, email, pass);
-    if (result.ok) {
-      const succ = document.getElementById('alertSuccess');
-      succ.textContent = `Account created! Welcome, ${result.session.name.split(' ')[0]}. Redirecting to dashboard...`;
-      succ.classList.add('show');
-      setTimeout(() => window.location.href = 'dashboard/index.html', 1200);
-    } else {
-      setLoading(false);
-      showError(result.error);
+function doRegister() {
+  var fn  = document.getElementById('fn').value.trim();
+  var ln  = document.getElementById('ln').value.trim();
+  var em  = document.getElementById('em').value.trim();
+  var pw  = document.getElementById('pw').value;
+  var pw2 = document.getElementById('pw2').value;
+  var co  = document.getElementById('co').value.trim();
+  var ph  = document.getElementById('ph').value.trim();
+  var t1  = document.getElementById('t1').checked;
+  var t2  = document.getElementById('t2').checked;
+
+  if (!fn)  { showErr('Please enter your first name.'); return; }
+  if (!em || !em.includes('@')) { showErr('Please enter a valid email address.'); return; }
+  if (!pw)  { showErr('Please enter a password.'); return; }
+  if (pw !== pw2) { showErr('Passwords do not match.'); return; }
+  if (!t1) { showErr('You must agree to the Security Engagement Agreement.'); return; }
+  if (!t2) { showErr('Please acknowledge the legal requirement.'); return; }
+
+  var btn = document.getElementById('regBtn');
+  var txt = document.getElementById('regBtnTxt');
+  btn.disabled = true;
+  txt.innerHTML = '<span class="spin"></span>CREATING ACCOUNT...';
+
+  setTimeout(function() {
+    var fullName = (fn + ' ' + ln).trim();
+    var result = AUTH.register(fullName, em, pw);
+
+    if (!result.ok) {
+      showErr(result.error);
+      btn.disabled = false;
+      txt.textContent = 'CREATE ACCOUNT \u2192';
+      return;
     }
-  }
 
-  function togglePw(id, icon) {
-    const inp = document.getElementById(id);
-    inp.type = inp.type === 'password' ? 'text' : 'password';
-    icon.textContent = inp.type === 'password' ? '👁' : '🙈';
-  }
+    // Save plan + extra fields to user record
+    var users = AUTH.getUsers();
+    var idx = users.findIndex(function(u){ return u.email === em.toLowerCase(); });
+    if (idx >= 0) {
+      users[idx].company = co;
+      users[idx].phone   = ph;
+      users[idx].plan    = selPlan;
+      AUTH.saveUsers(users);
+      // Update session too
+      var session = AUTH.getSession();
+      if (session) {
+        session.plan = selPlan; session.company = co; session.phone = ph;
+        localStorage.setItem('pm_session_v2', JSON.stringify(session));
+      }
+    }
 
-  document.addEventListener('keydown', e => { if (e.key === 'Enter') doRegister(); });
+    showOk('Account created! Redirecting to dashboard...');
+    setTimeout(function(){ window.location.href = 'dashboard/index.html'; }, 1200);
+  }, 600);
+}
+
+document.addEventListener('keydown', function(e) { if (e.key === 'Enter') doRegister(); });
 </script>
 </body>
 </html>
