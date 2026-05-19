@@ -11,17 +11,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@300;400;500;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  :root{
-    --bg:#03070f;--bg2:#060d1a;--bg3:#0a1628;
+    :root{
+    /* Background — slightly lighter, less harsh */
+    --bg:#0a1020;--bg2:#101828;--bg3:#162035;
+    /* Accent */
     --g:#00ff88;--g2:#00d4ff;--g3:#7b2fff;
-    --border:rgba(0,255,136,.1);
-    --muted:#2a4a62;--text:#7aafc8;--text2:#c0dce8;--white:#e8f4f8;
-    --danger:#ff3b5c;--warn:#f59e0b;--ok:#00ff88;
+    --border:rgba(0,255,136,.14);
+    /* Text — much brighter for readability */
+    --muted:#6b8da8;--text:#9abdd0;--text2:#d8eaf5;--white:#f2f9ff;
+    --danger:#ff4d6a;--warn:#f5a623;--ok:#00e87a;
     --mono:'Azeret Mono',monospace;--display:'Bebas Neue',sans-serif;--body:'DM Sans',sans-serif;
-    --sidebar:230px;--header:56px;
+    --sidebar:240px;--header:58px;
   }
   html,body{height:100%;overflow:hidden} @media(max-width:768px){html,body{height:auto;overflow:auto}}
-  body{background:var(--bg);color:var(--text2);font-family:var(--body)}
+  body{background:var(--bg);color:var(--text2);font-family:var(--body);font-size:15px;line-height:1.6}
   ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(0,255,136,.15);border-radius:2px}
   button,input,select,textarea{font-family:inherit}
   #app{display:flex;flex-direction:column;height:100vh} @media(max-width:768px){#app{height:auto;min-height:100vh}}
@@ -39,8 +42,8 @@
   .rb-client{background:rgba(0,212,255,.06);color:var(--g2)}
   .rb-user{background:rgba(0,255,136,.06);color:var(--g)}
   .hdr-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--g3),var(--g));display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.58rem;font-weight:700;color:#fff;cursor:pointer;flex-shrink:0}
-  .hdr-name{font-family:var(--mono);font-size:.62rem;color:var(--text2)} @media(max-width:768px){.hdr-name{display:none}}
-  .hdr-btn{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;padding:.36rem .78rem;border-radius:5px;border:none;cursor:pointer;transition:all .2s}
+  .hdr-name{font-family:var(--mono);font-size:.75rem;color:var(--text2)} @media(max-width:768px){.hdr-name{display:none}}
+  .hdr-btn{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;padding:.36rem .78rem;border-radius:5px;border:none;cursor:pointer;transition:all .2s}
   .hdr-scan{background:var(--g);color:#040810;font-weight:700}
   .hdr-scan:hover{background:#fff}
   .hdr-scan:disabled{background:rgba(0,255,136,.15);color:rgba(0,255,136,.3);cursor:not-allowed}
@@ -59,17 +62,17 @@
     .sidebar.mob-open{transform:translateX(0)}
   }
   .sb-section{padding:.6rem 0}
-  .sb-label{font-family:var(--mono);font-size:.47rem;color:var(--muted);letter-spacing:.2em;padding:.2rem .9rem .4rem;text-transform:uppercase}
-  .sb-item{display:flex;align-items:center;gap:.55rem;padding:.54rem .9rem;font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.05em;cursor:pointer;border-left:2px solid transparent;transition:all .18s;border:none;background:none;width:100%;text-align:left}
+  .sb-label{font-family:var(--mono);font-size:.62rem;color:var(--muted);letter-spacing:.15em;padding:.3rem .9rem .5rem;text-transform:uppercase}
+  .sb-item{display:flex;align-items:center;gap:.55rem;padding:.54rem .9rem;font-family:var(--mono);font-size:.78rem;color:var(--muted);letter-spacing:.03em;cursor:pointer;border-left:2px solid transparent;transition:all .18s;border:none;background:none;width:100%;text-align:left}
   .sb-item:hover{color:var(--text2);background:rgba(0,255,136,.02)}
   .sb-item.active{color:var(--g);background:rgba(0,255,136,.05);border-left-color:var(--g)}
   .sb-icon{font-size:.8rem;width:15px;text-align:center;flex-shrink:0}
   .sb-badge{margin-left:auto;font-family:var(--mono);font-size:.46rem;background:rgba(255,59,92,.15);color:var(--danger);border:1px solid rgba(255,59,92,.2);border-radius:3px;padding:.08rem .3rem}
   .sb-bottom{margin-top:auto;padding:.6rem 0;border-top:1px solid rgba(0,255,136,.06)}
   .device-mini{margin:.5rem .7rem;background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.08);border-radius:5px;padding:.6rem .8rem}
-  .dm-label{font-family:var(--mono);font-size:.48rem;color:var(--muted);letter-spacing:.12em;margin-bottom:.3rem}
-  .dm-host{font-family:var(--mono);font-size:.58rem;color:var(--text2)}
-  .dm-ip{font-family:var(--mono);font-size:.5rem;color:var(--muted)}
+  .dm-label{font-family:var(--mono);font-size:.64rem;color:var(--muted);letter-spacing:.12em;margin-bottom:.3rem}
+  .dm-host{font-family:var(--mono);font-size:.75rem;color:var(--text2)}
+  .dm-ip{font-family:var(--mono);font-size:.66rem;color:var(--muted)}
   .dm-score{font-family:var(--display);font-size:1.4rem;color:var(--g)}
   /* MAIN */
   .main{flex:1;overflow-y:auto;overflow-x:hidden} @media(max-width:768px){.main{width:100%;overflow:visible}}
@@ -77,8 +80,8 @@
   .page.active{display:block}
   @keyframes pgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
   .pg-hdr{margin-bottom:1.1rem;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:.6rem}
-  .pg-title{font-family:var(--display);font-size:1.65rem;color:var(--white);letter-spacing:.05em;line-height:1}
-  .pg-sub{font-family:var(--mono);font-size:.57rem;color:var(--muted);margin-top:.2rem;letter-spacing:.07em}
+  .pg-title{font-family:var(--display);font-size:1.9rem;color:var(--white);letter-spacing:.05em;line-height:1}
+  .pg-sub{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:.2rem;letter-spacing:.07em}
   /* PANEL */
   .panel{background:rgba(6,13,26,.72);border:1px solid rgba(0,255,136,.07);border-radius:9px;overflow:hidden;margin-bottom:.9rem}
   .ph{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.1rem;border-bottom:1px solid rgba(0,255,136,.05)}
@@ -99,9 +102,9 @@
   .sc-b::before{background:linear-gradient(90deg,var(--g2),transparent)}
   .sc-p::before{background:linear-gradient(90deg,var(--g3),transparent)}
   .sc-r::before{background:linear-gradient(90deg,var(--danger),transparent)}
-  .sc-label{font-family:var(--mono);font-size:.52rem;color:var(--muted);letter-spacing:.13em;text-transform:uppercase;margin-bottom:.5rem}
-  .sc-value{font-family:var(--display);font-size:1.9rem;line-height:1;letter-spacing:.03em}
-  .sc-delta{font-family:var(--mono);font-size:.52rem;color:var(--muted);margin-top:.22rem}
+  .sc-label{font-family:var(--mono);font-size:.68rem;color:var(--muted);letter-spacing:.13em;text-transform:uppercase;margin-bottom:.5rem}
+  .sc-value{font-family:var(--display);font-size:2.1rem;line-height:1;letter-spacing:.03em}
+  .sc-delta{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:.22rem}
   .sc-icon{position:absolute;right:.8rem;top:.8rem;font-size:1.2rem;opacity:.12}
   /* BADGE */
   .badge{display:inline-block;font-family:var(--mono);font-size:.48rem;letter-spacing:.1em;padding:.16rem .42rem;border-radius:3px;text-transform:uppercase}
@@ -176,7 +179,7 @@
   .form-label{font-family:var(--mono);font-size:.54rem;color:var(--g2);letter-spacing:.15em;display:block;margin-bottom:.32rem}
   .form-input{width:100%;background:rgba(0,0,0,.25);border:1px solid rgba(0,255,136,.09);border-radius:5px;padding:.6rem .85rem;font-family:var(--mono);font-size:.65rem;color:var(--white);outline:none;transition:border-color .2s}
   .form-input:focus{border-color:rgba(0,255,136,.3)}
-  .form-hint{font-family:var(--mono);font-size:.52rem;color:var(--muted);margin-top:.25rem;line-height:1.5}
+  .form-hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:.25rem;line-height:1.5}
   .form-grid2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
   /* BUTTONS */
   .btn{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;padding:.62rem 1.3rem;border-radius:5px;border:none;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:.4rem}
@@ -339,12 +342,12 @@
   .up-btn{font-family:var(--mono);font-size:.58rem;font-weight:700;letter-spacing:.1em;padding:.5rem;background:var(--g);color:#040810;border:none;border-radius:4px;cursor:pointer;width:100%;margin-top:.5rem;transition:all .2s}
   .up-btn:hover{background:#fff}
   .up-btn.up-current{background:rgba(255,255,255,.06);color:var(--muted);cursor:default}
-  .up-features{font-family:var(--mono);font-size:.52rem;color:var(--muted);line-height:1.8;margin-top:.4rem;text-align:left}
+  .up-features{font-family:var(--mono);font-size:.68rem;color:var(--muted);line-height:1.8;margin-top:.4rem;text-align:left}
   .upgrade-close-btn{font-family:var(--mono);font-size:.6rem;color:var(--muted);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:5px;padding:.45rem 1rem;cursor:pointer;transition:all .2s;display:block;width:100%;text-align:center;margin-top:.2rem}
   .upgrade-close-btn:hover{color:var(--text2)}
 
   /* Usage bar in header */
-  .usage-chip{display:flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.52rem;color:var(--muted);background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:.22rem .65rem;cursor:pointer}
+  .usage-chip{display:flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.68rem;color:var(--muted);background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:.22rem .65rem;cursor:pointer}
   .usage-chip:hover{border-color:rgba(0,255,136,.2);color:var(--text2)}
   .usage-bar-mini{width:40px;height:3px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}
   .usage-bar-fill{height:100%;border-radius:2px;transition:width .4s,background .4s}
@@ -864,7 +867,7 @@
                 <div style="display:flex;gap:3px;margin-top:.4rem" id="dashPwBar">
                   ${[1,2,3,4,5].map(i=>`<div id="dps${i}" style="flex:1;height:3px;background:rgba(255,255,255,.06);border-radius:2px;transition:background .3s"></div>`).join('')}
                 </div>
-                <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted);margin-top:.2rem" id="dashPwLabel"></div>
+                <div style="font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:.2rem" id="dashPwLabel"></div>
               </div>
               <div class="form-group"><label class="form-label">CONFIRM NEW PASSWORD</label>
                 <input class="form-input" id="confPwDash" type="password" placeholder="Re-enter new password"/>
@@ -885,7 +888,7 @@
         <div class="billing-current">
           <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:.8rem">
             <div>
-              <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted);letter-spacing:.15em;margin-bottom:.3rem">CURRENT PLAN</div>
+              <div style="font-family:var(--mono);font-size:.68rem;color:var(--muted);letter-spacing:.15em;margin-bottom:.3rem">CURRENT PLAN</div>
               <div class="bc-plan-name" id="billingPlanName">FREE</div>
               <div class="bc-price" id="billingPlanPrice">$0 / month · No credit card required</div>
             </div>
@@ -1572,8 +1575,8 @@ function renderDashboard() {
     const score=d.security_score||0; const col=score>=80?'var(--g)':score>=60?'#f5c842':'var(--danger)';
     return `<div style="display:flex;align-items:center;gap:.8rem;padding:.55rem .7rem;background:rgba(255,255,255,.02);border:1px solid rgba(0,255,136,.05);border-radius:5px;margin-bottom:.3rem;cursor:pointer" onclick="scanDeviceById('${d.ip}')">
       <div style="font-family:var(--display);font-size:1.4rem;color:${col};width:36px;text-align:right">${score}</div>
-      <div style="flex:1"><div style="font-family:var(--mono);font-size:.6rem;color:var(--text2)">${d.hostname}</div><div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${d.ip} · ${d.os||'Linux'}</div></div>
-      <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${(d.issues||[]).filter(i=>i.severity==='critical').length}C ${(d.issues||[]).filter(i=>i.severity==='high').length}H</div>
+      <div style="flex:1"><div style="font-family:var(--mono);font-size:.6rem;color:var(--text2)">${d.hostname}</div><div style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">${d.ip} · ${d.os||'Linux'}</div></div>
+      <div style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">${(d.issues||[]).filter(i=>i.severity==='critical').length}C ${(d.issues||[]).filter(i=>i.severity==='high').length}H</div>
     </div>`;
   }).join('') : '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:1.5rem">No devices scanned yet</div>';
 
@@ -1609,7 +1612,7 @@ function renderDevicesGrid() {
           <div><div style="font-family:var(--mono);font-size:.5rem;color:var(--muted);margin-bottom:.2rem">SECURITY SCORE</div><div class="device-score" style="color:${col}">${score}<span style="font-size:1rem">/100</span></div></div>
           <div style="text-align:right">
             ${crits>0?`<div style="font-family:var(--mono);font-size:.55rem;color:var(--danger)">${crits} CRITICAL</div>`:''}
-            <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${(d.issues||[]).length} total issues</div>
+            <div style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">${(d.issues||[]).length} total issues</div>
             ${d._demo?'<div style="font-family:var(--mono);font-size:.48rem;color:var(--warn);margin-top:.2rem">DEMO DATA</div>':''}
           </div>
         </div>
@@ -1649,7 +1652,7 @@ function renderScanResult(data) {
   document.getElementById('pkgPanel').innerHTML = (data.outdated_packages||[]).map(p=>
     `<div style="display:flex;align-items:center;gap:.7rem;padding:.44rem .65rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:4px;margin-bottom:.25rem">
       <span style="font-family:var(--mono);font-size:.58rem;color:var(--text2);flex:1">${p.name}</span>
-      <span style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">→ <span style="color:var(--g)">${p.new_version||'latest'}</span></span>
+      <span style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">→ <span style="color:var(--g)">${p.new_version||'latest'}</span></span>
       ${badge(p.severity||'medium')}</div>`).join('') || '<div style="font-family:var(--mono);font-size:.58rem;color:var(--ok)">✓ All packages up to date</div>';
   // Auth
   const fl=data.failed_logins||{};
@@ -1690,7 +1693,7 @@ function renderAlerts() {
         </div>
         <div style="font-family:var(--mono);font-size:.57rem;color:var(--muted);line-height:1.6">${a.detail||''}</div>
       </div>
-      <button onclick="dismissAlert('${a.ip+'-'+a.id}')" style="font-family:var(--mono);font-size:.52rem;color:var(--muted);background:none;border:none;cursor:pointer;align-self:flex-start;padding:.2rem">✕</button>
+      <button onclick="dismissAlert('${a.ip+'-'+a.id}')" style="font-family:var(--mono);font-size:.68rem;color:var(--muted);background:none;border:none;cursor:pointer;align-self:flex-start;padding:.2rem">✕</button>
     </div>`).join('') :
     `<div class="panel"><div class="pb"><div style="font-family:var(--mono);font-size:.62rem;color:var(--ok);text-align:center;padding:2rem">✓ ${DEVICES.length ? 'All alerts dismissed' : 'No devices scanned yet'}</div></div></div>`;
 }
@@ -2061,7 +2064,7 @@ function viewAgreement(id) {
     }).join('')}
 
     <div style="background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.08);border-radius:5px;padding:.8rem;margin-top:.5rem">
-      <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted);margin-bottom:.4rem;letter-spacing:.12em">SCOPE OF SYSTEMS</div>
+      <div style="font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-bottom:.4rem;letter-spacing:.12em">SCOPE OF SYSTEMS</div>
       <div style="font-family:var(--mono);font-size:.6rem;color:var(--g2);white-space:pre-wrap;line-height:1.8">${a.scope||'Not specified'}</div>
     </div>
 
@@ -2278,32 +2281,32 @@ function nav(page) {
 const PLANS_DEF = {
   free: {
     name: 'Free', price: 0, color: 'var(--muted)',
-    devices: 1, scans_per_day: 1, history_days: 7,
+    devices: 3, scans_per_day: 10, history_days: 7,
     ai_analysis: false, email_alerts: false,
     scheduled_scans: false, network_discovery: false,
     pdf_reports: false, compliance_reports: false, team_seats: 1,
     wazuh: false, splunk: false, incidents: false, iocs: false,
-    features: ['1 device','1 scan/day','Security score','TXT export','7-day history'],
+    features: ['3 devices','10 scans/day','Security score','TXT export','7-day history'],
     locked:   ['AI analysis','Email alerts','Scheduled scans','Network discovery','PDF reports','Incidents','IOC database','Wazuh/Splunk'],
   },
   starter: {
     name: 'Starter', price: 19, color: 'var(--g)',
-    devices: 5, scans_per_day: 10, history_days: 30,
+    devices: 10, scans_per_day: 50, history_days: 30,
     ai_analysis: true, email_alerts: true,
     scheduled_scans: false, network_discovery: true,
     pdf_reports: false, compliance_reports: false, team_seats: 1,
     wazuh: false, splunk: false, incidents: true, iocs: true,
-    features: ['5 devices','10 scans/day','AI analysis + chat','Email alerts','Network discovery','30-day history','TXT + JSON export','Incidents & IOCs','MITRE ATT&CK'],
+    features: ['10 devices','50 scans/day','AI analysis + chat','Email alerts','Network discovery','30-day history','TXT + JSON export','Incidents & IOCs','MITRE ATT&CK'],
     locked:   ['Scheduled scans','PDF reports','Wazuh/Splunk','Compliance reports'],
   },
   professional: {
     name: 'Professional', price: 79, color: 'var(--g2)',
-    devices: 25, scans_per_day: 100, history_days: 90,
+    devices: 50, scans_per_day: 500, history_days: 90,
     ai_analysis: true, email_alerts: true,
     scheduled_scans: true, network_discovery: true,
     pdf_reports: true, compliance_reports: false, team_seats: 1,
     wazuh: true, splunk: true, incidents: true, iocs: true,
-    features: ['25 devices','100 scans/day','Scheduled scans (cron)','PDF reports','Wazuh + Splunk','90-day history','Priority support'],
+    features: ['50 devices','500 scans/day','Scheduled scans (cron)','PDF reports','Wazuh + Splunk','90-day history','Priority support'],
     locked:   ['Compliance reports','5 team seats'],
   },
   enterprise: {
@@ -2316,6 +2319,17 @@ const PLANS_DEF = {
     features: ['Unlimited devices','Unlimited scans','Compliance reports','5 team seats','Webhook alerts','1-year history','Dedicated support'],
     locked:   [],
   },
+  /* Admin role always gets enterprise-level unlimited access */
+  admin: {
+    name: 'Admin', price: 0, color: 'var(--danger)',
+    devices: -1, scans_per_day: -1, history_days: 365,
+    ai_analysis: true, email_alerts: true,
+    scheduled_scans: true, network_discovery: true,
+    pdf_reports: true, compliance_reports: true, team_seats: -1,
+    wazuh: true, splunk: true, incidents: true, iocs: true,
+    features: ['Unlimited everything','All features','Admin access'],
+    locked:   [],
+  },
 };
 
 // Plan order for upgrade display
@@ -2323,7 +2337,8 @@ const PLAN_ORDER = ['free','starter','professional','enterprise'];
 
 // ── Get current user plan ──────────────────────────────────────
 function getUserPlan() {
-  // Check session first, then localStorage override (set after payment)
+  // Admin always gets unlimited access regardless of stored plan
+  if (SESSION.role === 'admin') return 'enterprise';
   const stored = localStorage.getItem('pm_user_plan_' + SESSION.id);
   return stored || SESSION.plan || 'free';
 }
@@ -2823,7 +2838,7 @@ function renderWebScanResults(data) {
   document.getElementById('webIssuesPanel').innerHTML = (data.issues||[]).map(i =>
     `<div class="issue-row" style="background:${SEV_C[i.severity]};border:1px solid ${SEV_B[i.severity]}">
       ${badge(i.severity)}<div style="flex:1;font-family:var(--mono);font-size:.6rem;color:var(--text2)">${i.title}</div>
-      <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${i.category}</div>
+      <div style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">${i.category}</div>
       <div style="font-family:var(--mono);font-size:.58rem;color:${SEV_COL[i.severity]}">CVSS ${i.cvss}</div>
     </div>`).join('');
 }
@@ -2858,7 +2873,7 @@ async function runEmailOsint() {
         ${bc.demo?'<div style="font-family:var(--mono);font-size:.52rem;color:var(--warn);margin-bottom:.5rem">DEMO DATA — Add HIBP_API_KEY to .env for live results</div>':''}
         ${(bc.breaches||[]).slice(0,5).map(b=>`<div style="padding:.4rem .5rem;background:rgba(0,0,0,.15);border-radius:4px;margin-bottom:.25rem">
           <div style="font-family:var(--mono);font-size:.6rem;color:var(--text2)">${b.Name} <span style="color:var(--muted)">(${b.BreachDate?.split('-')[0]||'—'})</span></div>
-          <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${(b.DataClasses||[]).join(', ')}</div>
+          <div style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">${(b.DataClasses||[]).join(', ')}</div>
         </div>`).join('')}
       </div>`;
   } catch(e) {
@@ -3040,7 +3055,7 @@ function renderIncidents() {
     <div style="padding:.9rem 1rem;background:${SEV_C[inc.severity]};border:1px solid ${SEV_B[inc.severity]};border-radius:7px;margin-bottom:.4rem">
       <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.4rem;flex-wrap:wrap">
         ${badge(inc.severity)}
-        <span style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">#${inc.id}</span>
+        <span style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">#${inc.id}</span>
         <span style="font-family:var(--mono);font-size:.64rem;color:var(--white);flex:1">${inc.title}</span>
         <span style="font-family:var(--mono);font-size:.52rem;padding:.15rem .45rem;border-radius:3px;background:rgba(0,0,0,.2);color:${STATUS_COL[inc.status]||'var(--muted)'}">${inc.status.toUpperCase()}</span>
       </div>
@@ -3049,7 +3064,7 @@ function renderIncidents() {
         ${['open','investigating','contained','resolved','closed'].filter(s=>s!==inc.status).slice(0,3).map(s=>
           `<button onclick="updateIncidentStatus('${inc.id}','${s}')" class="btn btn-o btn-sm" style="font-size:.5rem;padding:.2rem .5rem">${s.toUpperCase()}</button>`
         ).join('')}
-        <span style="font-family:var(--mono);font-size:.52rem;color:var(--muted);margin-left:auto">${new Date(inc.created_at).toLocaleString()}</span>
+        <span style="font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-left:auto">${new Date(inc.created_at).toLocaleString()}</span>
       </div>
     </div>`).join('') :
     '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">No incidents matching filters.</div>';
@@ -3127,7 +3142,7 @@ function renderIocs() {
           <td>${badge(i.severity)}</td>
           <td style="font-family:var(--mono);font-size:.57rem;color:var(--muted);max-width:200px">${i.description||'—'}</td>
           <td style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">${i.source}</td>
-          <td style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${new Date(i.created_at).toLocaleDateString()}</td>
+          <td style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">${new Date(i.created_at).toLocaleDateString()}</td>
         </tr>`).join('')}
        </tbody></table>`
     : '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">No IOCs found.</div>';
@@ -3249,7 +3264,7 @@ function renderPlaybooks() {
           <div>
             <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.5rem">RESPONSE STEPS</div>
             ${pb.steps.map((s,i)=>`<div style="display:flex;gap:.6rem;padding:.4rem .6rem;background:rgba(255,255,255,.02);border-radius:4px;margin-bottom:.25rem">
-              <span style="font-family:var(--mono);font-size:.52rem;color:var(--muted);flex-shrink:0;width:16px">${i+1}</span>
+              <span style="font-family:var(--mono);font-size:.68rem;color:var(--muted);flex-shrink:0;width:16px">${i+1}</span>
               <span style="font-family:var(--mono);font-size:.6rem;color:var(--text2)">${s}</span>
             </div>`).join('')}
           </div>
@@ -3291,7 +3306,7 @@ async function loadWazuh() {
         <span style="width:7px;height:7px;border-radius:50%;background:${a.status==='active'?'var(--ok)':'var(--danger)'};box-shadow:0 0 5px ${a.status==='active'?'var(--ok)':'var(--danger)'};flex-shrink:0"></span>
         <span style="font-family:var(--mono);font-size:.6rem;color:var(--text2);flex:1">${a.name}</span>
         <span style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">${a.ip}</span>
-        <span style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${a.os?.platform||'—'} ${a.os?.version||''}</span>
+        <span style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">${a.os?.platform||'—'} ${a.os?.version||''}</span>
         <span class="badge ${a.status==='active'?'b-ok':'b-offline'}">${a.status}</span>
       </div>`).join('');
     // Alert stats
@@ -3351,9 +3366,9 @@ async function runSplunkSearch() {
         <div style="display:flex;flex-direction:column;gap:.3rem">
           ${results.map(r=>`<div style="background:rgba(0,0,0,.25);border:1px solid rgba(0,255,136,.07);border-radius:5px;padding:.6rem .8rem">
             <div style="display:flex;gap:.8rem;margin-bottom:.25rem;flex-wrap:wrap">
-              <span style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${new Date(r._time||Date.now()).toLocaleTimeString()}</span>
+              <span style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">${new Date(r._time||Date.now()).toLocaleTimeString()}</span>
               <span style="font-family:var(--mono);font-size:.52rem;color:var(--g2)">${r.host||'—'}</span>
-              <span style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${r.source||'—'}</span>
+              <span style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">${r.source||'—'}</span>
             </div>
             <div style="font-family:var(--mono);font-size:.6rem;color:var(--text2);word-break:break-all">${r._raw||JSON.stringify(r)}</div>
           </div>`).join('')}
@@ -3449,10 +3464,10 @@ function renderUsersPage() {
               <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);line-height:1.6">${u.phone||'—'}<br>${u.company||'—'}</div>
             </td>
             <td><span class="badge b-${u.role==='admin'?'critical':u.role==='client'?'medium':'ok'}">${u.role}</span></td>
-            <td><span style="font-family:var(--mono);font-size:.52rem;color:var(--muted);background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.1);padding:.15rem .4rem;border-radius:3px">${(u.plan||'free').toUpperCase()}</span></td>
+            <td><span style="font-family:var(--mono);font-size:.68rem;color:var(--muted);background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.1);padding:.15rem .4rem;border-radius:3px">${(u.plan||'free').toUpperCase()}</span></td>
             <td><span style="font-family:var(--mono);font-size:.5rem;padding:.15rem .4rem;border-radius:3px;background:${u.status==='active'?'rgba(0,255,136,.08)':'rgba(255,59,92,.08)'};color:${u.status==='active'?'var(--ok)':'var(--danger)'};border:1px solid ${u.status==='active'?'rgba(0,255,136,.18)':'rgba(255,59,92,.2)'}">${(u.status||'active').toUpperCase()}</span></td>
-            <td style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${u.created||'—'}</td>
-            <td style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">${u.lastLogin ? new Date(u.lastLogin).toLocaleString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : 'Never'}</td>
+            <td style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">${u.created||'—'}</td>
+            <td style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">${u.lastLogin ? new Date(u.lastLogin).toLocaleString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : 'Never'}</td>
             <td style="font-family:var(--mono);font-size:.55rem;color:var(--muted);text-align:center">${u.loginCount||0}</td>
             <td>
               <div style="display:flex;gap:.3rem">
@@ -3965,7 +3980,7 @@ function renderReports() {
       <span class="badge b-${issue.severity}">${issue.severity}</span>
       <div style="flex:1;min-width:150px">
         <div style="font-family:var(--mono);font-size:.62rem;color:var(--text2)">${issue.title}</div>
-        <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted);margin-top:.15rem">${issue.device} · ${issue.category} · CVSS ${issue.cvss}</div>
+        <div style="font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:.15rem">${issue.device} · ${issue.category} · CVSS ${issue.cvss}</div>
       </div>
       <div style="display:flex;gap:.4rem;flex-shrink:0">
         <button onclick='fixIssueWithAI(${JSON.stringify({id:issue.id,title:issue.title,severity:issue.severity,category:issue.category,cvss:issue.cvss,detail:issue.detail||""})}, ${JSON.stringify({hostname:issue.device,ip:issue.ip,os:issue._dev?.os||"Linux",firewall:issue._dev?.firewall||{},ssh_config:issue._dev?.ssh_config||{}})})'

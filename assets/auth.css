@@ -1,15 +1,15 @@
 /* auth.css — login & register pages */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#040810;--bg2:#070d18;--bg3:#0c1525;
+  --bg:#0a1020;--bg2:#101828;--bg3:#162035;
   --g:#00ff88;--g2:#00d4ff;--g3:#7b2fff;
-  --border:rgba(0,255,136,.12);--border2:rgba(0,212,255,.1);
-  --muted:#2a4a62;--text:#7aafc8;--text2:#c0dce8;--white:#e8f4f8;
-  --danger:#ff3b5c;--warn:#f59e0b;--ok:#00ff88;
+  --border:rgba(0,255,136,.14);--border2:rgba(0,212,255,.12);
+  --muted:#6b8da8;--text:#9abdd0;--text2:#d8eaf5;--white:#f2f9ff;
+  --danger:#ff4d6a;--warn:#f5a623;--ok:#00e87a;
   --mono:'Space Mono',monospace;--display:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;
 }
 html,body{height:100%;margin:0}
-body{background:var(--bg);color:var(--text2);font-family:var(--body);overflow-x:hidden;cursor:none;display:flex;flex-direction:column;min-height:100vh}
+body{background:var(--bg);color:var(--text2);font-family:var(--body);font-size:15px;line-height:1.6;overflow-x:hidden;cursor:none;display:flex;flex-direction:column;min-height:100vh}
 #bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.45}
 body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:1;opacity:.3}
 #cur{position:fixed;width:8px;height:8px;background:var(--g);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s;box-shadow:0 0 10px var(--g)}
@@ -28,7 +28,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;justify-content
 .auth-wrap{width:100%;max-width:440px}
 .auth-logo{font-family:var(--display);font-size:2.4rem;color:var(--white);letter-spacing:.06em;margin-bottom:.2rem;text-shadow:0 0 30px rgba(0,229,255,.2)}
 .auth-logo span{color:var(--g)}
-.auth-subtitle{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.2em;margin-bottom:2.2rem}
+.auth-subtitle{font-family:var(--mono);font-size:.72rem;color:var(--muted);letter-spacing:.15em;margin-bottom:2.2rem}
 .auth-card{background:rgba(6,13,26,.9);border:1px solid rgba(0,255,136,.1);border-radius:12px;overflow:hidden;box-shadow:0 0 60px rgba(0,255,136,.04),0 24px 80px rgba(0,0,0,.6)}
 .auth-card-bar{height:2px;background:linear-gradient(90deg,var(--g),var(--g2),var(--g3))}
 .auth-card-body{padding:2rem}
@@ -41,12 +41,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;justify-content
 
 /* FORM */
 .form-group{margin-bottom:1rem}
-.form-label{font-family:var(--mono);font-size:.58rem;color:var(--g2);letter-spacing:.18em;display:block;margin-bottom:.4rem}
-.form-input{width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(0,255,136,.1);border-radius:6px;padding:.78rem 1rem;font-family:var(--mono);font-size:.72rem;color:var(--white);outline:none;transition:border-color .2s,box-shadow .2s;cursor:text}
+.form-label{font-family:var(--mono);font-size:.72rem;color:var(--g2);letter-spacing:.12em;display:block;margin-bottom:.4rem}
+.form-input{width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(0,255,136,.1);border-radius:6px;padding:.82rem 1rem;font-family:var(--mono);font-size:.82rem;color:var(--white);outline:none;transition:border-color .2s,box-shadow .2s;cursor:text}
 .form-input:focus{border-color:rgba(0,255,136,.35);box-shadow:0 0 0 3px rgba(0,255,136,.05)}
 .form-input::placeholder{color:var(--muted)}
 .form-input.error{border-color:rgba(255,59,92,.4)}
-.form-hint{font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:.3rem;letter-spacing:.05em}
+.form-hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:.3rem;letter-spacing:.05em}
 
 /* INPUT WITH ICON */
 .input-wrap{position:relative}
@@ -61,14 +61,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;justify-content
 .pw-label{font-family:var(--mono);font-size:.52rem;color:var(--muted);letter-spacing:.1em}
 
 /* ALERT */
-.alert{font-family:var(--mono);font-size:.62rem;padding:.65rem .9rem;border-radius:5px;margin-bottom:1rem;display:none;line-height:1.5}
+.alert{font-family:var(--mono);font-size:.74rem;padding:.7rem 1rem;border-radius:5px;margin-bottom:1rem;display:none;line-height:1.55}
 .alert.show{display:block}
 .alert-error{background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.2);color:var(--danger)}
 .alert-success{background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.15);color:var(--ok)}
 .alert-info{background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.15);color:var(--g2)}
 
 /* BUTTONS */
-.btn-submit{width:100%;background:var(--g);color:#040810;border:none;border-radius:6px;padding:.88rem;font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.15em;cursor:pointer;transition:all .2s;margin-top:.3rem;position:relative;overflow:hidden}
+.btn-submit{width:100%;background:var(--g);color:#040810;border:none;border-radius:6px;padding:.95rem;font-family:var(--mono);font-size:.82rem;font-weight:700;letter-spacing:.12em;cursor:pointer;transition:all .2s;margin-top:.3rem;position:relative;overflow:hidden}
 .btn-submit::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--g),var(--g2));opacity:0;transition:opacity .2s}
 .btn-submit:hover::before{opacity:1}
 .btn-submit:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,255,136,.25)}
@@ -90,7 +90,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;justify-content
 .dr-client{background:rgba(0,212,255,.07);color:var(--g2);border-color:rgba(0,212,255,.2)}
 .dr-user{background:rgba(0,255,136,.07);color:var(--g);border-color:rgba(0,255,136,.18)}
 .demo-role:hover{filter:brightness(1.3);transform:translateY(-1px)}
-.demo-hint{font-family:var(--mono);font-size:.55rem;color:var(--muted);text-align:center;margin-top:.6rem;line-height:1.6}
+.demo-hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);text-align:center;margin-top:.6rem;line-height:1.65}
 .demo-hint strong{color:var(--text2)}
 
 /* CHECKLIST */

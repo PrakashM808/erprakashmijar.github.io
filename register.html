@@ -14,14 +14,14 @@
   .reg-page{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;position:relative;z-index:1}
   @media(max-width:900px){.reg-page{grid-template-columns:1fr}}
   /* PRICING PANEL */
-  .pricing-panel{background:rgba(4,8,16,.97);border-right:1px solid rgba(0,255,136,.08);padding:2.5rem 2rem;display:flex;flex-direction:column;overflow-y:auto}
+  .pricing-panel{background:rgba(10,16,32,.98);border-right:1px solid rgba(0,255,136,.08);padding:2.5rem 2rem;display:flex;flex-direction:column;overflow-y:auto}
   @media(max-width:900px){.pricing-panel{display:none}}
   .pp-logo{font-family:var(--mono);font-size:.75rem;color:var(--g);letter-spacing:.14em;margin-bottom:2.5rem;text-decoration:none}
   .pp-logo span{color:var(--g2)}
   .pp-title{font-family:var(--display);font-size:2.2rem;color:var(--white);letter-spacing:.04em;line-height:.92;margin-bottom:.5rem}
   .pp-sub{font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.8;margin-bottom:2rem}
   .plan-cards{display:flex;flex-direction:column;gap:.7rem;flex:1}
-  .plan-card{border-radius:8px;padding:1rem 1.2rem;border:1.5px solid rgba(255,255,255,.07);cursor:pointer;transition:all .22s;position:relative;background:rgba(6,13,26,.6)}
+  .plan-card{border-radius:8px;padding:1rem 1.2rem;border:1.5px solid rgba(255,255,255,.07);cursor:pointer;transition:all .22s;position:relative;background:rgba(12,20,38,.6)}
   .plan-card:hover{border-color:rgba(0,255,136,.25)}
   .plan-card.sel{border-color:var(--g);background:rgba(0,255,136,.06);box-shadow:0 0 20px rgba(0,255,136,.07)}
   .pct{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
@@ -91,7 +91,7 @@
       <div class="plan-card sel" data-plan="free" onclick="selectPlan('free',this)">
         <div class="pct"><div><div class="pname">FREE</div><div class="pprice">$0 / forever</div></div><div class="pdot">&#10003;</div></div>
         <div class="plan-feats">
-          <div class="pf"><span class="ok">&#10003;</span>1 device · 1 scan per day</div>
+          <div class="pf"><span class="ok">&#10003;</span>3 devices · 10 scans/day</div>
           <div class="pf"><span class="ok">&#10003;</span>Security score + issue list</div>
           <div class="pf"><span class="ok">&#10003;</span>TXT report export</div>
           <div class="pf dim"><span class="no">&#10005;</span>AI analysis</div>
@@ -103,7 +103,7 @@
         <div class="pbadge">POPULAR</div>
         <div class="pct"><div><div class="pname">STARTER</div><div class="pprice">$19 / month</div></div><div class="pdot">&#10003;</div></div>
         <div class="plan-feats">
-          <div class="pf"><span class="ok">&#10003;</span>5 devices · 10 scans/day</div>
+          <div class="pf"><span class="ok">&#10003;</span>10 devices · 50 scans/day</div>
           <div class="pf"><span class="ok">&#10003;</span>AI vulnerability analysis + chat</div>
           <div class="pf"><span class="ok">&#10003;</span>Email alerts · Network discovery</div>
           <div class="pf"><span class="ok">&#10003;</span>30-day history · JSON export</div>
@@ -114,7 +114,7 @@
       <div class="plan-card" data-plan="professional" onclick="selectPlan('professional',this)">
         <div class="pct"><div><div class="pname">PROFESSIONAL</div><div class="pprice">$79 / month</div></div><div class="pdot">&#10003;</div></div>
         <div class="plan-feats">
-          <div class="pf"><span class="ok">&#10003;</span>25 devices · 100 scans/day</div>
+          <div class="pf"><span class="ok">&#10003;</span>50 devices · 500 scans/day</div>
           <div class="pf"><span class="ok">&#10003;</span>Scheduled automatic scans</div>
           <div class="pf"><span class="ok">&#10003;</span>PDF executive reports</div>
           <div class="pf"><span class="ok">&#10003;</span>90-day history · Priority support</div>

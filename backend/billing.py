@@ -12,8 +12,8 @@ PLANS = {
     "free": {
         "name": "Free",
         "price": 0,
-        "devices": 1,
-        "scans_per_day": 1,
+        "devices": 3,
+        "scans_per_day": 10,
         "ai_analysis": False,
         "email_alerts": False,
         "scheduled_scans": False,
@@ -22,8 +22,8 @@ PLANS = {
         "network_discovery": False,
         "description": "Perfect for individuals learning security",
         "features": [
-            "1 device",
-            "1 scan per day",
+            "3 devices",
+            "10 scans per day",
             "Basic security score",
             "TXT report export",
             "Community support"
@@ -32,8 +32,8 @@ PLANS = {
     "starter": {
         "name": "Starter",
         "price": 19,
-        "devices": 5,
-        "scans_per_day": 10,
+        "devices": 10,
+        "scans_per_day": 50,
         "ai_analysis": True,
         "email_alerts": True,
         "scheduled_scans": False,
@@ -42,8 +42,8 @@ PLANS = {
         "network_discovery": True,
         "description": "For freelancers and small projects",
         "features": [
-            "5 devices",
-            "10 scans per day",
+            "10 devices",
+            "50 scans per day",
             "AI vulnerability analysis",
             "Email alerts",
             "Network discovery",
@@ -57,8 +57,8 @@ PLANS = {
     "professional": {
         "name": "Professional",
         "price": 79,
-        "devices": 25,
-        "scans_per_day": 100,
+        "devices": 50,
+        "scans_per_day": 500,
         "ai_analysis": True,
         "email_alerts": True,
         "scheduled_scans": True,
@@ -67,8 +67,8 @@ PLANS = {
         "network_discovery": True,
         "description": "For security professionals and agencies",
         "features": [
-            "25 devices",
-            "100 scans per day",
+            "50 devices",
+            "500 scans per day",
             "AI analysis + chat",
             "Scheduled automatic scans",
             "PDF executive reports",

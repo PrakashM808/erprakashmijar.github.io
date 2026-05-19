@@ -14,7 +14,7 @@ const AUTH = (() => {
       email: 'admin@erprakashmijar.com', password: 'Admin@2026',
       role: 'admin', avatar: 'PM', created: '2026-01-01',
       phone: '+1 (555) 000-0001', company: 'PM::OFFSEC',
-      plan: 'enterprise', status: 'active',
+      plan: 'enterprise'  /* admin always gets enterprise = unlimited */, status: 'active',
       lastLogin: null, loginCount: 0, notes: 'System admin account'
     },
     {
