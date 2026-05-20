@@ -423,6 +423,18 @@
   body.light-mode code,.light-mode .fix-cmd{background:rgba(0,0,0,.06);color:#008844}
 
   </style>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="SecAudit"/>
+  <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
+  <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152.png"/>
+  <link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144.png"/>
+  <link rel="apple-touch-icon" sizes="128x128" href="/icons/icon-128.png"/>
+  <meta name="msapplication-TileImage" content="/icons/icon-144.png"/>
+  <meta name="msapplication-TileColor" content="#060e1a"/>
 </head>
 <body>
 <div id="app">
@@ -4160,7 +4172,85 @@ function filterLearn(q) {
   renderLearnContent(q);
 }
 
+
+/* ── PWA Install ── */
+var deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault(); deferredPrompt = e;
+  if (!localStorage.getItem('pwa-dismissed')) {
+    setTimeout(function() {
+      var b = document.getElementById('pwaBanner');
+      if (b) b.classList.add('show');
+    }, 5000);
+  }
+});
+function installPWA() {
+  var b = document.getElementById('pwaBanner');
+  if (b) b.classList.remove('show');
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function(r) { deferredPrompt = null; });
+  } else {
+    alert('To install on iPhone:\n1. Tap Share button\n2. Tap "Add to Home Screen"\n3. Tap Add');
+  }
+}
+function dismissPWA() {
+  var b = document.getElementById('pwaBanner');
+  if (b) b.classList.remove('show');
+  localStorage.setItem('pwa-dismissed', '1');
+}
+window.addEventListener('appinstalled', function() {
+  var b = document.getElementById('pwaBanner');
+  if (b) b.classList.remove('show');
+});
+
+
+var deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault();deferredPrompt=e;
+  if(!localStorage.getItem('pwa-dismissed')){
+    setTimeout(function(){var b=document.getElementById('pwaBanner');if(b)b.classList.add('show');},5000);
+  }
+});
+function installPWA(){
+  var b=document.getElementById('pwaBanner');if(b)b.classList.remove('show');
+  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(function(){deferredPrompt=null;});}
+  else{alert('To install on iPhone:\n1. Tap the Share button (bottom)\n2. Tap "Add to Home Screen"\n3. Tap Add');}
+}
+function dismissPWA(){
+  var b=document.getElementById('pwaBanner');if(b)b.classList.remove('show');
+  localStorage.setItem('pwa-dismissed','1');
+}
+window.addEventListener('appinstalled',function(){var b=document.getElementById('pwaBanner');if(b)b.classList.remove('show');});
+
 init();
 </script>
+
+<script>
+/* ── PWA Service Worker Registration ── */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').then(function(reg) {
+      console.log('[PWA] Service worker registered:', reg.scope);
+      // Check for updates every 60 seconds
+      setInterval(function() { reg.update(); }, 60000);
+    }).catch(function(err) {
+      console.log('[PWA] Registration failed:', err);
+    });
+  });
+}
+</script>
+
+<!-- PWA Install Banner -->
+<div class="pwa-banner" id="pwaBanner">
+  <div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#7b2fff,#00ff88);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">&#128737;</div>
+  <div style="flex:1;min-width:0">
+    <div style="font-family:var(--mono);font-size:.65rem;color:var(--white);font-weight:700;margin-bottom:.1rem">Install PM::OFFSEC App</div>
+    <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">Add to home screen for offline access</div>
+  </div>
+  <button onclick="installPWA()" style="background:var(--g);color:#060e1a;border:none;border-radius:5px;padding:.4rem .9rem;font-family:var(--mono);font-size:.6rem;font-weight:700;cursor:pointer;flex-shrink:0;white-space:nowrap">INSTALL</button>
+  <button onclick="dismissPWA()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;flex-shrink:0;line-height:1">&#10005;</button>
+</div>
+
 </body>
 </html>

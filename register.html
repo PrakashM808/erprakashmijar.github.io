@@ -76,6 +76,18 @@
   .spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(0,0,0,.2);border-top-color:#040810;border-radius:50%;animation:sp .6s linear infinite;margin-right:.4rem;vertical-align:middle}
   @keyframes sp{to{transform:rotate(360deg)}}
   </style>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="SecAudit"/>
+  <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
+  <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152.png"/>
+  <link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144.png"/>
+  <link rel="apple-touch-icon" sizes="128x128" href="/icons/icon-128.png"/>
+  <meta name="msapplication-TileImage" content="/icons/icon-144.png"/>
+  <meta name="msapplication-TileColor" content="#060e1a"/>
 </head>
 <body>
 <canvas id="bgCanvas"></canvas>
@@ -364,6 +376,21 @@ function doRegister() {
 }
 
 document.addEventListener('keydown', function(e) { if (e.key === 'Enter') doRegister(); });
+</script>
+
+<script>
+/* ── PWA Service Worker Registration ── */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').then(function(reg) {
+      console.log('[PWA] Service worker registered:', reg.scope);
+      // Check for updates every 60 seconds
+      setInterval(function() { reg.update(); }, 60000);
+    }).catch(function(err) {
+      console.log('[PWA] Registration failed:', err);
+    });
+  });
+}
 </script>
 </body>
 </html>

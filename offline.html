@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Offline — PM::OFFSEC</title>
+  <meta name="theme-color" content="#00ff88"/>
+  <style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#060e1a;color:#d8eaf5;font-family:'Space Mono',monospace,system-ui;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center}
+  .icon{font-size:4rem;margin-bottom:1.5rem;animation:pulse 2s ease infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.7;transform:scale(.97)}}
+  .title{font-family:'Bebas Neue',sans-serif,system-ui;font-size:3rem;color:#f2f9ff;letter-spacing:.05em;margin-bottom:.5rem}
+  .title span{color:#00ff88}
+  .sub{font-size:.72rem;color:#6b8da8;line-height:1.85;margin-bottom:2rem;max-width:380px}
+  .card{background:#0a1525;border:1px solid rgba(0,255,136,.12);border-radius:10px;padding:1.5rem;margin-bottom:1.5rem;width:100%;max-width:380px;text-align:left}
+  .card-title{font-size:.6rem;color:#00d4ff;letter-spacing:.18em;margin-bottom:.8rem}
+  .item{display:flex;align-items:center;gap:.7rem;padding:.45rem 0;font-size:.68rem;color:#6b8da8;border-bottom:1px solid rgba(255,255,255,.04)}
+  .item:last-child{border:none}
+  .item-dot{width:7px;height:7px;border-radius:50%;background:#00ff88;flex-shrink:0}
+  .item-dot.dim{background:#1a3050}
+  .retry-btn{background:#00ff88;color:#060e1a;border:none;border-radius:6px;padding:.85rem 2.5rem;font-family:'Space Mono',monospace;font-size:.72rem;font-weight:700;letter-spacing:.12em;cursor:pointer;transition:all .2s;margin-top:.5rem}
+  .retry-btn:hover{background:#fff;transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,255,136,.25)}
+  .brand{font-size:.6rem;color:#2a4a62;letter-spacing:.14em;margin-top:2rem}
+  .brand span{color:#00d4ff}
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="SecAudit"/>
+  <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
+  <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152.png"/>
+  <link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144.png"/>
+  <link rel="apple-touch-icon" sizes="128x128" href="/icons/icon-128.png"/>
+  <meta name="msapplication-TileImage" content="/icons/icon-144.png"/>
+  <meta name="msapplication-TileColor" content="#060e1a"/>
+</head>
+<body>
+  <div class="icon">&#128274;</div>
+  <div class="title">YOU'RE<br><span>OFFLINE</span></div>
+  <p class="sub">No internet connection detected. Some features require connectivity to work. Here's what you can still do:</p>
+
+  <div class="card">
+    <div class="card-title">AVAILABLE OFFLINE</div>
+    <div class="item"><div class="item-dot"></div>View cached scan results</div>
+    <div class="item"><div class="item-dot"></div>Read previous AI reports</div>
+    <div class="item"><div class="item-dot"></div>Browse your incident history</div>
+    <div class="item"><div class="item-dot"></div>Access saved playbooks</div>
+    <div class="item"><div class="item-dot"></div>View IOC database</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">NEEDS CONNECTION</div>
+    <div class="item"><div class="item-dot dim"></div>Live security scans</div>
+    <div class="item"><div class="item-dot dim"></div>AI vulnerability analysis</div>
+    <div class="item"><div class="item-dot dim"></div>Email alerts</div>
+    <div class="item"><div class="item-dot dim"></div>OSINT lookups</div>
+    <div class="item"><div class="item-dot dim"></div>Wazuh / Splunk feed</div>
+  </div>
+
+  <button class="retry-btn" onclick="retry()">TRY AGAIN &#8594;</button>
+
+  <div class="brand">PM<span>::</span>OFFSEC SECURITY DASHBOARD</div>
+
+  <script>
+  function retry() {
+    window.location.reload();
+  }
+  // Auto-retry when connection restores
+  window.addEventListener('online', function() {
+    window.location.href = '/dashboard/index.html';
+  });
+  </script>
+
+<script>
+/* ── PWA Service Worker Registration ── */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').then(function(reg) {
+      console.log('[PWA] Service worker registered:', reg.scope);
+      // Check for updates every 60 seconds
+      setInterval(function() { reg.update(); }, 60000);
+    }).catch(function(err) {
+      console.log('[PWA] Registration failed:', err);
+    });
+  });
+}
+</script>
+</body>
+</html>
