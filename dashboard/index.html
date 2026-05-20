@@ -4360,46 +4360,30 @@ function emailAgreementToUser(agrId) {
   var agrs = getAgreements();
   var a = agrs.find(function(ag){ return ag.id === agrId; });
   if (!a) return;
-  // Open mail client with pre-filled email
-  var subject = encodeURIComponent('Your PM::OFFSEC Security Engagement Agreement — ' + a.id);
-  var body = encodeURIComponent(
-    'Dear ' + (a.name||'') + ',
-
-'
-    + 'Thank you for signing the PM::OFFSEC Security Engagement Agreement.
-
-'
-    + 'Agreement Details:
-'
-    + '- Agreement ID: ' + a.id + '
-'
-    + '- Organization: ' + (a.org||'') + '
-'
-    + '- Engagement Type: ' + (a.type||'') + '
-'
-    + '- Authorized Period: ' + (a.start||'') + ' to ' + (a.end||'') + '
-'
-    + '- Signed: ' + (a.timestamp||'') + '
-
-'
-    + 'All testing will be conducted within the authorized scope as defined in your agreement.
-
-'
-    + 'To view or download your full agreement document, log in to the dashboard:
-'
-    + 'https://erprakashmijar.com/dashboard/index.html
-
-'
-    + 'Best regards,
-'
-    + 'Prakash Mijar
-'
-    + 'PM::OFFSEC Security Dashboard
-'
-    + 'contact@erprakashmijar.com'
-  );
-  var mailto = 'mailto:' + (a.email||'') + '?subject=' + subject + '&body=' + body;
-  window.location.href = mailto;
+  var subject = encodeURIComponent('PM::OFFSEC Security Engagement Agreement — ' + a.id);
+  var lines = [
+    'Dear ' + (a.name||'') + ',',
+    '',
+    'Thank you for signing the PM::OFFSEC Security Engagement Agreement.',
+    '',
+    'Agreement Details:',
+    '- Agreement ID: ' + a.id,
+    '- Organization: ' + (a.org||''),
+    '- Engagement Type: ' + (a.type||''),
+    '- Authorized Period: ' + (a.start||'') + ' to ' + (a.end||''),
+    '- Signed: ' + (a.timestamp||''),
+    '',
+    'All testing will be conducted within the authorized scope.',
+    '',
+    'To view your agreement: https://erprakashmijar.com/dashboard/index.html',
+    '',
+    'Best regards,',
+    'Prakash Mijar',
+    'PM::OFFSEC Security Dashboard',
+    'contact@erprakashmijar.com'
+  ];
+  var body = encodeURIComponent(lines.join('\n'));
+  window.location.href = 'mailto:' + (a.email||'') + '?subject=' + subject + '&body=' + body;
 }
 
 var deferredPrompt=null;
@@ -4409,15 +4393,8 @@ window.addEventListener('beforeinstallprompt',function(e){
     setTimeout(function(){var b=document.getElementById('pwaBanner');if(b)b.classList.add('show');},5000);
   }
 });
-function installPWA(){
-  var b=document.getElementById('pwaBanner');if(b)b.classList.remove('show');
-  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(function(){deferredPrompt=null;});}
-  else{alert('To install on iPhone:\n1. Tap the Share button (bottom)\n2. Tap "Add to Home Screen"\n3. Tap Add');}
-}
-function dismissPWA(){
-  var b=document.getElementById('pwaBanner');if(b)b.classList.remove('show');
-  localStorage.setItem('pwa-dismissed','1');
-}
+
+
 window.addEventListener('appinstalled',function(){var b=document.getElementById('pwaBanner');if(b)b.classList.remove('show');});
 
 init();
