@@ -669,6 +669,65 @@ if ('serviceWorker' in navigator) {
     });
   });
 }
+
+function downloadMyAgreementPDF() {
+  // Get the stored agreement
+  var existing = JSON.parse(localStorage.getItem('pm_agreements') || '[]');
+  var latest = existing[existing.length - 1];
+  if (!latest) { window.print(); return; }
+
+  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"/>'
+    + '<title>Security Engagement Agreement ' + latest.id + '</title>'
+    + '<style>body{font-family:"Courier New",monospace;padding:40px;max-width:800px;margin:0 auto;color:#000;font-size:13px;line-height:1.6}h1{font-size:22px;border-bottom:2px solid #00aa55;padding-bottom:8px}h2{font-size:14px;color:#006633;letter-spacing:1px;margin-top:24px;text-transform:uppercase}.row{margin-bottom:6px}.label{color:#666;font-size:12px;display:inline-block;width:160px}.value{font-weight:bold}.scope-box{background:#f5f5f5;border:1px solid #ccc;padding:12px;white-space:pre-wrap;font-size:12px;margin-top:8px}.legal-note{background:#fff3cd;border:1px solid #ffc107;padding:12px;margin-top:16px;font-size:12px}.sig-box{background:#e8f5e9;border:1px solid #4caf50;padding:12px;margin-top:16px;font-size:12px}.footer{margin-top:40px;padding-top:16px;border-top:1px solid #ccc;font-size:11px;color:#666;text-align:center}</style></head><body>'
+    + '<h1>Security Engagement Agreement</h1>'
+    + '<p><strong>Agreement ID:</strong> ' + latest.id + ' &nbsp;|&nbsp; <strong>Signed:</strong> ' + (latest.timestamp||'') + '</p>'
+    + '<h2>Authorizing Party</h2>'
+    + '<div class="row"><span class="label">Full Name</span><span class="value">' + (latest.name||'') + '</span></div>'
+    + '<div class="row"><span class="label">Organization</span><span class="value">' + (latest.org||'') + '</span></div>'
+    + '<div class="row"><span class="label">Email</span><span class="value">' + (latest.email||'') + '</span></div>'
+    + '<div class="row"><span class="label">Phone</span><span class="value">' + (latest.phone||'') + '</span></div>'
+    + '<h2>Engagement Details</h2>'
+    + '<div class="row"><span class="label">Type</span><span class="value">' + (latest.type||'') + '</span></div>'
+    + '<div class="row"><span class="label">Environment</span><span class="value">' + (latest.env||'') + '</span></div>'
+    + '<div class="row"><span class="label">Start Date</span><span class="value">' + (latest.start||'') + '</span></div>'
+    + '<div class="row"><span class="label">End Date</span><span class="value">' + (latest.end||'') + '</span></div>'
+    + '<h2>Authorized Scope</h2>'
+    + '<div class="scope-box">' + (latest.scope||'').replace(/\n/g,'<br>') + '</div>'
+    + '<div class="legal-note"><strong>Legal Certifications:</strong><br>'
+    + '&#10003; Authorized under CFAA 18 U.S.C. &sect; 1030<br>'
+    + '&#10003; ECPA authorization granted<br>'
+    + '&#10003; All agreement terms accepted<br>'
+    + '&#10003; Federal crime warning acknowledged (18 U.S.C. &sect; 1001)</div>'
+    + '<div class="sig-box"><strong>Electronic Signature</strong><br>'
+    + 'Signed by: ' + (latest.name||'') + '<br>'
+    + 'Timestamp: ' + (latest.timestamp||'') + '<br>'
+    + 'Binding under ESIGN Act (15 U.S.C. &sect; 7001)</div>'
+    + '<div class="footer">PM::OFFSEC Security Dashboard | erprakashmijar.com</div>'
+    + '</body></html>';
+
+  var win = window.open('', '_blank');
+  win.document.write(html);
+  win.document.close();
+  setTimeout(function(){ win.print(); }, 500);
+}
+
+function emailMyAgreement() {
+  var existing = JSON.parse(localStorage.getItem('pm_agreements') || '[]');
+  var latest = existing[existing.length - 1];
+  if (!latest) { alert('No signed agreement found.'); return; }
+  var subject = encodeURIComponent('Your PM::OFFSEC Security Engagement Agreement — ' + latest.id);
+  var body = encodeURIComponent(
+    'Your Security Engagement Agreement has been signed.\n\n'
+    + 'Agreement ID: ' + latest.id + '\n'
+    + 'Organization: ' + (latest.org||'') + '\n'
+    + 'Type: ' + (latest.type||'') + '\n'
+    + 'Period: ' + (latest.start||'') + ' to ' + (latest.end||'') + '\n'
+    + 'Signed: ' + (latest.timestamp||'') + '\n\n'
+    + 'To view the full agreement: https://erprakashmijar.com/legal/agreement.html'
+  );
+  window.location.href = 'mailto:' + (latest.email||'') + '?subject=' + subject + '&body=' + body;
+}
+
 </script>
 </body>
 </html>

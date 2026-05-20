@@ -6,86 +6,76 @@
   <title>Sign In — PM::OFFSEC Security Dashboard</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
   <meta name="theme-color" content="#00ff88"/>
+  <link rel="manifest" href="/manifest.json"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-title" content="SecAudit"/>
+  <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="assets/auth.css"/>
   <style>
+  /* Fix cursor visible on login page */
+  body{cursor:auto!important}
+  #cur,#cur2{display:none!important}
   .login-page{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;position:relative;z-index:1}
   @media(max-width:860px){.login-page{grid-template-columns:1fr}}
-  /* LEFT brand panel */
-  .brand-panel{background:rgba(10,16,32,.98);border-right:1px solid rgba(0,255,136,.08);padding:3rem 2.5rem;display:flex;flex-direction:column;justify-content:space-between}
+  .brand-panel{background:rgba(4,8,16,.97);border-right:1px solid rgba(0,255,136,.08);padding:3rem 2.5rem;display:flex;flex-direction:column;justify-content:space-between}
   @media(max-width:860px){.brand-panel{display:none}}
   .bp-logo{font-family:var(--mono);font-size:.8rem;color:var(--g);letter-spacing:.16em;text-decoration:none}
   .bp-logo span{color:var(--g2)}
-  .bp-headline{font-family:var(--display);font-size:3.5rem;color:var(--white);letter-spacing:.03em;line-height:.92;margin-bottom:1rem}
+  .bp-headline{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:var(--white);letter-spacing:.03em;line-height:.92;margin-bottom:1rem}
   .bp-headline span{color:var(--g)}
-  .bp-sub{font-family:var(--mono);font-size:.62rem;color:var(--muted);line-height:1.85;margin-bottom:2rem}
-  .bp-features{display:flex;flex-direction:column;gap:.7rem}
-  .bp-feat{display:flex;align-items:center;gap:.8rem;font-family:var(--mono);font-size:.62rem;color:var(--text2)}
-  .bp-feat-icon{width:28px;height:28px;border-radius:6px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+  .bp-sub{font-family:var(--mono);font-size:.65rem;color:var(--muted);line-height:1.85;margin-bottom:2rem}
+  .bp-feats{display:flex;flex-direction:column;gap:.7rem}
+  .bp-feat{display:flex;align-items:center;gap:.8rem;font-family:var(--mono);font-size:.65rem;color:var(--text2)}
+  .bp-feat-ico{width:30px;height:30px;border-radius:6px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
   .bp-stats{display:flex;gap:1.5rem;margin-top:auto;padding-top:2rem;border-top:1px solid rgba(0,255,136,.07)}
-  .bp-stat{text-align:center}
-  .bp-stat-num{font-family:var(--display);font-size:1.8rem;color:var(--g);letter-spacing:.04em}
-  .bp-stat-lbl{font-family:var(--mono);font-size:.5rem;color:var(--muted);letter-spacing:.1em}
-  /* RIGHT form panel */
-  .form-panel{display:flex;align-items:center;justify-content:center;padding:2rem 2rem}
+  .bp-stat-num{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;color:var(--g);letter-spacing:.04em}
+  .bp-stat-lbl{font-family:var(--mono);font-size:.52rem;color:var(--muted);letter-spacing:.1em}
+  .form-panel{display:flex;align-items:center;justify-content:center;padding:2rem}
   .form-inner{width:100%;max-width:400px}
   .mob-logo{font-family:var(--mono);font-size:.75rem;color:var(--g);letter-spacing:.14em;margin-bottom:2rem;text-decoration:none;display:none}
   .mob-logo span{color:var(--g2)}
   @media(max-width:860px){.mob-logo{display:block}.form-panel{padding:2rem 1.2rem}}
-  .login-title{font-family:var(--display);font-size:2.2rem;color:var(--white);letter-spacing:.04em;margin-bottom:.3rem}
-  .login-sub{font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.75;margin-bottom:1.8rem}
-  .forgot-link{font-family:var(--mono);font-size:.58rem;color:var(--muted);text-decoration:none;float:right;margin-top:.35rem;transition:color .2s}
+  .login-title{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--white);letter-spacing:.04em;margin-bottom:.3rem}
+  .login-sub{font-family:var(--mono);font-size:.63rem;color:var(--muted);line-height:1.75;margin-bottom:1.8rem}
+  .forgot-wrap{display:flex;justify-content:flex-end;margin-top:.35rem}
+  .forgot-link{font-family:var(--mono);font-size:.6rem;color:var(--muted);text-decoration:none;transition:color .2s}
   .forgot-link:hover{color:var(--g2)}
-  .alert{font-family:var(--mono);font-size:.6rem;padding:.65rem .9rem;border-radius:6px;margin-bottom:.8rem;display:none}
+  .divider-or{display:flex;align-items:center;gap:.8rem;margin:1rem 0}
+  .divider-or::before,.divider-or::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.07)}
+  .divider-or span{font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:.1em}
+  .demo-roles{display:flex;flex-direction:column;gap:.4rem}
+  .demo-role{font-family:var(--mono);font-size:.6rem;padding:.55rem .9rem;background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.1);border-radius:6px;cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:space-between}
+  .demo-role:hover{background:rgba(0,212,255,.1);border-color:rgba(0,212,255,.3)}
+  .demo-role-lbl{color:var(--g2);letter-spacing:.06em}
+  .demo-role-cred{color:var(--muted);font-size:.55rem}
+  .reg-note{text-align:center;font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-top:1rem}
+  .reg-note a{color:var(--g2);text-decoration:none}
+  .alert{font-family:var(--mono);font-size:.65rem;padding:.65rem .9rem;border-radius:6px;margin-bottom:.8rem;display:none;line-height:1.5}
   .alert.show{display:block}
   .alert-error{background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.2);color:var(--danger)}
   .spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(0,0,0,.2);border-top-color:#040810;border-radius:50%;animation:sp .6s linear infinite;margin-right:.4rem;vertical-align:middle}
   @keyframes sp{to{transform:rotate(360deg)}}
-  /* Demo roles */
-  .demo-roles{display:flex;flex-direction:column;gap:.4rem;margin-top:1.2rem}
-  .demo-role{font-family:var(--mono);font-size:.57rem;padding:.5rem .8rem;background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.1);border-radius:5px;cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:space-between}
-  .demo-role:hover{background:rgba(0,212,255,.09);border-color:rgba(0,212,255,.25)}
-  .demo-role-lbl{color:var(--g2);letter-spacing:.06em}
-  .demo-role-cred{color:var(--muted);font-size:.53rem}
-  .divider-or{display:flex;align-items:center;gap:.8rem;margin:1rem 0}
-  .divider-or::before,.divider-or::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.07)}
-  .divider-or span{font-family:var(--mono);font-size:.52rem;color:var(--muted);letter-spacing:.1em}
-  .reg-note{text-align:center;font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:1rem}
-  .reg-note a{color:var(--g2);text-decoration:none}
   </style>
-  <!-- PWA -->
-  <link rel="manifest" href="/manifest.json"/>
-  <meta name="mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="apple-mobile-web-app-title" content="SecAudit"/>
-  <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
-  <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152.png"/>
-  <link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144.png"/>
-  <link rel="apple-touch-icon" sizes="128x128" href="/icons/icon-128.png"/>
-  <meta name="msapplication-TileImage" content="/icons/icon-144.png"/>
-  <meta name="msapplication-TileColor" content="#060e1a"/>
 </head>
 <body>
 <canvas id="bgCanvas"></canvas>
 
 <div class="login-page">
-
-  <!-- LEFT: BRAND -->
   <div class="brand-panel">
     <div>
       <a href="index.html" class="bp-logo">PM<span>::</span>OFFSEC</a>
       <div style="margin-top:3rem">
         <div class="bp-headline">SECURITY<br>AUDIT<br><span>DASHBOARD</span></div>
-        <p class="bp-sub">Real-time vulnerability scanning, AI-powered remediation, and SOC platform — all in one dashboard.</p>
-        <div class="bp-features">
-          <div class="bp-feat"><div class="bp-feat-icon">&#128269;</div>Live SSH security scanning</div>
-          <div class="bp-feat"><div class="bp-feat-icon">&#129302;</div>AI fix assistant — exact bash commands</div>
-          <div class="bp-feat"><div class="bp-feat-icon">&#127760;</div>Website scanner — SSL, headers, DNS</div>
-          <div class="bp-feat"><div class="bp-feat-icon">&#127970;</div>SOC platform — incidents, IOCs, MITRE</div>
-          <div class="bp-feat"><div class="bp-feat-icon">&#128202;</div>Wazuh + Splunk SIEM integration</div>
+        <p class="bp-sub">Real-time vulnerability scanning, AI-powered fixes, and SOC platform in one dashboard.</p>
+        <div class="bp-feats">
+          <div class="bp-feat"><div class="bp-feat-ico">&#128269;</div>Live SSH security scanning</div>
+          <div class="bp-feat"><div class="bp-feat-ico">&#129302;</div>AI fix assistant — exact bash commands</div>
+          <div class="bp-feat"><div class="bp-feat-ico">&#127760;</div>Website scanner — SSL, headers, DNS</div>
+          <div class="bp-feat"><div class="bp-feat-ico">&#127970;</div>SOC platform — incidents, IOCs, MITRE</div>
+          <div class="bp-feat"><div class="bp-feat-ico">&#128202;</div>Wazuh + Splunk SIEM integration</div>
         </div>
       </div>
     </div>
@@ -96,14 +86,11 @@
     </div>
   </div>
 
-  <!-- RIGHT: FORM -->
   <div class="form-panel">
     <div class="form-inner">
-
       <a href="index.html" class="mob-logo">PM<span>::</span>OFFSEC</a>
-
       <div class="login-title">WELCOME BACK</div>
-      <p class="login-sub">Sign in to your PM::OFFSEC Security Dashboard account.</p>
+      <p class="login-sub">Sign in to your PM::OFFSEC Security Dashboard.</p>
 
       <div class="alert alert-error" id="loginErr"></div>
 
@@ -113,17 +100,17 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">
-          PASSWORD
-          <a href="forgot-password.html" class="forgot-link">Forgot password? &#8594;</a>
-        </label>
+        <label class="form-label">PASSWORD</label>
         <div style="position:relative">
           <input class="form-input" id="loginPw" type="password" placeholder="Your password" autocomplete="current-password"/>
           <span onclick="toggleVis()" style="position:absolute;right:.8rem;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--muted);font-size:.85rem;user-select:none" id="eyeIco">&#128065;</span>
         </div>
+        <div class="forgot-wrap">
+          <a href="forgot-password.html" class="forgot-link">Forgot password? &#8594;</a>
+        </div>
       </div>
 
-      <button class="btn-submit" id="loginBtn" onclick="doLogin()" style="margin-top:.3rem">
+      <button class="btn-submit" id="loginBtn" onclick="doLogin()">
         <span id="loginBtnTxt">SIGN IN &#8594;</span>
       </button>
 
@@ -140,32 +127,43 @@
           <span class="demo-role-cred">client@demo.com</span>
         </div>
       </div>
-
     </div>
   </div>
-
 </div>
 
 <script src="assets/auth.js"></script>
 <script>
-AUTH.requireGuest('dashboard/index.html');
+/* Force cursor visible — auth.css sets cursor:none globally */
+document.body.style.cursor = 'auto';
+
+/* IMPORTANT: Only redirect if already logged in */
+(function() {
+  var session = AUTH.getSession();
+  if (session && session.id) {
+    window.location.href = 'dashboard/index.html';
+    return;
+  }
+})();
+
 initCanvas('bgCanvas');
 
 function showErr(msg) {
   var e = document.getElementById('loginErr');
-  e.textContent = msg; e.classList.add('show');
+  e.textContent = msg;
+  e.classList.add('show');
 }
 
 function toggleVis() {
   var inp = document.getElementById('loginPw');
   var ico = document.getElementById('eyeIco');
-  inp.type = (inp.type === 'password') ? 'text' : 'password';
-  ico.textContent = (inp.type === 'password') ? '\u{1F441}' : '\u{1F648}';
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  ico.textContent = inp.type === 'password' ? '\u{1F441}' : '\u{1F648}';
 }
 
 function doLogin() {
   var email = document.getElementById('loginEmail').value.trim();
   var pass  = document.getElementById('loginPw').value;
+
   if (!email) { showErr('Please enter your email address.'); return; }
   if (!pass)  { showErr('Please enter your password.'); return; }
 
@@ -192,22 +190,9 @@ function quickLogin(email, pass) {
   doLogin();
 }
 
-document.addEventListener('keydown', function(e) { if (e.key === 'Enter') doLogin(); });
-</script>
-
-<script>
-/* ── PWA Service Worker Registration ── */
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/sw.js').then(function(reg) {
-      console.log('[PWA] Service worker registered:', reg.scope);
-      // Check for updates every 60 seconds
-      setInterval(function() { reg.update(); }, 60000);
-    }).catch(function(err) {
-      console.log('[PWA] Registration failed:', err);
-    });
-  });
-}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doLogin();
+});
 </script>
 </body>
 </html>
