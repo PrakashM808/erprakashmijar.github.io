@@ -24,6 +24,81 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="assets/style.css"/>
   <link rel="stylesheet" href="assets/home.css"/>
+<style>
+/* ── STATS STRIP ── */
+.stats-strip{background:rgba(0,255,136,.03);border-top:1px solid rgba(0,255,136,.08);border-bottom:1px solid rgba(0,255,136,.08);padding:1.4rem 0}
+.ss-grid{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap}
+.ss-item{text-align:center;padding:.6rem 2.2rem;flex-shrink:0}
+.ss-num{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--g);letter-spacing:.06em;line-height:1}
+.ss-num span{font-size:1.2rem;color:var(--g2)}
+.ss-lbl{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--muted);letter-spacing:.1em;margin-top:.2rem;text-transform:uppercase}
+.ss-div{width:1px;height:36px;background:rgba(0,255,136,.12);flex-shrink:0}
+@media(max-width:640px){.ss-div{display:none}.ss-item{padding:.5rem 1.2rem;min-width:33%}}
+
+/* ── COST SECTION ── */
+.cost-sec{padding:5rem 0}
+.cost-sub{font-family:'Space Mono',monospace;font-size:.72rem;color:var(--muted);line-height:1.85;max-width:580px;margin:0 0 3rem}
+.cost-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-bottom:2.5rem}
+@media(max-width:680px){.cost-stats{grid-template-columns:1fr}}
+.cost-stat{background:rgba(6,13,26,.8);border:1px solid rgba(0,255,136,.08);border-radius:10px;padding:1.8rem 1.5rem;text-align:center;transition:transform .25s,border-color .25s}
+.cost-stat:hover{transform:translateY(-3px);border-color:rgba(0,255,136,.2)}
+.cost-stat.featured{border-color:rgba(255,59,92,.25);background:rgba(255,59,92,.05);box-shadow:0 0 30px rgba(255,59,92,.06)}
+.cost-num{font-family:'Bebas Neue',sans-serif;font-size:3.2rem;color:var(--g);letter-spacing:.04em;line-height:1;margin-bottom:.4rem}
+.cost-stat.featured .cost-num{color:#ff4d6a}
+.cost-num span{font-size:2rem;color:inherit}
+.cost-stat-lbl{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--text2);line-height:1.6;margin-bottom:.4rem}
+.cost-stat-src{font-family:'Space Mono',monospace;font-size:.54rem;color:var(--muted);letter-spacing:.08em}
+.consequence-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-bottom:2.5rem}
+@media(max-width:900px){.consequence-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.consequence-grid{grid-template-columns:1fr}}
+.consequence-card{background:rgba(6,13,26,.8);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:1.4rem 1.2rem;transition:all .25s;position:relative;overflow:hidden}
+.consequence-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px}
+.cc-breach::before{background:linear-gradient(90deg,#ff4d6a,transparent)}
+.cc-money::before{background:linear-gradient(90deg,#f5a623,transparent)}
+.cc-legal::before{background:linear-gradient(90deg,#00d4ff,transparent)}
+.cc-rep::before{background:linear-gradient(90deg,#c084fc,transparent)}
+.consequence-card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.14)}
+.cc-icon{font-size:1.6rem;margin-bottom:.7rem}
+.cc-title{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--white);letter-spacing:.12em;margin-bottom:.5rem;font-weight:700}
+.cc-desc{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--muted);line-height:1.75}
+.cost-cta{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;background:linear-gradient(135deg,rgba(0,255,136,.06),rgba(0,212,255,.04));border:1px solid rgba(0,255,136,.15);border-radius:10px;padding:1.5rem 2rem;flex-wrap:wrap}
+.cost-cta-title{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--white);letter-spacing:.05em;margin-bottom:.25rem}
+.cost-cta-sub{font-family:'Space Mono',monospace;font-size:.63rem;color:var(--muted)}
+
+/* ── PROCESS SECTION ── */
+.process-sec{padding:5rem 0}
+.process-steps{display:flex;align-items:flex-start;gap:0;margin:3rem 0;flex-wrap:wrap}
+@media(max-width:800px){.process-steps{flex-direction:column;align-items:center}}
+.process-step{flex:1;min-width:180px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.ps-connector{width:50px;display:flex;align-items:center;padding-top:2.5rem;flex-shrink:0}
+.ps-connector::before{content:'';display:block;width:100%;height:1px;background:linear-gradient(90deg,rgba(0,255,136,.25),rgba(0,212,255,.25))}
+@media(max-width:800px){.ps-connector{width:2px;height:36px;padding:0;margin:.5rem 0}.ps-connector::before{width:2px;height:100%;background:linear-gradient(180deg,rgba(0,255,136,.25),rgba(0,212,255,.25))}}
+.ps-num{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:rgba(0,255,136,.15);letter-spacing:.05em;line-height:1;margin-bottom:.5rem}
+.ps-body{background:rgba(6,13,26,.8);border:1px solid rgba(0,255,136,.08);border-radius:10px;padding:1.4rem 1.1rem;width:100%;transition:all .25s}
+.ps-body:hover{border-color:rgba(0,255,136,.22);transform:translateY(-3px)}
+.ps-icon{font-size:1.8rem;margin-bottom:.7rem}
+.ps-title{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--white);letter-spacing:.1em;margin-bottom:.5rem;font-weight:700}
+.ps-desc{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--muted);line-height:1.75;margin-bottom:.6rem}
+.ps-tag{font-family:'Space Mono',monospace;font-size:.54rem;color:var(--g2);letter-spacing:.08em;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.12);border-radius:4px;padding:.2rem .6rem;display:inline-block}
+.ps-link{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--g);text-decoration:none;border-bottom:1px solid rgba(0,255,136,.3);padding-bottom:1px;transition:all .2s}
+.ps-link:hover{color:var(--g2)}
+
+/* ── VS BOX ── */
+.vs-box{display:grid;grid-template-columns:1fr 60px 1fr;background:rgba(6,13,26,.8);border:1px solid rgba(0,255,136,.08);border-radius:12px;overflow:hidden;margin-top:3rem}
+@media(max-width:700px){.vs-box{grid-template-columns:1fr;grid-template-rows:auto auto auto}}
+.vs-col{padding:2rem}
+.vs-them{background:rgba(255,59,92,.03);border-right:1px solid rgba(255,255,255,.06)}
+.vs-us{background:rgba(0,255,136,.03)}
+@media(max-width:700px){.vs-them{border-right:none;border-bottom:1px solid rgba(255,255,255,.06)}}
+.vs-label{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.12em;margin-bottom:1.2rem;text-align:center;padding-bottom:.7rem;border-bottom:1px solid rgba(255,255,255,.06)}
+.vs-us .vs-label{color:var(--g)}
+.vs-items{display:flex;flex-direction:column;gap:.55rem}
+.vs-item{font-family:'Space Mono',monospace;font-size:.65rem;line-height:1.5;display:flex;align-items:flex-start;gap:.6rem}
+.vs-item.bad{color:var(--muted)}
+.vs-item.good{color:var(--text2)}
+.vs-divider{display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.2)}
+.vs-vs{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--muted);letter-spacing:.1em}
+</style>
 </head>
 <body>
 <a class="skip-nav" href="#main-content">Skip to content</a>
@@ -94,6 +169,39 @@
     </div>
   </div>
 </section>
+
+
+<!-- ── PLATFORM STATS STRIP ── -->
+<div class="stats-strip">
+  <div class="wrap">
+    <div class="ss-grid">
+      <div class="ss-item">
+        <div class="ss-num">40<span>+</span></div>
+        <div class="ss-lbl">Security Checks Per Scan</div>
+      </div>
+      <div class="ss-div"></div>
+      <div class="ss-item">
+        <div class="ss-num">10<span>s</span></div>
+        <div class="ss-lbl">Average Scan Time</div>
+      </div>
+      <div class="ss-div"></div>
+      <div class="ss-item">
+        <div class="ss-num">AI</div>
+        <div class="ss-lbl">Powered Fix Assistant</div>
+      </div>
+      <div class="ss-div"></div>
+      <div class="ss-item">
+        <div class="ss-num">US</div>
+        <div class="ss-lbl">Law Compliant (CFAA)</div>
+      </div>
+      <div class="ss-div"></div>
+      <div class="ss-item">
+        <div class="ss-num">SOC</div>
+        <div class="ss-lbl">Platform Included</div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="divider"></div>
 
@@ -252,6 +360,67 @@
 </section>
 
 
+
+<div class="divider"></div>
+
+<!-- ── COST OF IGNORING SECURITY ── -->
+<section class="cost-sec">
+  <div class="wrap">
+    <div class="s-label reveal">Why It Matters</div>
+    <h2 class="s-title reveal">THE COST OF<br><span>IGNORING SECURITY</span></h2>
+    <p class="cost-sub reveal">Most businesses discover vulnerabilities only after an attack. By then the damage is done &#8212; and the average recovery takes months.</p>
+
+    <div class="cost-stats reveal">
+      <div class="cost-stat">
+        <div class="cost-num">43<span>%</span></div>
+        <div class="cost-stat-lbl">of cyberattacks target small businesses</div>
+        <div class="cost-stat-src">Verizon DBIR 2024</div>
+      </div>
+      <div class="cost-stat featured">
+        <div class="cost-num">$4.88<span>M</span></div>
+        <div class="cost-stat-lbl">average cost of a data breach in 2024</div>
+        <div class="cost-stat-src">IBM Cost of Data Breach Report</div>
+      </div>
+      <div class="cost-stat">
+        <div class="cost-num">277<span>d</span></div>
+        <div class="cost-stat-lbl">average days to identify a breach</div>
+        <div class="cost-stat-src">IBM Security 2024</div>
+      </div>
+    </div>
+
+    <div class="consequence-grid reveal">
+      <div class="consequence-card cc-breach">
+        <div class="cc-icon">&#128274;</div>
+        <div class="cc-title">DATA BREACHES</div>
+        <div class="cc-desc">Exposed customer data leads to lawsuits, regulatory fines, and destroyed trust that takes years to rebuild.</div>
+      </div>
+      <div class="consequence-card cc-money">
+        <div class="cc-icon">&#128200;</div>
+        <div class="cc-title">FINANCIAL LOSSES</div>
+        <div class="cc-desc">Ransomware, fraud, and business disruption can bankrupt a company. Recovery costs dwarf prevention costs.</div>
+      </div>
+      <div class="consequence-card cc-legal">
+        <div class="cc-icon">&#9878;</div>
+        <div class="cc-title">REGULATORY FINES</div>
+        <div class="cc-desc">GDPR fines up to 4% of global revenue. HIPAA penalties up to $1.9M per violation. CFAA criminal liability.</div>
+      </div>
+      <div class="consequence-card cc-rep">
+        <div class="cc-icon">&#128565;</div>
+        <div class="cc-title">REPUTATION DAMAGE</div>
+        <div class="cc-desc">60% of small businesses close within 6 months of a cyberattack. Your reputation is your most valuable asset.</div>
+      </div>
+    </div>
+
+    <div class="cost-cta reveal">
+      <div class="cost-cta-text">
+        <div class="cost-cta-title">START SCANNING FOR FREE</div>
+        <div class="cost-cta-sub">Find vulnerabilities before attackers do. No credit card required.</div>
+      </div>
+      <a href="register.html" class="btn btn-g" style="flex-shrink:0;font-size:.8rem;padding:.85rem 2rem">GET STARTED FREE &#8594;</a>
+    </div>
+  </div>
+</section>
+
 <div class="divider"></div>
 
 <!-- ── CYBERSECURITY NEWS ── -->
@@ -281,6 +450,95 @@
         Sources: CISA · SANS · Krebs on Security · The Hacker News · BleepingComputer · NIST NVD
       </div>
     </div>
+  </div>
+</section>
+
+
+<div class="divider"></div>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="process-sec">
+  <div class="wrap">
+    <div class="s-label reveal">Simple Process</div>
+    <h2 class="s-title reveal">FROM ZERO TO<br><span>SECURED IN MINUTES</span></h2>
+
+    <div class="process-steps">
+
+      <div class="process-step reveal">
+        <div class="ps-num">01</div>
+        <div class="ps-body">
+          <div class="ps-icon">&#128274;</div>
+          <div class="ps-title">CREATE FREE ACCOUNT</div>
+          <div class="ps-desc">Sign up in 30 seconds. Choose your plan — free tier includes 3 devices and 10 scans per day. No credit card required.</div>
+          <a href="register.html" class="ps-link">Get started &#8594;</a>
+        </div>
+      </div>
+
+      <div class="ps-connector"></div>
+
+      <div class="process-step reveal" style="animation-delay:.1s">
+        <div class="ps-num">02</div>
+        <div class="ps-body">
+          <div class="ps-icon">&#128268;</div>
+          <div class="ps-title">CONNECT YOUR SERVER</div>
+          <div class="ps-desc">Enter your server IP, SSH credentials, or domain. The scanner connects securely and audits your system in under 10 seconds.</div>
+          <div class="ps-tag">SSH · Web · API · Network</div>
+        </div>
+      </div>
+
+      <div class="ps-connector"></div>
+
+      <div class="process-step reveal" style="animation-delay:.2s">
+        <div class="ps-num">03</div>
+        <div class="ps-body">
+          <div class="ps-icon">&#129302;</div>
+          <div class="ps-title">GET AI-POWERED REPORT</div>
+          <div class="ps-desc">Claude AI analyzes every finding and generates an exact bash command to fix it. Plain English. No security knowledge required.</div>
+          <div class="ps-tag">40+ checks · CVSS scoring · MITRE ATT&amp;CK</div>
+        </div>
+      </div>
+
+      <div class="ps-connector"></div>
+
+      <div class="process-step reveal" style="animation-delay:.3s">
+        <div class="ps-num">04</div>
+        <div class="ps-body">
+          <div class="ps-icon">&#9989;</div>
+          <div class="ps-title">FIX &amp; MONITOR</div>
+          <div class="ps-desc">Apply the fixes, schedule automatic daily scans, set up email alerts, and track your security score improving over time.</div>
+          <div class="ps-tag">Auto-scan · Email alerts · SOC dashboard</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- VS comparison -->
+    <div class="vs-box reveal">
+      <div class="vs-col vs-them">
+        <div class="vs-label">Traditional Security Audit</div>
+        <div class="vs-items">
+          <div class="vs-item bad">&#10005; €990–€2,990 per audit</div>
+          <div class="vs-item bad">&#10005; 5–7 days to get results</div>
+          <div class="vs-item bad">&#10005; Manual process, not repeatable</div>
+          <div class="vs-item bad">&#10005; One-time snapshot</div>
+          <div class="vs-item bad">&#10005; No self-service client portal</div>
+          <div class="vs-item bad">&#10005; Generic remediation advice</div>
+        </div>
+      </div>
+      <div class="vs-divider"><div class="vs-vs">VS</div></div>
+      <div class="vs-col vs-us">
+        <div class="vs-label">PM::OFFSEC Dashboard</div>
+        <div class="vs-items">
+          <div class="vs-item good">&#10003; From $0 free — $19/month paid</div>
+          <div class="vs-item good">&#10003; Results in under 10 seconds</div>
+          <div class="vs-item good">&#10003; Automated, runs on schedule</div>
+          <div class="vs-item good">&#10003; Continuous monitoring 24/7</div>
+          <div class="vs-item good">&#10003; Full client self-service portal</div>
+          <div class="vs-item good">&#10003; Exact bash commands to fix each issue</div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
