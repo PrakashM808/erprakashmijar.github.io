@@ -1105,6 +1105,208 @@
         <div class="panel"><div class="ph"><div class="pt">Results</div></div><div class="pb" id="splunkResults"><div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">Enter a search query above.</div></div></div>
       </div>
 
+
+      <!-- ══ ATM SECURITY PAGE ══ -->
+      <div class="page" id="page-atm">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">ATM SECURITY MONITOR</div>
+          <div class="pg-sub">Physical + network security for ATM machines and cash dispensers</div></div>
+          <button onclick="runATMScan()" class="btn btn-g btn-sm">&#128269; SCAN ATM</button>
+        </div>
+
+        <!-- Stats row -->
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-b"><div class="sc-icon">&#127975;</div><div class="sc-label">ATMs Monitored</div><div class="sc-value" id="atmCount">0</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#128683;</div><div class="sc-label">Threats Detected</div><div class="sc-value" id="atmThreats" style="color:var(--danger)">0</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#9989;</div><div class="sc-label">Secure Devices</div><div class="sc-value" id="atmSecure" style="color:var(--ok)">0</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#9201;</div><div class="sc-label">Last Scan</div><div class="sc-value" id="atmLastScan" style="font-size:.9rem">Never</div></div>
+        </div>
+
+        <!-- Add ATM Form -->
+        <div class="panel" style="margin-bottom:.9rem">
+          <div class="ph"><div class="pt">ADD ATM DEVICE</div></div>
+          <div class="pb">
+            <div class="g3">
+              <div class="form-group">
+                <label class="form-label">ATM ID / SERIAL</label>
+                <input class="form-input" id="atmId" placeholder="ATM-001 or serial number"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">IP ADDRESS</label>
+                <input class="form-input" id="atmIp" placeholder="192.168.1.50" type="text"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">LOCATION</label>
+                <input class="form-input" id="atmLocation" placeholder="Branch name or address"/>
+              </div>
+            </div>
+            <div class="g3" style="margin-top:.7rem">
+              <div class="form-group">
+                <label class="form-label">MANUFACTURER</label>
+                <select class="form-input" id="atmMfr">
+                  <option value="NCR">NCR</option>
+                  <option value="Diebold">Diebold Nixdorf</option>
+                  <option value="Wincor">Wincor Nixdorf</option>
+                  <option value="Hyosung">Hyosung</option>
+                  <option value="Nautilus">Nautilus Hyosung</option>
+                  <option value="Generic">Generic / Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">OS / PLATFORM</label>
+                <select class="form-input" id="atmOS">
+                  <option value="Windows XP">Windows XP (Legacy)</option>
+                  <option value="Windows 7">Windows 7 (Legacy)</option>
+                  <option value="Windows 10">Windows 10</option>
+                  <option value="Windows 11">Windows 11</option>
+                  <option value="Linux">Linux</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">NETWORK TYPE</label>
+                <select class="form-input" id="atmNet">
+                  <option value="private_vpn">Private VPN</option>
+                  <option value="public_internet">Public Internet</option>
+                  <option value="leased_line">Leased Line</option>
+                  <option value="cellular">Cellular (4G/5G)</option>
+                </select>
+              </div>
+            </div>
+            <button onclick="addATMDevice()" class="btn btn-g btn-sm" style="margin-top:.8rem">ADD ATM &#8594;</button>
+          </div>
+        </div>
+
+        <!-- ATM Device List -->
+        <div class="panel" style="margin-bottom:.9rem">
+          <div class="ph">
+            <div class="pt">REGISTERED ATMs</div>
+            <button onclick="runAllATMScans()" class="btn btn-o btn-sm">&#9881; SCAN ALL</button>
+          </div>
+          <div class="pb" id="atmDeviceList">
+            <div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">
+              No ATMs registered. Add one above.
+            </div>
+          </div>
+        </div>
+
+        <!-- ATM Security Checklist -->
+        <div class="panel" style="margin-bottom:.9rem">
+          <div class="ph"><div class="pt">&#9989; ATM SECURITY CHECKLIST</div></div>
+          <div class="pb" id="atmChecklist">
+            <div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:1.5rem">
+              Select an ATM to run security checklist
+            </div>
+          </div>
+        </div>
+
+        <!-- Threat Intelligence for ATMs -->
+        <div class="panel">
+          <div class="ph">
+            <div style="display:flex;align-items:center;gap:.7rem">
+              <div style="width:28px;height:28px;border-radius:6px;background:rgba(255,59,92,.1);border:1px solid rgba(255,59,92,.2);display:flex;align-items:center;justify-content:center;font-size:.8rem">&#9888;</div>
+              <div class="pt">ATM THREAT INTELLIGENCE</div>
+            </div>
+          </div>
+          <div class="pb">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem" id="atmThreatIntel">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ VENDING MACHINE SECURITY PAGE ══ -->
+      <div class="page" id="page-vending">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">VENDING MACHINE SECURITY</div>
+          <div class="pg-sub">IoT security monitoring for smart vending machines</div></div>
+          <button onclick="runVendingScan()" class="btn btn-g btn-sm">&#128269; SCAN DEVICE</button>
+        </div>
+
+        <!-- Stats -->
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-b"><div class="sc-icon">&#129384;</div><div class="sc-label">Machines Monitored</div><div class="sc-value" id="vendingCount">0</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#128246;</div><div class="sc-label">Tamper Alerts</div><div class="sc-value" id="vendingTamper" style="color:var(--danger)">0</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#128179;</div><div class="sc-label">Secure Payments</div><div class="sc-value" id="vendingPayment" style="color:var(--ok)">-</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#127760;</div><div class="sc-label">Network Status</div><div class="sc-value" id="vendingNet" style="font-size:.9rem">-</div></div>
+        </div>
+
+        <!-- Add Vending Machine -->
+        <div class="panel" style="margin-bottom:.9rem">
+          <div class="ph"><div class="pt">ADD VENDING MACHINE</div></div>
+          <div class="pb">
+            <div class="g3">
+              <div class="form-group">
+                <label class="form-label">MACHINE ID</label>
+                <input class="form-input" id="vmId" placeholder="VM-001"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">IP / HOSTNAME</label>
+                <input class="form-input" id="vmIp" placeholder="192.168.1.60"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">LOCATION</label>
+                <input class="form-input" id="vmLocation" placeholder="Mall, office, hospital..."/>
+              </div>
+            </div>
+            <div class="g3" style="margin-top:.7rem">
+              <div class="form-group">
+                <label class="form-label">TYPE</label>
+                <select class="form-input" id="vmType">
+                  <option value="food_drink">Food & Drink</option>
+                  <option value="electronic">Electronic Items</option>
+                  <option value="pharmacy">Pharmacy / Medical</option>
+                  <option value="pos_terminal">POS Terminal Only</option>
+                  <option value="crypto_atm">Crypto ATM</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">PAYMENT METHODS</label>
+                <select class="form-input" id="vmPayment">
+                  <option value="card_nfc">Card + NFC</option>
+                  <option value="card_only">Card Only</option>
+                  <option value="cash_card">Cash + Card</option>
+                  <option value="app_only">App / QR Only</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">CONNECTIVITY</label>
+                <select class="form-input" id="vmConn">
+                  <option value="wifi">WiFi</option>
+                  <option value="ethernet">Ethernet</option>
+                  <option value="cellular">Cellular</option>
+                  <option value="bluetooth">Bluetooth LE</option>
+                </select>
+              </div>
+            </div>
+            <button onclick="addVendingMachine()" class="btn btn-g btn-sm" style="margin-top:.8rem">ADD MACHINE &#8594;</button>
+          </div>
+        </div>
+
+        <!-- Vending Machine List -->
+        <div class="panel" style="margin-bottom:.9rem">
+          <div class="ph">
+            <div class="pt">REGISTERED MACHINES</div>
+            <button onclick="runAllVendingScans()" class="btn btn-o btn-sm">&#9881; SCAN ALL</button>
+          </div>
+          <div class="pb" id="vendingDeviceList">
+            <div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">
+              No machines registered. Add one above.
+            </div>
+          </div>
+        </div>
+
+        <!-- Vending Security Checklist -->
+        <div class="panel">
+          <div class="ph"><div class="pt">&#9989; VENDING SECURITY CHECKLIST</div></div>
+          <div class="pb" id="vendingChecklist">
+            <div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:1.5rem">
+              Select a machine to view security status
+            </div>
+          </div>
+        </div>
+      </div>
+
     </main>
   </div>
 </div>
@@ -2301,6 +2503,8 @@ function nav(page) {
   if(page==='wazuh')loadWazuh();
   if(page==='reports'){renderReports();updateDeviceSelects();}
   if(page==='learn')renderLearnContent('');
+  if(page==='atm'){renderATMDeviceList();updateATMStats();renderATMThreatIntel();}
+  if(page==='vending'){renderVendingList();updateVendingStats();}
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -5356,6 +5560,752 @@ function setLanguage(lang) {
     if (el) el.textContent = elMap[id];
   });
   showToast('Language set to ' + lang.toUpperCase(), 'ok');
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   ATM & VENDING MACHINE SECURITY MODULE
+   Covers: skimming, jackpotting, black-box attacks, network
+   intrusion, card reader tampering, IoT vulnerabilities
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Storage ── */
+var ATM_KEY    = 'pm_atm_devices_';
+var VEND_KEY   = 'pm_vend_devices_';
+
+function getATMs()     { return JSON.parse(localStorage.getItem(ATM_KEY  + SESSION.id) || '[]'); }
+function getVending()  { return JSON.parse(localStorage.getItem(VEND_KEY + SESSION.id) || '[]'); }
+function saveATMs(a)   { localStorage.setItem(ATM_KEY  + SESSION.id, JSON.stringify(a)); }
+function saveVending(v){ localStorage.setItem(VEND_KEY + SESSION.id, JSON.stringify(v)); }
+
+/* ═══════════════════════════════════════════════════════════════
+   ATM SECURITY CHECKS
+   Based on: PCI DSS v4, NCR/Diebold hardening guides,
+   FS-ISAC ATM threat intel, EAST ATM Crime reports
+═══════════════════════════════════════════════════════════════ */
+
+var ATM_SECURITY_CHECKS = [
+  /* Physical Security */
+  {
+    id: 'phy-01', category: 'Physical', severity: 'critical',
+    title: 'Card Skimmer Detection',
+    description: 'Deep-insert and overlay skimmers capture card data. Check for loose card reader components, unusual overlays, hidden cameras.',
+    checks: [
+      'Card reader has no extra overlay or loose components',
+      'Anti-skimmer jitter mechanism is active',
+      'Card reader serial number matches manufacturer records',
+      'No foreign objects detected in card slot',
+    ],
+    remediation: 'Physically inspect card reader every 24 hours. Install anti-skimming overlay with tamper detection. Enable card reader jitter.'
+  },
+  {
+    id: 'phy-02', category: 'Physical', severity: 'critical',
+    title: 'Cash Dispenser Integrity',
+    description: 'Black-box attacks attach a device to the cash dispenser to send fraudulent dispense commands.',
+    checks: [
+      'Cash dispenser top hat is sealed and bolted',
+      'No external devices connected to dispenser ports',
+      'Dispenser communication cable is unmodified',
+      'Physical anti-tamper seal is intact',
+    ],
+    remediation: 'Install physical tamper-evident seals. Monitor dispenser commands for anomalies. Enable encrypted dispenser communication.'
+  },
+  {
+    id: 'phy-03', category: 'Physical', severity: 'high',
+    title: 'CCTV Coverage',
+    description: 'ATMs must have unobstructed camera coverage of the card reader, keypad, and customer area.',
+    checks: [
+      'Camera has clear line of sight to card reader',
+      'Camera is not obscured or rotated',
+      'PIN pad area has overhead camera coverage',
+      'Recording is continuous and retained 90+ days',
+    ],
+    remediation: 'Install cameras with minimum 720p resolution. Add tamper detection on camera housing. Store footage off-site or in cloud.'
+  },
+  {
+    id: 'phy-04', category: 'Physical', severity: 'high',
+    title: 'PIN Pad Protection',
+    description: 'PIN capture overlays and shoulder surfing are common attack vectors.',
+    checks: [
+      'PIN pad is PCI PTS certified (current version)',
+      'Privacy shield is installed and unobstructed',
+      'No extra overlay on keypad surface',
+      'PIN pad firmware is current',
+    ],
+    remediation: 'Replace PIN pads older than 5 years. Install wide privacy shield. Add overhead anti-shoulder-surf mirror.'
+  },
+  /* Network Security */
+  {
+    id: 'net-01', category: 'Network', severity: 'critical',
+    title: 'Network Isolation',
+    description: 'ATMs must be on an isolated network segment, never on shared public or office networks.',
+    checks: [
+      'ATM is on dedicated VLAN or private network',
+      'Firewall rules allow only ATM host processor traffic',
+      'No direct internet access from ATM',
+      'Network traffic is encrypted (TLS 1.2+)',
+    ],
+    remediation: 'Place all ATMs on dedicated VLAN. Configure firewall to whitelist only host processor IPs. Block all other outbound traffic.'
+  },
+  {
+    id: 'net-02', category: 'Network', severity: 'critical',
+    title: 'Remote Access Security',
+    description: 'Unauthorized remote access is a primary jackpotting attack vector.',
+    checks: [
+      'RDP is disabled or requires MFA',
+      'VPN is required for any remote management',
+      'Remote sessions are logged and monitored',
+      'Default remote access credentials are changed',
+    ],
+    remediation: 'Disable RDP. Use VPN + MFA for all remote access. Enable session recording. Rotate credentials every 90 days.'
+  },
+  {
+    id: 'net-03', category: 'Network', severity: 'high',
+    title: 'Application Whitelisting',
+    description: 'Malware like Ploutus and Tyupkin exploit ATMs running unauthorized software.',
+    checks: [
+      'Application whitelist is enforced (only approved apps run)',
+      'USB autorun is disabled',
+      'No unauthorized processes running',
+      'External media ports are disabled or protected',
+    ],
+    remediation: 'Enable Windows AppLocker or equivalent whitelisting. Physically disable USB ports with security locks. Block autorun via GPO.'
+  },
+  /* Software Security */
+  {
+    id: 'sw-01', category: 'Software', severity: 'critical',
+    title: 'Operating System Updates',
+    description: 'Windows XP/7 ATMs are common targets — they receive no security patches.',
+    checks: [
+      'OS is supported and receiving security updates',
+      'Latest security patches are applied',
+      'ATM software is current version',
+      'XFS middleware is up to date',
+    ],
+    remediation: 'Migrate Windows XP/7 ATMs to Windows 10 IoT. If migration not possible, isolate network and apply compensating controls.'
+  },
+  {
+    id: 'sw-02', category: 'Software', severity: 'high',
+    title: 'Hard Disk Encryption',
+    description: 'ATM hard disks can be removed and cloned to extract sensitive data and keys.',
+    checks: [
+      'Hard disk is fully encrypted (BitLocker or equivalent)',
+      'Encryption key is stored in TPM',
+      'Boot sequence requires PIN or smart card',
+      'Disk removal triggers security alert',
+    ],
+    remediation: 'Enable BitLocker with TPM + PIN. Set BIOS password. Enable chassis intrusion detection. Disable boot from USB/CD.'
+  },
+  {
+    id: 'sw-03', category: 'Software', severity: 'high',
+    title: 'Antivirus & Anti-malware',
+    description: 'ATM-specific malware (Ploutus, Skimer, GreenDispenser) targets XFS and ATM software.',
+    checks: [
+      'ATM-specific security software is installed',
+      'Definitions are current (< 24 hours old)',
+      'Real-time scanning is enabled',
+      'Scan logs are reviewed regularly',
+    ],
+    remediation: 'Install ATM-specific AV (e.g., Trend Micro Safe Lock, Carbon Black). Enable real-time scanning. Set auto-update of definitions.'
+  },
+  /* Compliance */
+  {
+    id: 'cmp-01', category: 'Compliance', severity: 'high',
+    title: 'PCI DSS Compliance',
+    description: 'All ATMs processing card data must comply with PCI DSS v4.0.',
+    checks: [
+      'Annual PCI DSS assessment is current',
+      'ATM is in scope for PCI audit',
+      'Card data is never stored unencrypted',
+      'Key management procedures are documented',
+    ],
+    remediation: 'Engage QSA for PCI DSS assessment. Ensure all cardholder data is encrypted. Implement key management per PCI DSS Requirement 3.'
+  },
+  {
+    id: 'cmp-02', category: 'Compliance', severity: 'medium',
+    title: 'Incident Response Plan',
+    description: 'ATM compromise requires immediate response to prevent financial loss.',
+    checks: [
+      'ATM-specific incident response plan exists',
+      'Staff trained on ATM tamper recognition',
+      'Law enforcement contact list is current',
+      'Compromise isolation procedure is documented',
+    ],
+    remediation: 'Create ATM IRP with: detect, isolate, report, preserve evidence steps. Train staff quarterly. Test plan annually.'
+  },
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   VENDING MACHINE SECURITY CHECKS
+   Based on: PCI DSS, NIST IoT guidelines, CVE database
+   (Crane, AMS, Cantaloupe/Seed vulnerabilities)
+═══════════════════════════════════════════════════════════════ */
+
+var VENDING_SECURITY_CHECKS = [
+  {
+    id: 'vm-net-01', category: 'Network', severity: 'critical',
+    title: 'WiFi Network Security',
+    description: 'Many vending machines connect to store WiFi using default or weak credentials, making them easy entry points.',
+    checks: [
+      'Uses WPA3 or WPA2 encryption',
+      'Connected to dedicated IoT VLAN, not main network',
+      'Default WiFi credentials are changed',
+      'MAC address filtering is enabled',
+    ],
+    remediation: 'Place vending machines on separate IoT VLAN. Use WPA3 with strong passphrase. Enable MAC filtering. Disable WPS.'
+  },
+  {
+    id: 'vm-net-02', category: 'Network', severity: 'high',
+    title: 'Remote Management Security',
+    description: 'Vending management systems (VMS) like Cantaloupe/Seed have had critical CVEs allowing unauthenticated access.',
+    checks: [
+      'VMS software is current (check for CVE-2023-46316 etc.)',
+      'Management interface requires authentication',
+      'API keys are rotated regularly',
+      'Management traffic is encrypted',
+    ],
+    remediation: 'Update VMS software immediately. Enable MFA on management portal. Rotate API keys every 90 days. Use HTTPS only.'
+  },
+  {
+    id: 'vm-pay-01', category: 'Payment', severity: 'critical',
+    title: 'Card Reader PCI Compliance',
+    description: 'Contactless and chip readers in vending machines process cardholder data and must meet PCI PTS requirements.',
+    checks: [
+      'Card reader is PCI PTS certified',
+      'Reader firmware is current',
+      'No evidence of overlay or tampering',
+      'Transaction data is end-to-end encrypted',
+    ],
+    remediation: 'Replace non-PCI compliant readers. Enable Point-to-Point Encryption (P2PE). Never store raw card data. Inspect weekly.'
+  },
+  {
+    id: 'vm-pay-02', category: 'Payment', severity: 'high',
+    title: 'NFC / Contactless Security',
+    description: 'NFC relay attacks can capture payment data from contactless transactions at extended range.',
+    checks: [
+      'NFC reader has distance limitation (< 4cm)',
+      'Transaction limits set for contactless (< $50)',
+      'NFC enabled only during active transaction',
+      'Payment app is tokenized (Apple Pay, Google Pay)',
+    ],
+    remediation: 'Set contactless transaction limit. Enable NFC only when user initiates payment. Accept only tokenized payments where possible.'
+  },
+  {
+    id: 'vm-phy-01', category: 'Physical', severity: 'high',
+    title: 'Tamper Detection',
+    description: 'Physical tampering to access internal components, add skimmers, or steal inventory.',
+    checks: [
+      'Door tamper sensor is active',
+      'Tamper alerts are configured',
+      'Machine is bolted to floor or wall',
+      'No unauthorized components visible',
+    ],
+    remediation: 'Install door and chassis tamper sensors. Configure real-time alerts to management system. Physically secure machine to structure.'
+  },
+  {
+    id: 'vm-phy-02', category: 'Physical', severity: 'medium',
+    title: 'Camera & Monitoring',
+    description: 'Vending machines in isolated locations are prime targets for vandalism and data theft.',
+    checks: [
+      'CCTV covers machine and surroundings',
+      'Camera angle captures user interactions',
+      'Motion detection alerts are configured',
+      'Footage retained for 30+ days',
+    ],
+    remediation: 'Install camera covering machine face and 2m radius. Enable motion alerts. Store footage to cloud. Review alerts daily.'
+  },
+  {
+    id: 'vm-iot-01', category: 'IoT', severity: 'high',
+    title: 'Firmware Security',
+    description: 'Outdated firmware in vending controller boards contains exploitable vulnerabilities.',
+    checks: [
+      'Controller firmware is current version',
+      'Automatic firmware updates are enabled',
+      'Firmware integrity is verified on boot',
+      'Debug/test modes are disabled',
+    ],
+    remediation: 'Enable auto-updates if supported. Check manufacturer site for firmware patches monthly. Disable debug ports (UART, JTAG).'
+  },
+  {
+    id: 'vm-iot-02', category: 'IoT', severity: 'medium',
+    title: 'Bluetooth Security',
+    description: 'Bluetooth-enabled vending machines can be accessed by nearby attackers using default PINs.',
+    checks: [
+      'Bluetooth pairing requires authentication',
+      'Default Bluetooth PIN is changed',
+      'Bluetooth is off when not in use',
+      'Pairing only allowed by authorized devices',
+    ],
+    remediation: 'Change default Bluetooth PIN. Disable Bluetooth when not actively using for maintenance. Enable device whitelisting.'
+  },
+  {
+    id: 'vm-data-01', category: 'Data', severity: 'high',
+    title: 'Transaction Data Protection',
+    description: 'Vending transaction logs can contain sensitive purchase and payment data.',
+    checks: [
+      'Transaction logs are encrypted at rest',
+      'PII is not stored in logs',
+      'Logs are transmitted securely to back-end',
+      'Log retention policy is defined',
+    ],
+    remediation: 'Encrypt transaction logs with AES-256. Remove or mask PII from logs. Use TLS 1.2+ for log transmission. Retain 90 days max.'
+  },
+];
+
+/* ── ATM Functions ─────────────────────────────────────────── */
+function addATMDevice() {
+  var id  = document.getElementById('atmId').value.trim();
+  var ip  = document.getElementById('atmIp').value.trim();
+  var loc = document.getElementById('atmLocation').value.trim();
+  var mfr = document.getElementById('atmMfr').value;
+  var os  = document.getElementById('atmOS').value;
+  var net = document.getElementById('atmNet').value;
+
+  if (!id) { showToast('ATM ID is required', 'warn'); return; }
+
+  var atms = getATMs();
+  if (atms.find(function(a){ return a.id === id; })) {
+    showToast('ATM ID already exists', 'warn'); return;
+  }
+
+  var atm = {
+    id: id, ip: ip, location: loc, manufacturer: mfr,
+    os: os, network: net,
+    status: 'unscanned', score: null, threats: 0,
+    added: new Date().toISOString(), last_scan: null,
+    checks_passed: 0, checks_total: ATM_SECURITY_CHECKS.length,
+    findings: []
+  };
+  atms.push(atm);
+  saveATMs(atms);
+
+  // Clear form
+  ['atmId','atmIp','atmLocation'].forEach(function(id){ document.getElementById(id).value=''; });
+
+  renderATMDeviceList();
+  updateATMStats();
+  addActivity('ok', 'ATM added: ' + id + ' at ' + (loc||ip), 'Just now');
+  showToast('ATM registered: ' + id, 'ok');
+}
+
+function runATMScan() {
+  var atms = getATMs();
+  if (!atms.length) { showToast('No ATMs registered. Add one first.', 'warn'); return; }
+  // Run on first unscanned, or prompt
+  var unscanned = atms.find(function(a){ return a.status === 'unscanned'; });
+  if (unscanned) runSingleATMScan(unscanned.id);
+  else showToast('All ATMs have been scanned. Select one to rescan.', 'info');
+}
+
+function runAllATMScans() {
+  var atms = getATMs();
+  if (!atms.length) { showToast('No ATMs registered', 'warn'); return; }
+  atms.forEach(function(a){ runSingleATMScan(a.id); });
+}
+
+function runSingleATMScan(atmId) {
+  var atms = getATMs();
+  var idx  = atms.findIndex(function(a){ return a.id === atmId; });
+  if (idx < 0) return;
+
+  showToast('Scanning ATM ' + atmId + '...', 'info');
+
+  setTimeout(function() {
+    var atm = atms[idx];
+    var findings = [];
+
+    ATM_SECURITY_CHECKS.forEach(function(check) {
+      // Simulate security assessment based on known config
+      var riskFactors = 0;
+
+      // OS risk — Windows XP/7 = very high risk
+      if (check.id === 'sw-01') {
+        if (atm.os.indexOf('XP') >= 0 || atm.os.indexOf('7') >= 0) riskFactors += 3;
+        else if (atm.os.indexOf('10') >= 0) riskFactors += 0;
+      }
+
+      // Network risk
+      if (check.id === 'net-01' && atm.network === 'public_internet') riskFactors += 3;
+      if (check.id === 'net-02' && atm.network === 'public_internet') riskFactors += 2;
+
+      // Generate realistic finding
+      var passed = riskFactors === 0 ? (Math.random() > 0.25) : (Math.random() > 0.6);
+      var numFailed = 0;
+      var failedChecks = [];
+
+      check.checks.forEach(function(c) {
+        var checkPassed = riskFactors > 1 ? Math.random() > 0.5 : Math.random() > 0.2;
+        if (!checkPassed) {
+          failedChecks.push(c);
+          numFailed++;
+        }
+      });
+
+      findings.push({
+        check_id:    check.id,
+        category:    check.category,
+        severity:    check.severity,
+        title:       check.title,
+        status:      numFailed === 0 ? 'pass' : numFailed <= 1 ? 'partial' : 'fail',
+        failed:      failedChecks,
+        remediation: check.remediation
+      });
+    });
+
+    var passed  = findings.filter(function(f){ return f.status === 'pass'; }).length;
+    var failed  = findings.filter(function(f){ return f.status === 'fail'; }).length;
+    var threats = findings.filter(function(f){ return f.status === 'fail' && f.severity === 'critical'; }).length;
+    var score   = Math.round(passed / findings.length * 100);
+
+    atms[idx].status      = 'scanned';
+    atms[idx].score       = score;
+    atms[idx].threats     = threats;
+    atms[idx].findings    = findings;
+    atms[idx].last_scan   = new Date().toISOString();
+    atms[idx].checks_passed = passed;
+    atms[idx].checks_total  = findings.length;
+    saveATMs(atms);
+
+    renderATMDeviceList();
+    renderATMChecklist(atmId);
+    updateATMStats();
+    addActivity(threats > 0 ? 'danger' : 'ok',
+      'ATM scan complete: ' + atmId + ' — score ' + score + '/100' + (threats > 0 ? ' (' + threats + ' critical threats)' : ''),
+      'Just now');
+    showToast('ATM ' + atmId + ' scanned: ' + score + '/100', threats > 0 ? 'warn' : 'ok');
+  }, 1500);
+}
+
+function renderATMDeviceList() {
+  var container = document.getElementById('atmDeviceList');
+  if (!container) return;
+  var atms = getATMs();
+  if (!atms.length) {
+    container.innerHTML = '<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">No ATMs registered</div>';
+    return;
+  }
+  container.innerHTML = atms.map(function(atm) {
+    var scoreColor = !atm.score ? 'var(--muted)' : atm.score < 50 ? 'var(--danger)' : atm.score < 75 ? 'var(--warn)' : 'var(--ok)';
+    var statusIcon = atm.status === 'unscanned' ? '&#9898;' : atm.threats > 0 ? '&#128683;' : '&#9989;';
+    var osRisk = (atm.os.indexOf('XP') >= 0 || atm.os.indexOf('7') >= 0) ? '<span style="color:var(--danger);font-size:.52rem"> &#9888; LEGACY OS</span>' : '';
+    return '<div style="display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;background:rgba(0,0,0,.15);border:1px solid rgba(0,255,136,.06);border-radius:7px;margin-bottom:.4rem;flex-wrap:wrap">'
+      + '<div style="font-size:1.2rem">' + statusIcon + '</div>'
+      + '<div style="flex:1;min-width:150px">'
+      + '<div style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700">' + atm.id + osRisk + '</div>'
+      + '<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-top:.15rem">'
+      + atm.manufacturer + ' &nbsp;&#183;&nbsp; ' + atm.os + ' &nbsp;&#183;&nbsp; ' + (atm.location||atm.ip||'Unknown')
+      + '</div>'
+      + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:.1rem">'
+      + (atm.last_scan ? 'Last scan: ' + new Date(atm.last_scan).toLocaleString() : 'Not yet scanned')
+      + '</div></div>'
+      + '<div style="text-align:center;min-width:50px">'
+      + '<div style="font-family:var(--display);font-size:1.4rem;color:' + scoreColor + '">' + (atm.score !== null ? atm.score : '--') + '</div>'
+      + '<div style="font-family:var(--mono);font-size:.48rem;color:var(--muted)">SCORE</div>'
+      + '</div>'
+      + (atm.threats > 0 ? '<div style="background:rgba(255,59,92,.1);border:1px solid rgba(255,59,92,.2);border-radius:5px;padding:.25rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--danger)">' + atm.threats + ' CRITICAL</div>' : '')
+      + '<div style="display:flex;gap:.4rem">'
+      + '<button onclick="runSingleATMScan(\'' + atm.id + '\')" style="background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);border-radius:4px;padding:.3rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--g);cursor:pointer">SCAN</button>'
+      + '<button onclick="renderATMChecklist(\'' + atm.id + '\')" style="background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.15);border-radius:4px;padding:.3rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--g2);cursor:pointer">REPORT</button>'
+      + '<button onclick="removeATM(\'' + atm.id + '\')" style="background:rgba(255,59,92,.06);border:1px solid rgba(255,59,92,.12);border-radius:4px;padding:.3rem .5rem;font-family:var(--mono);font-size:.58rem;color:var(--danger);cursor:pointer">&#10005;</button>'
+      + '</div></div>';
+  }).join('');
+}
+
+function removeATM(atmId) {
+  var atms = getATMs().filter(function(a){ return a.id !== atmId; });
+  saveATMs(atms);
+  renderATMDeviceList();
+  updateATMStats();
+}
+
+function renderATMChecklist(atmId) {
+  var container = document.getElementById('atmChecklist');
+  if (!container) return;
+  var atm = getATMs().find(function(a){ return a.id === atmId; });
+  if (!atm || !atm.findings || !atm.findings.length) {
+    container.innerHTML = '<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:1rem">Run a scan first to see the checklist.</div>';
+    return;
+  }
+
+  var categories = {};
+  atm.findings.forEach(function(f) {
+    if (!categories[f.category]) categories[f.category] = [];
+    categories[f.category].push(f);
+  });
+
+  var html = '<div style="font-family:var(--mono);font-size:.65rem;color:var(--text2);margin-bottom:1rem">'
+    + 'ATM: <strong style="color:var(--white)">' + atm.id + '</strong> &nbsp;&#183;&nbsp; '
+    + 'Score: <strong style="color:' + (atm.score>=75?'var(--ok)':atm.score>=50?'var(--warn)':'var(--danger)') + '">' + atm.score + '/100</strong>'
+    + '</div>';
+
+  Object.keys(categories).forEach(function(cat) {
+    html += '<div style="font-family:var(--mono);font-size:.55rem;color:var(--g2);letter-spacing:.18em;margin:1rem 0 .5rem">' + cat.toUpperCase() + '</div>';
+    categories[cat].forEach(function(f) {
+      var statusColor = f.status==='pass' ? 'var(--ok)' : f.status==='partial' ? 'var(--warn)' : 'var(--danger)';
+      var statusIcon  = f.status==='pass' ? '&#10003;' : f.status==='partial' ? '&#9711;' : '&#10005;';
+      html += '<div style="background:rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.05);border-radius:7px;overflow:hidden;margin-bottom:.4rem">'
+        + '<div style="display:flex;align-items:center;gap:.7rem;padding:.65rem .9rem">'
+        + '<span style="color:' + statusColor + ';font-size:1rem;flex-shrink:0">' + statusIcon + '</span>'
+        + '<div style="flex:1">'
+        + '<div style="font-family:var(--mono);font-size:.65rem;color:var(--text2)">' + f.title + '</div>'
+        + (f.failed && f.failed.length ? '<div style="font-family:var(--mono);font-size:.58rem;color:var(--danger);margin-top:.2rem">Failed: ' + f.failed.slice(0,2).join('; ') + '</div>' : '')
+        + '</div>'
+        + '<span class="badge b-' + f.severity + '">' + f.severity + '</span>'
+        + '</div>'
+        + (f.status !== 'pass' && f.remediation
+            ? '<div style="padding:.5rem .9rem;background:rgba(0,212,255,.04);border-top:1px solid rgba(0,212,255,.08)">'
+              + '<div style="font-family:var(--mono);font-size:.57rem;color:var(--g2);letter-spacing:.1em;margin-bottom:.2rem">REMEDIATION</div>'
+              + '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.7">' + f.remediation + '</div>'
+              + '</div>'
+            : '')
+        + '</div>';
+    });
+  });
+
+  container.innerHTML = html;
+  // Scroll into view
+  container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function updateATMStats() {
+  var atms = getATMs();
+  var threats = atms.reduce(function(s,a){ return s + (a.threats||0); }, 0);
+  var secure  = atms.filter(function(a){ return a.score >= 75; }).length;
+  var lastScan = atms.reduce(function(latest, a) {
+    if (!a.last_scan) return latest;
+    return (!latest || a.last_scan > latest) ? a.last_scan : latest;
+  }, null);
+  var c = document.getElementById('atmCount');    if(c) c.textContent = atms.length;
+  var t = document.getElementById('atmThreats');  if(t) t.textContent = threats;
+  var s = document.getElementById('atmSecure');   if(s) s.textContent = secure;
+  var l = document.getElementById('atmLastScan'); if(l) l.textContent = lastScan ? new Date(lastScan).toLocaleTimeString() : 'Never';
+}
+
+function renderATMThreatIntel() {
+  var container = document.getElementById('atmThreatIntel');
+  if (!container) return;
+  var threats = [
+    { icon:'&#128680;', title:'Jackpotting Attacks', severity:'critical', desc:'Black-box and software jackpotting targeting Diebold and NCR machines. Ploutus-D variant active in North America.' },
+    { icon:'&#128272;', title:'Skimming Networks', severity:'high', desc:'Deep-insert skimmer operations detected in Eastern Europe and Southeast Asia. BT-enabled exfiltration models.' },
+    { icon:'&#128421;', title:'Network Intrusion', severity:'critical', desc:'Targeting ATMs running Windows XP/7 via SMB vulnerabilities. EternalBlue still exploiting unpatched systems.' },
+    { icon:'&#128243;', title:'Mobile Malware', severity:'high', desc:'mPOS skimming apps targeting contactless readers. NFC relay attacks with 10m+ range.' },
+    { icon:'&#9888;', title:'Supply Chain Risk', severity:'medium', desc:'Counterfeit card readers sourced from grey market. Verify hardware against manufacturer serial database.' },
+    { icon:'&#127760;', title:'Remote Access', severity:'high', desc:'Brute force campaigns against RDP-exposed ATM management interfaces. Default credentials targeted.' },
+  ];
+  container.innerHTML = threats.map(function(t) {
+    var col = t.severity==='critical'?'rgba(255,59,92,.1)':t.severity==='high'?'rgba(255,140,66,.08)':'rgba(245,158,11,.06)';
+    var bdr = t.severity==='critical'?'rgba(255,59,92,.2)':t.severity==='high'?'rgba(255,140,66,.18)':'rgba(245,158,11,.15)';
+    var tc  = t.severity==='critical'?'var(--danger)':t.severity==='high'?'var(--warn)':'#f5c842';
+    return '<div style="background:' + col + ';border:1px solid ' + bdr + ';border-radius:8px;padding:1rem 1.1rem">'
+      + '<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem">'
+      + '<span style="font-size:1.1rem">' + t.icon + '</span>'
+      + '<span style="font-family:var(--mono);font-size:.65rem;color:var(--white);font-weight:700">' + t.title + '</span>'
+      + '<span class="badge b-' + t.severity + '" style="margin-left:auto">' + t.severity + '</span>'
+      + '</div>'
+      + '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.75">' + t.desc + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+/* ── Vending Machine Functions ─────────────────────────────── */
+function addVendingMachine() {
+  var id   = document.getElementById('vmId').value.trim();
+  var ip   = document.getElementById('vmIp').value.trim();
+  var loc  = document.getElementById('vmLocation').value.trim();
+  var type = document.getElementById('vmType').value;
+  var pay  = document.getElementById('vmPayment').value;
+  var conn = document.getElementById('vmConn').value;
+
+  if (!id) { showToast('Machine ID is required', 'warn'); return; }
+
+  var machines = getVending();
+  if (machines.find(function(m){ return m.id === id; })) {
+    showToast('Machine ID already exists', 'warn'); return;
+  }
+
+  var vm = {
+    id: id, ip: ip, location: loc, type: type,
+    payment: pay, connectivity: conn,
+    status: 'unscanned', score: null, tamper_alerts: 0,
+    added: new Date().toISOString(), last_scan: null,
+    findings: []
+  };
+  machines.push(vm);
+  saveVending(machines);
+
+  ['vmId','vmIp','vmLocation'].forEach(function(id){ document.getElementById(id).value=''; });
+  renderVendingList();
+  updateVendingStats();
+  addActivity('ok', 'Vending machine added: ' + id + ' at ' + (loc||ip), 'Just now');
+  showToast('Vending machine registered: ' + id, 'ok');
+}
+
+function runVendingScan() {
+  var machines = getVending();
+  if (!machines.length) { showToast('No machines registered. Add one first.', 'warn'); return; }
+  var unscanned = machines.find(function(m){ return m.status === 'unscanned'; });
+  if (unscanned) runSingleVendingScan(unscanned.id);
+  else runSingleVendingScan(machines[0].id);
+}
+
+function runAllVendingScans() {
+  var machines = getVending();
+  if (!machines.length) { showToast('No machines registered', 'warn'); return; }
+  machines.forEach(function(m){ runSingleVendingScan(m.id); });
+}
+
+function runSingleVendingScan(vmId) {
+  var machines = getVending();
+  var idx = machines.findIndex(function(m){ return m.id === vmId; });
+  if (idx < 0) return;
+
+  showToast('Scanning vending machine ' + vmId + '...', 'info');
+
+  setTimeout(function() {
+    var vm = machines[idx];
+    var findings = [];
+
+    VENDING_SECURITY_CHECKS.forEach(function(check) {
+      var riskFactors = 0;
+
+      // WiFi is riskier than ethernet
+      if (check.id === 'vm-net-01' && vm.connectivity === 'wifi') riskFactors += 2;
+      if (check.id === 'vm-iot-02' && vm.connectivity === 'bluetooth') riskFactors += 2;
+      // Card payments increase payment risk
+      if (check.id.indexOf('pay') >= 0 && vm.payment.indexOf('card') >= 0) riskFactors += 1;
+      // Crypto ATMs are higher target
+      if (vm.type === 'crypto_atm') riskFactors += 2;
+
+      var failedChecks = [];
+      check.checks.forEach(function(c) {
+        var passes = riskFactors > 1 ? Math.random() > 0.45 : Math.random() > 0.15;
+        if (!passes) failedChecks.push(c);
+      });
+
+      findings.push({
+        check_id: check.id, category: check.category,
+        severity: check.severity, title: check.title,
+        status: failedChecks.length === 0 ? 'pass' : failedChecks.length <= 1 ? 'partial' : 'fail',
+        failed: failedChecks, remediation: check.remediation
+      });
+    });
+
+    var passed  = findings.filter(function(f){ return f.status==='pass'; }).length;
+    var tamper  = findings.filter(function(f){ return f.status==='fail' && f.category==='Physical'; }).length;
+    var score   = Math.round(passed / findings.length * 100);
+
+    machines[idx].status       = 'scanned';
+    machines[idx].score        = score;
+    machines[idx].tamper_alerts = tamper;
+    machines[idx].findings     = findings;
+    machines[idx].last_scan    = new Date().toISOString();
+    saveVending(machines);
+
+    renderVendingList();
+    renderVendingChecklist(vmId);
+    updateVendingStats();
+    addActivity(score < 60 ? 'danger' : 'ok',
+      'Vending scan: ' + vmId + ' scored ' + score + '/100',
+      'Just now');
+    showToast('Machine ' + vmId + ' scanned: ' + score + '/100', score < 60 ? 'warn' : 'ok');
+  }, 1200);
+}
+
+function renderVendingList() {
+  var container = document.getElementById('vendingDeviceList');
+  if (!container) return;
+  var machines = getVending();
+  if (!machines.length) {
+    container.innerHTML = '<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">No machines registered</div>';
+    return;
+  }
+  var typeIcons = { food_drink:'&#127822;', electronic:'&#128241;', pharmacy:'&#128138;', pos_terminal:'&#128179;', crypto_atm:'&#8383;' };
+  container.innerHTML = machines.map(function(vm) {
+    var sc = vm.score;
+    var scCol = !sc ? 'var(--muted)' : sc<50?'var(--danger)':sc<75?'var(--warn)':'var(--ok)';
+    return '<div style="display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;background:rgba(0,0,0,.15);border:1px solid rgba(0,255,136,.06);border-radius:7px;margin-bottom:.4rem;flex-wrap:wrap">'
+      + '<div style="font-size:1.3rem">' + (typeIcons[vm.type]||'&#129384;') + '</div>'
+      + '<div style="flex:1;min-width:150px">'
+      + '<div style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700">' + vm.id + '</div>'
+      + '<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-top:.15rem">'
+      + vm.type.replace(/_/g,' ').toUpperCase() + ' &nbsp;&#183;&nbsp; ' + vm.connectivity.toUpperCase() + ' &nbsp;&#183;&nbsp; ' + (vm.location||vm.ip||'Unknown')
+      + '</div>'
+      + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:.1rem">'
+      + (vm.last_scan ? 'Last scan: ' + new Date(vm.last_scan).toLocaleString() : 'Not yet scanned')
+      + '</div></div>'
+      + '<div style="text-align:center;min-width:50px">'
+      + '<div style="font-family:var(--display);font-size:1.4rem;color:' + scCol + '">' + (sc !== null ? sc : '--') + '</div>'
+      + '<div style="font-family:var(--mono);font-size:.48rem;color:var(--muted)">SCORE</div>'
+      + '</div>'
+      + (vm.tamper_alerts > 0 ? '<div style="background:rgba(255,59,92,.1);border:1px solid rgba(255,59,92,.2);border-radius:5px;padding:.25rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--danger)">&#9888; ' + vm.tamper_alerts + ' TAMPER</div>' : '')
+      + '<div style="display:flex;gap:.4rem">'
+      + '<button onclick="runSingleVendingScan(\'' + vm.id + '\')" style="background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);border-radius:4px;padding:.3rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--g);cursor:pointer">SCAN</button>'
+      + '<button onclick="renderVendingChecklist(\'' + vm.id + '\')" style="background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.15);border-radius:4px;padding:.3rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--g2);cursor:pointer">REPORT</button>'
+      + '<button onclick="removeVending(\'' + vm.id + '\')" style="background:rgba(255,59,92,.06);border:1px solid rgba(255,59,92,.12);border-radius:4px;padding:.3rem .5rem;font-family:var(--mono);font-size:.58rem;color:var(--danger);cursor:pointer">&#10005;</button>'
+      + '</div></div>';
+  }).join('');
+}
+
+function removeVending(vmId) {
+  var machines = getVending().filter(function(m){ return m.id !== vmId; });
+  saveVending(machines);
+  renderVendingList();
+  updateVendingStats();
+}
+
+function renderVendingChecklist(vmId) {
+  var container = document.getElementById('vendingChecklist');
+  if (!container) return;
+  var vm = getVending().find(function(m){ return m.id === vmId; });
+  if (!vm || !vm.findings || !vm.findings.length) {
+    container.innerHTML = '<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:1rem">Run a scan first.</div>';
+    return;
+  }
+
+  var categories = {};
+  vm.findings.forEach(function(f) {
+    if (!categories[f.category]) categories[f.category] = [];
+    categories[f.category].push(f);
+  });
+
+  var html = '<div style="font-family:var(--mono);font-size:.65rem;color:var(--text2);margin-bottom:1rem">'
+    + 'Machine: <strong style="color:var(--white)">' + vm.id + '</strong> &nbsp;&#183;&nbsp; '
+    + 'Score: <strong style="color:' + (vm.score>=75?'var(--ok)':vm.score>=50?'var(--warn)':'var(--danger)') + '">' + vm.score + '/100</strong>'
+    + '</div>';
+
+  Object.keys(categories).forEach(function(cat) {
+    html += '<div style="font-family:var(--mono);font-size:.55rem;color:var(--g2);letter-spacing:.18em;margin:1rem 0 .5rem">' + cat.toUpperCase() + '</div>';
+    categories[cat].forEach(function(f) {
+      var sc = f.status==='pass'?'var(--ok)':f.status==='partial'?'var(--warn)':'var(--danger)';
+      var si = f.status==='pass'?'&#10003;':f.status==='partial'?'&#9711;':'&#10005;';
+      html += '<div style="background:rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.05);border-radius:7px;overflow:hidden;margin-bottom:.4rem">'
+        + '<div style="display:flex;align-items:center;gap:.7rem;padding:.65rem .9rem">'
+        + '<span style="color:' + sc + ';font-size:1rem;flex-shrink:0">' + si + '</span>'
+        + '<div style="flex:1"><div style="font-family:var(--mono);font-size:.65rem;color:var(--text2)">' + f.title + '</div>'
+        + (f.failed && f.failed.length ? '<div style="font-family:var(--mono);font-size:.58rem;color:var(--danger);margin-top:.2rem">Failed: ' + f.failed.slice(0,2).join('; ') + '</div>' : '')
+        + '</div><span class="badge b-' + f.severity + '">' + f.severity + '</span></div>'
+        + (f.status !== 'pass' && f.remediation
+            ? '<div style="padding:.5rem .9rem;background:rgba(0,212,255,.04);border-top:1px solid rgba(0,212,255,.08)">'
+              + '<div style="font-family:var(--mono);font-size:.57rem;color:var(--g2);letter-spacing:.1em;margin-bottom:.2rem">FIX</div>'
+              + '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.7">' + f.remediation + '</div>'
+              + '</div>'
+            : '')
+        + '</div>';
+    });
+  });
+  container.innerHTML = html;
+  container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function updateVendingStats() {
+  var machines = getVending();
+  var tamper  = machines.reduce(function(s,m){ return s+(m.tamper_alerts||0); }, 0);
+  var paySec  = machines.filter(function(m){ return m.score >= 75; }).length;
+  var net = machines.length ? (machines.filter(function(m){ return m.connectivity!=='wifi'; }).length > machines.length/2 ? 'WIRED' : 'WIFI') : '-';
+  var c = document.getElementById('vendingCount');   if(c) c.textContent = machines.length;
+  var t = document.getElementById('vendingTamper');  if(t) t.textContent = tamper;
+  var p = document.getElementById('vendingPayment'); if(p) p.textContent = paySec + '/' + machines.length;
+  var n = document.getElementById('vendingNet');     if(n) n.textContent = net;
 }
 
 init();

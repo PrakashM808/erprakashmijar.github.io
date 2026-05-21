@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from scanner   import local_scan, remote_scan, discover_network_devices
+from physical_security import scan_atm_network, scan_vending_network, get_atm_compliance_summary
 from cve       import search_cves_by_keyword, get_cve_by_id, get_recent_cves
 from billing   import (PLANS, init_stripe, create_stripe_checkout,
                        create_lemonsqueezy_checkout, handle_stripe_webhook,
@@ -622,6 +623,97 @@ class NewDeviceAlertReq(BaseModel):
     user_name: str
     device_ip: str
     hostname: str = ""
+
+
+
+# ── ATM & VENDING MACHINE SECURITY ENDPOINTS ─────────────────────
+
+class ATMScanReq(BaseModel):
+    atm_id: str
+    ip: str
+    manufacturer: str = "Generic"
+    os: str = "Windows 10"
+    network: str = "private_vpn"
+    user_id: str = "anonymous"
+
+class VendingScanReq(BaseModel):
+    vm_id: str
+    ip: str
+    vm_type: str = "food_drink"
+    connectivity: str = "wifi"
+    user_id: str = "anonymous"
+
+class ATMComplianceReq(BaseModel):
+    os_type: str
+    network_type: str
+    manufacturer: str = "Generic"
+
+@app.post("/api/atm/scan")
+async def atm_network_scan(req: ATMScanReq):
+    """Scan ATM for network-level security vulnerabilities"""
+    result = await scan_atm_network(req.ip)
+    compliance = get_atm_compliance_summary(req.os, req.network, req.manufacturer)
+    return {
+        "atm_id": req.atm_id,
+        "network_scan": result,
+        "compliance": compliance,
+        "overall_score": round((result.get("network_score",100) + compliance.get("compliance_score",100)) / 2),
+        "scanned_at": datetime.utcnow().isoformat()
+    }
+
+@app.post("/api/vending/scan")
+async def vending_network_scan(req: VendingScanReq):
+    """Scan vending machine for IoT security vulnerabilities"""
+    result = await scan_vending_network(req.ip)
+    return {
+        "vm_id": req.vm_id,
+        "network_scan": result,
+        "vm_type": req.vm_type,
+        "connectivity": req.connectivity,
+        "scanned_at": datetime.utcnow().isoformat()
+    }
+
+@app.post("/api/atm/compliance")
+def atm_compliance_check(req: ATMComplianceReq):
+    """Get ATM compliance posture based on configuration"""
+    return get_atm_compliance_summary(req.os_type, req.network_type, req.manufacturer)
+
+@app.get("/api/atm/threats")
+def atm_threat_intel():
+    """Current ATM threat intelligence feed"""
+    return {
+        "updated": datetime.utcnow().isoformat(),
+        "threats": [
+            {"name":"Jackpotting","severity":"critical","active":True,"regions":["NA","EU","APAC"],
+             "description":"Black-box and software jackpotting campaigns targeting NCR and Diebold machines"},
+            {"name":"Skimming Networks","severity":"high","active":True,"regions":["EU","SEA"],
+             "description":"Deep-insert skimmer distribution network with Bluetooth exfiltration"},
+            {"name":"EternalBlue ATM","severity":"critical","active":True,"regions":["Global"],
+             "description":"SMBv1 exploitation targeting Windows XP/7 ATMs"},
+            {"name":"Ploutus-D","severity":"critical","active":True,"regions":["LATAM","NA"],
+             "description":"ATM malware enabling cash dispense via SMS or USB keyboard"},
+        ],
+        "advisories": [
+            "FS-ISAC: Update ATM application whitelisting immediately",
+            "NCR: Critical patch for XFS service available",
+            "PCI SSC: PCI PTS 6.x deadline for terminal replacement",
+        ]
+    }
+
+@app.get("/api/vending/cves")
+async def vending_cves():
+    """Known CVEs affecting vending management systems"""
+    known_cves = [
+        {"cve":"CVE-2023-46316","product":"Cantaloupe Seed","severity":"critical","cvss":9.8,
+         "description":"Unauthenticated RCE in Cantaloupe/Seed vending management platform"},
+        {"cve":"CVE-2022-29142","product":"AMS Vending","severity":"high","cvss":7.5,
+         "description":"Authentication bypass in AMS remote vending management"},
+        {"cve":"CVE-2021-44228","product":"Log4j (various)","severity":"critical","cvss":10.0,
+         "description":"Log4Shell affects vending management systems running Java"},
+        {"cve":"CVE-2020-13671","product":"Drupal CMS","severity":"critical","cvss":9.8,
+         "description":"Affects vending portals running Drupal CMS"},
+    ]
+    return {"cves": known_cves, "count": len(known_cves)}
 
 
 # ── CVE ENDPOINTS ────────────────────────────────────────────────
