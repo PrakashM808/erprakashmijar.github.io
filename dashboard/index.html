@@ -1909,6 +1909,21 @@ async function testApi() {
   document.getElementById('apiTestResult').style.color = online ? 'var(--ok)' : 'var(--danger)';
 }
 
+function saveAlertPrefsToBackend() {
+  if (!API_ONLINE) return;
+  var prefs = JSON.parse(localStorage.getItem('pm_alert_prefs_' + SESSION.id) || '{}');
+  apiPost('/api/alerts/prefs', {
+    user_id: SESSION.id,
+    email: prefs.email || '',
+    enabled: prefs.enabled !== false,
+    on_critical: prefs.on_critical !== false,
+    on_high: prefs.on_high !== false,
+    on_medium: prefs.on_medium || false,
+    weekly_report: prefs.weekly_report !== false,
+    slack_webhook: prefs.slack_webhook || ''
+  }).catch(function(){});
+}
+
 function saveApiSettings() {
   SETTINGS.apiUrl = document.getElementById('apiUrlInput').value.trim() || 'http://localhost:8000';
   SETTINGS.apiKey = document.getElementById('apiKeyInput').value.trim();
@@ -4396,6 +4411,84 @@ window.addEventListener('beforeinstallprompt',function(e){
 
 
 window.addEventListener('appinstalled',function(){var b=document.getElementById('pwaBanner');if(b)b.classList.remove('show');});
+
+
+/* ═══════════════════════════════════════════════════════════════
+   EMAIL TRIGGER FUNCTIONS — call backend email APIs
+═══════════════════════════════════════════════════════════════ */
+async function triggerScanEmail(scanData) {
+  if (!API_ONLINE || !SETTINGS.apiUrl) return;
+  var prefs = JSON.parse(localStorage.getItem('pm_alert_prefs_' + SESSION.id) || '{}');
+  var email = prefs.email || SESSION.email;
+  if (!email || !prefs.enabled) return;
+
+  var issues = scanData.issues || [];
+  var critical = issues.filter(function(i){ return i.severity === 'critical'; });
+  var high = issues.filter(function(i){ return i.severity === 'high'; });
+
+  try {
+    if (critical.length > 0 || high.length > 0) {
+      // Send critical alert
+      await apiPost('/api/email/critical-alert', {
+        to_email: email,
+        user_name: SESSION.name,
+        scan_data: scanData,
+        ai_summary: ''
+      });
+    } else if (prefs.on_scan_complete) {
+      // Send scan complete notification
+      await apiPost('/api/email/scan-complete', {
+        to_email: email,
+        user_name: SESSION.name,
+        scan_data: scanData
+      });
+    }
+  } catch(e) {
+    console.log('[Email] Failed to send scan email:', e);
+  }
+}
+
+async function triggerAgreementEmail(agreement) {
+  if (!API_ONLINE || !SETTINGS.apiUrl) return;
+  try {
+    await apiPost('/api/email/agreement-confirmation', {
+      to_email: agreement.email,
+      user_name: agreement.name,
+      agreement: agreement
+    });
+    console.log('[Email] Agreement confirmation sent to:', agreement.email);
+  } catch(e) {
+    console.log('[Email] Agreement email failed:', e);
+  }
+}
+
+async function triggerNewDeviceEmail(deviceIp, hostname) {
+  if (!API_ONLINE) return;
+  var prefs = JSON.parse(localStorage.getItem('pm_alert_prefs_' + SESSION.id) || '{}');
+  if (!prefs.email || !prefs.enabled) return;
+  try {
+    await apiPost('/api/email/new-device', {
+      to_email: prefs.email,
+      user_name: SESSION.name,
+      device_ip: deviceIp,
+      hostname: hostname || ''
+    });
+  } catch(e) {
+    console.log('[Email] New device email failed:', e);
+  }
+}
+
+async function sendTestEmail(email) {
+  if (!API_ONLINE) { showToast('Backend offline — cannot send test email', 'warn'); return; }
+  try {
+    showToast('Sending test email to ' + email + '...', 'info');
+    var r = await apiGet('/api/email/test/' + encodeURIComponent(email));
+    if (r.ok) showToast('✅ Test email sent! Check your inbox.', 'ok');
+    else showToast('❌ Email failed: ' + (r.error || 'Unknown'), 'err');
+  } catch(e) {
+    showToast('❌ Could not send test email', 'err');
+  }
+}
 
 init();
 </script>

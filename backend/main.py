@@ -18,7 +18,11 @@ from billing   import (PLANS, init_stripe, create_stripe_checkout,
                        create_lemonsqueezy_checkout, handle_stripe_webhook,
                        handle_lemonsqueezy_webhook, check_plan_limit, get_plan_info)
 from alerts    import (send_scan_alert, send_weekly_report,
-                       send_welcome_email, send_subscription_email, send_email)
+                       send_welcome_email, send_subscription_email, send_email,
+                       send_agreement_confirmation, send_password_reset,
+                       send_critical_alert, send_scan_complete,
+                       send_weekly_digest, send_plan_expiry_warning,
+                       send_new_device_alert, send_slack_alert)
 from scheduler import (add_schedule, remove_schedule, pause_schedule,
                        resume_schedule, get_all_schedules, get_schedule,
                        CRON_PRESETS, start_scheduler, stop_scheduler)
@@ -95,6 +99,20 @@ def scan_local(user_id: str = "anonymous", x_user_plan: str = Header(default="fr
         result = local_scan()
         _save_history(result, user_id)
         _increment_scan_count(user_id)
+        # Auto-send email alerts
+        try:
+            prefs = alert_prefs_get(user_id)
+            if prefs.get("enabled") and prefs.get("email"):
+                issues = result.get("issues", [])
+                crit = [i for i in issues if i.get("severity") == "critical"]
+                high = [i for i in issues if i.get("severity") == "high"]
+                if crit or high:
+                    from fastapi import BackgroundTasks as BT
+                    send_critical_alert(prefs["email"], user_id, result)
+                elif prefs.get("on_scan_complete", False):
+                    send_scan_complete(prefs["email"], user_id, result)
+        except Exception as _e:
+            pass  # Never block scan results due to email failure
         return result
     except Exception as e:
         raise HTTPException(500, f"Scan failed: {str(e)}")
@@ -477,6 +495,114 @@ def record_login(user_id: str):
     """Record user login"""
     user_record_login(user_id)
     return {"ok": True}
+
+
+# ── EMAIL ENDPOINTS ──────────────────────────────────────────────
+
+class AgreementEmailReq(BaseModel):
+    to_email: str
+    user_name: str
+    agreement: dict
+
+class PasswordResetEmailReq(BaseModel):
+    to_email: str
+    user_name: str
+    reset_token: str
+    expires_min: int = 15
+
+class ScanCompleteEmailReq(BaseModel):
+    to_email: str
+    user_name: str
+    scan_data: dict
+
+class CriticalAlertEmailReq(BaseModel):
+    to_email: str
+    user_name: str
+    scan_data: dict
+    ai_summary: str = ""
+
+class WeeklyDigestReq(BaseModel):
+    to_email: str
+    user_name: str
+    stats: dict
+
+class SlackAlertReq(BaseModel):
+    webhook_url: str
+    message: str
+    color: str = "#00ff88"
+
+class NewDeviceAlertReq(BaseModel):
+    to_email: str
+    user_name: str
+    device_ip: str
+    hostname: str = ""
+
+@app.post("/api/email/agreement-confirmation")
+async def email_agreement(req: AgreementEmailReq, background_tasks: BackgroundTasks):
+    """Auto-send agreement confirmation after signing"""
+    background_tasks.add_task(
+        send_agreement_confirmation, req.to_email, req.user_name, req.agreement
+    )
+    return {"ok": True, "message": "Agreement confirmation queued"}
+
+@app.post("/api/email/password-reset")
+async def email_password_reset(req: PasswordResetEmailReq):
+    """Send password reset OTP email — blocking (user is waiting)"""
+    result = send_password_reset(req.to_email, req.user_name, req.reset_token, req.expires_min)
+    return result
+
+@app.post("/api/email/scan-complete")
+async def email_scan_complete(req: ScanCompleteEmailReq, background_tasks: BackgroundTasks):
+    """Send scan completion summary email"""
+    background_tasks.add_task(
+        send_scan_complete, req.to_email, req.user_name, req.scan_data
+    )
+    return {"ok": True, "message": "Scan complete email queued"}
+
+@app.post("/api/email/critical-alert")
+async def email_critical(req: CriticalAlertEmailReq, background_tasks: BackgroundTasks):
+    """Send critical vulnerability alert"""
+    background_tasks.add_task(
+        send_critical_alert, req.to_email, req.user_name, req.scan_data, req.ai_summary
+    )
+    return {"ok": True, "message": "Critical alert queued"}
+
+@app.post("/api/email/weekly-digest")
+async def email_weekly_digest(req: WeeklyDigestReq, background_tasks: BackgroundTasks):
+    """Send weekly security digest"""
+    background_tasks.add_task(
+        send_weekly_digest, req.to_email, req.user_name, req.stats
+    )
+    return {"ok": True, "message": "Weekly digest queued"}
+
+@app.post("/api/email/new-device")
+async def email_new_device(req: NewDeviceAlertReq, background_tasks: BackgroundTasks):
+    """Alert user about new unknown device"""
+    background_tasks.add_task(
+        send_new_device_alert, req.to_email, req.user_name, req.device_ip, req.hostname
+    )
+    return {"ok": True, "message": "New device alert queued"}
+
+@app.post("/api/slack/alert")
+async def slack_alert(req: SlackAlertReq, background_tasks: BackgroundTasks):
+    """Send alert to Slack webhook"""
+    background_tasks.add_task(send_slack_alert, req.webhook_url, req.message, req.color)
+    return {"ok": True, "message": "Slack alert queued"}
+
+@app.get("/api/email/test/{email}")
+async def test_all_emails(email: str):
+    """Test endpoint — sends all email types to verify setup"""
+    results = {}
+    test_scan = {
+        "ip": "192.168.1.100", "hostname": "test-server",
+        "score": 42, "security_score": 42,
+        "issues": [
+            {"title": "SSH root login enabled", "severity": "critical", "cvss": 9.1, "category": "SSH", "detail": "PermitRootLogin yes"},
+            {"title": "Outdated OpenSSL", "severity": "high", "cvss": 7.5, "category": "Packages", "detail": "OpenSSL 1.0.2"},
+        ]
+    }
+    results["scan_complete"] = send_scan_complete(email, "Test User", test_scan)
+    return {"ok": True, "results": results, "note": "Check your inbox for test emails"}
 
 @app.post("/api/scan/website")
 async def scan_website(req: WebScanReq, background_tasks: BackgroundTasks,
