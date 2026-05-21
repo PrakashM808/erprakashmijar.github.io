@@ -14,9 +14,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from scanner   import local_scan, remote_scan, discover_network_devices
+from cve       import search_cves_by_keyword, get_cve_by_id, get_recent_cves
 from billing   import (PLANS, init_stripe, create_stripe_checkout,
                        create_lemonsqueezy_checkout, handle_stripe_webhook,
-                       handle_lemonsqueezy_webhook, check_plan_limit, get_plan_info)
+                       handle_lemonsqueezy_webhook, check_plan_limit, get_plan_info,
+                       start_trial, check_trial_status, generate_invoice,
+                       generate_invoice_html, process_stripe_event, process_ls_event,
+                       downgrade_to_free, get_upgrade_url)
 from alerts    import (send_scan_alert, send_weekly_report,
                        send_welcome_email, send_subscription_email, send_email,
                        send_agreement_confirmation, send_password_reset,
@@ -497,6 +501,88 @@ def record_login(user_id: str):
     return {"ok": True}
 
 
+
+# ── PAYMENT & BILLING ENDPOINTS ──────────────────────────────────
+
+class TrialReq(BaseModel):
+    user_id: str
+    plan: str = "starter"
+
+class InvoiceReq(BaseModel):
+    user_id: str
+    user_name: str
+    user_email: str
+    plan: str
+    amount: float
+    provider: str
+    transaction_id: str
+
+class UpgradeReq(BaseModel):
+    user_id: str
+    user_email: str
+    current_plan: str
+    target_plan: str
+    provider: str = "stripe"
+
+class DowngradeReq(BaseModel):
+    user_id: str
+    reason: str = "cancelled"
+
+@app.post("/api/billing/trial/start")
+def start_free_trial(req: TrialReq):
+    """Start a 14-day free trial for new users"""
+    result = start_trial(req.user_id, req.plan)
+    return result
+
+@app.get("/api/billing/trial/{user_id}")
+def get_trial_status(user_id: str):
+    """Check if user is on trial and days remaining"""
+    return check_trial_status(user_id)
+
+@app.post("/api/billing/invoice/generate")
+def create_invoice(req: InvoiceReq):
+    """Generate invoice data after successful payment"""
+    inv = generate_invoice(req.user_id, req.plan, req.amount, req.provider, req.transaction_id)
+    html = generate_invoice_html(inv, req.user_name, req.user_email)
+    return {"invoice": inv, "html": html}
+
+@app.get("/api/billing/invoice/{transaction_id}")
+def get_invoice_html(transaction_id: str, user_name: str = "", user_email: str = "", plan: str = "starter", amount: float = 19.0):
+    """Get printable invoice HTML"""
+    inv = generate_invoice("unknown", plan, amount, "stripe", transaction_id)
+    html = generate_invoice_html(inv, user_name, user_email)
+    from fastapi.responses import HTMLResponse
+    return HTMLResponse(content=html)
+
+@app.post("/api/billing/downgrade")
+def downgrade_user(req: DowngradeReq):
+    """Downgrade user to free plan"""
+    ok = downgrade_to_free(req.user_id, req.reason)
+    return {"ok": ok}
+
+@app.get("/api/billing/upgrade-url/{user_id}")
+def get_upgrade(user_id: str, current_plan: str = "free", target_plan: str = "starter",
+                provider: str = "stripe", user_email: str = ""):
+    """Get upgrade checkout URL"""
+    app_url = os.getenv("APP_URL", "https://erprakashmijar.com")
+    return get_upgrade_url(user_id, current_plan, target_plan, provider, user_email, app_url)
+
+@app.get("/api/billing/subscription/{user_id}")
+def get_subscription(user_id: str):
+    """Get full subscription details for a user"""
+    sub = subscription_get(user_id)
+    trial = check_trial_status(user_id)
+    current_plan = plan_get(user_id)
+    plan_info = get_plan_info(current_plan)
+    return {
+        "user_id": user_id,
+        "plan": current_plan,
+        "plan_info": plan_info,
+        "subscription": sub,
+        "trial": trial
+    }
+
+
 # ── EMAIL ENDPOINTS ──────────────────────────────────────────────
 
 class AgreementEmailReq(BaseModel):
@@ -536,6 +622,28 @@ class NewDeviceAlertReq(BaseModel):
     user_name: str
     device_ip: str
     hostname: str = ""
+
+
+# ── CVE ENDPOINTS ────────────────────────────────────────────────
+@app.get("/api/cve/search")
+async def cve_search(q: str, limit: int = 5):
+    """Search NVD CVE database"""
+    results = await search_cves_by_keyword(q, limit)
+    return {"cves": results, "count": len(results), "query": q}
+
+@app.get("/api/cve/{cve_id}")
+async def cve_detail(cve_id: str):
+    """Get full CVE details"""
+    cve = await get_cve_by_id(cve_id)
+    if not cve:
+        raise HTTPException(404, "CVE not found")
+    return cve
+
+@app.get("/api/cve/recent/{days}")
+async def cve_recent(days: int = 7, limit: int = 10):
+    """Get recent critical CVEs"""
+    cves = await get_recent_cves(days, limit)
+    return {"cves": cves, "days": days}
 
 @app.post("/api/email/agreement-confirmation")
 async def email_agreement(req: AgreementEmailReq, background_tasks: BackgroundTasks):
@@ -788,3 +896,52 @@ def splunk_search_route(req: SplunkSearchReq):
 def splunk_log_route(event: dict):
     return splunk_send_log(event)
 
+
+# ═══════════════════════════════════════════════════════════════
+# FEATURE 8 — SSL CERTIFICATE MONITOR
+# ═══════════════════════════════════════════════════════════════
+import ssl, socket
+from datetime import timezone
+
+class SSLMonitorReq(BaseModel):
+    domains: list
+    user_id: str = "anonymous"
+
+@app.post("/api/ssl/monitor")
+async def ssl_monitor(req: SSLMonitorReq):
+    """Check SSL certificates for multiple domains"""
+    results = []
+    for domain in req.domains[:20]:
+        try:
+            ctx = ssl.create_default_context()
+            with ctx.wrap_socket(socket.socket(), server_hostname=domain) as s:
+                s.settimeout(8)
+                s.connect((domain, 443))
+                cert = s.getpeercert()
+            not_after = datetime.strptime(cert['notAfter'], '%b %d %H:%M:%S %Y %Z')
+            not_after = not_after.replace(tzinfo=timezone.utc)
+            now = datetime.now(timezone.utc)
+            days_left = (not_after - now).days
+            issuer = dict(x[0] for x in cert.get('issuer', []))
+            subject = dict(x[0] for x in cert.get('subject', []))
+            results.append({
+                "domain": domain, "valid": True,
+                "days_left": days_left,
+                "expires": not_after.strftime("%Y-%m-%d"),
+                "issuer": issuer.get("organizationName", "Unknown"),
+                "cn": subject.get("commonName", domain),
+                "severity": "critical" if days_left < 7 else "high" if days_left < 14 else "medium" if days_left < 30 else "ok",
+                "status": "EXPIRED" if days_left < 0 else "CRITICAL" if days_left < 7 else "WARNING" if days_left < 30 else "VALID"
+            })
+        except ssl.SSLCertVerificationError as e:
+            results.append({"domain": domain, "valid": False, "error": str(e), "severity": "critical", "status": "INVALID"})
+        except Exception as e:
+            results.append({"domain": domain, "valid": False, "error": str(e), "severity": "unknown", "status": "ERROR"})
+    return {"results": results, "checked": len(results)}
+
+@app.get("/api/ssl/check/{domain}")
+async def ssl_check(domain: str):
+    """Quick SSL check for a single domain"""
+    req = SSLMonitorReq(domains=[domain])
+    result = await ssl_monitor(req)
+    return result["results"][0] if result["results"] else {"error": "No result"}
