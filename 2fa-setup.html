@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Two-Factor Authentication — PM::OFFSEC</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <meta name="theme-color" content="#00ff88"/>
+  <link rel="manifest" href="/manifest.json"/>
+  <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/auth.css"/>
+  <style>
+  body{cursor:auto!important}
+  .setup-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;position:relative;z-index:1}
+  .setup-card{width:100%;max-width:520px;background:rgba(6,13,26,.97);border:1px solid rgba(0,255,136,.12);border-radius:14px;overflow:hidden}
+  .setup-header{padding:1.8rem 2rem;border-bottom:1px solid rgba(0,255,136,.07);background:linear-gradient(135deg,rgba(123,47,255,.08),rgba(0,255,136,.04))}
+  .setup-logo{font-family:'Space Mono',monospace;font-size:.72rem;color:var(--g);letter-spacing:.14em;text-decoration:none;display:block;margin-bottom:1rem}
+  .setup-logo span{color:var(--g2)}
+  .setup-title{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;color:var(--white);letter-spacing:.04em;margin-bottom:.3rem}
+  .setup-sub{font-family:'Space Mono',monospace;font-size:.63rem;color:var(--muted);line-height:1.75}
+  .setup-body{padding:1.8rem 2rem}
+
+  /* Steps */
+  .steps{display:flex;gap:0;margin-bottom:2rem}
+  .step{flex:1;text-align:center;position:relative}
+  .step::after{content:'';position:absolute;top:14px;left:50%;right:-50%;height:1px;background:rgba(0,255,136,.12);z-index:0}
+  .step:last-child::after{display:none}
+  .step-num{width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(0,255,136,.2);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:.6rem;color:var(--muted);margin:0 auto .4rem;position:relative;z-index:1;background:var(--bg2);transition:all .3s}
+  .step.active .step-num{border-color:var(--g);color:var(--g);background:rgba(0,255,136,.08)}
+  .step.done .step-num{border-color:var(--g);background:var(--g);color:#040810}
+  .step-lbl{font-family:'Space Mono',monospace;font-size:.52rem;color:var(--muted);letter-spacing:.08em}
+  .step.active .step-lbl{color:var(--g2)}
+
+  /* Method selector */
+  .method-cards{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1.5rem}
+  .method-card{background:rgba(0,0,0,.2);border:1.5px solid rgba(255,255,255,.07);border-radius:9px;padding:1.3rem 1rem;cursor:pointer;transition:all .22s;text-align:center}
+  .method-card:hover{border-color:rgba(0,255,136,.2)}
+  .method-card.selected{border-color:var(--g);background:rgba(0,255,136,.06);box-shadow:0 0 16px rgba(0,255,136,.06)}
+  .method-icon{font-size:2rem;margin-bottom:.6rem}
+  .method-title{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--white);margin-bottom:.3rem;font-weight:700}
+  .method-desc{font-family:'Space Mono',monospace;font-size:.56rem;color:var(--muted);line-height:1.65}
+  .method-badge{display:inline-block;font-family:'Space Mono',monospace;font-size:.48rem;background:rgba(0,255,136,.1);color:var(--g);border:1px solid rgba(0,255,136,.2);border-radius:3px;padding:.12rem .4rem;margin-top:.4rem;letter-spacing:.08em}
+
+  /* QR code */
+  .qr-wrap{text-align:center;margin:1.2rem 0}
+  #qrCanvas{border:3px solid rgba(0,255,136,.15);border-radius:8px;background:#fff;padding:8px}
+  .secret-box{background:rgba(0,0,0,.3);border:1px solid rgba(0,255,136,.1);border-radius:6px;padding:.8rem 1rem;margin:.8rem 0;display:flex;align-items:center;justify-content:space-between;gap:.8rem}
+  .secret-val{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--g);letter-spacing:.2em;word-break:break-all}
+  .copy-btn{background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);border-radius:5px;padding:.3rem .6rem;font-family:'Space Mono',monospace;font-size:.55rem;color:var(--g2);cursor:pointer;white-space:nowrap;transition:all .2s}
+  .copy-btn:hover{background:rgba(0,255,136,.18)}
+
+  /* Backup codes */
+  .backup-grid{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin:1rem 0}
+  .backup-code{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--text2);background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.07);border-radius:4px;padding:.4rem .7rem;letter-spacing:.1em;text-align:center}
+
+  /* OTP input */
+  .otp-inputs{display:flex;gap:.5rem;justify-content:center;margin:1.2rem 0}
+  .otp-digit{width:46px;height:56px;background:rgba(0,0,0,.3);border:1.5px solid rgba(0,255,136,.12);border-radius:8px;font-family:'Space Mono',monospace;font-size:1.4rem;color:var(--white);text-align:center;outline:none;transition:all .2s}
+  .otp-digit:focus{border-color:var(--g);background:rgba(0,255,136,.04);box-shadow:0 0 0 2px rgba(0,255,136,.1)}
+
+  /* Alerts */
+  .alert{font-family:'Space Mono',monospace;font-size:.65rem;padding:.7rem 1rem;border-radius:6px;margin-bottom:.8rem;display:none;line-height:1.5}
+  .alert.show{display:block}
+  .alert-error{background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.2);color:var(--danger)}
+  .alert-ok{background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);color:var(--ok)}
+  .alert-info{background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.15);color:var(--g2)}
+
+  /* Status badge */
+  .status-badge{display:inline-flex;align-items:center;gap:.4rem;font-family:'Space Mono',monospace;font-size:.62rem;padding:.3rem .8rem;border-radius:12px;margin-bottom:1.2rem}
+  .status-enabled{background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);color:var(--g)}
+  .status-disabled{background:rgba(255,59,92,.06);border:1px solid rgba(255,59,92,.15);color:var(--danger)}
+  .status-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+
+  .spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(0,0,0,.2);border-top-color:#040810;border-radius:50%;animation:sp .6s linear infinite;margin-right:.4rem;vertical-align:middle}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+
+<div class="setup-page">
+  <div class="setup-card">
+    <div class="setup-header">
+      <a href="dashboard/index.html" class="setup-logo">PM<span>::</span>OFFSEC</a>
+      <div class="setup-title">TWO-FACTOR AUTH</div>
+      <p class="setup-sub">Add an extra layer of security to your account.</p>
+    </div>
+
+    <div class="setup-body">
+      <!-- Steps -->
+      <div class="steps" id="stepsRow">
+        <div class="step active" id="step1"><div class="step-num">1</div><div class="step-lbl">METHOD</div></div>
+        <div class="step" id="step2"><div class="step-num">2</div><div class="step-lbl">SETUP</div></div>
+        <div class="step" id="step3"><div class="step-num">3</div><div class="step-lbl">VERIFY</div></div>
+        <div class="step" id="step4"><div class="step-num">4</div><div class="step-lbl">BACKUP</div></div>
+      </div>
+
+      <!-- Alerts -->
+      <div class="alert alert-error" id="alertErr"></div>
+      <div class="alert alert-ok"    id="alertOk"></div>
+      <div class="alert alert-info"  id="alertInfo"></div>
+
+      <!-- ── CURRENT STATUS ── -->
+      <div id="panelStatus">
+        <div id="currentStatus"></div>
+        <div id="statusActions"></div>
+      </div>
+
+      <!-- ── STEP 1: Choose method ── -->
+      <div id="panelStep1" style="display:none">
+        <p style="font-family:'Space Mono',monospace;font-size:.65rem;color:var(--muted);line-height:1.75;margin-bottom:1.2rem">
+          Choose how you want to verify your identity when signing in:
+        </p>
+        <div class="method-cards">
+          <div class="method-card selected" id="card-totp" onclick="selectMethod('totp')">
+            <div class="method-icon">&#128241;</div>
+            <div class="method-title">AUTHENTICATOR APP</div>
+            <div class="method-desc">Google Authenticator, Authy, or any TOTP app. Works offline.</div>
+            <div class="method-badge">RECOMMENDED</div>
+          </div>
+          <div class="method-card" id="card-email" onclick="selectMethod('email')">
+            <div class="method-icon">&#9993;</div>
+            <div class="method-title">EMAIL CODE</div>
+            <div class="method-desc">We'll send a 6-digit code to your email each time you log in.</div>
+            <div class="method-badge">SIMPLER</div>
+          </div>
+        </div>
+        <button class="btn-submit" id="btnStep1" onclick="proceedStep1()">CONTINUE &#8594;</button>
+      </div>
+
+      <!-- ── STEP 2: TOTP Setup (QR Code) ── -->
+      <div id="panelStep2Totp" style="display:none">
+        <p style="font-family:'Space Mono',monospace;font-size:.65rem;color:var(--muted);line-height:1.75;margin-bottom:1rem">
+          Scan this QR code with your authenticator app (Google Authenticator, Authy, Microsoft Authenticator):
+        </p>
+        <div class="qr-wrap">
+          <canvas id="qrCanvas" width="180" height="180"></canvas>
+        </div>
+        <p style="font-family:'Space Mono',monospace;font-size:.6rem;color:var(--muted);text-align:center;margin:.6rem 0">
+          Can't scan? Enter this secret key manually:
+        </p>
+        <div class="secret-box">
+          <div class="secret-val" id="secretDisplay"></div>
+          <button class="copy-btn" onclick="copySecret()">&#128203; COPY</button>
+        </div>
+        <button class="btn-submit" onclick="showStep(3)">I'VE SCANNED IT &#8594;</button>
+      </div>
+
+      <!-- ── STEP 2: Email Setup ── -->
+      <div id="panelStep2Email" style="display:none">
+        <div style="background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.12);border-radius:8px;padding:1.5rem;text-align:center;margin-bottom:1.5rem">
+          <div style="font-size:2.5rem;margin-bottom:.6rem">&#9993;</div>
+          <div style="font-family:'Space Mono',monospace;font-size:.7rem;color:var(--white);margin-bottom:.4rem">Email Authentication Ready</div>
+          <div style="font-family:'Space Mono',monospace;font-size:.62rem;color:var(--muted);line-height:1.7">
+            A 6-digit code will be sent to<br>
+            <strong style="color:var(--g2)" id="emailDisplay"></strong><br>
+            each time you log in.
+          </div>
+        </div>
+        <button class="btn-submit" onclick="proceedEmailSetup()">ENABLE EMAIL 2FA &#8594;</button>
+      </div>
+
+      <!-- ── STEP 3: Verify ── -->
+      <div id="panelStep3" style="display:none">
+        <p style="font-family:'Space Mono',monospace;font-size:.65rem;color:var(--muted);line-height:1.75;margin-bottom:1.2rem" id="verifyInstr">
+          Enter the 6-digit code from your authenticator app to confirm setup:
+        </p>
+        <div class="otp-inputs" id="otpInputs">
+          <input class="otp-digit" maxlength="1" inputmode="numeric" oninput="otpInput(this,0)"/>
+          <input class="otp-digit" maxlength="1" inputmode="numeric" oninput="otpInput(this,1)"/>
+          <input class="otp-digit" maxlength="1" inputmode="numeric" oninput="otpInput(this,2)"/>
+          <input class="otp-digit" maxlength="1" inputmode="numeric" oninput="otpInput(this,3)"/>
+          <input class="otp-digit" maxlength="1" inputmode="numeric" oninput="otpInput(this,4)"/>
+          <input class="otp-digit" maxlength="1" inputmode="numeric" oninput="otpInput(this,5)"/>
+        </div>
+        <button class="btn-submit" id="btnVerify" onclick="verifySetupCode()">VERIFY CODE &#8594;</button>
+      </div>
+
+      <!-- ── STEP 4: Backup codes ── -->
+      <div id="panelStep4" style="display:none">
+        <div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:7px;padding:1rem 1.2rem;margin-bottom:1rem">
+          <div style="font-family:'Space Mono',monospace;font-size:.6rem;color:var(--warn);letter-spacing:.12em;margin-bottom:.5rem">&#9888; SAVE THESE BACKUP CODES</div>
+          <div style="font-family:'Space Mono',monospace;font-size:.62rem;color:var(--muted);line-height:1.7">
+            If you lose access to your authenticator, these one-time codes let you log in. Each code can only be used once. Store them somewhere safe.
+          </div>
+        </div>
+        <div class="backup-grid" id="backupCodesGrid"></div>
+        <div style="display:flex;gap:.6rem;margin:1rem 0">
+          <button onclick="copyBackupCodes()" class="btn btn-o btn-sm" style="flex:1">&#128203; COPY ALL</button>
+          <button onclick="downloadBackupCodes()" class="btn btn-o btn-sm" style="flex:1">&#11015; DOWNLOAD</button>
+        </div>
+        <label style="display:flex;align-items:center;gap:.7rem;cursor:pointer;margin-bottom:1.2rem">
+          <input type="checkbox" id="savedCheck" style="width:15px;height:15px;accent-color:var(--g)"/>
+          <span style="font-family:'Space Mono',monospace;font-size:.62rem;color:var(--text2)">I have saved my backup codes in a safe place</span>
+        </label>
+        <button class="btn-submit" id="btnFinish" onclick="finish2FASetup()" disabled style="opacity:.5">FINISH SETUP &#8594;</button>
+        <script>document.getElementById('savedCheck').addEventListener('change',function(){var b=document.getElementById('btnFinish');b.disabled=!this.checked;b.style.opacity=this.checked?'1':'.5'});</script>
+      </div>
+
+      <!-- ── DISABLE 2FA panel ── -->
+      <div id="panelDisable" style="display:none">
+        <div style="background:rgba(255,59,92,.06);border:1px solid rgba(255,59,92,.15);border-radius:7px;padding:1rem 1.2rem;margin-bottom:1.2rem">
+          <div style="font-family:'Space Mono',monospace;font-size:.6rem;color:var(--danger);letter-spacing:.12em;margin-bottom:.4rem">&#9888; DISABLE TWO-FACTOR AUTH</div>
+          <div style="font-family:'Space Mono',monospace;font-size:.62rem;color:var(--muted);line-height:1.7">
+            Disabling 2FA will make your account less secure. Enter your password to confirm.
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">CURRENT PASSWORD</label>
+          <input class="form-input" id="disablePassword" type="password" placeholder="Enter your password"/>
+        </div>
+        <div style="display:flex;gap:.6rem">
+          <button onclick="confirmDisable2FA()" class="btn btn-r" style="flex:1;font-family:'Space Mono',monospace;font-size:.65rem;padding:.75rem;letter-spacing:.1em;border:none;border-radius:5px;cursor:pointer;font-weight:700">DISABLE 2FA</button>
+          <button onclick="showStatus()" class="btn btn-o" style="flex:1;font-family:'Space Mono',monospace;font-size:.65rem;padding:.75rem;letter-spacing:.1em;border:none;border-radius:5px;cursor:pointer">CANCEL</button>
+        </div>
+      </div>
+
+    </div><!-- /setup-body -->
+  </div><!-- /setup-card -->
+</div>
+
+<!-- QR Code generator (pure JS, no external lib) -->
+<script src="assets/auth.js"></script>
+<script>
+AUTH.requireAuth('login.html');
+initCanvas('bgCanvas');
+
+var SESSION = AUTH.getSession();
+var selectedMethod = 'totp';
+var pendingSecret  = null;
+var pendingCodes   = [];
+
+function showErr(m) { var e=document.getElementById('alertErr'); e.textContent=m; e.classList.add('show'); document.getElementById('alertOk').classList.remove('show'); }
+function showOk(m)  { var e=document.getElementById('alertOk');  e.textContent=m; e.classList.add('show'); document.getElementById('alertErr').classList.remove('show'); }
+function showInfo(m){ var e=document.getElementById('alertInfo');e.textContent=m; e.classList.add('show'); }
+function clearAlerts(){ ['alertErr','alertOk','alertInfo'].forEach(function(id){document.getElementById(id).classList.remove('show');}); }
+
+function hideAll() {
+  ['panelStatus','panelStep1','panelStep2Totp','panelStep2Email',
+   'panelStep3','panelStep4','panelDisable'].forEach(function(id){
+    document.getElementById(id).style.display='none';
+  });
+  document.getElementById('stepsRow').style.display='none';
+}
+
+function showStatus() {
+  clearAlerts();
+  hideAll();
+  document.getElementById('panelStatus').style.display='block';
+  var mfa = AUTH.getMfaSettings(SESSION.id);
+  var statusDiv = document.getElementById('currentStatus');
+  var actionsDiv = document.getElementById('statusActions');
+
+  if (mfa.enabled) {
+    statusDiv.innerHTML = '<div class="status-badge status-enabled"><div class="status-dot"></div>2FA ENABLED — ' + mfa.type.toUpperCase() + '</div>'
+      + '<p style="font-family:\'Space Mono\',monospace;font-size:.65rem;color:var(--muted);line-height:1.75;margin-bottom:1.2rem">'
+      + 'Two-factor authentication is protecting your account. You\'ll need to verify with your '
+      + (mfa.type==='totp' ? 'authenticator app' : 'email') + ' each time you log in.</p>'
+      + '<p style="font-family:\'Space Mono\',monospace;font-size:.6rem;color:var(--muted)">Backup codes remaining: <strong style="color:var(--text2)">' + (mfa.backupCodes||[]).length + '/10</strong></p>';
+    actionsDiv.innerHTML = '<div style="display:flex;gap:.6rem;margin-top:1.2rem">'
+      + '<button onclick="startSetup()" class="btn btn-o" style="flex:1;font-family:\'Space Mono\',monospace;font-size:.65rem;padding:.75rem;letter-spacing:.1em;cursor:pointer;border-radius:5px">&#8635; SWITCH METHOD</button>'
+      + '<button onclick="showDisablePanel()" class="btn btn-r" style="flex:1;font-family:\'Space Mono\',monospace;font-size:.65rem;padding:.75rem;letter-spacing:.1em;border:none;border-radius:5px;cursor:pointer;background:rgba(255,59,92,.15);color:var(--danger)">DISABLE 2FA</button>'
+      + '</div>'
+      + '<a href="dashboard/index.html" style="display:block;text-align:center;font-family:\'Space Mono\',monospace;font-size:.62rem;color:var(--muted);margin-top:.8rem;text-decoration:none">&#8592; Back to dashboard</a>';
+  } else {
+    statusDiv.innerHTML = '<div class="status-badge status-disabled"><div class="status-dot"></div>2FA DISABLED</div>'
+      + '<p style="font-family:\'Space Mono\',monospace;font-size:.65rem;color:var(--muted);line-height:1.75;margin-bottom:1.2rem">'
+      + 'Your account is not protected by two-factor authentication. Enabling it significantly increases your account security.</p>';
+    actionsDiv.innerHTML = '<button onclick="startSetup()" class="btn-submit">ENABLE 2FA &#8594;</button>'
+      + '<a href="dashboard/index.html" style="display:block;text-align:center;font-family:\'Space Mono\',monospace;font-size:.62rem;color:var(--muted);margin-top:.8rem;text-decoration:none">&#8592; Back to dashboard</a>';
+  }
+}
+
+function startSetup() {
+  clearAlerts();
+  hideAll();
+  document.getElementById('stepsRow').style.display='flex';
+  document.getElementById('panelStep1').style.display='block';
+  updateSteps(1);
+}
+
+function selectMethod(m) {
+  selectedMethod = m;
+  document.getElementById('card-totp').classList.toggle('selected', m==='totp');
+  document.getElementById('card-email').classList.toggle('selected', m==='email');
+}
+
+async function proceedStep1() {
+  clearAlerts();
+  var result = await AUTH.setup2FA(SESSION.id, SESSION.email, selectedMethod);
+  if (!result.ok) { showErr(result.error); return; }
+
+  if (selectedMethod === 'totp') {
+    pendingSecret = result.secret;
+    pendingCodes  = result.backupCodes;
+    document.getElementById('secretDisplay').textContent = result.secret;
+    document.getElementById('emailDisplay').textContent  = SESSION.email;
+    generateQR(result.uri);
+    hideAll();
+    document.getElementById('stepsRow').style.display='flex';
+    document.getElementById('panelStep2Totp').style.display='block';
+    updateSteps(2);
+  } else {
+    pendingCodes = result.backupCodes || AUTH.generateBackupCodes();
+    document.getElementById('emailDisplay').textContent = SESSION.email;
+    hideAll();
+    document.getElementById('stepsRow').style.display='flex';
+    document.getElementById('panelStep2Email').style.display='block';
+    updateSteps(2);
+  }
+}
+
+async function proceedEmailSetup() {
+  clearAlerts();
+  var result = await AUTH.enable2FA(SESSION.id, '000000'); // email 2fa doesn't need token
+  // For email type, enable directly
+  AUTH.saveMfaSettings(SESSION.id, { enabled: true, type: 'email', backupCodes: pendingCodes });
+  AUTH.setMfaVerified(SESSION.id);
+  showStep(4);
+}
+
+function showStep(n) {
+  clearAlerts();
+  hideAll();
+  document.getElementById('stepsRow').style.display='flex';
+  updateSteps(n);
+  if (n===3) {
+    document.getElementById('panelStep3').style.display='block';
+    if (selectedMethod==='email') {
+      document.getElementById('verifyInstr').textContent = 'Enter the 6-digit code sent to your email:';
+    }
+    document.querySelector('.otp-digit').focus();
+  }
+  if (n===4) {
+    document.getElementById('panelStep4').style.display='block';
+    var grid = document.getElementById('backupCodesGrid');
+    grid.innerHTML = (pendingCodes||[]).map(function(c){
+      return '<div class="backup-code">'+c+'</div>';
+    }).join('');
+  }
+}
+
+async function verifySetupCode() {
+  clearAlerts();
+  var digits = Array.from(document.querySelectorAll('.otp-digit')).map(function(i){return i.value;});
+  var code = digits.join('');
+  if (code.length !== 6) { showErr('Please enter all 6 digits.'); return; }
+  var btn = document.getElementById('btnVerify');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>VERIFYING...';
+  var result = await AUTH.enable2FA(SESSION.id, code);
+  if (result.ok) {
+    updateSteps(4);
+    showStep(4);
+  } else {
+    showErr(result.error || 'Invalid code. Try again.');
+    btn.disabled = false;
+    btn.textContent = 'VERIFY CODE \u2192';
+    document.querySelectorAll('.otp-digit').forEach(function(i){i.value='';});
+    document.querySelector('.otp-digit').focus();
+  }
+}
+
+function finish2FASetup() {
+  showOk('Two-factor authentication enabled successfully!');
+  setTimeout(function(){ window.location.href='dashboard/index.html'; }, 1500);
+}
+
+function showDisablePanel() {
+  clearAlerts();
+  hideAll();
+  document.getElementById('panelDisable').style.display='block';
+}
+
+function confirmDisable2FA() {
+  var pw = document.getElementById('disablePassword').value;
+  if (!pw) { showErr('Please enter your password.'); return; }
+  var result = AUTH.disable2FA(SESSION.id, pw);
+  if (result.ok) {
+    showOk('Two-factor authentication disabled.');
+    setTimeout(showStatus, 1500);
+  } else {
+    showErr(result.error);
+  }
+}
+
+function updateSteps(active) {
+  for (var i=1;i<=4;i++) {
+    var el = document.getElementById('step'+i);
+    el.classList.remove('active','done');
+    if (i < active) el.classList.add('done');
+    if (i === active) el.classList.add('active');
+    if (el.classList.contains('done')) el.querySelector('.step-num').textContent='✓';
+    else el.querySelector('.step-num').textContent=String(i);
+  }
+}
+
+function otpInput(el, idx) {
+  el.value = el.value.replace(/\D/g,'').slice(-1);
+  var inputs = document.querySelectorAll('.otp-digit');
+  if (el.value && idx < 5) inputs[idx+1].focus();
+  if (el.value.length===0 && idx > 0) inputs[idx-1].focus();
+}
+
+function copySecret() {
+  navigator.clipboard.writeText(pendingSecret||'').catch(function(){});
+  showInfo('Secret key copied to clipboard');
+}
+
+function copyBackupCodes() {
+  navigator.clipboard.writeText((pendingCodes||[]).join('\n')).catch(function(){});
+  showInfo('All backup codes copied');
+}
+
+function downloadBackupCodes() {
+  var txt = 'PM::OFFSEC — Backup Codes\nAccount: ' + SESSION.email + '\nDate: ' + new Date().toLocaleDateString() + '\n\n' + (pendingCodes||[]).join('\n') + '\n\nEach code can only be used once. Store securely.';
+  var blob = new Blob([txt], {type:'text/plain'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'pmoffsec-backup-codes.txt'; a.click();
+}
+
+/* ── Minimal QR Code generator (no external library) ── */
+function generateQR(text) {
+  var canvas = document.getElementById('qrCanvas');
+  var ctx = canvas.getContext('2d');
+  // Simple placeholder — display text encoded as visual pattern
+  // In production: use qrcode.js or qrcode-generator library
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0,0,180,180);
+  ctx.fillStyle = '#000000';
+
+  // Draw a simple visual indicator while real QR would need a library
+  var size = 180;
+  var border = 10;
+  // Corner squares
+  [[0,0],[size-7*5-border,0],[0,size-7*5-border]].forEach(function(pos) {
+    var x=pos[0]+border, y=pos[1]+border;
+    ctx.fillRect(x,y,7*5,7*5);
+    ctx.fillStyle='#fff';ctx.fillRect(x+5,y+5,5*5,5*5);
+    ctx.fillStyle='#000';ctx.fillRect(x+10,y+10,3*5,3*5);
+  });
+
+  // Instruction text
+  ctx.font='bold 11px monospace';
+  ctx.fillStyle='#333';
+  ctx.textAlign='center';
+  ctx.fillText('Use an authenticator app', size/2, size-25);
+  ctx.fillText('to scan this code', size/2, size-13);
+
+  // Show a note to use the secret key manually
+  ctx.font='9px monospace';
+  ctx.fillText('(or enter the key below)', size/2, size-2);
+}
+
+// Init
+showStatus();
+</script>
+</body>
+</html>

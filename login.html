@@ -58,6 +58,21 @@
   .alert-error{background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.2);color:var(--danger)}
   .spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(0,0,0,.2);border-top-color:#040810;border-radius:50%;animation:sp .6s linear infinite;margin-right:.4rem;vertical-align:middle}
   @keyframes sp{to{transform:rotate(360deg)}}
+
+  /* ── 2FA VERIFICATION MODAL ── */
+  .mfa-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+  .mfa-overlay.show{display:flex}
+  .mfa-card{background:rgba(6,13,26,.99);border:1px solid rgba(0,255,136,.18);border-radius:12px;padding:2rem;width:100%;max-width:380px;animation:mfaIn .3s cubic-bezier(.16,1,.3,1)}
+  @keyframes mfaIn{from{opacity:0;transform:scale(.92) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+  .mfa-icon{font-size:2.5rem;text-align:center;margin-bottom:.8rem}
+  .mfa-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--white);letter-spacing:.04em;text-align:center;margin-bottom:.3rem}
+  .mfa-sub{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--muted);text-align:center;line-height:1.7;margin-bottom:1.5rem}
+  .mfa-otp{display:flex;gap:.4rem;justify-content:center;margin-bottom:1.2rem}
+  .mfa-digit{width:44px;height:54px;background:rgba(0,0,0,.3);border:1.5px solid rgba(0,255,136,.12);border-radius:8px;font-family:'Space Mono',monospace;font-size:1.4rem;color:var(--white);text-align:center;outline:none;transition:border-color .2s}
+  .mfa-digit:focus{border-color:var(--g);background:rgba(0,255,136,.04)}
+  .mfa-links{display:flex;justify-content:center;gap:1.2rem;margin-top:.8rem}
+  .mfa-link{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--muted);cursor:pointer;text-decoration:none;transition:color .2s}
+  .mfa-link:hover{color:var(--g2)}
   </style>
 </head>
 <body>
@@ -174,10 +189,16 @@ function doLogin() {
 
   setTimeout(function() {
     var result = AUTH.login(email, pass);
+    if (result.requires2FA) {
+      txt.textContent = 'SIGN IN →';
+      btn.disabled = false;
+      showMFAModal(result.userId, result.mfaType);
+      return;
+    }
     if (!result.ok) {
       showErr(result.error);
       btn.disabled = false;
-      txt.textContent = 'SIGN IN \u2192';
+      txt.textContent = 'SIGN IN →';
       return;
     }
     window.location.href = 'dashboard/index.html';
@@ -193,6 +214,120 @@ function quickLogin(email, pass) {
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Enter') doLogin();
 });
+
+/* ── 2FA HANDLING ── */
+var _mfaUserId = null;
+var _mfaType   = null;
+
+function showMFAModal(userId, mfaType) {
+  _mfaUserId = userId;
+  _mfaType   = mfaType;
+  document.getElementById('mfaOverlay').classList.add('show');
+  var icon = document.getElementById('mfaIcon');
+  var sub  = document.getElementById('mfaSub');
+  if (mfaType === 'email') {
+    icon.textContent = String.fromCharCode(9993);
+    var otp = AUTH.generateEmailOtp(userId, '');
+    sub.textContent = 'A 6-digit code was sent to your email. Expires in 5 minutes.';
+    console.log('[2FA] Email OTP (dev mode):', otp);
+  } else {
+    icon.textContent = String.fromCharCode(128241);
+    sub.textContent = 'Enter the 6-digit code from your authenticator app.';
+  }
+  setTimeout(function(){ var d=document.getElementById('md0'); if(d)d.focus(); }, 200);
+}
+
+function mfaDigit(el, idx) {
+  el.value = el.value.replace(/[^0-9]/g,'').slice(-1);
+  var inputs = document.querySelectorAll('.mfa-digit');
+  if (el.value && idx < 5) inputs[idx+1].focus();
+  if (!el.value && idx > 0) inputs[idx-1].focus();
+  var code = Array.from(inputs).map(function(i){return i.value;}).join('');
+  if (code.length === 6) setTimeout(submitMFA, 150);
+}
+
+async function submitMFA() {
+  var inputs = document.querySelectorAll('.mfa-digit');
+  var code = Array.from(inputs).map(function(i){return i.value;}).join('');
+  if (code.length !== 6) {
+    var e = document.getElementById('mfaErr');
+    e.textContent = 'Please enter all 6 digits.'; e.style.display='block'; return;
+  }
+  var btn=document.getElementById('mfaBtn'), txt=document.getElementById('mfaBtnTxt');
+  btn.disabled=true; txt.innerHTML='<span class="spin"></span>VERIFYING...';
+  document.getElementById('mfaErr').style.display='none';
+  var result = await AUTH.verify2FA(_mfaUserId, code);
+  if (result.ok) {
+    var login = AUTH.completeLoginAfter2FA(_mfaUserId);
+    if (login.ok) { window.location.href='dashboard/index.html'; return; }
+    document.getElementById('mfaErr').textContent=login.error; document.getElementById('mfaErr').style.display='block';
+  } else {
+    document.getElementById('mfaErr').textContent=result.error||'Invalid code.'; document.getElementById('mfaErr').style.display='block';
+    inputs.forEach(function(i){i.value='';});
+    document.getElementById('md0').focus();
+  }
+  btn.disabled=false; txt.textContent='VERIFY \u2192';
+}
+
+async function submitBackupCode() {
+  var code = document.getElementById('backupCodeInput').value.trim();
+  if (!code) return;
+  var result = await AUTH.verify2FA(_mfaUserId, code);
+  if (result.ok) {
+    var login = AUTH.completeLoginAfter2FA(_mfaUserId);
+    if (login.ok) { window.location.href='dashboard/index.html'; }
+    else { document.getElementById('mfaErr').textContent=login.error; document.getElementById('mfaErr').style.display='block'; }
+  } else {
+    document.getElementById('mfaErr').textContent='Invalid backup code.'; document.getElementById('mfaErr').style.display='block';
+  }
+}
+
+function showBackupInput() {
+  var s=document.getElementById('backupSection');
+  s.style.display = s.style.display==='none' ? 'block' : 'none';
+  if (s.style.display==='block') document.getElementById('backupCodeInput').focus();
+}
+
+function cancelMFA() {
+  document.getElementById('mfaOverlay').classList.remove('show');
+  _mfaUserId=null; _mfaType=null;
+  localStorage.removeItem('pm_2fa_pending');
+  document.getElementById('loginBtn').disabled=false;
+  document.getElementById('loginBtnTxt').textContent='SIGN IN \u2192';
+}
+
 </script>
+
+<!-- 2FA Verification Modal -->
+<div class="mfa-overlay" id="mfaOverlay">
+  <div class="mfa-card">
+    <div class="mfa-icon" id="mfaIcon">&#128241;</div>
+    <div class="mfa-title">VERIFY IDENTITY</div>
+    <p class="mfa-sub" id="mfaSub">Enter the 6-digit code from your authenticator app.</p>
+    <div class="alert alert-error" id="mfaErr" style="display:none"></div>
+    <div class="mfa-otp">
+      <input class="mfa-digit" maxlength="1" inputmode="numeric" id="md0" oninput="mfaDigit(this,0)"/>
+      <input class="mfa-digit" maxlength="1" inputmode="numeric" id="md1" oninput="mfaDigit(this,1)"/>
+      <input class="mfa-digit" maxlength="1" inputmode="numeric" id="md2" oninput="mfaDigit(this,2)"/>
+      <input class="mfa-digit" maxlength="1" inputmode="numeric" id="md3" oninput="mfaDigit(this,3)"/>
+      <input class="mfa-digit" maxlength="1" inputmode="numeric" id="md4" oninput="mfaDigit(this,4)"/>
+      <input class="mfa-digit" maxlength="1" inputmode="numeric" id="md5" oninput="mfaDigit(this,5)"/>
+    </div>
+    <button class="btn-submit" id="mfaBtn" onclick="submitMFA()" style="margin-top:.5rem">
+      <span id="mfaBtnTxt">VERIFY &#8594;</span>
+    </button>
+    <div class="mfa-links">
+      <a class="mfa-link" onclick="showBackupInput()">Use backup code</a>
+      <a class="mfa-link" onclick="cancelMFA()">Cancel</a>
+    </div>
+    <!-- Backup code input (hidden by default) -->
+    <div id="backupSection" style="display:none;margin-top:1rem">
+      <div class="form-divider"><span>BACKUP CODE</span></div>
+      <input class="form-input" id="backupCodeInput" type="text" placeholder="xxxx-xxxx" style="margin-top:.6rem;text-align:center;letter-spacing:.15em"/>
+      <button onclick="submitBackupCode()" class="btn-submit" style="margin-top:.6rem;font-size:.7rem;padding:.7rem">USE BACKUP CODE</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

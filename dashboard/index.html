@@ -2673,6 +2673,30 @@ function checkPaymentReturn() {
   }
 }
 
+
+function updateMfaStatus() {
+  var card = document.getElementById('mfaStatusCard');
+  var text = document.getElementById('mfaStatusText');
+  var btn  = document.getElementById('mfaSetupBtn');
+  if (!card || !SESSION) return;
+  var mfa = AUTH.getMfaSettings(SESSION.id);
+  if (mfa.enabled) {
+    text.textContent = '\u2705 Enabled (' + mfa.type.toUpperCase() + ')';
+    text.style.color = 'var(--ok)';
+    btn.textContent = 'MANAGE';
+    btn.style.background = 'rgba(0,255,136,.08)';
+    btn.style.color = 'var(--g)';
+    btn.style.border = '1px solid rgba(0,255,136,.2)';
+  } else {
+    text.textContent = '\u274C Not enabled \u2014 your account is at risk';
+    text.style.color = 'var(--danger)';
+    btn.textContent = 'ENABLE NOW';
+    btn.style.background = 'rgba(255,59,92,.1)';
+    btn.style.color = 'var(--danger)';
+    btn.style.border = '1px solid rgba(255,59,92,.2)';
+  }
+}
+
 function init() {
   const roleClass={admin:'rb-admin',client:'rb-client',user:'rb-user'};
   document.getElementById('hdrRole').textContent=SESSION.role.toUpperCase();
