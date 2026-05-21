@@ -23,6 +23,15 @@ from scheduler import (add_schedule, remove_schedule, pause_schedule,
                        resume_schedule, get_all_schedules, get_schedule,
                        CRON_PRESETS, start_scheduler, stop_scheduler)
 import anthropic
+from database import (
+    init_db, user_create, user_get, user_get_by_email, user_update,
+    user_record_login, users_get_all, scan_save, scan_get_history,
+    scan_get_all_history, scan_get_recent, scan_count_increment,
+    scan_count_get_today, incident_create, incident_get_all, incident_update,
+    agreement_save, agreements_get_all, alert_prefs_set, alert_prefs_get,
+    plan_set, plan_get, subscription_save, subscription_get,
+    ioc_add, iocs_get_all, get_dashboard_stats, get_score_history
+)
 
 init_stripe()
 
@@ -46,16 +55,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ── In-memory stores (upgrade to PostgreSQL for production) ──────
-scan_history: dict  = {}   # ip -> list of {date, score, timestamp}
-user_plans:   dict  = {}   # user_id -> plan_key
-user_subs:    dict  = {}   # user_id -> subscription info
-scan_counts:  dict  = {}   # user_id:YYYY-MM-DD -> count
-alert_prefs:  dict  = {}   # user_id -> {email, enabled}
+# ── Storage now handled by database.py (PostgreSQL + in-memory fallback) ──
+# Legacy dicts kept for any code that references them directly
+scan_history: dict  = {}
+user_plans:   dict  = {}
+user_subs:    dict  = {}
+scan_counts:  dict  = {}
+alert_prefs:  dict  = {}
 
 # ── LIFECYCLE ────────────────────────────────────────────────────
 @app.on_event("startup")
 async def startup():
+    init_db()  # Initialize PostgreSQL schema
     start_scheduler()
 
 @app.on_event("shutdown")
@@ -82,7 +93,7 @@ def scan_local(user_id: str = "anonymous", x_user_plan: str = Header(default="fr
     _check_scan_quota(user_id, x_user_plan)
     try:
         result = local_scan()
-        _save_history(result)
+        _save_history(result, user_id)
         _increment_scan_count(user_id)
         return result
     except Exception as e:
@@ -108,7 +119,7 @@ async def scan_remote(req: RemoteScanReq, background_tasks: BackgroundTasks,
                              key_path=req.key_path)
         if "error" in result:
             raise HTTPException(400, result["error"])
-        _save_history(result)
+        _save_history(result, user_id)
         _increment_scan_count(req.user_id)
         # Email alert in background (if plan supports it)
         if req.alert_email and check_plan_limit(x_user_plan, "email_alerts"):
@@ -400,19 +411,9 @@ async def welcome_email(req: WelcomeReq, background_tasks: BackgroundTasks):
     return {"ok": True, "message": "Welcome email queued"}
 
 # ── HELPERS ──────────────────────────────────────────────────────
-def _save_history(result: dict):
-    ip = result.get("ip", "127.0.0.1")
-    if ip not in scan_history:
-        scan_history[ip] = []
-    scan_history[ip].append({
-        "date": datetime.now().strftime("%b %d"),
-        "score": result["security_score"],
-        "timestamp": result["timestamp"]
-    })
-    if len(scan_history[ip]) > 20:
-        scan_history[ip] = scan_history[ip][-20:]
-    result["score_history"] = scan_history[ip][-5:]
-
+def _save_history(result: dict, user_id: str = "anonymous"):
+    """Save scan result to PostgreSQL (or in-memory fallback)"""
+    scan_save(user_id, result)
 def _increment_scan_count(user_id: str):
     key = f"{user_id}:{datetime.now().strftime('%Y-%m-%d')}"
     scan_counts[key] = scan_counts.get(key, 0) + 1
@@ -455,13 +456,35 @@ class WebScanReq(BaseModel):
     user_id: str = "anonymous"
     alert_email: Optional[str] = None
 
+
+@app.get("/api/stats/{user_id}")
+def dashboard_stats(user_id: str):
+    """Get summary stats for a user's dashboard"""
+    return get_dashboard_stats(user_id)
+
+@app.get("/api/score-history/{user_id}")
+def score_history(user_id: str, days: int = 30):
+    """Get security score history for trend chart"""
+    return {"history": get_score_history(user_id, days)}
+
+@app.get("/api/users")
+def list_users():
+    """Admin: get all users from database"""
+    return {"users": users_get_all()}
+
+@app.post("/api/users/login-record/{user_id}")
+def record_login(user_id: str):
+    """Record user login"""
+    user_record_login(user_id)
+    return {"ok": True}
+
 @app.post("/api/scan/website")
 async def scan_website(req: WebScanReq, background_tasks: BackgroundTasks,
                        x_user_plan: str = Header(default="free")):
     _check_scan_quota(req.user_id, x_user_plan)
     try:
         result = website_scan(req.domain)
-        _save_history(result)
+        _save_history(result, user_id)
         _increment_scan_count(req.user_id)
         if req.alert_email and check_plan_limit(x_user_plan, "email_alerts"):
             background_tasks.add_task(send_scan_alert, req.alert_email, result)
