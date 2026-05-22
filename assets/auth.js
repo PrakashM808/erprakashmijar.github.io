@@ -34,16 +34,32 @@ const AUTH = (() => {
   }
   function saveUsers(u) { localStorage.setItem(USERS_KEY, JSON.stringify(u)); }
   function getSession() {
-    try { return JSON.parse(localStorage.getItem(SESSION_KEY)); }
-    catch { return null; }
+    try {
+      // sessionStorage is tab-isolated — fixes multi-account bug
+      var s = sessionStorage.getItem(SESSION_KEY);
+      if (s) return JSON.parse(s);
+      // Fallback: check localStorage for "remember me" sessions
+      var ls = localStorage.getItem(SESSION_KEY + '_persist');
+      if (ls) return JSON.parse(ls);
+      return null;
+    } catch(e) { return null; }
   }
-  function setSession(user) {
+  function setSession(user, persist) {
     const s = { ...user, loginAt: Date.now() };
     delete s.password;
-    localStorage.setItem(SESSION_KEY, JSON.stringify(s));
+    // Always store in sessionStorage (tab-isolated) — prevents cross-tab session bleed
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(s));
+    // Also persist in localStorage if "remember me" or admin session
+    if (persist || user.role === 'admin') {
+      localStorage.setItem(SESSION_KEY + '_persist', JSON.stringify(s));
+    }
     return s;
   }
-  function clearSession() { localStorage.removeItem(SESSION_KEY); }
+  function clearSession() {
+    sessionStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(SESSION_KEY + '_persist');
+    localStorage.removeItem(SESSION_KEY); // clean up old key too
+  }
 
   /* Init defaults on first visit */
   if (!localStorage.getItem(USERS_KEY)) saveUsers(DEFAULTS);
@@ -176,14 +192,14 @@ const AUTH = (() => {
   /* ── 2FA Session tracking ──────────────────────────────────── */
   function setMfaVerified(userId) {
     var data = {};
-    try { data = JSON.parse(localStorage.getItem(MFA_SESSION) || '{}'); } catch(e){}
+    try { data = JSON.parse(sessionStorage.getItem(MFA_SESSION) || '{}'); } catch(e){}
     data[userId] = { verified: true, at: Date.now(), expires: Date.now() + 12 * 60 * 60 * 1000 };
-    localStorage.setItem(MFA_SESSION, JSON.stringify(data));
+    sessionStorage.setItem(MFA_SESSION, JSON.stringify(data));
   }
 
   function isMfaVerified(userId) {
     try {
-      var data = JSON.parse(localStorage.getItem(MFA_SESSION) || '{}');
+      var data = JSON.parse(sessionStorage.getItem(MFA_SESSION) || '{}');
       var entry = data[userId];
       if (!entry || !entry.verified) return false;
       if (Date.now() > entry.expires) return false;  // 12-hour session
@@ -195,7 +211,7 @@ const AUTH = (() => {
     try {
       var data = JSON.parse(localStorage.getItem(MFA_SESSION) || '{}');
       delete data[userId];
-      localStorage.setItem(MFA_SESSION, JSON.stringify(data));
+      sessionStorage.setItem(MFA_SESSION, JSON.stringify(data));
     } catch(e) {}
   }
 

@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Portal — PM::OFFSEC</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --ink:#0f172a;--ink2:#334155;--ink3:#64748b;--ink4:#94a3b8;
+    --surface:#fff;--surface2:#f8fafc;--surface3:#f1f5f9;
+    --border:#e2e8f0;--border2:#cbd5e1;
+    --blue:#2563eb;--blue-lt:#eff6ff;--blue-dk:#1d4ed8;
+    --green:#16a34a;--green-lt:#f0fdf4;
+    --red:#dc2626;--red-lt:#fef2f2;
+    --orange:#ea580c;--orange-lt:#fff7ed;
+    --purple:#7c3aed;--purple-lt:#f5f3ff;
+    --font:'Inter',sans-serif;--mono:'Space Mono',monospace;
+    --r:12px;--r-sm:8px;--r-xs:6px;
+    --sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.05);
+    --sh-md:0 4px 6px -1px rgba(0,0,0,.08),0 2px 4px rgba(0,0,0,.05);
+  }
+  body{font-family:var(--font);background:var(--surface2);color:var(--ink);font-size:14px;line-height:1.5}
+  button,input,select,textarea{font-family:var(--font)}
+  a{color:var(--blue);text-decoration:none}
+
+  /* Layout */
+  .admin-layout{display:flex;min-height:100vh}
+  .admin-sidebar{width:220px;background:var(--ink);flex-shrink:0;display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .25s}
+  @media(max-width:768px){.admin-sidebar{transform:translateX(-100%)}.admin-sidebar.open{transform:translateX(0)}}
+  .admin-main{flex:1;margin-left:220px;display:flex;flex-direction:column;min-height:100vh}
+  @media(max-width:768px){.admin-main{margin-left:0}}
+
+  /* Sidebar */
+  .sb-brand{padding:1.2rem 1rem;border-bottom:1px solid rgba(255,255,255,.08)}
+  .sb-brand-row{display:flex;align-items:center;gap:.6rem}
+  .sb-brand-ico{width:30px;height:30px;background:var(--blue);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.85rem;flex-shrink:0}
+  .sb-brand-name{font-size:.82rem;font-weight:700;color:#fff}
+  .sb-brand-role{font-size:.65rem;color:rgba(255,255,255,.45);letter-spacing:.1em}
+  .sb-nav{padding:.6rem 0;flex:1;overflow-y:auto}
+  .sb-section{padding:.4rem 1rem .2rem;font-size:.62rem;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.15em;text-transform:uppercase;margin-top:.4rem}
+  .sb-item{display:flex;align-items:center;gap:.6rem;width:100%;padding:.55rem 1rem;font-size:.8rem;color:rgba(255,255,255,.65);background:none;border:none;cursor:pointer;text-align:left;transition:all .15s;border-left:2px solid transparent}
+  .sb-item:hover{color:#fff;background:rgba(255,255,255,.06)}
+  .sb-item.active{color:#fff;background:rgba(37,99,235,.25);border-left-color:var(--blue)}
+  .sb-item-ico{font-size:.95rem;width:18px;text-align:center;flex-shrink:0}
+  .sb-badge{font-size:.6rem;background:var(--red);color:#fff;border-radius:10px;padding:.1rem .4rem;margin-left:auto;font-weight:700}
+  .sb-bottom{padding:1rem;border-top:1px solid rgba(255,255,255,.08)}
+  .sb-user{display:flex;align-items:center;gap:.6rem}
+  .sb-avatar{width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0}
+  .sb-user-name{font-size:.78rem;color:#fff;font-weight:500}
+  .sb-user-role{font-size:.62rem;color:rgba(255,255,255,.4)}
+
+  /* Top bar */
+  .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:.65rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;position:sticky;top:0;z-index:50;box-shadow:var(--sh)}
+  .topbar-left{display:flex;align-items:center;gap:.8rem}
+  .topbar-title{font-size:.95rem;font-weight:700;color:var(--ink)}
+  .topbar-sub{font-size:.75rem;color:var(--ink3)}
+  .topbar-right{display:flex;align-items:center;gap:.6rem}
+  .mob-menu-btn{display:none;padding:.4rem;border-radius:var(--r-xs);border:1px solid var(--border);background:var(--surface);cursor:pointer}
+  @media(max-width:768px){.mob-menu-btn{display:flex;align-items:center;justify-content:center}}
+
+  /* Content area */
+  .content{padding:1.4rem;flex:1}
+  .page{display:none}.page.active{display:block}
+
+  /* Buttons */
+  .btn{display:inline-flex;align-items:center;gap:.35rem;padding:.42rem .85rem;border-radius:var(--r-xs);font-size:.78rem;font-weight:600;border:none;cursor:pointer;transition:all .15s;white-space:nowrap;line-height:1.4}
+  .btn-blue{background:var(--blue);color:#fff}.btn-blue:hover{background:var(--blue-dk)}
+  .btn-out{background:var(--surface);color:var(--ink2);border:1px solid var(--border)}.btn-out:hover{background:var(--surface3)}
+  .btn-green{background:var(--green);color:#fff}.btn-green:hover{background:#15803d}
+  .btn-red{background:var(--red);color:#fff}.btn-red:hover{background:#b91c1c}
+  .btn-purple{background:var(--purple);color:#fff}.btn-purple:hover{background:#6d28d9}
+  .btn-sm{padding:.28rem .6rem;font-size:.72rem}
+
+  /* Stats row */
+  .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem;margin-bottom:1.2rem}
+  .stat-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:1rem 1.2rem;box-shadow:var(--sh)}
+  .stat-box-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem}
+  .stat-box-lbl{font-size:.72rem;font-weight:600;color:var(--ink3);letter-spacing:.04em;text-transform:uppercase}
+  .stat-box-ico{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+  .stat-box-num{font-size:1.7rem;font-weight:700;color:var(--ink);line-height:1}
+  .stat-box-sub{font-size:.7rem;color:var(--ink4);margin-top:.2rem}
+  .ico-blue{background:var(--blue-lt);color:var(--blue)}
+  .ico-green{background:var(--green-lt);color:var(--green)}
+  .ico-red{background:var(--red-lt);color:var(--red)}
+  .ico-orange{background:var(--orange-lt);color:var(--orange)}
+  .ico-purple{background:var(--purple-lt);color:var(--purple)}
+
+  /* Table card */
+  .tcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;margin-bottom:1rem}
+  .tcard-hdr{padding:.85rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+  .tcard-title{font-size:.88rem;font-weight:700;color:var(--ink)}
+  .tcard-sub{font-size:.72rem;color:var(--ink3);margin-top:.1rem}
+  .tcard-actions{display:flex;gap:.4rem;flex-wrap:wrap}
+  table{width:100%;border-collapse:collapse}
+  th{font-size:.68rem;font-weight:700;color:var(--ink3);letter-spacing:.08em;text-transform:uppercase;padding:.65rem 1rem;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap;background:var(--surface2)}
+  td{padding:.7rem 1rem;border-bottom:1px solid var(--border);font-size:.8rem;color:var(--ink2);vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--surface2)}
+  .tbl-wrap{overflow-x:auto}
+
+  /* Badges */
+  .badge{font-size:.65rem;font-weight:700;padding:.15rem .5rem;border-radius:4px;letter-spacing:.06em;white-space:nowrap}
+  .b-green{background:#dcfce7;color:#166534}
+  .b-red{background:#fee2e2;color:#991b1b}
+  .b-blue{background:#dbeafe;color:#1e40af}
+  .b-orange{background:#ffedd5;color:#9a3412}
+  .b-gray{background:var(--surface3);color:var(--ink3)}
+  .b-purple{background:#ede9fe;color:#5b21b6}
+  .b-critical{background:#fee2e2;color:#991b1b}
+  .b-high{background:#ffedd5;color:#9a3412}
+  .b-medium{background:#fef9c3;color:#854d0e}
+  .b-low{background:#dcfce7;color:#166534}
+
+  /* Avatar */
+  .avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0}
+
+  /* Cards */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:1rem;overflow:hidden}
+  .card-hdr{padding:.85rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .card-title{font-size:.88rem;font-weight:700;color:var(--ink)}
+  .card-body{padding:1.2rem}
+
+  /* Form */
+  .fg{margin-bottom:.8rem}
+  .flbl{display:block;font-size:.73rem;font-weight:600;color:var(--ink2);margin-bottom:.28rem}
+  .finp{width:100%;padding:.5rem .8rem;border:1.5px solid var(--border);border-radius:var(--r-xs);font-size:.82rem;color:var(--ink);outline:none;transition:border-color .15s;background:var(--surface)}
+  .finp:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+  @media(max-width:560px){.grid2{grid-template-columns:1fr}}
+
+  /* Approval panel */
+  .ap-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:1rem;margin-bottom:.6rem;transition:box-shadow .15s}
+  .ap-card:hover{box-shadow:var(--sh-md)}
+  .ap-top{display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem;flex-wrap:wrap}
+  .ap-client{font-size:.83rem;font-weight:600;color:var(--ink)}
+  .ap-issue{font-size:.82rem;color:var(--ink2);flex:1}
+  .ap-state-approved{background:var(--green-lt);border:1px solid #bbf7d0;border-left:3px solid var(--green)}
+  .ap-state-rejected{background:var(--red-lt);border:1px solid #fecaca;border-left:3px solid var(--red)}
+  .ap-state-pending{border-left:3px solid var(--ink4)}
+
+  /* Login */
+  .login-full{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1e1b4b,#0f172a);padding:1rem}
+  .login-box{background:var(--surface);border-radius:var(--r);box-shadow:var(--sh-md);padding:2.2rem;width:100%;max-width:380px}
+  .alert-err{background:var(--red-lt);border:1px solid #fecaca;color:var(--red);padding:.55rem .85rem;border-radius:var(--r-xs);font-size:.78rem;display:none;margin-bottom:.6rem}
+  .alert-err.show{display:block}
+
+  /* Toast */
+  .toast{position:fixed;bottom:1.2rem;right:1.2rem;padding:.65rem 1rem;border-radius:8px;font-size:.78rem;font-weight:600;color:#fff;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,.2);max-width:280px;animation:fadeUp .3s ease}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+  /* Responsive */
+  @media(max-width:768px){
+    .stat-row{grid-template-columns:repeat(2,1fr)}
+    .content{padding:1rem}
+  }
+  </style>
+</head>
+<body>
+
+<!-- ADMIN LOGIN -->
+<div id="adminLogin" class="login-full">
+  <div class="login-box">
+    <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:1.8rem">
+      <div style="width:38px;height:38px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem">&#128737;</div>
+      <div><div style="font-size:.95rem;font-weight:700">PM::OFFSEC</div><div style="font-size:.7rem;color:var(--ink3)">Admin Portal</div></div>
+    </div>
+    <div style="font-size:1.2rem;font-weight:700;margin-bottom:.2rem">Administrator Login</div>
+    <p style="font-size:.8rem;color:var(--ink3);margin-bottom:1.2rem">Restricted access — admins only.</p>
+    <div class="alert-err" id="adminLoginErr"></div>
+    <div class="fg"><label class="flbl">Email</label><input class="finp" id="adminEmail" type="email" placeholder="admin@erprakashmijar.com"/></div>
+    <div class="fg"><label class="flbl">Password</label><input class="finp" id="adminPw" type="password" placeholder="Admin password"/></div>
+    <button class="btn btn-blue" style="width:100%;justify-content:center;padding:.6rem" onclick="doAdminLogin()">Sign In &#8594;</button>
+    <div style="text-align:center;margin-top:.9rem"><button class="btn btn-out btn-sm" onclick="demoAdminLogin()">&#9889; Demo Admin Login</button></div>
+  </div>
+</div>
+
+<!-- ADMIN PORTAL -->
+<div id="adminPortal" style="display:none">
+  <div class="admin-layout">
+
+    <!-- Sidebar -->
+    <nav class="admin-sidebar" id="adminSidebar">
+      <div class="sb-brand">
+        <div class="sb-brand-row">
+          <div class="sb-brand-ico">&#128737;</div>
+          <div><div class="sb-brand-name">PM::OFFSEC</div><div class="sb-brand-role">ADMIN PORTAL</div></div>
+        </div>
+      </div>
+      <div class="sb-nav">
+        <div class="sb-section">Overview</div>
+        <button class="sb-item active" onclick="ap('overview')"><span class="sb-item-ico">&#128202;</span>Overview</button>
+        <button class="sb-item" onclick="ap('clients')"><span class="sb-item-ico">&#128101;</span>Clients<span class="sb-badge" id="sbClientBadge">0</span></button>
+        <div class="sb-section">Approvals</div>
+        <button class="sb-item" onclick="ap('approvals')"><span class="sb-item-ico">&#9989;</span>Fix Approvals<span class="sb-badge" id="sbApprovalBadge" style="display:none">!</span></button>
+        <button class="sb-item" onclick="ap('agreements')"><span class="sb-item-ico">&#9878;</span>Agreements</button>
+        <div class="sb-section">Reports</div>
+        <button class="sb-item" onclick="ap('reports')"><span class="sb-item-ico">&#128196;</span>All Reports</button>
+        <button class="sb-item" onclick="ap('issues')"><span class="sb-item-ico">&#128683;</span>Critical Issues</button>
+        <div class="sb-section">Admin</div>
+        <button class="sb-item" onclick="ap('addclient')"><span class="sb-item-ico">&#10133;</span>Add Client</button>
+        <button class="sb-item" onclick="window.location.href='../dashboard/index.html'"><span class="sb-item-ico">&#128269;</span>Scanner Dashboard</button>
+      </div>
+      <div class="sb-bottom">
+        <div class="sb-user">
+          <div class="sb-avatar" id="sbAvatar">A</div>
+          <div><div class="sb-user-name" id="sbName">Admin</div><div class="sb-user-role">ADMINISTRATOR</div></div>
+        </div>
+        <button class="btn btn-out btn-sm" style="width:100%;justify-content:center;margin-top:.6rem;color:#fff;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12)" onclick="adminLogout()">&#128682; Logout</button>
+      </div>
+    </nav>
+
+    <!-- Main area -->
+    <div class="admin-main">
+      <!-- Top bar -->
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="mob-menu-btn" onclick="document.getElementById('adminSidebar').classList.toggle('open')">&#9776;</button>
+          <div>
+            <div class="topbar-title" id="pageTitle">Overview</div>
+            <div class="topbar-sub" id="pageSub">All clients and activity</div>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div style="font-size:.75rem;color:var(--ink4)" id="topDate"></div>
+          <a href="../client/index.html" target="_blank" class="btn btn-out btn-sm">&#128064; View Client Portal</a>
+        </div>
+      </div>
+
+      <!-- Content pages -->
+      <div class="content">
+
+        <!-- Overview -->
+        <div class="page active" id="p-overview">
+          <div class="stat-row" id="overviewStats"></div>
+          <div class="tcard">
+            <div class="tcard-hdr"><div><div class="tcard-title">Recent Client Activity</div><div class="tcard-sub">Latest scans and approvals across all clients</div></div>
+              <button class="btn btn-blue btn-sm" onclick="ap('clients')">View All Clients</button>
+            </div>
+            <div class="tbl-wrap"><table><thead><tr>
+              <th>Client</th><th>Last Scan</th><th>Score</th><th>Critical</th><th>Status</th><th>Action</th>
+            </tr></thead><tbody id="overviewTable"></tbody></table></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div class="card">
+              <div class="card-hdr"><div class="card-title">&#128683; Critical Issues Across All Clients</div></div>
+              <div class="card-body" id="critIssuesList"></div>
+            </div>
+            <div class="card">
+              <div class="card-hdr"><div class="card-title">&#9989; Pending Approvals</div></div>
+              <div class="card-body" id="pendingApprList"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Clients -->
+        <div class="page" id="p-clients">
+          <div class="tcard">
+            <div class="tcard-hdr">
+              <div><div class="tcard-title">All Clients</div><div class="tcard-sub">Manage client accounts and security reports</div></div>
+              <div class="tcard-actions">
+                <input class="finp" id="clientSearch" placeholder="&#128269; Search clients..." style="width:180px" oninput="filterClients()"/>
+                <button class="btn btn-blue btn-sm" onclick="ap('addclient')">&#10133; Add Client</button>
+              </div>
+            </div>
+            <div class="tbl-wrap"><table><thead><tr>
+              <th>Client</th><th>Organization</th><th>Plan</th><th>Score</th><th>Issues</th><th>Agreement</th><th>Actions</th>
+            </tr></thead><tbody id="clientsTable"></tbody></table></div>
+          </div>
+        </div>
+
+        <!-- Approvals -->
+        <div class="page" id="p-approvals">
+          <div class="card">
+            <div class="card-hdr">
+              <div><div class="card-title">Fix Approvals from Clients</div><div class="card-sub">Review what clients have approved or declined</div></div>
+              <button class="btn btn-blue btn-sm" onclick="renderApprovals()">&#8635; Refresh</button>
+            </div>
+            <div class="card-body" id="approvalsContent"></div>
+          </div>
+        </div>
+
+        <!-- Agreements -->
+        <div class="page" id="p-agreements">
+          <div class="tcard">
+            <div class="tcard-hdr">
+              <div><div class="tcard-title">Signed Agreements</div><div class="tcard-sub">All legally signed engagement agreements</div></div>
+              <button class="btn btn-blue btn-sm" onclick="exportAllAgreements()">&#11015; Export All</button>
+            </div>
+            <div class="tbl-wrap"><table><thead><tr>
+              <th>Agreement ID</th><th>Client Name</th><th>Organization</th><th>Type</th><th>Signed</th><th>Period</th><th>Actions</th>
+            </tr></thead><tbody id="agreementsTable"></tbody></table></div>
+          </div>
+        </div>
+
+        <!-- Reports -->
+        <div class="page" id="p-reports">
+          <div class="tcard">
+            <div class="tcard-hdr"><div class="tcard-title">Security Reports</div><div class="tcard-sub">All client scans and reports</div></div>
+            <div class="tbl-wrap"><table><thead><tr>
+              <th>Client</th><th>Device</th><th>Score</th><th>Critical</th><th>High</th><th>Date</th><th>Actions</th>
+            </tr></thead><tbody id="reportsTable"></tbody></table></div>
+          </div>
+        </div>
+
+        <!-- Critical Issues -->
+        <div class="page" id="p-issues">
+          <div class="stat-row" style="grid-template-columns:repeat(3,1fr)">
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Total Critical</span><div class="stat-box-ico ico-red">&#128683;</div></div><div class="stat-box-num" id="issStatCrit">-</div></div>
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Approved to Fix</span><div class="stat-box-ico ico-green">&#9989;</div></div><div class="stat-box-num" id="issStatApproved">-</div></div>
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Awaiting Approval</span><div class="stat-box-ico ico-orange">&#9201;</div></div><div class="stat-box-num" id="issStatPending">-</div></div>
+          </div>
+          <div class="tcard">
+            <div class="tcard-hdr"><div class="tcard-title">All Critical &amp; High Issues</div></div>
+            <div class="tbl-wrap"><table><thead><tr>
+              <th>Issue</th><th>Client</th><th>Severity</th><th>CVSS</th><th>Client Approval</th><th>Actions</th>
+            </tr></thead><tbody id="issuesTable"></tbody></table></div>
+          </div>
+        </div>
+
+        <!-- Add Client -->
+        <div class="page" id="p-addclient">
+          <div class="card" style="max-width:600px">
+            <div class="card-hdr"><div class="card-title">Add New Client</div></div>
+            <div class="card-body">
+              <div class="grid2">
+                <div class="fg"><label class="flbl">Full Name *</label><input class="finp" id="nc_name" placeholder="Jane Smith"/></div>
+                <div class="fg"><label class="flbl">Organization *</label><input class="finp" id="nc_org" placeholder="Acme Corp"/></div>
+              </div>
+              <div class="grid2">
+                <div class="fg"><label class="flbl">Email *</label><input class="finp" id="nc_email" type="email" placeholder="jane@acme.com"/></div>
+                <div class="fg"><label class="flbl">Phone</label><input class="finp" id="nc_phone" placeholder="+1 555 000 0000"/></div>
+              </div>
+              <div class="grid2">
+                <div class="fg"><label class="flbl">Plan</label>
+                  <select class="finp" id="nc_plan">
+                    <option value="free">Free</option>
+                    <option value="starter" selected>Starter ($19/mo)</option>
+                    <option value="pro">Professional ($79/mo)</option>
+                    <option value="enterprise">Enterprise ($199/mo)</option>
+                  </select></div>
+                <div class="fg"><label class="flbl">Temporary Password *</label><input class="finp" id="nc_pw" type="password" placeholder="Temp password (client must change)"/></div>
+              </div>
+              <div class="fg"><label class="flbl">Notes</label><textarea class="finp" id="nc_notes" rows="3" placeholder="Any notes about this client..." style="resize:vertical"></textarea></div>
+              <div style="display:flex;gap:.6rem;margin-top:.4rem">
+                <button class="btn btn-blue" onclick="addNewClient()">&#10133; Create Client Account</button>
+                <button class="btn btn-out" onclick="ap('clients')">Cancel</button>
+              </div>
+              <div class="alert-err" id="addClientErr" style="margin-top:.7rem"></div>
+              <div id="addClientOk" style="display:none;background:var(--green-lt);border:1px solid #bbf7d0;color:var(--green);padding:.55rem .85rem;border-radius:var(--r-xs);font-size:.78rem;margin-top:.7rem"></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /content -->
+    </div><!-- /admin-main -->
+  </div><!-- /layout -->
+</div><!-- /portal -->
+
+<script src="../assets/auth.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════
+   PM::OFFSEC ADMIN PORTAL
+   Separate admin view — manage clients, approvals, agreements
+═══════════════════════════════════════════════════════════ */
+
+var ADMIN_SESSION = null;
+
+/* ── LOGIN ── */
+function doAdminLogin() {
+  var email=document.getElementById('adminEmail').value.trim();
+  var pw=document.getElementById('adminPw').value;
+  var err=document.getElementById('adminLoginErr');
+  err.classList.remove('show');
+  if (!email||!pw) { err.textContent='Please enter email and password.'; err.classList.add('show'); return; }
+  var r=AUTH.login(email,pw);
+  if (r.requires2FA) { window.location.href='../login.html'; return; }
+  if (!r.ok) { err.textContent=r.error||'Invalid credentials.'; err.classList.add('show'); return; }
+  if (r.session.role !== 'admin') { err.textContent='Access denied. Admin accounts only.'; err.classList.add('show'); AUTH.logout(null); return; }
+  ADMIN_SESSION = r.session;
+  showAdminPortal();
+}
+
+function demoAdminLogin() {
+  document.getElementById('adminEmail').value='admin@erprakashmijar.com';
+  document.getElementById('adminPw').value='Admin@2026';
+  doAdminLogin();
+}
+
+function adminLogout() { AUTH.logout('../login.html'); }
+
+function showAdminPortal() {
+  document.getElementById('adminLogin').style.display='none';
+  document.getElementById('adminPortal').style.display='block';
+  document.getElementById('sbAvatar').textContent=ADMIN_SESSION.name[0].toUpperCase();
+  document.getElementById('sbName').textContent=ADMIN_SESSION.name;
+  document.getElementById('topDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
+  ap('overview');
+}
+
+/* ── NAVIGATION ── */
+function ap(name) {
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.sb-item').forEach(function(b){b.classList.remove('active');});
+  var page=document.getElementById('p-'+name);
+  if(page) page.classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(function(b){
+    if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+name+"'")) b.classList.add('active');
+  });
+  var titles={
+    overview:['Overview','All clients and activity'],
+    clients:['Clients','Manage client accounts'],
+    approvals:['Fix Approvals','Client-approved fixes'],
+    agreements:['Agreements','Signed legal agreements'],
+    reports:['Security Reports','All client scan reports'],
+    issues:['Critical Issues','All critical and high findings'],
+    addclient:['Add Client','Create new client account'],
+  };
+  var t=titles[name]||[name,''];
+  document.getElementById('pageTitle').textContent=t[0];
+  document.getElementById('pageSub').textContent=t[1];
+  // Render the page
+  if(name==='overview') renderOverview();
+  if(name==='clients') renderClients();
+  if(name==='approvals') renderApprovals();
+  if(name==='agreements') renderAgreements();
+  if(name==='reports') renderReports();
+  if(name==='issues') renderIssuesPage();
+  // Close mobile sidebar
+  document.getElementById('adminSidebar').classList.remove('open');
+}
+
+/* ── DATA HELPERS ── */
+function getAllUsers() { return AUTH.getUsers ? AUTH.getUsers() : []; }
+
+function getClientUsers() {
+  return getAllUsers().filter(function(u){ return u.role !== 'admin'; });
+}
+
+function getDevicesForUser(userId) {
+  var key = userId ? 'pm_devices_v3' : 'pm_devices_v3';
+  // In a real app, devices would be per-user. Here we show shared devices.
+  return JSON.parse(localStorage.getItem(key)||'[]');
+}
+
+function getApprovalsForUser(userId) {
+  try { return JSON.parse(localStorage.getItem('pm_ap_'+userId)||'{}'); } catch(e){ return {}; }
+}
+
+function getAllAgreements() {
+  try { return JSON.parse(localStorage.getItem('pm_agreements')||'[]'); } catch(e){ return []; }
+}
+
+function getUserScoreInfo(userId) {
+  var devs=getDevicesForUser(userId).filter(function(d){return d.score!=null;});
+  if(!devs.length) return {score:null,crit:0,high:0,total:0};
+  var avgScore=Math.round(devs.reduce(function(s,d){return s+(d.score||0);},0)/devs.length);
+  var allIssues=devs.flatMap(function(d){return d.issues||[];});
+  return {
+    score:avgScore,
+    crit:allIssues.filter(function(i){return i.severity==='critical';}).length,
+    high:allIssues.filter(function(i){return i.severity==='high';}).length,
+    total:allIssues.length,
+    devices:devs.length,
+  };
+}
+
+/* ── OVERVIEW ── */
+function renderOverview() {
+  var clients=getClientUsers();
+  var devices=getDevicesForUser();
+  var allIssues=devices.flatMap(function(d){return d.issues||[];});
+  var critIssues=allIssues.filter(function(i){return i.severity==='critical';});
+  var agreements=getAllAgreements();
+
+  // Pending approvals
+  var pendingCount=0;
+  clients.forEach(function(u){
+    var ap=getApprovalsForUser(u.id);
+    var devs=getDevicesForUser(u.id);
+    devs.flatMap(function(d){return d.issues||[];}).filter(function(i){return i.severity==='critical'||i.severity==='high';}).forEach(function(iss){
+      var issId=(iss.title||'').replace(/\s/g,'_');
+      if(!ap[issId]||ap[issId]==='pending') pendingCount++;
+    });
+  });
+
+  // Update sidebar badge
+  var pb=document.getElementById('sbApprovalBadge');
+  if(pendingCount>0){pb.style.display='';pb.textContent=pendingCount;}
+
+  document.getElementById('sbClientBadge').textContent=clients.length;
+
+  document.getElementById('overviewStats').innerHTML=
+    statBox('&#128101;','Total Clients',clients.length,'Active accounts','ico-blue')
+    +statBox('&#128683;','Critical Issues',critIssues.length,'Across all clients','ico-red')
+    +statBox('&#9201;','Pending Approvals',pendingCount,'Awaiting client review','ico-orange')
+    +statBox('&#9878;','Agreements Signed',agreements.length,'Legal documents','ico-green');
+
+  // Overview table
+  var rows=clients.slice(0,10).map(function(u){
+    var info=getUserScoreInfo(u.id);
+    var scoreHtml=info.score!=null?scoreChip(info.score):'<span style="color:var(--ink4);font-size:.75rem">Not scanned</span>';
+    return '<tr>'
+      +'<td><div style="display:flex;align-items:center;gap:.6rem"><div class="avatar">'+u.name[0].toUpperCase()+'</div>'
+      +'<div><div style="font-weight:600;font-size:.8rem">'+u.name+'</div><div style="font-size:.7rem;color:var(--ink3)">'+u.email+'</div></div></div></td>'
+      +'<td style="color:var(--ink3);font-size:.75rem">'+(u.lastLogin?new Date(u.lastLogin).toLocaleDateString():'Never')+'</td>'
+      +'<td>'+scoreHtml+'</td>'
+      +'<td>'+(info.crit>0?'<span class="badge b-red">'+info.crit+' critical</span>':'<span class="badge b-green">None</span>')+'</td>'
+      +'<td><span class="badge '+(u.plan==='enterprise'?'b-purple':u.plan==='pro'?'b-blue':u.plan==='starter'?'b-green':'b-gray')+'">'+u.plan.toUpperCase()+'</span></td>'
+      +'<td><button class="btn btn-out btn-sm" onclick="viewClientReport(\''+u.id+'\')">&#128065; View</button></td>'
+      +'</tr>';
+  }).join('');
+
+  document.getElementById('overviewTable').innerHTML=rows||'<tr><td colspan="6" style="text-align:center;color:var(--ink4);padding:2rem">No clients yet. <button class="btn btn-blue btn-sm" onclick="ap(\'addclient\')">Add first client</button></td></tr>';
+
+  // Critical issues list
+  var critList=critIssues.slice(0,5).map(function(i){
+    return '<div style="display:flex;align-items:center;gap:.6rem;padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.78rem">'
+      +'<span class="badge b-critical">CRITICAL</span>'
+      +'<span style="flex:1;color:var(--ink2)">'+(i.title||'Unknown')+'</span>'
+      +'</div>';
+  }).join('');
+  document.getElementById('critIssuesList').innerHTML=critList||'<div style="text-align:center;padding:1.5rem;color:var(--ink4);font-size:.78rem">&#9989; No critical issues</div>';
+
+  // Pending approvals list
+  var pendList=[];
+  clients.forEach(function(u){
+    var ap=getApprovalsForUser(u.id);
+    var devs=getDevicesForUser(u.id);
+    devs.flatMap(function(d){return d.issues||[];}).filter(function(i){return i.severity==='critical';}).slice(0,2).forEach(function(iss){
+      var issId=(iss.title||'').replace(/\s/g,'_');
+      if(!ap[issId]||ap[issId]==='pending'){
+        pendList.push('<div style="display:flex;align-items:center;gap:.6rem;padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.78rem">'
+          +'<div class="avatar" style="width:22px;height:22px;font-size:.6rem">'+u.name[0]+'</div>'
+          +'<span style="flex:1;color:var(--ink2)">'+(iss.title||'')+'</span>'
+          +'<span class="badge b-gray">Pending</span>'
+          +'</div>');
+      }
+    });
+  });
+  document.getElementById('pendingApprList').innerHTML=pendList.slice(0,5).join('')||'<div style="text-align:center;padding:1.5rem;color:var(--ink4);font-size:.78rem">&#9989; No pending approvals</div>';
+}
+
+function statBox(ico,lbl,val,sub,icoClass) {
+  return '<div class="stat-box">'
+    +'<div class="stat-box-top"><span class="stat-box-lbl">'+lbl+'</span><div class="stat-box-ico '+icoClass+'">'+ico+'</div></div>'
+    +'<div class="stat-box-num">'+val+'</div>'
+    +'<div class="stat-box-sub">'+sub+'</div>'
+    +'</div>';
+}
+
+function scoreChip(score) {
+  var grade=score>=90?'A':score>=80?'B':score>=70?'C':score>=55?'D':'F';
+  var col=score>=80?'b-green':score>=60?'b-orange':'b-red';
+  return '<span class="badge '+col+'">'+score+' ('+grade+')</span>';
+}
+
+/* ── CLIENTS ── */
+function renderClients() {
+  var clients=getClientUsers();
+  document.getElementById('sbClientBadge').textContent=clients.length;
+  var rows=clients.map(function(u){
+    var info=getUserScoreInfo(u.id);
+    var agrs=getAllAgreements().filter(function(a){return a.email===u.email||a.user_id===u.id;});
+    return '<tr>'
+      +'<td><div style="display:flex;align-items:center;gap:.6rem"><div class="avatar">'+u.name[0].toUpperCase()+'</div>'
+      +'<div><div style="font-weight:600;font-size:.8rem">'+u.name+'</div><div style="font-size:.7rem;color:var(--ink3)">'+u.email+'</div></div></div></td>'
+      +'<td style="font-size:.78rem;color:var(--ink2)">'+(u.company||'—')+'</td>'
+      +'<td><span class="badge '+(u.plan==='enterprise'?'b-purple':u.plan==='pro'?'b-blue':u.plan==='starter'?'b-green':'b-gray')+'">'+u.plan.toUpperCase()+'</span></td>'
+      +'<td>'+(info.score!=null?scoreChip(info.score):'<span style="color:var(--ink4);font-size:.75rem">Not scanned</span>')+'</td>'
+      +'<td>'+(info.crit>0?'<span class="badge b-red">'+info.crit+' crit</span>':info.high>0?'<span class="badge b-orange">'+info.high+' high</span>':'<span class="badge b-green">None</span>')+'</td>'
+      +'<td>'+(agrs.length?'<span class="badge b-green">&#9989; Signed</span>':'<span class="badge b-gray">Not signed</span>')+'</td>'
+      +'<td><div style="display:flex;gap:.3rem">'
+      +'<button class="btn btn-out btn-sm" onclick="viewClientReport(\''+u.id+'\')" title="View client portal">&#128065;</button>'
+      +'<button class="btn btn-out btn-sm" onclick="sendClientEmail(\''+u.email+'\',\''+u.name+'\')" title="Email client">&#128231;</button>'
+      +'<button class="btn btn-out btn-sm" onclick="showClientAgreements(\''+u.email+'\')" title="View agreements">&#9878;</button>'
+      +'</div></td>'
+      +'</tr>';
+  }).join('');
+  document.getElementById('clientsTable').innerHTML=rows||'<tr><td colspan="7" style="text-align:center;color:var(--ink4);padding:2rem">No clients yet.</td></tr>';
+}
+
+function filterClients() {
+  var q=document.getElementById('clientSearch').value.toLowerCase();
+  document.querySelectorAll('#clientsTable tr').forEach(function(tr){
+    tr.style.display=(!q||tr.textContent.toLowerCase().includes(q))?'':'none';
+  });
+}
+
+function viewClientReport(userId) {
+  // Open client portal in new tab (they see their own data)
+  window.open('../client/index.html','_blank');
+}
+
+function sendClientEmail(email, name) {
+  var subject=encodeURIComponent('Your PM::OFFSEC Security Report is Ready');
+  var body=encodeURIComponent('Hi '+name+',\n\nYour latest security report is ready to review.\n\nLog in to your client portal to see your security score, issues found, and approve any fixes:\nhttps://erprakashmijar.com/client/index.html\n\nBest regards,\nPrakash Mijar\nPM::OFFSEC Security Dashboard\ncontact@erprakashmijar.com');
+  window.location.href='mailto:'+email+'?subject='+subject+'&body='+body;
+}
+
+function showClientAgreements(email) {
+  ap('agreements');
+}
+
+/* ── APPROVALS ── */
+function renderApprovals() {
+  var clients=getClientUsers();
+  var allAps=[];
+  clients.forEach(function(u){
+    var apState=getApprovalsForUser(u.id);
+    var devs=getDevicesForUser(u.id);
+    devs.forEach(function(d){
+      (d.issues||[]).filter(function(i){return i.severity==='critical'||i.severity==='high';}).forEach(function(iss){
+        var issId=(iss.title||'').replace(/\s/g,'_');
+        var state=apState[issId]||'pending';
+        allAps.push({client:u, issue:iss, issId:issId, state:state, device:d.hostname||d.ip||'Unknown'});
+      });
+    });
+  });
+
+  // Update badge
+  var pending=allAps.filter(function(a){return a.state==='pending';}).length;
+  var pb=document.getElementById('sbApprovalBadge');
+  if(pending>0){pb.style.display='';pb.textContent=pending;}else{pb.style.display='none';}
+
+  if(!allAps.length){
+    document.getElementById('approvalsContent').innerHTML='<div style="text-align:center;padding:2rem;color:var(--ink4);font-size:.85rem">&#9989; No fix approvals found. Clients need to have scans run first.</div>';
+    return;
+  }
+
+  var approved=allAps.filter(function(a){return a.state==='approved';});
+  var rejected=allAps.filter(function(a){return a.state==='rejected';});
+  var pendList=allAps.filter(function(a){return a.state==='pending';});
+
+  var html='<div style="display:flex;gap:1.5rem;margin-bottom:1rem;flex-wrap:wrap">'
+    +'<span style="font-size:.78rem"><strong style="color:var(--green)">'+approved.length+'</strong> approved</span>'
+    +'<span style="font-size:.78rem"><strong style="color:var(--red)">'+rejected.length+'</strong> declined</span>'
+    +'<span style="font-size:.78rem"><strong style="color:var(--orange)">'+pending+'</strong> pending</span>'
+    +'</div>';
+
+  // Pending first
+  html+=pendList.slice(0,20).map(function(a){
+    return '<div class="ap-card ap-state-pending">'
+      +'<div class="ap-top">'
+      +'<div class="avatar" style="width:26px;height:26px;font-size:.65rem">'+a.client.name[0]+'</div>'
+      +'<span class="ap-client">'+a.client.name+'</span>'
+      +'<span class="badge b-'+a.issue.severity+'">'+a.issue.severity+'</span>'
+      +'<span class="ap-issue">'+a.issue.title+'</span>'
+      +'<span class="badge b-gray">Pending</span>'
+      +'</div>'
+      +'<div style="font-size:.75rem;color:var(--ink3)">&#128268; '+a.device+' &nbsp;&#183;&nbsp; Client has not yet reviewed this fix</div>'
+      +'</div>';
+  }).join('');
+
+  html+=approved.slice(0,10).map(function(a){
+    return '<div class="ap-card ap-state-approved">'
+      +'<div class="ap-top">'
+      +'<div class="avatar" style="width:26px;height:26px;font-size:.65rem">'+a.client.name[0]+'</div>'
+      +'<span class="ap-client">'+a.client.name+'</span>'
+      +'<span class="badge b-'+a.issue.severity+'">'+a.issue.severity+'</span>'
+      +'<span class="ap-issue">'+a.issue.title+'</span>'
+      +'<span class="badge b-green">&#9989; Approved</span>'
+      +'</div>'
+      +'<div style="font-size:.75rem;color:var(--green)">&#128268; '+a.device+' &nbsp;&#183;&nbsp; Client approved — ready to implement fix</div>'
+      +'</div>';
+  }).join('');
+
+  html+=rejected.slice(0,10).map(function(a){
+    return '<div class="ap-card ap-state-rejected">'
+      +'<div class="ap-top">'
+      +'<div class="avatar" style="width:26px;height:26px;font-size:.65rem">'+a.client.name[0]+'</div>'
+      +'<span class="ap-client">'+a.client.name+'</span>'
+      +'<span class="badge b-'+a.issue.severity+'">'+a.issue.severity+'</span>'
+      +'<span class="ap-issue">'+a.issue.title+'</span>'
+      +'<span class="badge b-red">&#10005; Declined</span>'
+      +'</div>'
+      +'<div style="font-size:.75rem;color:var(--red)">&#128268; '+a.device+' &nbsp;&#183;&nbsp; Client declined — contact client to discuss</div>'
+      +'</div>';
+  }).join('');
+
+  document.getElementById('approvalsContent').innerHTML=html;
+}
+
+/* ── AGREEMENTS ── */
+function renderAgreements() {
+  var agrs=getAllAgreements();
+  var rows=agrs.map(function(a){
+    return '<tr>'
+      +'<td><span style="font-family:var(--mono);font-size:.72rem;color:var(--ink3)">'+a.id+'</span></td>'
+      +'<td style="font-weight:600;font-size:.8rem">'+a.name+'</td>'
+      +'<td style="font-size:.78rem;color:var(--ink2)">'+a.org+'</td>'
+      +'<td><span class="badge b-blue">'+a.type+'</span></td>'
+      +'<td style="font-size:.75rem;color:var(--ink3)">'+(a.timestamp?a.timestamp.split('T')[0]:a.signed_at||'—')+'</td>'
+      +'<td style="font-size:.75rem;color:var(--ink3)">'+(a.start||'—')+' to '+(a.end||'—')+'</td>'
+      +'<td><div style="display:flex;gap:.3rem">'
+      +'<button class="btn btn-out btn-sm" onclick="downloadAgreementPDF(\''+a.id+'\')" title="Download PDF">&#128196; PDF</button>'
+      +'<button class="btn btn-out btn-sm" onclick="emailAgreement(\''+a.id+'\')" title="Email to client">&#128231;</button>'
+      +'</div></td>'
+      +'</tr>';
+  }).join('');
+  document.getElementById('agreementsTable').innerHTML=rows||'<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--ink4)">No signed agreements yet.</td></tr>';
+}
+
+function exportAllAgreements() {
+  var agrs=getAllAgreements();
+  if(!agrs.length){ toast('No agreements to export','#d35400'); return; }
+  var blob=new Blob([JSON.stringify(agrs,null,2)],{type:'application/json'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='pm-offsec-agreements-'+new Date().toISOString().split('T')[0]+'.json';
+  a.click();
+  toast('Agreements exported','#16a34a');
+}
+
+function downloadAgreementPDF(agrId) {
+  var agrs=getAllAgreements();
+  var a=agrs.find(function(ag){return ag.id===agrId;});
+  if(!a){ toast('Agreement not found','#dc2626'); return; }
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Agreement '+agrId+'</title>'
+    +'<style>body{font-family:"Courier New",monospace;max-width:800px;margin:40px auto;padding:0 20px;color:#1a1a2e;font-size:13px;line-height:1.6}'
+    +'h1{border-bottom:2px solid #2563eb;padding-bottom:10px;font-size:20px}'
+    +'.row{margin-bottom:6px}.lbl{color:#666;font-size:12px;display:inline-block;width:150px}'
+    +'.paid{background:#2563eb;color:#fff;font-size:11px;letter-spacing:2px;padding:3px 8px;border-radius:3px}'
+    +'.footer{margin-top:40px;padding-top:16px;border-top:1px solid #eee;font-size:11px;color:#999;text-align:center}'
+    +'@media print{body{margin:0}}</style></head><body>'
+    +'<h1>&#9878; Security Engagement Agreement</h1>'
+    +'<p style="font-size:12px;color:#666">ID: <strong>'+agrId+'</strong> &nbsp;|&nbsp; <span class="paid">SIGNED</span></p>'
+    +'<div style="margin:20px 0">'
+    +'<div class="row"><span class="lbl">Full Name</span><strong>'+a.name+'</strong></div>'
+    +'<div class="row"><span class="lbl">Organization</span>'+a.org+'</div>'
+    +'<div class="row"><span class="lbl">Email</span>'+a.email+'</div>'
+    +'<div class="row"><span class="lbl">Phone</span>'+(a.phone||'—')+'</div>'
+    +'<div class="row"><span class="lbl">Type</span>'+a.type+'</div>'
+    +'<div class="row"><span class="lbl">Environment</span>'+(a.env||'—')+'</div>'
+    +'<div class="row"><span class="lbl">Start Date</span>'+(a.start||'—')+'</div>'
+    +'<div class="row"><span class="lbl">End Date</span>'+(a.end||'—')+'</div>'
+    +'<div class="row"><span class="lbl">Signed</span>'+(a.timestamp||'—')+'</div>'
+    +'</div>'
+    +'<div style="background:#f5f5f5;border:1px solid #ddd;padding:12px;margin:16px 0"><strong>Scope:</strong><br>'+(a.scope||'—')+'</div>'
+    +'<div style="background:#fff3cd;border:1px solid #ffc107;padding:12px"><strong>Legal Certifications:</strong><br>'
+    +'&#10003; Authorized under CFAA 18 U.S.C. § 1030<br>'
+    +'&#10003; ECPA authorization granted<br>'
+    +'&#10003; All agreement terms accepted<br>'
+    +'&#10003; ESIGN Act compliant (15 U.S.C. § 7001)'
+    +'</div>'
+    +'<div class="footer">PM::OFFSEC Security Dashboard &mdash; erprakashmijar.com</div>'
+    +'</body></html>';
+  var win=window.open('','_blank');
+  win.document.write(html);
+  win.document.close();
+  setTimeout(function(){win.print();},500);
+}
+
+function emailAgreement(agrId) {
+  var agrs=getAllAgreements();
+  var a=agrs.find(function(ag){return ag.id===agrId;});
+  if(!a) return;
+  var subj=encodeURIComponent('Your PM::OFFSEC Security Engagement Agreement — '+agrId);
+  var body=encodeURIComponent('Dear '+a.name+',\n\nYour Security Engagement Agreement ('+agrId+') has been signed and is on file.\n\nView your security dashboard: https://erprakashmijar.com/client/index.html\n\nBest regards,\nPrakash Mijar\nPM::OFFSEC');
+  window.location.href='mailto:'+a.email+'?subject='+subj+'&body='+body;
+}
+
+/* ── REPORTS ── */
+function renderReports() {
+  var clients=getClientUsers();
+  var rows=[];
+  clients.forEach(function(u){
+    var devs=getDevicesForUser(u.id).filter(function(d){return d.score!=null;});
+    devs.forEach(function(d){
+      var issues=d.issues||[];
+      var crit=issues.filter(function(i){return i.severity==='critical';}).length;
+      var high=issues.filter(function(i){return i.severity==='high';}).length;
+      rows.push('<tr>'
+        +'<td><div style="font-weight:600;font-size:.78rem">'+u.name+'</div><div style="font-size:.7rem;color:var(--ink3)">'+u.email+'</div></td>'
+        +'<td style="font-size:.78rem">'+(d.hostname||d.ip||'—')+'</td>'
+        +'<td>'+scoreChip(d.score||d.security_score||0)+'</td>'
+        +'<td>'+(crit>0?'<span class="badge b-red">'+crit+'</span>':'<span class="badge b-green">0</span>')+'</td>'
+        +'<td>'+(high>0?'<span class="badge b-orange">'+high+'</span>':'<span class="badge b-green">0</span>')+'</td>'
+        +'<td style="font-size:.73rem;color:var(--ink3)">'+(d.lastScan?new Date(d.lastScan).toLocaleDateString():new Date().toLocaleDateString())+'</td>'
+        +'<td><button class="btn btn-out btn-sm" onclick="viewClientReport(\''+u.id+'\')">&#128065; View</button></td>'
+        +'</tr>');
+    });
+  });
+  document.getElementById('reportsTable').innerHTML=rows.join('')||'<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--ink4)">No scan reports yet.</td></tr>';
+}
+
+/* ── CRITICAL ISSUES ── */
+function renderIssuesPage() {
+  var clients=getClientUsers();
+  var allCritHigh=[];
+  var totalApproved=0, totalPending=0;
+  clients.forEach(function(u){
+    var ap=getApprovalsForUser(u.id);
+    var devs=getDevicesForUser(u.id);
+    devs.forEach(function(d){
+      (d.issues||[]).filter(function(i){return i.severity==='critical'||i.severity==='high';}).forEach(function(iss){
+        var issId=(iss.title||'').replace(/\s/g,'_');
+        var state=ap[issId]||'pending';
+        if(state==='approved') totalApproved++;
+        else totalPending++;
+        allCritHigh.push({client:u,issue:iss,issId:issId,state:state,device:d.hostname||d.ip||'Server'});
+      });
+    });
+  });
+
+  var crit=allCritHigh.filter(function(a){return a.issue.severity==='critical';});
+  document.getElementById('issStatCrit').textContent=crit.length;
+  document.getElementById('issStatApproved').textContent=totalApproved;
+  document.getElementById('issStatPending').textContent=totalPending;
+
+  var rows=allCritHigh.map(function(a){
+    return '<tr>'
+      +'<td><div style="font-weight:600;font-size:.78rem">'+a.issue.title+'</div><div style="font-size:.7rem;color:var(--ink3)">&#128268; '+a.device+'</div></td>'
+      +'<td><div style="font-weight:500;font-size:.78rem">'+a.client.name+'</div></td>'
+      +'<td><span class="badge b-'+a.issue.severity+'">'+a.issue.severity.toUpperCase()+'</span></td>'
+      +'<td style="font-size:.78rem">'+(a.issue.cvss||'—')+'</td>'
+      +'<td><span class="badge '+(a.state==='approved'?'b-green':a.state==='rejected'?'b-red':'b-gray')+'">'
+        +(a.state==='approved'?'&#9989; Approved':a.state==='rejected'?'&#10005; Declined':'&#9201; Pending')+'</span></td>'
+      +'<td><button class="btn btn-out btn-sm" onclick="sendClientEmail(\''+a.client.email+'\',\''+a.client.name+'\')">&#128231; Contact</button></td>'
+      +'</tr>';
+  }).join('');
+  document.getElementById('issuesTable').innerHTML=rows||'<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--ink4)">No critical or high issues found.</td></tr>';
+}
+
+/* ── ADD CLIENT ── */
+function addNewClient() {
+  var name=document.getElementById('nc_name').value.trim();
+  var org=document.getElementById('nc_org').value.trim();
+  var email=document.getElementById('nc_email').value.trim();
+  var phone=document.getElementById('nc_phone').value.trim();
+  var plan=document.getElementById('nc_plan').value;
+  var pw=document.getElementById('nc_pw').value;
+  var err=document.getElementById('addClientErr');
+  var ok=document.getElementById('addClientOk');
+  err.style.display='none'; ok.style.display='none';
+
+  if(!name||!email||!pw) { err.textContent='Name, email, and password are required.'; err.style.display='block'; return; }
+  if(pw.length<8) { err.textContent='Password must be at least 8 characters.'; err.style.display='block'; return; }
+
+  var result=AUTH.register(email,pw,name,plan);
+  if(!result.ok) { err.textContent=result.error||'Could not create account.'; err.style.display='block'; return; }
+
+  // Update user with extra fields
+  var users=AUTH.getUsers();
+  var idx=users.findIndex(function(u){return u.email===email.toLowerCase();});
+  if(idx>=0){ users[idx].company=org; users[idx].phone=phone; AUTH.saveUsers(users); }
+
+  // Clear form
+  ['nc_name','nc_org','nc_email','nc_phone','nc_pw'].forEach(function(id){ document.getElementById(id).value=''; });
+  ok.textContent='Client account created successfully for '+name+' ('+email+'). They can log in at erprakashmijar.com/client/index.html';
+  ok.style.display='block';
+  toast(name+'\'s account created!','#16a34a');
+  renderClients();
+  setTimeout(function(){ap('clients');},2000);
+}
+
+/* ── UTILS ── */
+function toast(msg,color){
+  var t=document.createElement('div');
+  t.className='toast';
+  t.style.background=color||'#2563eb';
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(function(){t.style.opacity='0';t.style.transition='opacity .4s';setTimeout(function(){t.remove();},400);},3000);
+}
+
+/* ── INIT ── */
+(function(){
+  var s=AUTH.getSession();
+  if(s&&s.id&&s.role==='admin'){ADMIN_SESSION=s;showAdminPortal();}
+  document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.getElementById('adminLogin').style.display!=='none')doAdminLogin();});
+  document.getElementById('topDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
+})();
+</script>
+</body>
+</html>
