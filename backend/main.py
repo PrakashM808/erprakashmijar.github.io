@@ -305,6 +305,111 @@ async def github_oauth_callback(code: str, state: str = ""):
     except Exception as e:
         raise HTTPException(400, f"GitHub OAuth failed: {str(e)}")
 
+
+# ═══════════════════════════════════════════════════════════════
+# JWT AUTHENTICATION ENDPOINTS
+# ═══════════════════════════════════════════════════════════════
+try:
+    import jwt as pyjwt
+    JWT_AVAILABLE = True
+except ImportError:
+    JWT_AVAILABLE = False
+
+try:
+    import bcrypt
+    BCRYPT_AVAILABLE = True
+except ImportError:
+    BCRYPT_AVAILABLE = False
+
+JWT_SECRET    = os.getenv("JWT_SECRET_KEY", "pm-offsec-dev-secret-change-in-production")
+JWT_ALGORITHM = "HS256"
+JWT_EXPIRY_HOURS = 24
+
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+_security_bearer = HTTPBearer(auto_error=False)
+
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(_security_bearer)):
+    if not credentials:
+        raise HTTPException(401, "Missing authorization token")
+    try:
+        if not JWT_AVAILABLE:
+            raise HTTPException(500, "JWT not available — run: pip install pyjwt")
+        payload = pyjwt.decode(credentials.credentials, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        return {"user_id": payload.get("user_id"), "email": payload.get("sub"), "plan": payload.get("plan","free")}
+    except Exception as e:
+        raise HTTPException(401, f"Invalid token: {str(e)}")
+
+class JWTRegisterReq(BaseModel):
+    name: str
+    email: str
+    password: str
+    company: str = ""
+    phone: str = ""
+    plan: str = "free"
+
+class JWTLoginReq(BaseModel):
+    email: str
+    password: str
+
+@app.post("/api/auth/register")
+async def jwt_register(req: JWTRegisterReq, background_tasks: BackgroundTasks):
+    existing = user_get_by_email(req.email)
+    if existing:
+        raise HTTPException(400, "Email already registered")
+    import hashlib, uuid as _uuid
+    user_id = str(_uuid.uuid4())[:16]
+    if BCRYPT_AVAILABLE:
+        hashed = bcrypt.hashpw(req.password.encode(), bcrypt.gensalt()).decode()
+    else:
+        hashed = hashlib.sha256(req.password.encode()).hexdigest()
+    user_create(user_id=user_id, name=req.name, email=req.email, password=hashed,
+                role="user", plan=req.plan, company=req.company, phone=req.phone)
+    plan_set(user_id, req.plan)
+    if req.plan != "free":
+        try: start_trial(user_id, req.plan)
+        except: pass
+    if os.getenv("SENDGRID_API_KEY"):
+        background_tasks.add_task(send_welcome_email, req.email, req.name, req.plan)
+    token = ""
+    if JWT_AVAILABLE:
+        token = pyjwt.encode({"sub":req.email,"user_id":user_id,"plan":req.plan,
+            "exp":datetime.utcnow()+timedelta(hours=JWT_EXPIRY_HOURS)}, JWT_SECRET, algorithm=JWT_ALGORITHM)
+    return {"ok":True,"access_token":token,"user_id":user_id,"email":req.email,"name":req.name,"plan":req.plan}
+
+@app.post("/api/auth/login")
+async def jwt_login(req: JWTLoginReq):
+    import hashlib
+    user = user_get_by_email(req.email)
+    if not user:
+        raise HTTPException(401, "Invalid email or password")
+    stored = user.get("password","")
+    if BCRYPT_AVAILABLE:
+        try:
+            ok = bcrypt.checkpw(req.password.encode(), stored.encode())
+        except:
+            ok = (hashlib.sha256(req.password.encode()).hexdigest() == stored)
+    else:
+        ok = (hashlib.sha256(req.password.encode()).hexdigest() == stored)
+    if not ok:
+        raise HTTPException(401, "Invalid email or password")
+    if user.get("status") == "suspended":
+        raise HTTPException(403, "Account suspended")
+    user_record_login(user["id"])
+    current_plan = plan_get(user["id"])
+    token = ""
+    if JWT_AVAILABLE:
+        token = pyjwt.encode({"sub":user["email"],"user_id":user["id"],"plan":current_plan,
+            "exp":datetime.utcnow()+timedelta(hours=JWT_EXPIRY_HOURS)}, JWT_SECRET, algorithm=JWT_ALGORITHM)
+    return {"ok":True,"access_token":token,"user_id":user["id"],"email":user["email"],"name":user.get("name",""),"plan":current_plan}
+
+@app.get("/api/auth/verify")
+async def jwt_verify(user: dict = Depends(get_current_user)):
+    return {"valid":True,"user_id":user["user_id"],"email":user["email"],"plan":user["plan"]}
+
+@app.post("/api/auth/logout")
+async def jwt_logout():
+    return {"ok":True}
+
 # ── SECURITY & RATE LIMITING ──────────────────────────────────────
 from fastapi import Request
 from fastapi.responses import JSONResponse
