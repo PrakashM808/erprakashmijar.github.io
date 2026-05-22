@@ -426,7 +426,9 @@
   body.light-mode .sc-value,.light-mode .device-name{color:#0a1828!important}
   body.light-mode code,.light-mode .fix-cmd{background:rgba(0,0,0,.06);color:#008844}
 
-  </style>
+  @keyframes chatIn{from{opacity:0;transform:scale(.9) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes td{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+</style>
   <!-- PWA -->
   <link rel="manifest" href="/manifest.json"/>
   <meta name="mobile-web-app-capable" content="yes"/>
@@ -1405,11 +1407,7 @@
         <div id="discoverList" style="display:flex;flex-direction:column;gap:.35rem;max-height:300px;overflow-y:auto"></div>
       </div>
       <div id="discoverError" style="display:none;font-family:var(--mono);font-size:.6rem;color:var(--danger);background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.2);border-radius:5px;padding:.6rem .8rem;margin-bottom:.8rem"></div>
-      <button onclick="runDiscover()" class="btn btn-g" style="width:100%;margin-top:.5rem" id="discoverBtn">DISCOVER DEVICES →</button>
-    </div>
-  </div>
-</div>
-
+      <button o
 <script src="../assets/auth.js"></script>
 <script>
 /* ═══════════════════════════════════════════════════════════════
@@ -6321,7 +6319,143 @@ function updateVendingStats() {
   var n = document.getElementById('vendingNet');     if(n) n.textContent = net;
 }
 
+
+/* ── FLOATING CHAT ── */
+var _chatOpen = false;
+var _chatBuilt = false;
+
+function toggleChat() {
+  if (_chatOpen) { _chatOpen = false; hideChatWin(); }
+  else { _chatOpen = true; showChatWin(); }
+}
+
+function hideChatWin() {
+  document.getElementById('chatFabIcon').innerHTML = '&#128172;';
+  var w = document.getElementById('fcw');
+  if (w) w.style.display = 'none';
+}
+
+function showChatWin() {
+  document.getElementById('chatFabIcon').textContent = String.fromCharCode(10005);
+  if (!_chatBuilt) { _chatBuilt = true; buildFCW(); }
+  var w = document.getElementById('fcw');
+  if (w) { w.style.display = 'flex'; placeChatWin(); }
+}
+
+function placeChatWin() {
+  var w   = document.getElementById('fcw');
+  var btn = document.getElementById('chatLauncher');
+  if (!w || !btn) return;
+  var WH = 440, WW = 320;
+  var r  = btn.getBoundingClientRect();
+  var top  = r.top - WH - 12;
+  var left = r.left - WW + r.width;
+  if (top < 60) top = r.bottom + 10;
+  if (left + WW > window.innerWidth - 10) left = window.innerWidth - WW - 10;
+  if (left < 10) left = 10;
+  if (top + WH > window.innerHeight - 10) top = window.innerHeight - WH - 10;
+  if (top < 60) top = 60;
+  w.style.top = top + 'px';
+  w.style.left = left + 'px';
+}
+
+function buildFCW() {
+  var w = document.createElement('div');
+  w.id = 'fcw';
+  w.style.cssText = 'position:fixed;width:320px;height:440px;background:rgba(4,8,16,.98);border:1px solid rgba(0,255,136,.2);border-radius:12px;flex-direction:column;z-index:8999;box-shadow:0 20px 60px rgba(0,0,0,.7);overflow:hidden;display:none';
+
+  var hdr = document.createElement('div');
+  hdr.style.cssText = 'padding:.8rem 1rem;background:linear-gradient(135deg,rgba(123,47,255,.2),rgba(0,255,136,.1));border-bottom:1px solid rgba(0,255,136,.08);display:flex;align-items:center;gap:.6rem;flex-shrink:0';
+  hdr.innerHTML = '<div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#7b2fff,#00ff88);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0">&#128737;</div>'
+    + '<div style="flex:1"><div style="font-family:var(--mono);font-size:.63rem;color:#fff;letter-spacing:.06em">PM::OFFSEC AI</div>'
+    + '<div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">&#128994; Online</div></div>'
+    + '<button onclick="toggleChat()" style="background:none;border:none;color:var(--muted);font-size:1rem;cursor:pointer;line-height:1">&#10005;</button>';
+
+  var msgs = document.createElement('div');
+  msgs.id = 'fcwMsgs';
+  msgs.style.cssText = 'flex:1;overflow-y:auto;padding:.8rem;display:flex;flex-direction:column;gap:.5rem';
+  var welcome = document.createElement('div');
+  welcome.style.cssText = 'align-self:flex-start;max-width:90%';
+  var bubble = document.createElement('div');
+  bubble.style.cssText = 'padding:.5rem .75rem;background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.1);border-radius:2px 8px 8px 8px;font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7';
+  bubble.textContent = 'Hi! Ask me about your scan results, security issues, or any cybersecurity questions.';
+  welcome.appendChild(bubble);
+  msgs.appendChild(welcome);
+
+  var foot = document.createElement('div');
+  foot.style.cssText = 'padding:.6rem;border-top:1px solid rgba(0,255,136,.07);display:flex;gap:.4rem;align-items:center;flex-shrink:0';
+  var inp = document.createElement('input');
+  inp.id = 'fcwInp';
+  inp.type = 'text';
+  inp.placeholder = 'Ask a security question...';
+  inp.style.cssText = 'flex:1;background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.1);border-radius:6px;padding:.42rem .65rem;font-family:var(--mono);font-size:.62rem;color:#fff;outline:none';
+  inp.addEventListener('keydown', function(e){ if(e.key==='Enter') fcwSend(); });
+  var sb = document.createElement('button');
+  sb.style.cssText = 'width:30px;height:30px;border-radius:6px;background:linear-gradient(135deg,#7b2fff,#00ff88);border:none;cursor:pointer;font-size:.85rem;flex-shrink:0';
+  sb.innerHTML = '&#9658;';
+  sb.onclick = fcwSend;
+  foot.appendChild(inp);
+  foot.appendChild(sb);
+
+  w.appendChild(hdr);
+  w.appendChild(msgs);
+  w.appendChild(foot);
+  document.body.appendChild(w);
+  window.addEventListener('resize', placeChatWin);
+  setTimeout(function(){ inp.focus(); }, 100);
+}
+
+async function fcwSend() {
+  var inp  = document.getElementById('fcwInp');
+  var msgs = document.getElementById('fcwMsgs');
+  if (!inp || !msgs || !inp.value.trim()) return;
+  var text = inp.value.trim();
+  inp.value = '';
+
+  var userMsg = document.createElement('div');
+  userMsg.style.cssText = 'align-self:flex-end;max-width:90%';
+  var ub = document.createElement('div');
+  ub.style.cssText = 'padding:.5rem .75rem;background:rgba(123,47,255,.15);border:1px solid rgba(123,47,255,.25);border-radius:8px 2px 8px 8px;font-family:var(--mono);font-size:.62rem;color:#fff;line-height:1.7';
+  ub.textContent = text;
+  userMsg.appendChild(ub);
+  msgs.appendChild(userMsg);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  var reply = 'To enable AI responses, add your Anthropic API key in Settings, or connect the Railway backend.';
+  try {
+    if (API_ONLINE && SETTINGS.apiUrl) {
+      var r = await fetch(SETTINGS.apiUrl + '/api/ai/chat', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ question: text, scan_data: { devices: (DEVICES||[]).slice(0,3) } })
+      });
+      var rd = await r.json();
+      reply = rd.reply || reply;
+    } else if (SETTINGS.apiKey) {
+      var r2 = await fetch('https://api.anthropic.com/v1/messages', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-api-key':SETTINGS.apiKey,'anthropic-version':'2023-06-01'},
+        body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:300,
+          system:'You are a cybersecurity assistant. Answer in 2-3 sentences max.',
+          messages:[{role:'user',content:text}] })
+      });
+      var rd2 = await r2.json();
+      reply = (rd2.content&&rd2.content[0]&&rd2.content[0].text) || reply;
+    }
+  } catch(e) { reply = 'Connection error. Check API settings.'; }
+
+  var botMsg = document.createElement('div');
+  botMsg.style.cssText = 'align-self:flex-start;max-width:90%';
+  var bb = document.createElement('div');
+  bb.style.cssText = 'padding:.5rem .75rem;background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.1);border-radius:2px 8px 8px 8px;font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7';
+  bb.textContent = reply;
+  botMsg.appendChild(bb);
+  msgs.appendChild(botMsg);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+
 init();
+
 </script>
 
 <script>
