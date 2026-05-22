@@ -74,6 +74,7 @@
   .mfa-link{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--muted);cursor:pointer;text-decoration:none;transition:color .2s}
   .mfa-link:hover{color:var(--g2)}
   </style>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 <canvas id="bgCanvas"></canvas>
@@ -131,7 +132,18 @@
 
       <p class="reg-note">No account? <a href="register.html">Create one free &#8594;</a></p>
 
-      <div class="divider-or"><span>QUICK DEMO LOGIN</span></div>
+      <div class="divider-or"><span>OR SIGN IN WITH</span></div>
+      <div style="display:flex;gap:.5rem;margin-bottom:.7rem">
+        <button onclick="loginWithGoogle()" style="flex:1;display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.6rem .8rem;border-radius:6px;font-family:'Space Mono',monospace;font-size:.62rem;font-weight:700;cursor:pointer;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.12);color:var(--white);transition:all .2s">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          GOOGLE
+        </button>
+        <button onclick="loginWithGitHub()" style="flex:1;display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.6rem .8rem;border-radius:6px;font-family:'Space Mono',monospace;font-size:.62rem;font-weight:700;cursor:pointer;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.12);color:var(--white);transition:all .2s">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"/></svg>
+          GITHUB
+        </button>
+      </div>
+      <div class="divider-or"><span>QUICK ACCESS</span></div>
       <div class="demo-roles">
         <div class="demo-role" onclick="quickLogin('admin@erprakashmijar.com','Admin@2026')">
           <span class="demo-role-lbl">&#128737; ADMIN</span>
@@ -141,6 +153,11 @@
           <span class="demo-role-lbl">&#128101; CLIENT</span>
           <span class="demo-role-cred">client@demo.com</span>
         </div>
+      </div>
+      <div style="margin-top:.8rem">
+        <button onclick="enterDemoMode()" style="width:100%;background:rgba(123,47,255,.12);border:1px solid rgba(123,47,255,.25);border-radius:6px;padding:.7rem;font-family:'Space Mono',monospace;font-size:.65rem;color:#c084fc;cursor:pointer;letter-spacing:.08em;transition:all .2s">
+          &#127909; EXPLORE DEMO — No Account Required &#8594;
+        </button>
       </div>
     </div>
   </div>
@@ -209,6 +226,83 @@ function quickLogin(email, pass) {
   document.getElementById('loginEmail').value = email;
   document.getElementById('loginPw').value = pass;
   doLogin();
+}
+
+
+function enterDemoMode() {
+  // Store demo flag and redirect to dashboard
+  localStorage.setItem('pm_demo_mode', '1');
+  var demoSession = {
+    id:'demo_user', name:'Demo User', email:'demo@pmoffsec.com',
+    role:'user', plan:'starter', company:'Acme Corp (Demo)',
+    loginAt:Date.now(), demo:true
+  };
+  sessionStorage.setItem('pm_session_v2', JSON.stringify(demoSession));
+
+  // Pre-populate demo devices
+  var demoDevices = [
+    {ip:'192.168.1.100',hostname:'web-server-01',os:'Ubuntu 22.04',score:42,severity:'critical',
+     issues:[
+       {title:'SSH Root Login Enabled',severity:'critical',cvss:9.1,category:'SSH'},
+       {title:'Outdated OpenSSL 1.0.2',severity:'critical',cvss:8.8,category:'Packages'},
+       {title:'Firewall Inactive',severity:'high',cvss:7.5,category:'Firewall'},
+       {title:'Password Auth Enabled',severity:'high',cvss:7.2,category:'SSH'},
+     ],
+     open_ports:[{port:22,service:'SSH'},{port:80,service:'HTTP'},{port:3306,service:'MySQL'}],
+     lastScan:new Date().toISOString()},
+    {ip:'192.168.1.101',hostname:'db-server-01',os:'CentOS 7',score:61,severity:'high',
+     issues:[
+       {title:'MySQL Exposed Publicly',severity:'high',cvss:7.8,category:'Database'},
+       {title:'SELinux Disabled',severity:'high',cvss:6.5,category:'System'},
+     ],
+     open_ports:[{port:22,service:'SSH'},{port:3306,service:'MySQL'}],
+     lastScan:new Date().toISOString()},
+    {ip:'192.168.1.102',hostname:'mail-server',os:'Debian 11',score:78,severity:'medium',
+     issues:[
+       {title:'SPF Record Missing',severity:'medium',cvss:5.5,category:'DNS'},
+     ],
+     open_ports:[{port:25,service:'SMTP'},{port:587,service:'Submission'}],
+     lastScan:new Date().toISOString()},
+  ];
+  localStorage.setItem('pm_devices_v3', JSON.stringify(demoDevices));
+  window.location.href = 'dashboard/index.html';
+}
+
+
+function loginWithGoogle() {
+  var GOOGLE_CLIENT_ID = ''; // Set this in register.html
+  if (!GOOGLE_CLIENT_ID) {
+    // Redirect to register which shows setup instructions
+    window.location.href = 'register.html';
+    return;
+  }
+  if (typeof google !== 'undefined') {
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: function(resp) {
+        // Decode and login
+        var parts = resp.credential.split('.');
+        var payload = JSON.parse(atob(parts[1] + '=='));
+        var r = AUTH.loginWithOAuth(payload.email, 'google', payload.sub);
+        if (r && r.ok) window.location.href = 'dashboard/index.html';
+        else document.getElementById('loginErr').textContent = 'No account found. Register first.';
+        document.getElementById('loginErr').classList.add('show');
+      }
+    });
+    google.accounts.id.prompt();
+  }
+}
+
+function loginWithGitHub() {
+  var GITHUB_CLIENT_ID = '';
+  if (!GITHUB_CLIENT_ID) {
+    window.location.href = 'register.html';
+    return;
+  }
+  var state = Math.random().toString(36).slice(2);
+  localStorage.setItem('gh_oauth_state', state);
+  window.location.href = 'https://github.com/login/oauth/authorize?client_id='
+    + GITHUB_CLIENT_ID + '&scope=user:email&state=' + state;
 }
 
 document.addEventListener('keydown', function(e) {

@@ -1,0 +1,215 @@
+name: PM::OFFSEC CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # ── Validate Frontend ──────────────────────────────────────────
+  validate-frontend:
+    name: Validate Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check HTML files exist
+        run: |
+          echo "=== Checking required files ==="
+          for f in index.html login.html register.html dashboard/index.html \
+                   client/index.html admin/index.html privacy.html terms.html; do
+            if [ -f "$f" ]; then
+              echo "✅ $f ($(wc -l < $f) lines)"
+            else
+              echo "❌ MISSING: $f"
+              exit 1
+            fi
+          done
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check JavaScript syntax
+        run: |
+          echo "=== Checking JS syntax ==="
+          # Extract and check inline JS from dashboard
+          node -e "
+            const fs = require('fs');
+            const html = fs.readFileSync('dashboard/index.html', 'utf8');
+            const scripts = [...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)];
+            let mainJs = '';
+            for (const s of scripts) {
+              if (s[1].length > 1000) mainJs = s[1];
+            }
+            if (!mainJs) { console.log('❌ No main JS found'); process.exit(1); }
+            fs.writeFileSync('/tmp/dash_check.js', mainJs);
+            console.log('✅ Dashboard JS extracted: ' + mainJs.length + ' chars');
+          "
+          node --check /tmp/dash_check.js && echo "✅ Dashboard JS syntax valid" || exit 1
+          node --check assets/auth.js && echo "✅ auth.js syntax valid" || exit 1
+
+      - name: Check auth.js exports
+        run: |
+          node -e "
+            const fs = require('fs');
+            const auth = fs.readFileSync('assets/auth.js', 'utf8');
+            const required = ['function login', 'function register', 'function logout',
+                              'function requireAuth', 'function getSession'];
+            required.forEach(fn => {
+              if (!auth.includes(fn)) {
+                console.error('❌ Missing: ' + fn);
+                process.exit(1);
+              }
+              console.log('✅ ' + fn);
+            });
+          "
+
+      - name: Check HTML structure
+        run: |
+          node -e "
+            const fs = require('fs');
+            const html = fs.readFileSync('dashboard/index.html', 'utf8');
+            const required = ['page-dashboard', 'page-atm', 'page-vending',
+                              'page-fleet', 'page-threatfeed', 'page-soar',
+                              'mobMenuBtn', 'scanModal'];
+            let ok = true;
+            required.forEach(id => {
+              if (!html.includes('id=\"' + id + '\"')) {
+                console.error('❌ Missing: #' + id);
+                ok = false;
+              } else {
+                console.log('✅ #' + id);
+              }
+            });
+            if (!ok) process.exit(1);
+            // Check div balance
+            const opens = (html.match(/<div[^>]*>/g) || []).length;
+            const closes = (html.match(/<\/div>/g) || []).length;
+            if (opens !== closes) {
+              console.error('❌ Div imbalance: ' + opens + ' open, ' + closes + ' close');
+              process.exit(1);
+            }
+            console.log('✅ Div balance: ' + opens + ' open = ' + closes + ' close');
+          "
+
+  # ── Validate Backend ───────────────────────────────────────────
+  validate-backend:
+    name: Validate Backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt --quiet
+
+      - name: Check Python syntax
+        run: |
+          echo "=== Checking Python syntax ==="
+          for f in backend/*.py; do
+            python3 -m py_compile "$f" && echo "✅ $f" || exit 1
+          done
+
+      - name: Check required endpoints
+        run: |
+          cd backend
+          python3 -c "
+          import ast, sys
+          with open('main.py') as f:
+              src = f.read()
+          required = ['/api/scan/local', '/api/scan/website', '/api/ai/chat',
+                      '/api/atm/scan', '/api/vending/scan', '/api/cve/search',
+                      '/api/billing/trial/start', '/api/email/scan-complete']
+          ok = True
+          for ep in required:
+              if ep in src:
+                  print(f'✅ {ep}')
+              else:
+                  print(f'❌ MISSING: {ep}')
+                  ok = False
+          sys.exit(0 if ok else 1)
+          "
+
+      - name: Check database.py structure
+        run: |
+          python3 -c "
+          import ast, sys
+          with open('backend/database.py') as f:
+              src = f.read()
+          required = ['def init_db', 'def user_create', 'def scan_save',
+                      'def incident_create', 'def agreement_save']
+          ok = True
+          for fn in required:
+              if fn in src:
+                  print(f'✅ {fn}')
+              else:
+                  print(f'❌ MISSING: {fn}')
+                  ok = False
+          sys.exit(0 if ok else 1)
+          "
+
+  # ── Security Checks ────────────────────────────────────────────
+  security-check:
+    name: Security Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for hardcoded secrets
+        run: |
+          echo "=== Checking for hardcoded secrets ==="
+          # Check for API keys accidentally committed
+          if grep -r "sk-ant-api03\|SG\.\|sk_live_\|rk_live_" --include="*.py" --include="*.js" --include="*.html" . 2>/dev/null | grep -v ".env.example" | grep -v "YOUR_KEY\|placeholder\|example"; then
+            echo "❌ POSSIBLE HARDCODED SECRET FOUND - review above"
+            exit 1
+          fi
+          echo "✅ No hardcoded secrets found"
+
+      - name: Check .env is gitignored
+        run: |
+          if [ -f ".gitignore" ] && grep -q "\.env" .gitignore; then
+            echo "✅ .env is in .gitignore"
+          else
+            echo "❌ .env not found in .gitignore"
+            exit 1
+          fi
+
+      - name: Check CORS configuration
+        run: |
+          python3 -c "
+          with open('backend/main.py') as f:
+              src = f.read()
+          if 'CORSMiddleware' in src:
+              print('✅ CORS configured')
+          else:
+              print('⚠️  CORS not configured')
+          "
+
+  # ── Deploy notification ────────────────────────────────────────
+  notify-deploy:
+    name: Deploy Ready
+    runs-on: ubuntu-latest
+    needs: [validate-frontend, validate-backend, security-check]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Deployment Summary
+        run: |
+          echo "╔══════════════════════════════════════════════╗"
+          echo "║  PM::OFFSEC — All checks passed              ║"
+          echo "║  Frontend: GitHub Pages (auto-deploys)       ║"
+          echo "║  Backend: Run 'railway up' to deploy         ║"
+          echo "╚══════════════════════════════════════════════╝"
+          echo ""
+          echo "Commit: ${{ github.sha }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Author: ${{ github.actor }}"

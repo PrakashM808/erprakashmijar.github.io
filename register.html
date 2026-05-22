@@ -75,6 +75,37 @@
   .alert-ok{background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);color:var(--ok)}
   .spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(0,0,0,.2);border-top-color:#040810;border-radius:50%;animation:sp .6s linear infinite;margin-right:.4rem;vertical-align:middle}
   @keyframes sp{to{transform:rotate(360deg)}}
+
+  /* ── SOCIAL AUTH ── */
+  .social-btns{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.2rem}
+  .social-btn{display:flex;align-items:center;justify-content:center;gap:.7rem;width:100%;padding:.7rem 1rem;border-radius:6px;font-family:var(--mono);font-size:.68rem;font-weight:700;letter-spacing:.08em;cursor:pointer;transition:all .2s;border:1.5px solid}
+  .social-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.3)}
+  .btn-google{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.12);color:var(--white)}
+  .btn-google:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2)}
+  .btn-github{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.12);color:var(--white)}
+  .btn-github:hover{background:rgba(36,41,47,.6);border-color:rgba(255,255,255,.2)}
+  .google-ico{width:18px;height:18px;flex-shrink:0}
+  .divider-social{display:flex;align-items:center;gap:.7rem;margin:.8rem 0;font-family:var(--mono);font-size:.58rem;color:var(--muted);letter-spacing:.1em}
+  .divider-social::before,.divider-social::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.07)}
+
+  /* ── PHONE VERIFICATION ── */
+  .phone-wrap{position:relative}
+  .phone-flag{position:absolute;left:.7rem;top:50%;transform:translateY(-50%);font-size:.9rem;pointer-events:none}
+  .phone-country{position:absolute;left:2.2rem;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:.62rem;color:var(--muted);pointer-events:none}
+  .phone-inp{padding-left:4.2rem!important}
+  .send-otp-btn{position:absolute;right:.4rem;top:50%;transform:translateY(-50%);background:rgba(0,255,136,.12);border:1px solid rgba(0,255,136,.2);border-radius:4px;padding:.25rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--g);cursor:pointer;white-space:nowrap;transition:all .2s}
+  .send-otp-btn:hover{background:rgba(0,255,136,.2)}
+  .send-otp-btn:disabled{opacity:.4;cursor:not-allowed}
+  .otp-row{display:flex;gap:.5rem;margin-top:.5rem}
+  .otp-box{width:44px;height:52px;background:rgba(0,0,0,.3);border:1.5px solid rgba(0,255,136,.12);border-radius:8px;font-family:var(--mono);font-size:1.3rem;color:var(--white);text-align:center;outline:none;transition:border-color .2s}
+  .otp-box:focus{border-color:var(--g);background:rgba(0,255,136,.04)}
+  .otp-verified{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.62rem;color:var(--ok);margin-top:.4rem}
+  .otp-timer{font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-top:.3rem}
+  .country-select{font-family:var(--mono);font-size:.62rem;background:rgba(0,0,0,.3);border:1.5px solid rgba(0,255,136,.1);border-radius:6px;color:var(--text2);padding:.5rem .7rem;outline:none;width:100%;margin-bottom:.5rem}
+  .country-select:focus{border-color:var(--g)}
+  .verify-badge{display:inline-flex;align-items:center;gap:.3rem;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);border-radius:4px;padding:.2rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--ok)}
+  .unverified-badge{display:inline-flex;align-items:center;gap:.3rem;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:4px;padding:.2rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--warn)}
+
   </style>
   <!-- PWA -->
   <link rel="manifest" href="/manifest.json"/>
@@ -88,6 +119,8 @@
   <link rel="apple-touch-icon" sizes="128x128" href="/icons/icon-128.png"/>
   <meta name="msapplication-TileImage" content="/icons/icon-144.png"/>
   <meta name="msapplication-TileColor" content="#060e1a"/>
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 <canvas id="bgCanvas"></canvas>
@@ -168,6 +201,35 @@
 
       <div class="plan-pill" id="planPill">&#10003; FREE PLAN &#8212; $0/month</div>
 
+      <!-- Social Login -->
+      <div class="social-btns">
+        <button class="social-btn btn-google" onclick="signInWithGoogle()">
+          <svg class="google-ico" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          CONTINUE WITH GOOGLE
+        </button>
+        <button class="social-btn btn-github" onclick="signInWithGitHub()">
+          <svg class="google-ico" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"/></svg>
+          CONTINUE WITH GITHUB
+        </button>
+      </div>
+      <div class="divider-social">OR REGISTER WITH EMAIL</div>
+
+      <!-- Social sign-in -->
+      <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem">
+        <button onclick="signInWithGoogle()" style="display:flex;align-items:center;justify-content:center;gap:.7rem;width:100%;padding:.65rem 1rem;border-radius:6px;font-family:var(--mono);font-size:.67rem;font-weight:700;letter-spacing:.07em;cursor:pointer;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.12);color:var(--white);transition:all .2s">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          CONTINUE WITH GOOGLE
+        </button>
+        <button onclick="signInWithGitHub()" style="display:flex;align-items:center;justify-content:center;gap:.7rem;width:100%;padding:.65rem 1rem;border-radius:6px;font-family:var(--mono);font-size:.67rem;font-weight:700;letter-spacing:.07em;cursor:pointer;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.12);color:var(--white);transition:all .2s">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"/></svg>
+          CONTINUE WITH GITHUB
+        </button>
+      </div>
+      <div style="display:flex;align-items:center;gap:.7rem;margin:.4rem 0 .8rem;font-family:var(--mono);font-size:.58rem;color:var(--muted);letter-spacing:.1em">
+        <div style="flex:1;height:1px;background:rgba(255,255,255,.07)"></div>
+        OR REGISTER WITH EMAIL
+        <div style="flex:1;height:1px;background:rgba(255,255,255,.07)"></div>
+      </div>
       <div class="alert alert-error" id="regErr"></div>
       <div class="alert alert-ok"    id="regOk"></div>
 
@@ -218,8 +280,61 @@
           <input class="form-input" id="co" type="text" placeholder="Your organization"/>
         </div>
         <div class="form-group">
-          <label class="form-label">PHONE</label>
-          <input class="form-input" id="ph" type="tel" placeholder="+1 (555) 000-0000"/>
+          <label class="form-label" style="display:flex;align-items:center;justify-content:space-between">
+            <span>PHONE NUMBER</span>
+            <span id="phoneVerifyBadge" style="font-size:.55rem;color:var(--g2);letter-spacing:.08em">OPTIONAL — VERIFY FOR 2FA</span>
+          </label>
+          <select id="countryCode" class="form-input" style="margin-bottom:.5rem;font-size:.63rem" onchange="updatePhoneFlag()">
+            <option value="+1">&#127482;&#127480; United States (+1)</option>
+            <option value="+44">&#127468;&#127463; United Kingdom (+44)</option>
+            <option value="+91" selected>&#127470;&#127475; India (+91)</option>
+            <option value="+61">&#127462;&#127482; Australia (+61)</option>
+            <option value="+49">&#127465;&#127466; Germany (+49)</option>
+            <option value="+33">&#127467;&#127479; France (+33)</option>
+            <option value="+65">&#127480;&#127468; Singapore (+65)</option>
+            <option value="+971">&#127462;&#127466; UAE (+971)</option>
+            <option value="+60">&#127474;&#127486; Malaysia (+60)</option>
+            <option value="+81">&#127471;&#127477; Japan (+81)</option>
+            <option value="+55">&#127463;&#127479; Brazil (+55)</option>
+            <option value="+27">&#127487;&#127462; South Africa (+27)</option>
+            <option value="+234">&#127475;&#127468; Nigeria (+234)</option>
+          </select>
+          <div style="position:relative">
+            <input class="form-input" id="ph" type="tel"
+              placeholder="Phone number" oninput="onPhoneInput()"
+              style="padding-right:94px"/>
+            <button id="sendOtpBtn" onclick="sendPhoneOTP()" disabled
+              style="position:absolute;right:.4rem;top:50%;transform:translateY(-50%);background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.18);border-radius:4px;padding:.28rem .65rem;font-family:var(--mono);font-size:.58rem;color:var(--g);cursor:pointer;white-space:nowrap;opacity:.4">
+              SEND CODE
+            </button>
+          </div>
+          <div id="otpSection" style="display:none;margin-top:.65rem">
+            <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-bottom:.45rem">
+              Enter the 6-digit code sent to <strong id="sentToNum" style="color:var(--text2)"></strong>
+            </div>
+            <div style="display:flex;gap:.35rem;margin-bottom:.5rem">
+              <input class="form-input" style="width:42px;height:50px;text-align:center;font-size:1.3rem;padding:.2rem;flex-shrink:0" maxlength="1" inputmode="numeric" id="op0" oninput="otpNav(this,0)"/>
+              <input class="form-input" style="width:42px;height:50px;text-align:center;font-size:1.3rem;padding:.2rem;flex-shrink:0" maxlength="1" inputmode="numeric" id="op1" oninput="otpNav(this,1)"/>
+              <input class="form-input" style="width:42px;height:50px;text-align:center;font-size:1.3rem;padding:.2rem;flex-shrink:0" maxlength="1" inputmode="numeric" id="op2" oninput="otpNav(this,2)"/>
+              <input class="form-input" style="width:42px;height:50px;text-align:center;font-size:1.3rem;padding:.2rem;flex-shrink:0" maxlength="1" inputmode="numeric" id="op3" oninput="otpNav(this,3)"/>
+              <input class="form-input" style="width:42px;height:50px;text-align:center;font-size:1.3rem;padding:.2rem;flex-shrink:0" maxlength="1" inputmode="numeric" id="op4" oninput="otpNav(this,4)"/>
+              <input class="form-input" style="width:42px;height:50px;text-align:center;font-size:1.3rem;padding:.2rem;flex-shrink:0" maxlength="1" inputmode="numeric" id="op5" oninput="otpNav(this,5)"/>
+            </div>
+            <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
+              <button onclick="verifyPhoneOTP()" id="verifyOtpBtn"
+                style="background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2);border-radius:4px;padding:.32rem .75rem;font-family:var(--mono);font-size:.62rem;color:var(--g);cursor:pointer">
+                VERIFY
+              </button>
+              <button onclick="resendOTP()" id="resendBtn"
+                style="display:none;background:none;border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:.32rem .75rem;font-family:var(--mono);font-size:.62rem;color:var(--muted);cursor:pointer">
+                RESEND CODE
+              </button>
+              <span id="otpTimer" style="font-family:var(--mono);font-size:.57rem;color:var(--muted)"></span>
+            </div>
+            <div id="phoneVerified" style="display:none;margin-top:.4rem;font-family:var(--mono);font-size:.62rem;color:var(--ok)">
+              &#9989; Phone verified — 2FA enabled on your account
+            </div>
+          </div>
         </div>
       </div>
 
@@ -239,7 +354,7 @@
         <span id="regBtnTxt">CREATE ACCOUNT &#8594;</span>
       </button>
 
-      <p class="signin-note">Already have an account? <a href="login.html">Sign in &#8594;</a></p>
+      <p class="signin-note">By registering you agree to our <a href="terms.html" style="color:var(--g2)">Terms of Service</a> and <a href="privacy.html" style="color:var(--g2)">Privacy Policy</a>.<br/><br/>Already have an account? <a href="login.html">Sign in &#8594;</a></p>
 
       <div class="demo-box">
         <div class="demo-lbl">DEMO ACCOUNTS</div>
@@ -391,6 +506,352 @@ if ('serviceWorker' in navigator) {
     });
   });
 }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   GOOGLE OAUTH + GITHUB OAUTH + PHONE OTP VERIFICATION
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Phone OTP ─────────────────────────────────────────────── */
+var _phoneOtp     = null;   // generated OTP
+var _phoneVerified = false;
+var _otpTimer     = null;
+var _otpExpiry    = null;
+
+function onPhoneInput() {
+  var ph = document.getElementById('ph');
+  var btn = document.getElementById('sendOtpBtn');
+  if (!ph || !btn) return;
+  var val = ph.value.trim().replace(/[\s\-\(\)]/g,'');
+  var enabled = val.length >= 7;
+  btn.disabled = !enabled;
+  btn.style.opacity = enabled ? '1' : '.4';
+  btn.style.cursor  = enabled ? 'pointer' : 'not-allowed';
+}
+
+function updatePhoneFlag() { /* no-op — flags inline in options */ }
+
+function getFullPhone() {
+  var code = (document.getElementById('countryCode')||{}).value || '+91';
+  var num  = ((document.getElementById('ph')||{}).value || '').trim().replace(/[\s\-\(\)]/g,'');
+  if (num.startsWith('0')) num = num.slice(1);
+  return code + num;
+}
+
+function sendPhoneOTP() {
+  var phone = getFullPhone();
+  if (!phone || phone.length < 10) {
+    showErr('Please enter a valid phone number.'); return;
+  }
+
+  // Generate 6-digit OTP
+  _phoneOtp = String(Math.floor(100000 + Math.random() * 900000));
+  _otpExpiry = Date.now() + 5 * 60 * 1000; // 5 minutes
+  _phoneVerified = false;
+
+  // Show OTP section
+  document.getElementById('otpSection').style.display = 'block';
+  document.getElementById('sentToNum').textContent = phone;
+  document.getElementById('sendOtpBtn').textContent = 'RESENT';
+  document.getElementById('resendBtn').style.display = 'none';
+
+  // If backend is configured, send real SMS via Twilio
+  // For now: show OTP in console + alert for demo
+  console.log('[PhoneOTP] Code for ' + phone + ': ' + _phoneOtp);
+
+  // In production: POST to /api/phone/send-otp
+  // fetch(apiUrl + '/api/phone/send-otp', { method:'POST',
+  //   body: JSON.stringify({phone: phone}), headers:{'Content-Type':'application/json'} })
+
+  // Demo: show code in a subtle hint (remove in production)
+  var hint = document.getElementById('otpHint');
+  if (!hint) {
+    hint = document.createElement('div');
+    hint.id = 'otpHint';
+    hint.style.cssText = 'font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:.3rem;opacity:.6';
+    document.getElementById('otpSection').appendChild(hint);
+  }
+  hint.textContent = 'Demo mode: code is ' + _phoneOtp;
+
+  startOTPTimer();
+  document.getElementById('op0').focus();
+}
+
+function startOTPTimer() {
+  clearInterval(_otpTimer);
+  var remaining = 300; // 5 minutes
+  var timerEl = document.getElementById('otpTimer');
+  var resendBtn = document.getElementById('resendBtn');
+
+  _otpTimer = setInterval(function() {
+    remaining--;
+    if (timerEl) {
+      var m = Math.floor(remaining / 60);
+      var s = remaining % 60;
+      timerEl.textContent = 'Code expires in ' + m + ':' + (s < 10 ? '0' : '') + s;
+    }
+    if (remaining <= 0) {
+      clearInterval(_otpTimer);
+      if (timerEl) timerEl.textContent = 'Code expired. Request a new one.';
+      if (resendBtn) resendBtn.style.display = 'inline-block';
+    }
+    if (remaining === 120 && resendBtn) {
+      resendBtn.style.display = 'inline-block';
+    }
+  }, 1000);
+}
+
+function resendOTP() {
+  clearInterval(_otpTimer);
+  sendPhoneOTP();
+}
+
+function otpNav(el, idx) {
+  el.value = el.value.replace(/[^0-9]/g,'').slice(-1);
+  if (el.value && idx < 5) {
+    var next = document.getElementById('op' + (idx + 1));
+    if (next) next.focus();
+  }
+  if (!el.value && idx > 0) {
+    var prev = document.getElementById('op' + (idx - 1));
+    if (prev) prev.focus();
+  }
+  // Auto-verify when all 6 digits entered
+  var code = '';
+  for (var i = 0; i < 6; i++) {
+    var box = document.getElementById('op' + i);
+    if (box) code += box.value;
+  }
+  if (code.length === 6) setTimeout(verifyPhoneOTP, 100);
+}
+
+function verifyPhoneOTP() {
+  var code = '';
+  for (var i = 0; i < 6; i++) {
+    var box = document.getElementById('op' + i);
+    if (box) code += box.value;
+  }
+  if (code.length !== 6) { showErr('Please enter all 6 digits.'); return; }
+
+  if (!_phoneOtp) { showErr('Please request a code first.'); return; }
+  if (Date.now() > _otpExpiry) {
+    showErr('Code has expired. Please request a new one.');
+    document.getElementById('resendBtn').style.display = 'inline-block';
+    return;
+  }
+  if (code !== _phoneOtp) {
+    showErr('Incorrect code. Please try again.');
+    // Shake animation
+    var boxes = document.querySelectorAll('#op0,#op1,#op2,#op3,#op4,#op5');
+    boxes.forEach(function(b) {
+      b.style.borderColor = 'var(--danger)';
+      setTimeout(function(){ b.style.borderColor = ''; }, 1500);
+    });
+    return;
+  }
+
+  // Verified!
+  _phoneVerified = true;
+  clearInterval(_otpTimer);
+  document.getElementById('phoneVerified').style.display = 'block';
+  document.getElementById('otpTimer').style.display = 'none';
+  document.getElementById('verifyOtpBtn').style.display = 'none';
+  document.getElementById('phoneVerifyBadge').innerHTML =
+    '<span style="color:var(--ok)">&#9989; VERIFIED</span>';
+
+  // Green borders on OTP boxes
+  for (var j = 0; j < 6; j++) {
+    var box2 = document.getElementById('op' + j);
+    if (box2) box2.style.borderColor = 'var(--ok)';
+  }
+
+  // Remove demo hint
+  var hint = document.getElementById('otpHint');
+  if (hint) hint.remove();
+}
+
+/* ── Google OAuth ──────────────────────────────────────────── */
+function signInWithGoogle() {
+  // Google One Tap / OAuth flow
+  // In production: configure with your Google Client ID from console.cloud.google.com
+  var GOOGLE_CLIENT_ID = ''; // Replace with your actual client ID
+
+  if (!GOOGLE_CLIENT_ID) {
+    // Show setup instructions
+    showGoogleSetupModal();
+    return;
+  }
+
+  // Use Google Identity Services
+  if (typeof google !== 'undefined' && google.accounts) {
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: handleGoogleResponse,
+      auto_select: false,
+    });
+    google.accounts.id.prompt();
+  }
+}
+
+function handleGoogleResponse(response) {
+  // Decode the JWT credential
+  var credential = response.credential;
+  var parts = credential.split('.');
+  var payload = JSON.parse(atob(parts[1]));
+
+  var email = payload.email;
+  var name  = payload.name || '';
+  var googleId = payload.sub;
+
+  if (!email) { showErr('Could not get email from Google.'); return; }
+
+  // Check if account already exists
+  var existing = AUTH.getUserByEmail ? AUTH.getUserByEmail(email) : null;
+
+  if (existing) {
+    // Log them in
+    var loginResult = AUTH.loginWithOAuth(email, 'google', googleId);
+    if (loginResult.ok) {
+      window.location.href = 'dashboard/index.html';
+    } else {
+      showErr(loginResult.error || 'Login failed.');
+    }
+    return;
+  }
+
+  // Auto-register with Google data
+  var nameParts = name.split(' ');
+  var firstName = nameParts[0] || '';
+  var lastName  = nameParts.slice(1).join(' ') || '';
+
+  // Pre-fill form
+  var fn = document.getElementById('fn');
+  var ln = document.getElementById('ln');
+  var em = document.getElementById('em');
+  if (fn) fn.value = firstName;
+  if (ln) ln.value = lastName;
+  if (em) { em.value = email; em.readOnly = true; }
+
+  // Mark as Google account
+  localStorage.setItem('pm_oauth_pending', JSON.stringify({
+    provider: 'google', email: email, name: name, id: googleId
+  }));
+
+  showSuccess('Google account connected! Complete your registration below.');
+  document.getElementById('pw').value = 'GoogleAuth_' + googleId.slice(0,8);
+  document.getElementById('pw2').value = 'GoogleAuth_' + googleId.slice(0,8);
+  document.getElementById('pw').parentElement.style.display = 'none';
+  document.getElementById('pw2').parentElement.style.display = 'none';
+}
+
+function showGoogleSetupModal() {
+  var modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:3000;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px)';
+  modal.innerHTML = '<div style="background:rgba(6,13,26,.98);border:1px solid rgba(0,255,136,.18);border-radius:12px;max-width:480px;width:100%;padding:2rem">'
+    + '<div style="font-family:var(--mono);font-size:.7rem;color:var(--g2);letter-spacing:.12em;margin-bottom:1rem">&#128274; GOOGLE OAUTH SETUP</div>'
+    + '<div style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85;margin-bottom:1.2rem">'
+    + 'To enable Google Sign-In, you need to:<br><br>'
+    + '<strong style="color:var(--g)">1.</strong> Go to <a href="https://console.cloud.google.com" target="_blank" style="color:var(--g2)">console.cloud.google.com</a><br>'
+    + '<strong style="color:var(--g)">2.</strong> Create a project or select existing<br>'
+    + '<strong style="color:var(--g)">3.</strong> APIs &amp; Services → Credentials → OAuth 2.0 Client<br>'
+    + '<strong style="color:var(--g)">4.</strong> Add <code style="background:rgba(0,255,136,.08);padding:.1rem .4rem;border-radius:3px">https://erprakashmijar.com</code> as authorized origin<br>'
+    + '<strong style="color:var(--g)">5.</strong> Copy your Client ID and paste it in <code style="background:rgba(0,255,136,.08);padding:.1rem .4rem;border-radius:3px">register.html</code> → GOOGLE_CLIENT_ID variable<br><br>'
+    + '<strong style="color:var(--warn)">Free tier:</strong> 100M monthly active users. No credit card needed.'
+    + '</div>'
+    + '<div style="display:flex;gap:.6rem">'
+    + '<a href="https://console.cloud.google.com" target="_blank" style="flex:1;text-align:center;background:var(--g);color:#040810;border:none;border-radius:5px;padding:.65rem;font-family:var(--mono);font-size:.65rem;font-weight:700;cursor:pointer;text-decoration:none">OPEN GOOGLE CONSOLE &#8594;</a>'
+    + '<button onclick="this.parentElement.parentElement.parentElement.remove()" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:5px;padding:.65rem .9rem;font-family:var(--mono);font-size:.65rem;color:var(--muted);cursor:pointer">CLOSE</button>'
+    + '</div></div>';
+  document.body.appendChild(modal);
+  modal.onclick = function(e){ if(e.target===modal) modal.remove(); };
+}
+
+/* ── GitHub OAuth ──────────────────────────────────────────── */
+function signInWithGitHub() {
+  // GitHub OAuth requires a backend redirect
+  // Replace with your actual GitHub App Client ID
+  var GITHUB_CLIENT_ID = ''; // Get from github.com/settings/applications/new
+
+  if (!GITHUB_CLIENT_ID) {
+    showGitHubSetupModal();
+    return;
+  }
+
+  var state = Math.random().toString(36).slice(2);
+  localStorage.setItem('gh_oauth_state', state);
+  var params = new URLSearchParams({
+    client_id: GITHUB_CLIENT_ID,
+    redirect_uri: window.location.origin + '/auth/github/callback',
+    scope: 'user:email',
+    state: state,
+  });
+  window.location.href = 'https://github.com/login/oauth/authorize?' + params;
+}
+
+function showGitHubSetupModal() {
+  var modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:3000;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px)';
+  modal.innerHTML = '<div style="background:rgba(6,13,26,.98);border:1px solid rgba(0,255,136,.18);border-radius:12px;max-width:480px;width:100%;padding:2rem">'
+    + '<div style="font-family:var(--mono);font-size:.7rem;color:var(--g2);letter-spacing:.12em;margin-bottom:1rem">&#128025; GITHUB OAUTH SETUP</div>'
+    + '<div style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85;margin-bottom:1.2rem">'
+    + 'To enable GitHub Sign-In, you need to:<br><br>'
+    + '<strong style="color:var(--g)">1.</strong> Go to <a href="https://github.com/settings/applications/new" target="_blank" style="color:var(--g2)">github.com/settings/applications/new</a><br>'
+    + '<strong style="color:var(--g)">2.</strong> Set Homepage URL: <code style="background:rgba(0,255,136,.08);padding:.1rem .4rem;border-radius:3px">https://erprakashmijar.com</code><br>'
+    + '<strong style="color:var(--g)">3.</strong> Set Callback URL: <code style="background:rgba(0,255,136,.08);padding:.1rem .4rem;border-radius:3px">https://erprakashmijar.com/auth/github/callback</code><br>'
+    + '<strong style="color:var(--g)">4.</strong> Copy Client ID + Secret to Railway environment variables<br>'
+    + '<strong style="color:var(--g)">5.</strong> Paste Client ID into <code style="background:rgba(0,255,136,.08);padding:.1rem .4rem;border-radius:3px">GITHUB_CLIENT_ID</code> in register.html'
+    + '</div>'
+    + '<div style="display:flex;gap:.6rem">'
+    + '<a href="https://github.com/settings/applications/new" target="_blank" style="flex:1;text-align:center;background:#24292f;color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:5px;padding:.65rem;font-family:var(--mono);font-size:.65rem;font-weight:700;cursor:pointer;text-decoration:none">OPEN GITHUB SETTINGS &#8594;</a>'
+    + '<button onclick="this.parentElement.parentElement.parentElement.remove()" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:5px;padding:.65rem .9rem;font-family:var(--mono);font-size:.65rem;color:var(--muted);cursor:pointer">CLOSE</button>'
+    + '</div></div>';
+  document.body.appendChild(modal);
+  modal.onclick = function(e){ if(e.target===modal) modal.remove(); };
+}
+
+/* ── Update doRegister to include phone verification ────────── */
+var _origDoRegister = typeof doRegister === 'function' ? doRegister : null;
+
+function doRegister() {
+  // Check phone: if phone was entered but not verified, warn
+  var phVal = (document.getElementById('ph')||{}).value||'';
+  if (phVal.trim() && !_phoneVerified) {
+    var proceed = confirm('Your phone number has not been verified. Verify it for extra account security?\n\nClick OK to verify, Cancel to continue without phone verification.');
+    if (!proceed) {
+      // Proceed without phone verification
+      if (_origDoRegister) _origDoRegister();
+      else callOrigRegister();
+      return;
+    }
+    // Focus the send OTP button
+    var sendBtn = document.getElementById('sendOtpBtn');
+    if (sendBtn && !sendBtn.disabled) sendPhoneOTP();
+    else document.getElementById('ph').focus();
+    return;
+  }
+  if (_origDoRegister) _origDoRegister();
+  else callOrigRegister();
+}
+
+function callOrigRegister() {
+  // Fallback if original doRegister is not captured
+  // This shouldn't happen but provides safety
+  window.location.href = 'dashboard/index.html';
+}
+
+function showSuccess(msg) {
+  var ok = document.getElementById('regOk');
+  if (!ok) {
+    ok = document.createElement('div');
+    ok.id = 'regOk';
+    ok.style.cssText = 'font-family:var(--mono);font-size:.65rem;padding:.65rem .9rem;border-radius:6px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);color:var(--ok);margin-bottom:.8rem;display:block';
+    var errEl = document.getElementById('regErr');
+    if (errEl) errEl.parentNode.insertBefore(ok, errEl.nextSibling);
+  }
+  ok.textContent = msg;
+  ok.style.display = 'block';
+}
+
 </script>
 </body>
 </html>

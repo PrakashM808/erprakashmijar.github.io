@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Terms of Service — PM::OFFSEC</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',sans-serif;background:#040810;color:#c0dce8;line-height:1.7;font-size:15px}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid rgba(0,255,136,.08);position:sticky;top:0;background:rgba(4,8,16,.95);backdrop-filter:blur(8px);z-index:10}
+  .nav-logo{font-family:'Space Mono',monospace;font-size:.85rem;color:#00ff88;letter-spacing:.15em;text-decoration:none}
+  .nav-logo span{color:#00d4ff}
+  .nav-links{display:flex;gap:1.5rem}
+  .nav-links a{font-family:'Space Mono',monospace;font-size:.65rem;color:#6b8da8;text-decoration:none;letter-spacing:.1em;transition:color .2s}
+  .nav-links a:hover{color:#00ff88}
+  .wrap{max-width:820px;margin:0 auto;padding:3rem 1.5rem 5rem}
+  .page-title{font-family:'Space Mono',monospace;font-size:1.8rem;color:#f2f9ff;letter-spacing:.04em;margin-bottom:.5rem}
+  .page-sub{font-family:'Space Mono',monospace;font-size:.7rem;color:#2a4a62;margin-bottom:2.5rem}
+  h2{font-family:'Space Mono',monospace;font-size:.85rem;color:#00ff88;letter-spacing:.12em;margin:2rem 0 .8rem;padding-bottom:.4rem;border-bottom:1px solid rgba(0,255,136,.1)}
+  h3{font-family:'Space Mono',monospace;font-size:.72rem;color:#00d4ff;letter-spacing:.08em;margin:1.2rem 0 .5rem}
+  p{margin-bottom:.9rem;font-size:.88rem;color:#7aafc8}
+  ul{list-style:none;padding:0;margin-bottom:.9rem}
+  ul li{font-size:.86rem;color:#7aafc8;padding:.2rem 0 .2rem 1.2rem;position:relative}
+  ul li::before{content:'›';position:absolute;left:0;color:#00ff88}
+  strong{color:#c0dce8}
+  a{color:#00d4ff;text-decoration:none}
+  a:hover{text-decoration:underline}
+  .warning{background:rgba(255,59,92,.06);border:1px solid rgba(255,59,92,.15);border-radius:6px;padding:1rem 1.2rem;margin:1rem 0}
+  .warning strong{color:#ff4d6a}
+  .highlight{background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:6px;padding:1rem 1.2rem;margin:1rem 0}
+  .footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid rgba(0,255,136,.07);font-family:'Space Mono',monospace;font-size:.62rem;color:#2a4a62;text-align:center}
+  </style>
+</head>
+<body>
+<nav class="nav">
+  <a href="index.html" class="nav-logo">PM<span>::</span>OFFSEC</a>
+  <div class="nav-links">
+    <a href="index.html">HOME</a>
+    <a href="dashboard/index.html">DASHBOARD</a>
+    <a href="privacy.html">PRIVACY</a>
+    <a href="mailto:contact@erprakashmijar.com">CONTACT</a>
+  </div>
+</nav>
+<div class="wrap">
+  <div class="page-title">TERMS OF SERVICE</div>
+  <div class="page-sub">Last updated: January 2026 &nbsp;&#183;&nbsp; Effective: January 1, 2026</div>
+
+  <div class="warning">
+    <strong>&#9888; IMPORTANT:</strong> By using PM::OFFSEC, you confirm that you have explicit written authorization to scan any systems, networks or devices you submit. Unauthorized scanning is a federal crime under the Computer Fraud and Abuse Act (18 U.S.C. § 1030). We enforce this strictly.
+  </div>
+
+  <h2>1. ACCEPTANCE OF TERMS</h2>
+  <p>By accessing or using PM::OFFSEC Security Dashboard ("the Service"), you agree to be bound by these Terms of Service. If you do not agree, do not use the Service. These terms apply to all users including free accounts, paid subscribers, and API users.</p>
+
+  <h2>2. AUTHORIZED USE ONLY</h2>
+  <div class="warning">
+    <strong>YOU MUST HAVE EXPLICIT AUTHORIZATION</strong> to scan any system. This means:
+  </div>
+  <ul>
+    <li>You own the system, or</li>
+    <li>You have written permission from the system owner, or</li>
+    <li>You have a signed engagement agreement (our legal agreement feature handles this)</li>
+  </ul>
+  <p>Scanning systems without authorization is illegal. We will cooperate fully with law enforcement investigations and will terminate accounts involved in unauthorized scanning immediately and without refund.</p>
+
+  <h2>3. ACCOUNT RESPONSIBILITIES</h2>
+  <ul>
+    <li>You are responsible for maintaining the security of your account credentials</li>
+    <li>You must notify us immediately if you suspect unauthorized access to your account</li>
+    <li>One person per account unless you have a team plan</li>
+    <li>You must be 18 years or older to create an account</li>
+    <li>You are responsible for all activity that occurs under your account</li>
+  </ul>
+
+  <h2>4. ACCEPTABLE USE</h2>
+  <h3>Permitted Uses</h3>
+  <ul>
+    <li>Scanning systems you own or have explicit authorization to test</li>
+    <li>Security assessments for clients under signed engagement agreements</li>
+    <li>Educational and research purposes on systems you control</li>
+    <li>Compliance assessments (PCI DSS, CIS, HIPAA) for your organization</li>
+  </ul>
+  <h3>Prohibited Uses</h3>
+  <ul>
+    <li>Scanning systems without explicit written authorization</li>
+    <li>Using scan data to exploit vulnerabilities on systems you don't own</li>
+    <li>Distributing scan results of third-party systems</li>
+    <li>Using the platform to facilitate attacks or unauthorized access</li>
+    <li>Reverse engineering, scraping, or automated abuse of the API</li>
+    <li>Creating accounts to circumvent usage limits or bans</li>
+    <li>Sharing account credentials with unauthorized parties</li>
+  </ul>
+
+  <h2>5. SERVICE PLANS AND BILLING</h2>
+  <ul>
+    <li>Free plan: Limited to 3 devices and 10 scans per day</li>
+    <li>Paid plans are billed monthly in advance</li>
+    <li>Unused scan credits do not roll over between months</li>
+    <li>We reserve the right to change pricing with 30 days notice to existing subscribers</li>
+    <li>Refunds are available within 14 days of initial subscription purchase only</li>
+    <li>Downgrading a plan takes effect at the next billing cycle</li>
+  </ul>
+
+  <h2>6. DATA OWNERSHIP</h2>
+  <p>Your scan data belongs to you. You can export all your data at any time from your dashboard. PM::OFFSEC does not claim ownership over your infrastructure data or scan results. We may use anonymized, aggregated statistics (never individually identifiable) to improve the service.</p>
+
+  <h2>7. SERVICE AVAILABILITY</h2>
+  <p>We target 99% uptime but do not provide an SLA for Free or Starter plan accounts. Enterprise accounts receive priority support and a 99.5% uptime commitment. Scheduled maintenance will be announced at least 24 hours in advance.</p>
+  <p>We are not liable for data loss caused by service interruptions. You are responsible for maintaining your own backups of critical scan data.</p>
+
+  <h2>8. LIMITATION OF LIABILITY</h2>
+  <p>PM::OFFSEC is a security scanning tool. It identifies potential vulnerabilities but <strong>does not guarantee</strong> that your systems are completely secure. Our tool may:</p>
+  <ul>
+    <li>Miss vulnerabilities not covered by our checks</li>
+    <li>Report false positives that require manual verification</li>
+    <li>Not detect zero-day vulnerabilities or custom attack vectors</li>
+  </ul>
+  <p>To the maximum extent permitted by law, PM::OFFSEC is not liable for any security breaches, data loss, or damages resulting from: (a) vulnerabilities not detected by our tool, (b) misuse of scan results, or (c) failure to implement recommended remediations.</p>
+  <p>Our total liability for any claim is limited to the amount you paid us in the 3 months preceding the claim.</p>
+
+  <h2>9. INTELLECTUAL PROPERTY</h2>
+  <p>PM::OFFSEC, its branding, dashboard design, and proprietary scanning algorithms are owned by Prakash Mijar. You may not copy, redistribute, or create derivative works from our platform without written permission.</p>
+  <p>You retain all rights to your own scan data and any content you upload to the platform.</p>
+
+  <h2>10. TERMINATION</h2>
+  <p>We may suspend or terminate accounts that:</p>
+  <ul>
+    <li>Violate these terms, particularly unauthorized scanning</li>
+    <li>Engage in abuse, fraud, or chargebacks</li>
+    <li>Have been inactive for 12+ months (Free plan only, with 30 days notice)</li>
+  </ul>
+  <p>You may cancel your account at any time from your account settings. Upon cancellation, paid access continues until the end of the current billing period.</p>
+
+  <h2>11. GOVERNING LAW</h2>
+  <p>These terms are governed by the laws of India. Disputes will be resolved in the courts of India. For users in the European Union, GDPR rights apply as described in our Privacy Policy.</p>
+
+  <h2>12. CHANGES TO TERMS</h2>
+  <p>We will notify registered users by email at least 14 days before any material changes. Continued use after changes constitutes acceptance of the updated terms.</p>
+
+  <h2>13. CONTACT</h2>
+  <p>For legal inquiries: <a href="mailto:contact@erprakashmijar.com">contact@erprakashmijar.com</a></p>
+  <p>Subject: "Legal — [your query]"</p>
+
+  <div class="footer">PM::OFFSEC Security Dashboard &nbsp;&#183;&nbsp; erprakashmijar.com &nbsp;&#183;&nbsp; Terms of Service v1.0</div>
+</div>
+</body>
+</html>

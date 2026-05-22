@@ -586,9 +586,48 @@ const AUTH = (() => {
     return { score, ...map[Math.min(score, 5)] };
   }
 
+
+  /* ── OAuth login/register ─────────────────────────────────── */
+  function loginWithOAuth(email, provider, providerId) {
+    var users = getUsers();
+    var user = users.find(function(u){ return u.email.toLowerCase() === email.toLowerCase(); });
+    if (!user) return { ok: false, error: 'No account with this ' + provider + ' email. Please register.' };
+    if (user.status === 'suspended') return { ok: false, error: 'Account suspended.' };
+    var idx = users.findIndex(function(u){ return u.id === user.id; });
+    users[idx].lastLogin = new Date().toISOString();
+    users[idx].loginCount = (users[idx].loginCount||0) + 1;
+    users[idx].oauthProvider = provider;
+    saveUsers(users);
+    return { ok: true, session: setSession(users[idx]) };
+  }
+
+  function registerWithOAuth(email, name, provider, providerId, plan) {
+    plan = plan || 'free';
+    var users = getUsers();
+    if (users.find(function(u){ return u.email.toLowerCase() === email.toLowerCase(); })) {
+      return loginWithOAuth(email, provider, providerId);
+    }
+    var userId = 'u' + Date.now().toString(36);
+    var nameParts = (name||'').split(' ');
+    var newUser = {
+      id: userId, email: email.toLowerCase(),
+      name: name || email.split('@')[0],
+      password: 'oauth_' + provider + '_' + providerId,
+      role: 'user', plan: plan, status: 'active',
+      oauthProvider: provider, oauthId: providerId,
+      created: new Date().toISOString(), loginCount: 1,
+      lastLogin: new Date().toISOString()
+    };
+    users.push(newUser);
+    saveUsers(users);
+    return { ok: true, session: setSession(newUser) };
+  }
+
+
   return {
     login, register, logout,
     requireAuth, requireGuest, getSession,
+
     forgotPassword, verifyOTP, resetPassword, changePassword,
     getAllUsers, getAllUsersAdmin,
     adminUpdateUser, adminDeleteUser, adminCreateUser,

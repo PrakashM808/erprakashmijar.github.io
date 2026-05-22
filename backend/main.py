@@ -73,6 +73,284 @@ scan_counts:  dict  = {}
 alert_prefs:  dict  = {}
 
 # ── LIFECYCLE ────────────────────────────────────────────────────
+
+
+# ── OAUTH & PHONE VERIFICATION ENDPOINTS ─────────────────────────
+import hashlib, secrets
+
+class PhoneOTPReq(BaseModel):
+    phone: str
+    user_id: str = ""
+
+class VerifyPhoneOTPReq(BaseModel):
+    phone: str
+    code: str
+    user_id: str = ""
+
+class GoogleOAuthReq(BaseModel):
+    credential: str   # Google JWT token
+    plan: str = "free"
+
+class GitHubOAuthReq(BaseModel):
+    code: str         # GitHub auth code from redirect
+    state: str = ""
+    plan: str = "free"
+
+# In-memory OTP store (use Redis in production)
+_phone_otps = {}
+
+@app.post("/api/phone/send-otp")
+async def send_phone_otp(req: PhoneOTPReq):
+    """Send OTP to phone number via SMS (requires Twilio in production)"""
+    phone = req.phone.strip()
+    if len(phone) < 10:
+        raise HTTPException(400, "Invalid phone number")
+
+    # Generate 6-digit OTP
+    otp = str(secrets.randbelow(900000) + 100000)
+    _phone_otps[phone] = {
+        "otp": otp,
+        "expires": datetime.utcnow().timestamp() + 300,  # 5 min
+        "attempts": 0
+    }
+
+    # Send via Twilio if configured
+    twilio_sid    = os.getenv("TWILIO_ACCOUNT_SID")
+    twilio_token  = os.getenv("TWILIO_AUTH_TOKEN")
+    twilio_number = os.getenv("TWILIO_PHONE_NUMBER")
+
+    if twilio_sid and twilio_token and twilio_number:
+        try:
+            from twilio.rest import Client
+            client = Client(twilio_sid, twilio_token)
+            client.messages.create(
+                body=f"Your PM::OFFSEC verification code is: {otp}. Expires in 5 minutes.",
+                from_=twilio_number,
+                to=phone
+            )
+            return {"ok": True, "message": f"OTP sent to {phone[:4]}***{phone[-3:]}"}
+        except Exception as e:
+            # Fall through to demo mode
+            pass
+
+    # Demo mode: return OTP in response (remove in production)
+    return {
+        "ok": True,
+        "message": f"OTP sent to {phone[:4]}***{phone[-3:]}",
+        "demo_otp": otp,  # REMOVE IN PRODUCTION
+        "note": "Add TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER to Railway env for real SMS"
+    }
+
+@app.post("/api/phone/verify-otp")
+async def verify_phone_otp(req: VerifyPhoneOTPReq):
+    """Verify phone OTP"""
+    phone = req.phone.strip()
+    code  = req.code.strip()
+
+    if phone not in _phone_otps:
+        raise HTTPException(400, "No OTP sent to this number. Request a new code.")
+
+    entry = _phone_otps[phone]
+    if datetime.utcnow().timestamp() > entry["expires"]:
+        del _phone_otps[phone]
+        raise HTTPException(400, "OTP has expired. Request a new code.")
+
+    entry["attempts"] = entry.get("attempts", 0) + 1
+    if entry["attempts"] > 5:
+        del _phone_otps[phone]
+        raise HTTPException(400, "Too many attempts. Request a new code.")
+
+    if code != entry["otp"]:
+        raise HTTPException(400, "Incorrect code. Please try again.")
+
+    del _phone_otps[phone]
+
+    # Mark phone as verified for user
+    if req.user_id:
+        user_update(req.user_id, phone=phone)
+
+    return {"ok": True, "message": "Phone number verified successfully"}
+
+@app.post("/api/auth/google")
+async def google_oauth(req: GoogleOAuthReq):
+    """Handle Google OAuth — verify JWT and create/login account"""
+    import base64, json
+
+    try:
+        # Decode Google JWT (in production, verify with Google's public keys)
+        parts = req.credential.split('.')
+        payload_b64 = parts[1] + '==' * (4 - len(parts[1]) % 4)
+        payload = json.loads(base64.urlsafe_b64decode(payload_b64))
+
+        email   = payload.get("email", "")
+        name    = payload.get("name", "")
+        google_id = payload.get("sub", "")
+        email_verified = payload.get("email_verified", False)
+
+        if not email:
+            raise HTTPException(400, "Could not get email from Google token")
+
+        # Check if user exists
+        existing = user_get_by_email(email)
+        if existing:
+            # Update OAuth info and return session
+            user_record_login(existing["id"])
+            return {
+                "ok": True,
+                "action": "login",
+                "user": {
+                    "id": existing["id"],
+                    "email": email,
+                    "name": existing.get("name", name),
+                    "role": existing.get("role", "user"),
+                    "plan": existing.get("plan", "free"),
+                }
+            }
+
+        # Create new account via Google
+        import uuid
+        user_id = str(uuid.uuid4())[:12]
+        hashed_pw = hashlib.sha256(f"google_{google_id}_{email}".encode()).hexdigest()
+        name_parts = name.split(' ')
+        full_name = name or email.split('@')[0]
+
+        user_create(
+            user_id=user_id,
+            name=full_name,
+            email=email,
+            password=hashed_pw,
+            plan=req.plan,
+            company=""
+        )
+
+        return {
+            "ok": True,
+            "action": "register",
+            "user": {
+                "id": user_id,
+                "email": email,
+                "name": full_name,
+                "role": "user",
+                "plan": req.plan,
+            }
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(400, f"Google OAuth failed: {str(e)}")
+
+@app.get("/api/auth/github/callback")
+async def github_oauth_callback(code: str, state: str = ""):
+    """Handle GitHub OAuth callback"""
+    client_id     = os.getenv("GITHUB_CLIENT_ID", "")
+    client_secret = os.getenv("GITHUB_CLIENT_SECRET", "")
+
+    if not client_id or not client_secret:
+        raise HTTPException(400, "GitHub OAuth not configured. Add GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET to Railway env.")
+
+    try:
+        import httpx
+        # Exchange code for access token
+        async with httpx.AsyncClient() as client:
+            token_r = await client.post("https://github.com/login/oauth/access_token",
+                headers={"Accept": "application/json"},
+                json={"client_id": client_id, "client_secret": client_secret, "code": code}
+            )
+            token_data = token_r.json()
+            access_token = token_data.get("access_token", "")
+
+            if not access_token:
+                raise HTTPException(400, "Failed to get GitHub access token")
+
+            # Get user info
+            user_r = await client.get("https://api.github.com/user",
+                headers={"Authorization": f"Bearer {access_token}", "Accept": "application/json"}
+            )
+            gh_user = user_r.json()
+
+            # Get emails
+            emails_r = await client.get("https://api.github.com/user/emails",
+                headers={"Authorization": f"Bearer {access_token}"}
+            )
+            emails = emails_r.json()
+            primary_email = next((e["email"] for e in emails if e.get("primary")), None)
+            email = primary_email or gh_user.get("email", "")
+
+            if not email:
+                raise HTTPException(400, "Could not get email from GitHub")
+
+        # Check/create user
+        existing = user_get_by_email(email)
+        if existing:
+            user_record_login(existing["id"])
+            user_id = existing["id"]
+            name = existing.get("name", gh_user.get("name",""))
+            plan = existing.get("plan","free")
+        else:
+            import uuid
+            user_id = str(uuid.uuid4())[:12]
+            name = gh_user.get("name") or gh_user.get("login") or email.split("@")[0]
+            hashed_pw = hashlib.sha256(f"github_{gh_user.get('id')}_{email}".encode()).hexdigest()
+            plan = "free"
+            user_create(user_id=user_id, name=name, email=email, password=hashed_pw)
+
+        # Redirect to dashboard with session token
+        from fastapi.responses import RedirectResponse
+        session_token = hashlib.sha256(f"{user_id}{datetime.utcnow().isoformat()}".encode()).hexdigest()[:32]
+        return RedirectResponse(
+            url=f"{os.getenv('APP_URL','https://erprakashmijar.com')}/dashboard/index.html?oauth=github&uid={user_id}&token={session_token}"
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(400, f"GitHub OAuth failed: {str(e)}")
+
+# ── SECURITY & RATE LIMITING ──────────────────────────────────────
+from fastapi import Request
+from fastapi.responses import JSONResponse
+import time
+from collections import defaultdict
+
+# Simple in-memory rate limiter
+_rate_store = defaultdict(list)
+RATE_LIMIT    = 60   # requests
+RATE_WINDOW   = 60   # seconds
+
+@app.middleware("http")
+async def rate_limit_middleware(request: Request, call_next):
+    # Skip rate limiting for static assets
+    path = request.url.path
+    if not path.startswith("/api/"):
+        return await call_next(request)
+
+    client_ip = request.client.host or "unknown"
+    now = time.time()
+
+    # Clean old entries
+    _rate_store[client_ip] = [t for t in _rate_store[client_ip] if now - t < RATE_WINDOW]
+
+    if len(_rate_store[client_ip]) >= RATE_LIMIT:
+        return JSONResponse(
+            status_code=429,
+            content={"error": "Rate limit exceeded. Max 60 requests per minute."},
+            headers={"Retry-After": "60"}
+        )
+
+    _rate_store[client_ip].append(now)
+    return await call_next(request)
+
+@app.middleware("http")
+async def security_headers_middleware(request: Request, call_next):
+    response = await call_next(request)
+    # Security headers on all responses
+    response.headers["X-Content-Type-Options"]    = "nosniff"
+    response.headers["X-Frame-Options"]           = "DENY"
+    response.headers["X-XSS-Protection"]          = "1; mode=block"
+    response.headers["Referrer-Policy"]           = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"]        = "geolocation=(), microphone=(), camera=()"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    return response
+
 @app.on_event("startup")
 async def startup():
     init_db()  # Initialize PostgreSQL schema

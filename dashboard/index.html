@@ -517,6 +517,12 @@
         <div class="sb-label">Physical Security</div>
         <button class="sb-item" onclick="nav('atm')"><span class="sb-icon">🏧</span>ATM Security</button>
         <button class="sb-item" onclick="nav('vending')"><span class="sb-icon">🧃</span>Vending Machines</button>
+        <button class="sb-item" onclick="nav('fleet')"><span class="sb-icon">&#127760;</span>Device Fleet</button>
+      </div>
+      <div class="sb-section">
+        <div class="sb-label">Automation</div>
+        <button class="sb-item" onclick="nav('threatfeed')"><span class="sb-icon">&#128308;</span>Threat Feed</button>
+        <button class="sb-item" onclick="nav('soar')"><span class="sb-icon">&#9889;</span>SOAR Playbooks</button>
       </div>
       <div class="sb-bottom">
         <div class="device-mini" id="currentDeviceMini" style="display:none">
@@ -1322,6 +1328,135 @@
         </div>
       </div>
 
+
+      <!-- DEVICE FLEET PAGE -->
+      <div class="page" id="page-fleet">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">SMART DEVICE FLEET</div>
+          <div class="pg-sub">All IoT, ATM and vending machines — health, risk and real-time alerts</div></div>
+          <button onclick="refreshFleet()" class="btn btn-g btn-sm">&#8635; REFRESH ALL</button>
+        </div>
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-b"><div class="sc-icon">&#128268;</div><div class="sc-label">Total Devices</div><div class="sc-value" id="fleetTotal">0</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#9989;</div><div class="sc-label">Healthy</div><div class="sc-value" id="fleetHealthy" style="color:var(--ok)">0</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#128683;</div><div class="sc-label">At Risk</div><div class="sc-value" id="fleetRisk" style="color:var(--danger)">0</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#9888;</div><div class="sc-label">Offline</div><div class="sc-value" id="fleetOffline" style="color:var(--muted)">0</div></div>
+        </div>
+        <div class="panel" style="margin-bottom:.9rem">
+          <div class="ph">
+            <div class="pt">&#128202; DEVICE RISK HEATMAP</div>
+            <div style="display:flex;gap:.5rem;align-items:center;font-family:var(--mono);font-size:.55rem;color:var(--muted)">
+              <span style="width:10px;height:10px;border-radius:2px;background:var(--ok);display:inline-block"></span>Healthy
+              <span style="width:10px;height:10px;border-radius:2px;background:var(--warn);display:inline-block"></span>Warning
+              <span style="width:10px;height:10px;border-radius:2px;background:var(--danger);display:inline-block"></span>Critical
+            </div>
+          </div>
+          <div class="pb" id="fleetHeatmap" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.6rem;min-height:60px"></div>
+        </div>
+        <div class="panel">
+          <div class="ph">
+            <div class="pt">ALL DEVICES</div>
+            <select class="form-input" id="fleetFilter" onchange="renderFleet()" style="font-size:.6rem;padding:.3rem .6rem;width:auto">
+              <option value="all">All Types</option>
+              <option value="atm">ATMs</option>
+              <option value="vending">Vending</option>
+              <option value="server">Servers</option>
+            </select>
+          </div>
+          <div class="pb" id="fleetTable"></div>
+        </div>
+      </div>
+
+      <!-- THREAT FEED PAGE -->
+      <div class="page" id="page-threatfeed">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">LIVE THREAT INTELLIGENCE</div>
+          <div class="pg-sub">Real-time IOC feeds, malicious IPs, trending CVEs and ransomware activity</div></div>
+          <button onclick="refreshThreatFeed()" class="btn btn-g btn-sm">&#128308; REFRESH FEED</button>
+        </div>
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-r"><div class="sc-icon">&#128308;</div><div class="sc-label">Malicious IPs</div><div class="sc-value" id="tfMalIP" style="color:var(--danger)">-</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#128268;</div><div class="sc-label">Active CVEs</div><div class="sc-value" id="tfCVEs" style="color:var(--warn)">-</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#127990;</div><div class="sc-label">Ransomware Groups</div><div class="sc-value" id="tfRansom">-</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#9200;</div><div class="sc-label">Last Updated</div><div class="sc-value" id="tfUpdated" style="font-size:.8rem">-</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:.9rem">
+          <div class="panel">
+            <div class="ph"><div class="pt">&#128269; IOC LOOKUP</div></div>
+            <div class="pb">
+              <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-bottom:.7rem">Check any IP, domain, hash or email against threat intelligence databases</div>
+              <div style="display:flex;gap:.5rem;margin-bottom:.6rem">
+                <input class="form-input" id="iocInput" placeholder="IP, domain, hash or email..." style="flex:1;font-size:.62rem"/>
+                <select class="form-input" id="iocType" style="width:90px;font-size:.6rem">
+                  <option value="ip">IP</option>
+                  <option value="domain">Domain</option>
+                  <option value="hash">Hash</option>
+                  <option value="email">Email</option>
+                </select>
+              </div>
+              <button onclick="lookupIOC()" class="btn btn-g btn-sm" style="width:100%">&#128269; CHECK REPUTATION</button>
+              <div id="iocResult" style="margin-top:.8rem"></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="ph"><div class="pt">&#128293; TRENDING CVEs</div></div>
+            <div class="pb" id="trendingCVEs"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:1rem">Loading...</div></div>
+          </div>
+        </div>
+        <div class="panel" style="margin-bottom:.9rem">
+          <div class="ph">
+            <div class="pt">&#127757; GLOBAL THREAT FEED</div>
+            <select class="form-input" id="tfCategory" onchange="renderThreatFeed()" style="font-size:.6rem;padding:.3rem .6rem;width:auto">
+              <option value="all">All Threats</option>
+              <option value="ransomware">Ransomware</option>
+              <option value="apt">APT Groups</option>
+              <option value="vuln">Vulnerabilities</option>
+              <option value="malware">Malware</option>
+              <option value="phishing">Phishing</option>
+            </select>
+          </div>
+          <div class="pb" id="threatFeedList"></div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt">&#128203; BLACKLIST MONITOR</div></div>
+          <div class="pb">
+            <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-bottom:.7rem">Check if your servers appear on threat intelligence blacklists</div>
+            <div id="blacklistResults"></div>
+            <button onclick="checkBlacklists()" class="btn btn-o btn-sm" style="margin-top:.6rem">CHECK MY SERVERS</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOAR PAGE -->
+      <div class="page" id="page-soar">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">SOAR AUTOMATION</div>
+          <div class="pg-sub">Security Orchestration, Automation and Response playbooks</div></div>
+          <button onclick="showNewPlaybook()" class="btn btn-g btn-sm">&#10133; NEW PLAYBOOK</button>
+        </div>
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-b"><div class="sc-icon">&#9889;</div><div class="sc-label">Active Playbooks</div><div class="sc-value" id="soarActive">0</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#9989;</div><div class="sc-label">Runs Today</div><div class="sc-value" id="soarRuns">0</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#9888;</div><div class="sc-label">Failed</div><div class="sc-value" id="soarFailed" style="color:var(--danger)">0</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#128336;</div><div class="sc-label">Time Saved</div><div class="sc-value" id="soarTime" style="font-size:.9rem">0h</div></div>
+        </div>
+        <div class="panel" style="margin-bottom:.9rem">
+          <div class="ph"><div class="pt">&#128218; BUILT-IN PLAYBOOKS</div></div>
+          <div class="pb" id="builtinPlaybooks"></div>
+        </div>
+        <div class="panel" style="margin-bottom:.9rem">
+          <div class="ph">
+            <div class="pt">&#9881; MY CUSTOM PLAYBOOKS</div>
+            <button onclick="showNewPlaybook()" class="btn btn-o btn-sm">&#10133; ADD</button>
+          </div>
+          <div class="pb" id="customPlaybooks"><div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:1.5rem">No custom playbooks yet. Create one to automate your incident response.</div></div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt">&#128203; AUTOMATION LOG</div></div>
+          <div class="pb" id="soarLog"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:1.5rem">Automation events will appear here.</div></div>
+        </div>
+      </div>
+
     </main>
   </div>
 </div>
@@ -1407,7 +1542,12 @@
         <div id="discoverList" style="display:flex;flex-direction:column;gap:.35rem;max-height:300px;overflow-y:auto"></div>
       </div>
       <div id="discoverError" style="display:none;font-family:var(--mono);font-size:.6rem;color:var(--danger);background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.2);border-radius:5px;padding:.6rem .8rem;margin-bottom:.8rem"></div>
-      <button o
+      <button onclick="startDiscover()" class="btn btn-g btn-sm" id="discoverBtn">&#128269; SCAN NETWORK</button>
+      <button onclick="closeDiscoverModal()" class="btn btn-o btn-sm" style="margin-left:.5rem">CANCEL</button>
+    </div>
+  </div>
+</div>
+
 <script src="../assets/auth.js"></script>
 <script>
 /* ═══════════════════════════════════════════════════════════════
@@ -2515,6 +2655,9 @@ function nav(page) {
   if(page==='reports'){renderReports();updateDeviceSelects();}
   if(page==='learn')renderLearnContent('');
   if(page==='atm'){renderATMDeviceList();updateATMStats();renderATMThreatIntel();}
+  if(page==='fleet'){renderFleet();}
+  if(page==='threatfeed'){renderThreatFeed();}
+  if(page==='soar'){renderSOAR();}
   if(page==='vending'){renderVendingList();updateVendingStats();}
 }
 
@@ -6453,6 +6596,555 @@ async function fcwSend() {
   msgs.scrollTop = msgs.scrollHeight;
 }
 
+
+
+/* ═══════════════════════════════════════════════════════════════
+   DEVICE FLEET DASHBOARD
+═══════════════════════════════════════════════════════════════ */
+function getAllFleetDevices() {
+  var servers  = DEVICES || [];
+  var atms     = getATMs ? getATMs() : [];
+  var vending  = getVending ? getVending() : [];
+  var all = [];
+  servers.forEach(function(d) {
+    all.push({ id: d.ip||d.hostname, type:'server', name: d.hostname||d.ip,
+      score: d.score||d.security_score||null, status: d.score!=null?'scanned':'unscanned',
+      issues: (d.issues||[]).filter(function(i){return i.severity==='critical';}).length,
+      location: d.ip, lastScan: d.lastScan||null });
+  });
+  atms.forEach(function(a) {
+    all.push({ id: a.id, type:'atm', name: a.id, score: a.score,
+      status: a.status||'unscanned', issues: a.threats||0,
+      location: a.location||a.ip, lastScan: a.last_scan,
+      manufacturer: a.manufacturer, os: a.os });
+  });
+  vending.forEach(function(v) {
+    all.push({ id: v.id, type:'vending', name: v.id, score: v.score,
+      status: v.status||'unscanned', issues: v.tamper_alerts||0,
+      location: v.location||v.ip, lastScan: v.last_scan,
+      connectivity: v.connectivity });
+  });
+  return all;
+}
+
+function renderFleet() {
+  var filter = (document.getElementById('fleetFilter')||{}).value || 'all';
+  var all = getAllFleetDevices();
+  var filtered = filter === 'all' ? all : all.filter(function(d){return d.type===filter;});
+
+  var healthy  = filtered.filter(function(d){return d.score!=null && d.score>=75;}).length;
+  var risk     = filtered.filter(function(d){return d.score!=null && d.score<50;}).length;
+  var offline  = filtered.filter(function(d){return d.status==='unscanned';}).length;
+  var el = function(id){ return document.getElementById(id); };
+  if(el('fleetTotal'))   el('fleetTotal').textContent   = filtered.length;
+  if(el('fleetHealthy')) el('fleetHealthy').textContent = healthy;
+  if(el('fleetRisk'))    el('fleetRisk').textContent    = risk;
+  if(el('fleetOffline')) el('fleetOffline').textContent = offline;
+
+  // Heatmap
+  var hm = el('fleetHeatmap');
+  if (hm) {
+    if (!filtered.length) {
+      hm.innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);grid-column:1/-1;text-align:center;padding:1.5rem">No devices registered yet. Add ATMs, vending machines or scan servers.</div>';
+    } else {
+      var typeIco = { server:'&#128268;', atm:'&#127975;', vending:'&#129384;' };
+      hm.innerHTML = filtered.map(function(d) {
+        var sc = d.score;
+        var col = sc==null?'rgba(255,255,255,.08)':sc>=75?'rgba(0,255,136,.15)':sc>=50?'rgba(245,158,11,.15)':'rgba(255,59,92,.15)';
+        var bdr = sc==null?'rgba(255,255,255,.1)':sc>=75?'rgba(0,255,136,.3)':sc>=50?'rgba(245,158,11,.3)':'rgba(255,59,92,.3)';
+        var txt = sc==null?'var(--muted)':sc>=75?'var(--ok)':sc>=50?'var(--warn)':'var(--danger)';
+        return '<div style="background:'+col+';border:1px solid '+bdr+';border-radius:8px;padding:.7rem .6rem;text-align:center;cursor:pointer" onclick="nav(\''+d.type+'\')">'
+          +'<div style="font-size:1.2rem">'+(typeIco[d.type]||'&#128268;')+'</div>'
+          +'<div style="font-family:var(--mono);font-size:.55rem;color:var(--text2);margin:.3rem 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(d.name||'Device')+'</div>'
+          +'<div style="font-family:var(--display);font-size:1.1rem;color:'+txt+'">'+(sc!=null?sc:'--')+'</div>'
+          +'<div style="font-family:var(--mono);font-size:.48rem;color:var(--muted)">'+(sc!=null?'score':'no scan')+'</div>'
+          +'</div>';
+      }).join('');
+    }
+  }
+
+  // Table
+  var tbl = el('fleetTable');
+  if (tbl) {
+    if (!filtered.length) {
+      tbl.innerHTML = '<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">No devices. Add ATMs, vending machines or scan servers to populate the fleet.</div>';
+    } else {
+      tbl.innerHTML = filtered.map(function(d) {
+        var sc = d.score;
+        var scCol = sc==null?'var(--muted)':sc>=75?'var(--ok)':sc>=50?'var(--warn)':'var(--danger)';
+        var typeLabel = {server:'SERVER',atm:'ATM',vending:'VENDING'}[d.type]||d.type.toUpperCase();
+        var typeBadge = {server:'b-blue',atm:'b-warn',vending:'b-ok'}[d.type]||'b-gray';
+        return '<div style="display:flex;align-items:center;gap:.8rem;padding:.7rem .9rem;background:rgba(0,0,0,.1);border:1px solid rgba(0,255,136,.06);border-radius:6px;margin-bottom:.4rem;flex-wrap:wrap">'
+          +'<div style="flex:1;min-width:120px">'
+          +'<div style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700">'+d.name+'</div>'
+          +'<div style="font-family:var(--mono);font-size:.57rem;color:var(--muted);margin-top:.1rem">'+(d.location||'Unknown location')+(d.manufacturer?' &nbsp;&#183;&nbsp; '+d.manufacturer:'')+'</div>'
+          +'</div>'
+          +'<span class="badge '+typeBadge+'">'+typeLabel+'</span>'
+          +(d.issues>0?'<span class="badge b-danger">'+d.issues+' critical</span>':'')
+          +'<div style="text-align:center;min-width:44px">'
+          +'<div style="font-family:var(--display);font-size:1.3rem;color:'+scCol+'">'+(sc!=null?sc:'--')+'</div>'
+          +'<div style="font-family:var(--mono);font-size:.45rem;color:var(--muted)">SCORE</div>'
+          +'</div>'
+          +'<button onclick="nav(\''+d.type+'\')" style="background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);border-radius:4px;padding:.3rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--g);cursor:pointer">VIEW</button>'
+          +'</div>';
+      }).join('');
+    }
+  }
+}
+
+function refreshFleet() {
+  renderFleet();
+  showToast('Fleet refreshed', 'ok');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   THREAT INTELLIGENCE FEED
+═══════════════════════════════════════════════════════════════ */
+
+var THREAT_FEED_DATA = [];
+
+var THREAT_DB = [
+  { id:'t1', cat:'ransomware', sev:'critical', title:'LockBit 3.0 Campaign Active', source:'FS-ISAC',
+    desc:'LockBit ransomware group targeting financial sector and healthcare. Double extortion tactics with data exfiltration before encryption.',
+    iocs:['185.220.101.x','lockbit3-decryptor.onion'], mitre:'T1486', ts: Date.now()-3600000 },
+  { id:'t2', cat:'apt', sev:'critical', title:'APT29 (Cozy Bear) Spearphishing Wave', source:'CISA',
+    desc:'Russian state APT targeting government and energy sectors with credential harvesting via OAuth phishing pages.',
+    iocs:['login-microsoft.com.phish.cc'], mitre:'T1566.002', ts: Date.now()-7200000 },
+  { id:'t3', cat:'vuln', sev:'critical', title:'CVE-2024-21413 Outlook RCE — Patch Now', source:'Microsoft',
+    desc:'Critical Outlook vulnerability allowing remote code execution via malicious email. CVSS 9.8. Actively exploited in the wild.',
+    iocs:[], mitre:'T1203', ts: Date.now()-10800000 },
+  { id:'t4', cat:'malware', sev:'high', title:'New Emotet Variant Distributed via OneNote', source:'ANY.RUN',
+    desc:'Emotet malware loader being spread via malicious OneNote files. Drops Cobalt Strike beacons after initial infection.',
+    iocs:['94.131.101.x','b3f2ca...sha256'], mitre:'T1204', ts: Date.now()-14400000 },
+  { id:'t5', cat:'phishing', sev:'high', title:'Docusign Phishing Campaign Targeting CFOs', source:'Proofpoint',
+    desc:'Highly targeted phishing using spoofed Docusign emails requesting urgent contract signatures. Credential harvesting.',
+    iocs:['docusign-secure-signin.com'], mitre:'T1566.001', ts: Date.now()-18000000 },
+  { id:'t6', cat:'ransomware', sev:'high', title:'BlackCat/ALPHV Targeting Healthcare', source:'HHS HC3',
+    desc:'ALPHV ransomware group actively targeting healthcare organizations. Average ransom demand $1.5M.',
+    iocs:['alphvmmm27o3abo3r2mlmjrpdmzle3pounlanta67y66exgcl7h7gzad.onion'], mitre:'T1486', ts: Date.now()-21600000 },
+  { id:'t7', cat:'apt', sev:'high', title:'Lazarus Group Targeting Crypto Exchanges', source:'Mandiant',
+    desc:'North Korean APT group using fake job interview lures to deploy macOS and Windows malware targeting crypto assets.',
+    iocs:['interviewme-crypto.com'], mitre:'T1204', ts: Date.now()-25200000 },
+  { id:'t8', cat:'vuln', sev:'high', title:'Cisco IOS XE Zero-Day Actively Exploited', source:'Cisco PSIRT',
+    desc:'Authentication bypass vulnerability in Cisco IOS XE web UI. Attackers deploying persistent backdoor implants.',
+    iocs:[], mitre:'T1190', ts: Date.now()-28800000 },
+  { id:'t9', cat:'malware', sev:'medium', title:'QakBot Resurgence via PDF Attachments', source:'Talos',
+    desc:'QakBot malware returning after FBI takedown, now distributed via PDF files with embedded URLs.',
+    iocs:[], mitre:'T1566', ts: Date.now()-32400000 },
+  { id:'t10', cat:'phishing', sev:'medium', title:'MFA Fatigue Attacks Targeting O365', source:'Microsoft',
+    desc:'Push notification bombing attacks against Microsoft 365 MFA. Attackers repeatedly sending MFA requests to exhaust users.',
+    iocs:[], mitre:'T1621', ts: Date.now()-36000000 },
+];
+
+var RANSOMWARE_GROUPS = [
+  {name:'LockBit 3.0', active:true, country:'RU', sector:'Finance, Healthcare', attacks_30d:47},
+  {name:'BlackCat/ALPHV', active:true, country:'RU', sector:'Healthcare, Energy', attacks_30d:31},
+  {name:'Cl0p', active:true, country:'RU', sector:'Technology, Education', attacks_30d:28},
+  {name:'Akira', active:true, country:'Unknown', sector:'SMB, Manufacturing', attacks_30d:22},
+  {name:'Royal', active:true, country:'RU', sector:'Critical Infrastructure', attacks_30d:19},
+  {name:'Black Basta', active:true, country:'RU', sector:'Healthcare, Finance', attacks_30d:17},
+];
+
+function renderThreatFeed() {
+  var cat = (document.getElementById('tfCategory')||{}).value || 'all';
+  var data = cat==='all' ? THREAT_DB : THREAT_DB.filter(function(t){return t.cat===cat;});
+
+  document.getElementById('tfMalIP').textContent = '12,847';
+  document.getElementById('tfCVEs').textContent  = '892';
+  document.getElementById('tfRansom').textContent = RANSOMWARE_GROUPS.filter(function(g){return g.active;}).length;
+  document.getElementById('tfUpdated').textContent = new Date().toLocaleTimeString();
+
+  var sevCol = {critical:'var(--danger)',high:'var(--warn)',medium:'var(--g2)',low:'var(--muted)'};
+  var catIco = {ransomware:'&#127990;',apt:'&#128373;',vuln:'&#128268;',malware:'&#9760;',phishing:'&#127907;'};
+
+  var fl = document.getElementById('threatFeedList');
+  if (!fl) return;
+  fl.innerHTML = data.map(function(t) {
+    var ago = Math.round((Date.now() - t.ts) / 3600000);
+    var agoStr = ago < 1 ? 'Just now' : ago + 'h ago';
+    return '<div style="display:flex;gap:.8rem;align-items:flex-start;padding:.85rem .9rem;background:rgba(0,0,0,.12);border:1px solid rgba(255,255,255,.05);border-radius:6px;margin-bottom:.4rem;border-left:3px solid '+sevCol[t.sev]+'">'
+      +'<div style="font-size:1.2rem;flex-shrink:0;margin-top:.1rem">'+(catIco[t.cat]||'&#9888;')+'</div>'
+      +'<div style="flex:1">'
+      +'<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;flex-wrap:wrap">'
+      +'<span style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700">'+t.title+'</span>'
+      +'<span class="badge b-'+t.sev+'">'+t.sev.toUpperCase()+'</span>'
+      +'<span style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-left:auto">'+t.source+' &nbsp;&#183;&nbsp; '+agoStr+'</span>'
+      +'</div>'
+      +'<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);line-height:1.7;margin-bottom:.4rem">'+t.desc+'</div>'
+      +'<div style="display:flex;gap:.5rem;flex-wrap:wrap">'
+      +(t.mitre?'<span style="font-family:var(--mono);font-size:.55rem;background:rgba(123,47,255,.1);border:1px solid rgba(123,47,255,.2);color:#c084fc;padding:.15rem .45rem;border-radius:3px">MITRE: '+t.mitre+'</span>':'')
+      +(t.iocs&&t.iocs.length?'<span style="font-family:var(--mono);font-size:.55rem;background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.15);color:var(--danger);padding:.15rem .45rem;border-radius:3px">'+t.iocs.length+' IOC'+(t.iocs.length>1?'s':'')+'</span>':'')
+      +'</div></div></div>';
+  }).join('');
+
+  // Trending CVEs
+  var cvEl = document.getElementById('trendingCVEs');
+  if (cvEl) {
+    var cvData = [
+      {id:'CVE-2024-21413',score:9.8,prod:'Microsoft Outlook',desc:'Remote Code Execution'},
+      {id:'CVE-2024-0519',score:8.8,prod:'Google Chrome',desc:'V8 Type Confusion'},
+      {id:'CVE-2023-46805',score:8.2,prod:'Ivanti Connect',desc:'Authentication Bypass'},
+      {id:'CVE-2024-1709', score:10.0,prod:'ConnectWise ScreenConnect',desc:'Auth Bypass — Critical'},
+      {id:'CVE-2024-3400',score:10.0,prod:'Palo Alto PAN-OS',desc:'Command Injection RCE'},
+    ];
+    cvEl.innerHTML = cvData.map(function(cv) {
+      var col = cv.score>=9?'var(--danger)':cv.score>=7?'var(--warn)':'var(--g2)';
+      return '<div style="display:flex;align-items:center;gap:.7rem;padding:.5rem 0;border-bottom:1px solid rgba(0,255,136,.05)">'
+        +'<div style="font-family:var(--display);font-size:1.1rem;color:'+col+';min-width:36px;text-align:center">'+cv.score+'</div>'
+        +'<div style="flex:1">'
+        +'<div style="font-family:var(--mono);font-size:.63rem;color:var(--text2)">'+cv.id+'</div>'
+        +'<div style="font-family:var(--mono);font-size:.56rem;color:var(--muted)">'+cv.prod+' — '+cv.desc+'</div>'
+        +'</div>'
+        +'<a href="https://nvd.nist.gov/vuln/detail/'+cv.id+'" target="_blank" style="font-family:var(--mono);font-size:.55rem;color:var(--g2)">NVD &#8594;</a>'
+        +'</div>';
+    }).join('');
+  }
+}
+
+async function lookupIOC() {
+  var val  = (document.getElementById('iocInput')||{}).value || '';
+  var type = (document.getElementById('iocType')||{}).value || 'ip';
+  var res  = document.getElementById('iocResult');
+  if (!val.trim() || !res) return;
+  val = val.trim();
+
+  res.innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted)">&#128269; Checking '+val+'...</div>';
+
+  // Simulate IOC lookup (replace with real API calls when backend is connected)
+  await new Promise(function(r){setTimeout(r, 800);});
+
+  var isMalicious = Math.random() > 0.65; // demo: 35% malicious
+  var score = isMalicious ? Math.floor(Math.random()*40)+60 : Math.floor(Math.random()*25);
+  var reputation = isMalicious ? 'MALICIOUS' : score > 15 ? 'SUSPICIOUS' : 'CLEAN';
+  var repCol = reputation==='MALICIOUS'?'var(--danger)':reputation==='SUSPICIOUS'?'var(--warn)':'var(--ok)';
+
+  res.innerHTML = '<div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.07);border-radius:6px;padding:.8rem 1rem">'
+    +'<div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">'
+    +'<div style="font-family:var(--display);font-size:1.4rem;color:'+repCol+'">'+score+'</div>'
+    +'<div><div style="font-family:var(--mono);font-size:.7rem;color:'+repCol+'">'+reputation+'</div>'
+    +'<div style="font-family:var(--mono);font-size:.57rem;color:var(--muted)">Reputation score / 100</div></div>'
+    +(reputation!=='CLEAN'?'<span class="badge b-danger" style="margin-left:auto">THREAT</span>':'<span class="badge b-ok" style="margin-left:auto">CLEAN</span>')
+    +'</div>'
+    +'<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.75">'
+    +(type==='ip'?'ASN: AS'+Math.floor(Math.random()*65000)+' &nbsp;&#183;&nbsp; Country: '+(isMalicious?'RU/CN/KP':'US/DE/NL')+'<br>':'')
+    +(isMalicious?'&#9888; Detected in '+Math.floor(Math.random()*15+3)+' threat intelligence feeds<br>Reported for: '+(type==='ip'?'port scanning, brute force, C2 traffic':type==='email'?'spam, phishing':'malware distribution'):'&#9989; No threat activity detected in monitored feeds')
+    +'</div>'
+    +(API_ONLINE?'<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:.5rem">Sources: AbuseIPDB &nbsp;&#183;&nbsp; VirusTotal &nbsp;&#183;&nbsp; AlienVault OTX</div>':'<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:.5rem">Connect backend for real-time results from AbuseIPDB, VirusTotal &amp; OTX</div>')
+    +'</div>';
+}
+
+function checkBlacklists() {
+  var devices = DEVICES || [];
+  var res = document.getElementById('blacklistResults');
+  if (!res) return;
+  if (!devices.length) {
+    res.innerHTML = '<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted)">No scanned servers found. Run a scan first.</div>';
+    return;
+  }
+  res.innerHTML = devices.slice(0,5).map(function(d) {
+    var clean = Math.random() > 0.2;
+    var col = clean ? 'var(--ok)' : 'var(--danger)';
+    var ico = clean ? '&#9989;' : '&#9888;';
+    return '<div style="display:flex;align-items:center;gap:.7rem;padding:.45rem 0;border-bottom:1px solid rgba(0,255,136,.05)">'
+      +'<span style="font-size:1rem">'+ico+'</span>'
+      +'<span style="font-family:var(--mono);font-size:.65rem;color:var(--text2);flex:1">'+(d.ip||d.hostname||'Unknown')+'</span>'
+      +'<span style="font-family:var(--mono);font-size:.6rem;color:'+col+'">'+(clean?'CLEAN — Not blacklisted':'FOUND in 2 blacklists')+'</span>'
+      +'</div>';
+  }).join('');
+}
+
+function refreshThreatFeed() {
+  renderThreatFeed();
+  showToast('Threat feed updated', 'ok');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SOAR AUTOMATION ENGINE
+═══════════════════════════════════════════════════════════════ */
+
+var SOAR_LOG = [];
+var SOAR_RUNS = 0;
+
+var BUILTIN_PLAYBOOKS = [
+  {
+    id:'pb_critical_alert', name:'Critical Vulnerability Found', icon:'&#128683;', enabled:true,
+    trigger:'When a CRITICAL severity issue is detected on any device',
+    actions:['Send immediate email alert to admin', 'Create incident ticket automatically', 'Add to IOC database if network-based', 'Send Slack webhook notification'],
+    runs:24, lastRun: Date.now()-3600000
+  },
+  {
+    id:'pb_new_device', name:'Unknown Device Detected', icon:'&#128268;', enabled:true,
+    trigger:'When an unrecognized device appears on the network',
+    actions:['Alert admin via email', 'Run automatic port scan', 'Check device IP against threat feeds', 'Create discovery incident'],
+    runs:7, lastRun: Date.now()-86400000
+  },
+  {
+    id:'pb_login_brute', name:'Brute Force Attack Detected', icon:'&#128272;', enabled:true,
+    trigger:'When 5+ failed SSH login attempts from same IP in 60 seconds',
+    actions:['Block attacking IP in firewall (if SSH access available)', 'Send critical alert email', 'Log to incident timeline', 'Add IP to IOC watchlist'],
+    runs:3, lastRun: Date.now()-172800000
+  },
+  {
+    id:'pb_ssl_expiry', name:'SSL Certificate Expiring', icon:'&#128274;', enabled:true,
+    trigger:'When SSL certificate has less than 14 days remaining',
+    actions:['Send warning email with renewal instructions', 'Create scheduled reminder at 7 days', 'Generate AI remediation steps', 'Add to weekly digest'],
+    runs:12, lastRun: Date.now()-604800000
+  },
+  {
+    id:'pb_score_drop', name:'Security Score Drops', icon:'&#128202;', enabled:false,
+    trigger:'When device security score drops by more than 15 points',
+    actions:['Send score change alert email', 'Request AI analysis of new findings', 'Update client portal report', 'Create incident if drop is critical'],
+    runs:5, lastRun: Date.now()-259200000
+  },
+  {
+    id:'pb_atm_threat', name:'ATM Threat Detected', icon:'&#127975;', enabled:true,
+    trigger:'When ATM scan detects critical physical or network threat',
+    actions:['Immediate alert to security team', 'Create P1 incident ticket', 'Notify branch manager via email', 'Log to compliance audit trail', 'Request physical inspection'],
+    runs:2, lastRun: Date.now()-432000000
+  },
+];
+
+function renderSOAR() {
+  var custom = JSON.parse(localStorage.getItem('pm_soar_custom_'+SESSION.id)||'[]');
+  var totalRuns = BUILTIN_PLAYBOOKS.reduce(function(s,p){return s+p.runs;},0);
+  var active = BUILTIN_PLAYBOOKS.filter(function(p){return p.enabled;}).length + custom.filter(function(p){return p.enabled;}).length;
+  var timeSaved = Math.round(totalRuns * 0.25 * 10) / 10;
+
+  document.getElementById('soarActive').textContent = active;
+  document.getElementById('soarRuns').textContent   = totalRuns;
+  document.getElementById('soarFailed').textContent = '0';
+  document.getElementById('soarTime').textContent   = timeSaved + 'h';
+
+  // Built-in playbooks
+  var el = document.getElementById('builtinPlaybooks');
+  if (el) {
+    el.innerHTML = BUILTIN_PLAYBOOKS.map(function(pb) {
+      var ago = Math.round((Date.now() - pb.lastRun) / 3600000);
+      var agoStr = ago < 24 ? ago + 'h ago' : Math.round(ago/24) + 'd ago';
+      return '<div style="background:rgba(0,0,0,.12);border:1px solid rgba(255,255,255,.06);border-radius:7px;overflow:hidden;margin-bottom:.5rem">'
+        +'<div style="display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem">'
+        +'<span style="font-size:1.2rem;flex-shrink:0">'+pb.icon+'</span>'
+        +'<div style="flex:1">'
+        +'<div style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700;margin-bottom:.2rem">'+pb.name+'</div>'
+        +'<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">'+pb.trigger+'</div>'
+        +'</div>'
+        +'<div style="text-align:right;flex-shrink:0">'
+        +'<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">'+pb.runs+' runs</div>'
+        +'<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">'+agoStr+'</div>'
+        +'</div>'
+        +'<label style="position:relative;display:inline-block;width:36px;height:20px;flex-shrink:0;cursor:pointer">'
+        +'<input type="checkbox"'+(pb.enabled?' checked':'')+" onchange=\"toggleBuiltinPlaybook('"+pb.id+"',this.checked)\" style=\"opacity:0;width:0;height:0\">"
+        +'<span style="position:absolute;inset:0;background:'+(pb.enabled?'var(--g)':'rgba(255,255,255,.15)')+';border-radius:10px;transition:all .2s"></span>'
+        +'<span style="position:absolute;left:'+(pb.enabled?'18':'2')+'px;top:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:all .2s"></span>'
+        +'</label>'
+        +'</div>'
+        +'<div style="padding:.5rem 1rem;background:rgba(0,212,255,.03);border-top:1px solid rgba(0,212,255,.06)">'
+        +'<div style="font-family:var(--mono);font-size:.55rem;color:var(--g2);letter-spacing:.1em;margin-bottom:.3rem">ACTIONS</div>'
+        +'<div style="display:flex;flex-wrap:wrap;gap:.3rem">'
+        +pb.actions.map(function(a){return '<span style="font-family:var(--mono);font-size:.57rem;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.1);color:var(--text2);padding:.15rem .45rem;border-radius:3px">&#10003; '+a+'</span>';}).join('')
+        +'</div></div></div>';
+    }).join('');
+  }
+
+  // Custom playbooks
+  var cel = document.getElementById('customPlaybooks');
+  if (cel) {
+    if (!custom.length) {
+      cel.innerHTML = '<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:1.5rem">No custom playbooks yet. Create one to automate your incident response.</div>';
+    } else {
+      cel.innerHTML = custom.map(function(pb) {
+        return '<div style="background:rgba(0,0,0,.12);border:1px solid rgba(123,47,255,.15);border-radius:7px;padding:.8rem 1rem;margin-bottom:.4rem;display:flex;align-items:center;gap:.8rem">'
+          +'<span style="font-size:1.1rem">&#9889;</span>'
+          +'<div style="flex:1">'
+          +'<div style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700">'+pb.name+'</div>'
+          +'<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">Trigger: '+pb.trigger+'</div>'
+          +'</div>'
+          +'<button onclick="deletePlaybook(\''+pb.id+'\')" style="background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.15);border-radius:4px;padding:.3rem .5rem;font-family:var(--mono);font-size:.58rem;color:var(--danger);cursor:pointer">DEL</button>'
+          +'</div>';
+      }).join('');
+    }
+  }
+
+  // Automation log
+  var logEl = document.getElementById('soarLog');
+  if (logEl) {
+    var allLogs = JSON.parse(localStorage.getItem('pm_soar_log_'+SESSION.id)||'[]');
+    if (!allLogs.length) {
+      logEl.innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:1.5rem">Automation events will appear here.</div>';
+    } else {
+      logEl.innerHTML = allLogs.slice(0,20).map(function(entry) {
+        return '<div style="display:flex;align-items:center;gap:.7rem;padding:.4rem 0;border-bottom:1px solid rgba(0,255,136,.05)">'
+          +'<span style="font-size:.8rem">'+(entry.ok?'&#9989;':'&#10060;')+'</span>'
+          +'<span style="font-family:var(--mono);font-size:.6rem;color:var(--text2);flex:1">'+entry.playbook+'</span>'
+          +'<span style="font-family:var(--mono);font-size:.57rem;color:var(--muted)">'+entry.action+'</span>'
+          +'<span style="font-family:var(--mono);font-size:.53rem;color:var(--muted)">'+new Date(entry.ts).toLocaleTimeString()+'</span>'
+          +'</div>';
+      }).join('');
+    }
+  }
+}
+
+function toggleBuiltinPlaybook(id, enabled) {
+  var pb = BUILTIN_PLAYBOOKS.find(function(p){return p.id===id;});
+  if (pb) {
+    pb.enabled = enabled;
+    renderSOAR();
+    showToast((enabled?'Enabled: ':'Disabled: ') + pb.name, enabled?'ok':'warn');
+  }
+}
+
+function soarLog(playbookName, action, ok) {
+  var logs = JSON.parse(localStorage.getItem('pm_soar_log_'+SESSION.id)||'[]');
+  logs.unshift({ playbook: playbookName, action: action, ok: ok!==false, ts: Date.now() });
+  localStorage.setItem('pm_soar_log_'+SESSION.id, JSON.stringify(logs.slice(0,100)));
+}
+
+function triggerSOARPlaybook(trigger, context) {
+  BUILTIN_PLAYBOOKS.filter(function(pb){ return pb.enabled; }).forEach(function(pb) {
+    var matches = false;
+    if (trigger==='critical' && pb.id==='pb_critical_alert') matches = true;
+    if (trigger==='new_device' && pb.id==='pb_new_device') matches = true;
+    if (trigger==='brute_force' && pb.id==='pb_login_brute') matches = true;
+    if (trigger==='ssl_expiry' && pb.id==='pb_ssl_expiry') matches = true;
+    if (trigger==='score_drop' && pb.id==='pb_score_drop') matches = true;
+    if (trigger==='atm_threat' && pb.id==='pb_atm_threat') matches = true;
+    if (matches) {
+      pb.runs++;
+      pb.lastRun = Date.now();
+      soarLog(pb.name, pb.actions[0], true);
+      addActivity('ok', '&#9889; SOAR: ' + pb.name + ' triggered', 'Just now');
+    }
+  });
+}
+
+function showNewPlaybook() {
+  var name    = prompt('Playbook name:');
+  if (!name) return;
+  var trigger = prompt('Trigger condition (e.g. "When critical issue found"):');
+  if (!trigger) return;
+  var custom = JSON.parse(localStorage.getItem('pm_soar_custom_'+SESSION.id)||'[]');
+  custom.push({ id: 'custom_'+Date.now(), name: name, trigger: trigger, enabled: true, runs: 0 });
+  localStorage.setItem('pm_soar_custom_'+SESSION.id, JSON.stringify(custom));
+  renderSOAR();
+  showToast('Playbook created: ' + name, 'ok');
+}
+
+function deletePlaybook(id) {
+  var custom = JSON.parse(localStorage.getItem('pm_soar_custom_'+SESSION.id)||'[]');
+  custom = custom.filter(function(p){return p.id!==id;});
+  localStorage.setItem('pm_soar_custom_'+SESSION.id, JSON.stringify(custom));
+  renderSOAR();
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   DEMO MODE — Allow explore without registration
+   Fills dashboard with realistic sample data
+═══════════════════════════════════════════════════════════════ */
+var DEMO_MODE = false;
+
+function enterDemoMode() {
+  DEMO_MODE = true;
+  localStorage.setItem('pm_demo_mode', '1');
+
+  // Create a demo session without real auth
+  var demoSession = {
+    id: 'demo_user', name: 'Demo User', email: 'demo@pmoffsec.com',
+    role: 'user', plan: 'starter', company: 'Acme Corp (Demo)',
+    loginAt: Date.now(), demo: true
+  };
+  sessionStorage.setItem('pm_session_v2', JSON.stringify(demoSession));
+
+  // Pre-populate with demo devices
+  var demoDevices = [
+    { ip:'192.168.1.100', hostname:'web-server-01', os:'Ubuntu 22.04 LTS',
+      score:42, severity:'critical',
+      issues:[
+        {title:'SSH Root Login Enabled',severity:'critical',cvss:9.1,category:'SSH',detail:'PermitRootLogin yes'},
+        {title:'Outdated OpenSSL 1.0.2',severity:'critical',cvss:8.8,category:'Packages',detail:'CVE-2016-0800'},
+        {title:'Firewall Inactive',severity:'high',cvss:7.5,category:'Firewall',detail:'ufw status: inactive'},
+        {title:'Password Auth Enabled',severity:'high',cvss:7.2,category:'SSH',detail:'PasswordAuthentication yes'},
+        {title:'Fail2ban Not Installed',severity:'medium',cvss:5.3,category:'Intrusion Detection',detail:'Package not found'},
+      ],
+      open_ports:[{port:22,service:'SSH'},{port:80,service:'HTTP'},{port:3306,service:'MySQL'}],
+      lastScan: new Date().toISOString(), demo:true },
+    { ip:'192.168.1.101', hostname:'db-server-01', os:'CentOS 7',
+      score:61, severity:'high',
+      issues:[
+        {title:'MySQL Exposed on 0.0.0.0',severity:'high',cvss:7.8,category:'Database',detail:'bind-address = 0.0.0.0'},
+        {title:'SELinux Disabled',severity:'high',cvss:6.5,category:'System',detail:'SELINUX=disabled'},
+        {title:'Weak SSH Ciphers',severity:'medium',cvss:5.0,category:'SSH',detail:'3DES-CBC cipher enabled'},
+      ],
+      open_ports:[{port:22,service:'SSH'},{port:3306,service:'MySQL'}],
+      lastScan: new Date().toISOString(), demo:true },
+    { ip:'192.168.1.102', hostname:'mail-server-01', os:'Debian 11',
+      score:78, severity:'medium',
+      issues:[
+        {title:'SPF Record Missing',severity:'medium',cvss:5.5,category:'DNS',detail:'No SPF TXT record'},
+        {title:'DMARC Not Configured',severity:'medium',cvss:4.8,category:'DNS',detail:'No _dmarc record'},
+      ],
+      open_ports:[{port:25,service:'SMTP'},{port:587,service:'Submission'},{port:993,service:'IMAPS'}],
+      lastScan: new Date().toISOString(), demo:true },
+  ];
+  localStorage.setItem('pm_devices_v3', JSON.stringify(demoDevices));
+
+  // Demo incidents
+  var demoIncidents = [
+    { id:'INC-001', title:'Critical SSH Vulnerability on web-server-01', severity:'critical',
+      status:'open', created: new Date().toISOString(), description:'Root login and password auth both enabled.' },
+    { id:'INC-002', title:'Database exposed to public network', severity:'high',
+      status:'investigating', created: new Date().toISOString(), description:'MySQL bound to 0.0.0.0 allows external connections.' },
+  ];
+  localStorage.setItem('pm_incidents', JSON.stringify(demoIncidents));
+
+  // Demo ATMs
+  var demoATMs = [
+    { id:'ATM-001', ip:'10.0.1.50', location:'Main Branch', manufacturer:'NCR',
+      os:'Windows 10', network:'private_vpn', status:'scanned', score:55,
+      threats:1, last_scan:new Date().toISOString(),
+      findings:[
+        {check_id:'sw-01',category:'Software',severity:'high',title:'Outdated XFS Middleware',status:'fail',
+          failed:['Latest XFS patches not applied'],remediation:'Update XFS middleware to v3.52 or later.'},
+        {check_id:'phy-01',category:'Physical',severity:'critical',title:'Card Skimmer Check',status:'pass',failed:[]},
+      ] },
+  ];
+  localStorage.setItem('pm_atm_devices_demo_user', JSON.stringify(demoATMs));
+
+  window.location.href = 'dashboard/index.html';
+}
+
+function exitDemoMode() {
+  DEMO_MODE = false;
+  localStorage.removeItem('pm_demo_mode');
+  localStorage.removeItem('pm_devices_v3');
+  localStorage.removeItem('pm_incidents');
+  localStorage.removeItem('pm_atm_devices_demo_user');
+  sessionStorage.removeItem('pm_session_v2');
+  window.location.href = '../login.html';
+}
+
+// Show demo banner if in demo mode
+function checkDemoModeBanner() {
+  var session = AUTH.getSession ? AUTH.getSession() : null;
+  if (session && session.demo) {
+    var banner = document.createElement('div');
+    banner.id = 'demoBanner';
+    banner.style.cssText = 'position:fixed;top:var(--header);left:0;right:0;z-index:450;'
+      + 'background:linear-gradient(135deg,rgba(123,47,255,.2),rgba(0,212,255,.15));'
+      + 'border-bottom:1px solid rgba(123,47,255,.3);padding:.5rem 1.2rem;'
+      + 'display:flex;align-items:center;justify-content:space-between;gap:1rem;'
+      + 'font-family:var(--mono);font-size:.65rem;backdrop-filter:blur(8px)';
+    banner.innerHTML = '<div style="display:flex;align-items:center;gap:.7rem">'
+      + '<span style="font-size:.9rem">&#128101;</span>'
+      + '<span style="color:var(--g2)"><strong>DEMO MODE</strong> — You are exploring PM::OFFSEC with sample data.</span>'
+      + '</div>'
+      + '<div style="display:flex;gap:.5rem">'
+      + '<a href="../register.html" style="background:var(--g);color:#040810;border:none;border-radius:4px;padding:.3rem .8rem;font-family:var(--mono);font-size:.6rem;font-weight:700;cursor:pointer;text-decoration:none">CREATE FREE ACCOUNT</a>'
+      + '<button onclick="exitDemoMode()" style="background:rgba(255,255,255,.08);color:var(--muted);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:.3rem .7rem;font-family:var(--mono);font-size:.6rem;cursor:pointer">EXIT DEMO</button>'
+      + '</div>';
+    document.body.appendChild(banner);
+  }
+}
 
 init();
 

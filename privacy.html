@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Privacy Policy — PM::OFFSEC</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',sans-serif;background:#040810;color:#c0dce8;line-height:1.7;font-size:15px}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid rgba(0,255,136,.08);position:sticky;top:0;background:rgba(4,8,16,.95);backdrop-filter:blur(8px);z-index:10}
+  .nav-logo{font-family:'Space Mono',monospace;font-size:.85rem;color:#00ff88;letter-spacing:.15em;text-decoration:none}
+  .nav-logo span{color:#00d4ff}
+  .nav-links{display:flex;gap:1.5rem}
+  .nav-links a{font-family:'Space Mono',monospace;font-size:.65rem;color:#6b8da8;text-decoration:none;letter-spacing:.1em;transition:color .2s}
+  .nav-links a:hover{color:#00ff88}
+  .wrap{max-width:820px;margin:0 auto;padding:3rem 1.5rem 5rem}
+  .page-title{font-family:'Space Mono',monospace;font-size:1.8rem;color:#f2f9ff;letter-spacing:.04em;margin-bottom:.5rem}
+  .page-sub{font-family:'Space Mono',monospace;font-size:.7rem;color:#2a4a62;margin-bottom:2.5rem}
+  h2{font-family:'Space Mono',monospace;font-size:.85rem;color:#00ff88;letter-spacing:.12em;margin:2rem 0 .8rem;padding-bottom:.4rem;border-bottom:1px solid rgba(0,255,136,.1)}
+  h3{font-family:'Space Mono',monospace;font-size:.72rem;color:#00d4ff;letter-spacing:.08em;margin:1.2rem 0 .5rem}
+  p{margin-bottom:.9rem;font-size:.88rem;color:#7aafc8}
+  ul{list-style:none;padding:0;margin-bottom:.9rem}
+  ul li{font-size:.86rem;color:#7aafc8;padding:.2rem 0 .2rem 1.2rem;position:relative}
+  ul li::before{content:'›';position:absolute;left:0;color:#00ff88}
+  strong{color:#c0dce8}
+  a{color:#00d4ff;text-decoration:none}
+  a:hover{text-decoration:underline}
+  .highlight{background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:6px;padding:1rem 1.2rem;margin:1rem 0}
+  .footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid rgba(0,255,136,.07);font-family:'Space Mono',monospace;font-size:.62rem;color:#2a4a62;text-align:center}
+  </style>
+</head>
+<body>
+<nav class="nav">
+  <a href="index.html" class="nav-logo">PM<span>::</span>OFFSEC</a>
+  <div class="nav-links">
+    <a href="index.html">HOME</a>
+    <a href="dashboard/index.html">DASHBOARD</a>
+    <a href="terms.html">TERMS</a>
+    <a href="mailto:contact@erprakashmijar.com">CONTACT</a>
+  </div>
+</nav>
+<div class="wrap">
+  <div class="page-title">PRIVACY POLICY</div>
+  <div class="page-sub">Last updated: January 2026 &nbsp;&#183;&nbsp; Effective: January 1, 2026</div>
+
+  <div class="highlight">
+    <strong>Summary:</strong> PM::OFFSEC collects only what is necessary to provide security scanning services. We do not sell your data. Scan results belong to you. We use industry-standard encryption for all data in transit and at rest.
+  </div>
+
+  <h2>1. WHO WE ARE</h2>
+  <p>PM::OFFSEC Security Dashboard ("we", "us", "our") is operated by Prakash Mijar, a cybersecurity professional based in India. Our platform is accessible at <a href="https://erprakashmijar.com">erprakashmijar.com</a>.</p>
+  <p>Contact: <a href="mailto:contact@erprakashmijar.com">contact@erprakashmijar.com</a></p>
+
+  <h2>2. INFORMATION WE COLLECT</h2>
+  <h3>Account Information</h3>
+  <ul>
+    <li>Name and email address (required for account creation)</li>
+    <li>Hashed password (we never store plain-text passwords)</li>
+    <li>Company name and phone number (optional)</li>
+    <li>IP address at time of registration</li>
+  </ul>
+  <h3>Scan Data</h3>
+  <ul>
+    <li>IP addresses and hostnames you choose to scan</li>
+    <li>SSH credentials you provide (used only during the scan, never stored)</li>
+    <li>Scan results, vulnerability findings and security scores</li>
+    <li>Device metadata (OS version, open ports, services)</li>
+  </ul>
+  <h3>Usage Data</h3>
+  <ul>
+    <li>Pages visited and features used (for product improvement)</li>
+    <li>Login timestamps and session data</li>
+    <li>API requests and rate limit counters</li>
+  </ul>
+  <h3>What We Do NOT Collect</h3>
+  <ul>
+    <li>Payment card numbers (handled by Stripe/Lemon Squeezy directly)</li>
+    <li>SSH private keys or credentials after scan completion</li>
+    <li>Personal health information</li>
+    <li>Location data beyond IP-based country</li>
+  </ul>
+
+  <h2>3. HOW WE USE YOUR DATA</h2>
+  <ul>
+    <li>Provide and operate the security scanning service</li>
+    <li>Send email alerts for critical vulnerability findings</li>
+    <li>Process subscription payments through our payment providers</li>
+    <li>Improve platform features and fix bugs</li>
+    <li>Comply with legal obligations</li>
+    <li>Respond to support requests</li>
+  </ul>
+  <p>We do <strong>not</strong> sell, rent or trade your personal information to any third party.</p>
+
+  <h2>4. DATA STORAGE AND SECURITY</h2>
+  <p>All data is stored on Railway-hosted PostgreSQL databases located in the United States. We implement:</p>
+  <ul>
+    <li>TLS 1.2+ encryption for all data in transit</li>
+    <li>AES-256 encryption for data at rest</li>
+    <li>bcrypt hashing for all passwords</li>
+    <li>Regular security assessments of our own infrastructure</li>
+    <li>Access controls limiting who can access production data</li>
+  </ul>
+  <p>In the event of a data breach affecting your account, we will notify you within 72 hours via the email address on your account.</p>
+
+  <h2>5. DATA RETENTION</h2>
+  <ul>
+    <li><strong>Account data:</strong> Retained while your account is active, deleted within 30 days of account closure</li>
+    <li><strong>Scan results:</strong> Retained for 90 days (Free plan), 1 year (Starter/Pro), or as long as account is active (Enterprise)</li>
+    <li><strong>Email logs:</strong> Retained for 30 days for deliverability purposes</li>
+    <li><strong>Audit logs:</strong> Retained for 1 year for legal compliance</li>
+  </ul>
+
+  <h2>6. THIRD-PARTY SERVICES</h2>
+  <p>We use the following third-party services which have their own privacy policies:</p>
+  <ul>
+    <li><strong>Stripe</strong> — Payment processing (<a href="https://stripe.com/privacy">stripe.com/privacy</a>)</li>
+    <li><strong>SendGrid</strong> — Transactional email (<a href="https://sendgrid.com/privacy">sendgrid.com/privacy</a>)</li>
+    <li><strong>Railway</strong> — Infrastructure hosting (<a href="https://railway.app/legal/privacy">railway.app/legal/privacy</a>)</li>
+    <li><strong>Anthropic Claude</strong> — AI analysis features (<a href="https://www.anthropic.com/privacy">anthropic.com/privacy</a>)</li>
+    <li><strong>Have I Been Pwned</strong> — Breach checking (anonymized k-anonymity API)</li>
+  </ul>
+
+  <h2>7. YOUR RIGHTS</h2>
+  <p>You have the right to:</p>
+  <ul>
+    <li><strong>Access</strong> — Request a copy of all data we hold about you</li>
+    <li><strong>Correction</strong> — Update inaccurate information via your profile settings</li>
+    <li><strong>Deletion</strong> — Request deletion of your account and all associated data</li>
+    <li><strong>Portability</strong> — Export your scan data as JSON at any time</li>
+    <li><strong>Opt-out</strong> — Unsubscribe from marketing emails at any time</li>
+  </ul>
+  <p>To exercise any of these rights, email <a href="mailto:contact@erprakashmijar.com">contact@erprakashmijar.com</a>. We will respond within 30 days.</p>
+
+  <h2>8. COOKIES</h2>
+  <p>PM::OFFSEC uses only essential session cookies necessary for authentication. We do not use tracking cookies, advertising cookies, or analytics cookies. No third-party tracking scripts are loaded on our platform.</p>
+
+  <h2>9. SECURITY SCANNING DATA</h2>
+  <p>By using our scanning services, you confirm that you have explicit authorization to scan the systems and networks you submit. Scan results are stored securely and are only accessible to your account. We do not share your infrastructure details with any third party.</p>
+  <div class="highlight">
+    SSH credentials you provide for remote scanning are used only during the active scan session and are <strong>never written to disk or logged</strong>. They exist in memory only and are discarded immediately after the scan completes.
+  </div>
+
+  <h2>10. CHANGES TO THIS POLICY</h2>
+  <p>We will notify registered users by email at least 14 days before any material changes to this privacy policy. Continued use of the platform after changes constitutes acceptance of the updated policy.</p>
+
+  <h2>11. CONTACT</h2>
+  <p>For privacy questions, data requests, or concerns:</p>
+  <ul>
+    <li>Email: <a href="mailto:contact@erprakashmijar.com">contact@erprakashmijar.com</a></li>
+    <li>Subject line: "Privacy Request — [your request type]"</li>
+    <li>Response time: Within 30 days</li>
+  </ul>
+
+  <div class="footer">PM::OFFSEC Security Dashboard &nbsp;&#183;&nbsp; erprakashmijar.com &nbsp;&#183;&nbsp; Privacy Policy v1.0</div>
+</div>
+</body>
+</html>
