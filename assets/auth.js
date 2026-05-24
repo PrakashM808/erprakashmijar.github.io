@@ -25,6 +25,14 @@ const AUTH = (() => {
       plan: 'starter', status: 'active',
       lastLogin: null, loginCount: 0, notes: 'Demo client account'
     },
+    {
+      id: 'user-1', name: 'Demo User',
+      email: 'user@demo.com', password: 'User@1234',
+      role: 'user', avatar: 'DU', created: '2026-01-01',
+      phone: '', company: 'Demo Business',
+      plan: 'starter', status: 'active',
+      lastLogin: null, loginCount: 0, notes: 'Demo user account'
+    },
   ];
 
   /* ── Core storage ────────────────────────────────────────── */

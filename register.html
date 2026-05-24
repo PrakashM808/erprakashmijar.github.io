@@ -367,162 +367,68 @@ var selPlan = 'free';
 var PLAN_LABELS = {
   free:         'FREE PLAN — $0/month',
   starter:      'STARTER PLAN — $19/month',
-  professional: 'PROFESSIONAL PLAN — $79/month',
+  pro:          'PROFESSIONAL PLAN — $79/month',
   enterprise:   'ENTERPRISE PLAN — $199/month'
 };
 
-function selectPlan(plan, el) {
-  selPlan = plan;
-  document.querySelectorAll('.plan-card').forEach(function(c){ c.classList.remove('sel'); });
-  if (el) { el.classList.add('sel'); }
-  else { var m = document.querySelector('.plan-card[data-plan="'+plan+'"]'); if(m) m.classList.add('sel'); }
-  var pill = document.getElementById('planPill');
-  if (pill) pill.textContent = '\u2713 ' + PLAN_LABELS[plan];
-}
-
-function mobTab(btn) {
-  document.querySelectorAll('.mpt').forEach(function(b){ b.classList.remove('on'); });
-  btn.classList.add('on');
-}
-
-function pwStr(pw) {
-  var w = document.getElementById('strWrap');
-  if (!pw) { w.style.display = 'none'; return; }
-  w.style.display = 'block';
-  var s = AUTH.passwordStrength(pw);
-  for (var i = 1; i <= 5; i++) {
-    var el = document.getElementById('s'+i);
-    if (el) el.style.background = (i <= s.score) ? s.color : 'rgba(255,255,255,.07)';
-  }
-  var lbl = document.getElementById('strLbl');
-  if (lbl) { lbl.textContent = s.label; lbl.style.color = s.color; }
-}
-
-function chkMatch() {
-  var pw = document.getElementById('pw').value;
-  var c  = document.getElementById('pw2').value;
-  var h  = document.getElementById('mhint');
-  if (!c) { h.textContent = ''; return; }
-  h.textContent = (c === pw) ? '\u2713 Passwords match' : '\u2717 Does not match';
-  h.style.color  = (c === pw) ? 'var(--ok)' : 'var(--danger)';
-}
-
-function toggleVis() {
-  var inp = document.getElementById('pw');
-  var ico = document.getElementById('eyeIco');
-  inp.type = (inp.type === 'password') ? 'text' : 'password';
-  ico.textContent = (inp.type === 'password') ? '\u{1F441}' : '\u{1F648}';
-}
-
-function showErr(msg) {
-  var e = document.getElementById('regErr');
-  e.textContent = msg; e.classList.add('show');
-  document.getElementById('regOk').classList.remove('show');
-}
-function showOk(msg) {
-  var e = document.getElementById('regOk');
-  e.textContent = msg; e.classList.add('show');
-  document.getElementById('regErr').classList.remove('show');
-}
-
-function doRegister() {
-  var fn  = document.getElementById('fn').value.trim();
-  var ln  = document.getElementById('ln').value.trim();
-  var em  = document.getElementById('em').value.trim();
-  var pw  = document.getElementById('pw').value;
-  var pw2 = document.getElementById('pw2').value;
-  var co  = document.getElementById('co').value.trim();
-  var ph  = document.getElementById('ph').value.trim();
-  var t1  = document.getElementById('t1').checked;
-  var t2  = document.getElementById('t2').checked;
-
-  if (!fn)  { showErr('Please enter your first name.'); return; }
-  if (!em || !em.includes('@')) { showErr('Please enter a valid email address.'); return; }
-  if (!pw)  { showErr('Please enter a password.'); return; }
-  if (pw !== pw2) { showErr('Passwords do not match.'); return; }
-  if (!t1) { showErr('You must agree to the Security Engagement Agreement.'); return; }
-  if (!t2) { showErr('Please acknowledge the legal requirement.'); return; }
-
-  var btn = document.getElementById('regBtn');
-  var txt = document.getElementById('regBtnTxt');
-  btn.disabled = true;
-  txt.innerHTML = '<span class="spin"></span>CREATING ACCOUNT...';
-
-  setTimeout(function() {
-    var fullName = (fn + ' ' + ln).trim();
-    var result = AUTH.register(fullName, em, pw);
-
-    if (!result.ok) {
-      showErr(result.error);
-      btn.disabled = false;
-      txt.textContent = 'CREATE ACCOUNT \u2192';
-      return;
-    }
-
-    // Save plan + extra fields to user record
-    var users = AUTH.getUsers();
-    var idx = users.findIndex(function(u){ return u.email === em.toLowerCase(); });
-    if (idx >= 0) {
-      users[idx].company = co;
-      users[idx].phone   = ph;
-      users[idx].plan    = selPlan;
-      AUTH.saveUsers(users);
-      // Update session too
-      var session = AUTH.getSession();
-      if (session) {
-        session.plan = selPlan; session.company = co; session.phone = ph;
-        sessionStorage.setItem('pm_session_v2', JSON.stringify(session));
-      }
-    }
-
-    showOk('Account created! Redirecting to dashboard...');
-    setTimeout(function(){ window.location.href = 'dashboard/index.html'; }, 1200);
-  }, 600);
-}
-
-document.addEventListener('keydown', function(e) { if (e.key === 'Enter') doRegister(); });
-</script>
-
-<script>
-/* ── PWA Service Worker Registration ── */
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/sw.js').then(function(reg) {
-      console.log('[PWA] Service worker registered:', reg.scope);
-      // Check for updates every 60 seconds
-      setInterval(function() { reg.update(); }, 60000);
-    }).catch(function(err) {
-      console.log('[PWA] Registration failed:', err);
-    });
-  });
-}
-
-
-/* ═══════════════════════════════════════════════════════════════
-   GOOGLE OAUTH + GITHUB OAUTH + PHONE OTP VERIFICATION
-═══════════════════════════════════════════════════════════════ */
-
-/* ── Phone OTP ─────────────────────────────────────────────── */
-var _phoneOtp     = null;   // generated OTP
+// Phone OTP vars
+var _phoneOtp      = null;
 var _phoneVerified = false;
-var _otpTimer     = null;
-var _otpExpiry    = null;
+var _otpTimer      = null;
+var _otpExpiry     = null;
+
+/* ── Plan selection ── */
+function selectPlan(p, el) {
+  selPlan = p;
+  document.querySelectorAll('.plan-card').forEach(function(c){ c.classList.remove('selected'); });
+  if (el) el.classList.add('selected');
+  var badge = document.getElementById('selectedPlanBadge');
+  if (badge) badge.textContent = PLAN_LABELS[p] || p;
+}
+
+function mobTab(el) {
+  document.querySelectorAll('.mpt').forEach(function(b){ b.classList.remove('on'); });
+  el.classList.add('on');
+}
+
+/* ── Error / success helpers ── */
+function showErr(msg) {
+  var el = document.getElementById('regErr');
+  if (!el) { alert(msg); return; }
+  el.textContent = msg;
+  el.style.display = 'block';
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  setTimeout(function(){ el.style.display = 'none'; }, 6000);
+}
+
+function showOk(msg) {
+  var el = document.getElementById('regOk');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'regOk';
+    el.className = 'alert alert-ok';
+    var err = document.getElementById('regErr');
+    if (err) err.parentNode.insertBefore(el, err.nextSibling);
+  }
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+/* ── Phone OTP ── */
+function updatePhoneFlag() { /* flags in select options */ }
 
 function onPhoneInput() {
-  var ph = document.getElementById('ph');
+  var ph  = document.getElementById('ph');
   var btn = document.getElementById('sendOtpBtn');
   if (!ph || !btn) return;
   var val = ph.value.trim().replace(/[\s\-\(\)]/g,'');
   var enabled = val.length >= 7;
   btn.disabled = !enabled;
-  btn.style.opacity = enabled ? '1' : '.4';
-  btn.style.cursor  = enabled ? 'pointer' : 'not-allowed';
+  btn.style.opacity = enabled ? '1' : '0.4';
 }
 
-function updatePhoneFlag() { /* no-op — flags inline in options */ }
-
 function getFullPhone() {
-  var code = (document.getElementById('countryCode')||{}).value || '+91';
+  var code = (document.getElementById('countryCode')||{}).value || '+1';
   var num  = ((document.getElementById('ph')||{}).value || '').trim().replace(/[\s\-\(\)]/g,'');
   if (num.startsWith('0')) num = num.slice(1);
   return code + num;
@@ -530,86 +436,64 @@ function getFullPhone() {
 
 function sendPhoneOTP() {
   var phone = getFullPhone();
-  if (!phone || phone.length < 10) {
-    showErr('Please enter a valid phone number.'); return;
-  }
-
-  // Generate 6-digit OTP
-  _phoneOtp = String(Math.floor(100000 + Math.random() * 900000));
-  _otpExpiry = Date.now() + 5 * 60 * 1000; // 5 minutes
+  if (phone.length < 10) { showErr('Please enter a valid phone number.'); return; }
+  _phoneOtp    = String(Math.floor(100000 + Math.random() * 900000));
+  _otpExpiry   = Date.now() + 5 * 60 * 1000;
   _phoneVerified = false;
 
-  // Show OTP section
   document.getElementById('otpSection').style.display = 'block';
   document.getElementById('sentToNum').textContent = phone;
   document.getElementById('sendOtpBtn').textContent = 'RESENT';
-  document.getElementById('resendBtn').style.display = 'none';
 
-  // If backend is configured, send real SMS via Twilio
-  // For now: show OTP in console + alert for demo
-  console.log('[PhoneOTP] Code for ' + phone + ': ' + _phoneOtp);
-
-  // In production: POST to /api/phone/send-otp
-  // fetch(apiUrl + '/api/phone/send-otp', { method:'POST',
-  //   body: JSON.stringify({phone: phone}), headers:{'Content-Type':'application/json'} })
-
-  // Demo: show code in a subtle hint (remove in production)
-  var hint = document.getElementById('otpHint');
-  if (!hint) {
-    hint = document.createElement('div');
-    hint.id = 'otpHint';
-    hint.style.cssText = 'font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:.3rem;opacity:.6';
-    document.getElementById('otpSection').appendChild(hint);
-  }
-  hint.textContent = 'Demo mode: code is ' + _phoneOtp;
+  // Demo hint — remove in production with real Twilio
+  var hint = document.getElementById('otpHint') || document.createElement('div');
+  hint.id = 'otpHint';
+  hint.style.cssText = 'font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:.3rem;opacity:.7';
+  hint.textContent = 'Demo: your code is ' + _phoneOtp;
+  document.getElementById('otpSection').appendChild(hint);
 
   startOTPTimer();
-  document.getElementById('op0').focus();
+  setTimeout(function(){ var b=document.getElementById('op0'); if(b) b.focus(); }, 100);
 }
 
 function startOTPTimer() {
   clearInterval(_otpTimer);
-  var remaining = 300; // 5 minutes
-  var timerEl = document.getElementById('otpTimer');
-  var resendBtn = document.getElementById('resendBtn');
-
+  var remaining = 300;
   _otpTimer = setInterval(function() {
     remaining--;
-    if (timerEl) {
-      var m = Math.floor(remaining / 60);
-      var s = remaining % 60;
-      timerEl.textContent = 'Code expires in ' + m + ':' + (s < 10 ? '0' : '') + s;
+    var t = document.getElementById('otpTimer');
+    if (t) {
+      var m = Math.floor(remaining/60), s = remaining%60;
+      t.textContent = 'Expires in ' + m + ':' + (s<10?'0':'') + s;
     }
     if (remaining <= 0) {
       clearInterval(_otpTimer);
-      if (timerEl) timerEl.textContent = 'Code expired. Request a new one.';
-      if (resendBtn) resendBtn.style.display = 'inline-block';
+      if (t) t.textContent = 'Code expired. Request a new one.';
+      var rb = document.getElementById('resendBtn');
+      if (rb) rb.style.display = 'inline-block';
     }
-    if (remaining === 120 && resendBtn) {
-      resendBtn.style.display = 'inline-block';
+    if (remaining === 120) {
+      var rb = document.getElementById('resendBtn');
+      if (rb) rb.style.display = 'inline-block';
     }
   }, 1000);
 }
 
-function resendOTP() {
-  clearInterval(_otpTimer);
-  sendPhoneOTP();
-}
+function resendOTP() { sendPhoneOTP(); }
 
 function otpNav(el, idx) {
   el.value = el.value.replace(/[^0-9]/g,'').slice(-1);
   if (el.value && idx < 5) {
-    var next = document.getElementById('op' + (idx + 1));
+    var next = document.getElementById('op' + (idx+1));
     if (next) next.focus();
   }
   if (!el.value && idx > 0) {
-    var prev = document.getElementById('op' + (idx - 1));
+    var prev = document.getElementById('op' + (idx-1));
     if (prev) prev.focus();
   }
-  // Auto-verify when all 6 digits entered
   var code = '';
   for (var i = 0; i < 6; i++) {
-    var box = document.getElementById('op' + i);
+    var box = document.getElementById('op'+i);
     if (box) code += box.value;
   }
   if (code.length === 6) setTimeout(verifyPhoneOTP, 100);
@@ -618,230 +502,162 @@ function otpNav(el, idx) {
 function verifyPhoneOTP() {
   var code = '';
   for (var i = 0; i < 6; i++) {
-    var box = document.getElementById('op' + i);
+    var box = document.getElementById('op'+i);
     if (box) code += box.value;
   }
-  if (code.length !== 6) { showErr('Please enter all 6 digits.'); return; }
-
-  if (!_phoneOtp) { showErr('Please request a code first.'); return; }
-  if (Date.now() > _otpExpiry) {
-    showErr('Code has expired. Please request a new one.');
-    document.getElementById('resendBtn').style.display = 'inline-block';
-    return;
-  }
+  if (code.length !== 6) { showErr('Enter all 6 digits.'); return; }
+  if (!_phoneOtp) { showErr('Request a code first.'); return; }
+  if (Date.now() > _otpExpiry) { showErr('Code expired. Request a new one.'); return; }
   if (code !== _phoneOtp) {
-    showErr('Incorrect code. Please try again.');
-    // Shake animation
-    var boxes = document.querySelectorAll('#op0,#op1,#op2,#op3,#op4,#op5');
-    boxes.forEach(function(b) {
-      b.style.borderColor = 'var(--danger)';
-      setTimeout(function(){ b.style.borderColor = ''; }, 1500);
-    });
+    showErr('Incorrect code. Try again.');
+    for (var j=0;j<6;j++){
+      var b=document.getElementById('op'+j);
+      if(b){b.style.borderColor='var(--danger)';setTimeout(function(x){return function(){x.style.borderColor='';};}(b),1500);}
+    }
     return;
   }
-
-  // Verified!
   _phoneVerified = true;
   clearInterval(_otpTimer);
-  document.getElementById('phoneVerified').style.display = 'block';
-  document.getElementById('otpTimer').style.display = 'none';
-  document.getElementById('verifyOtpBtn').style.display = 'none';
-  document.getElementById('phoneVerifyBadge').innerHTML =
-    '<span style="color:var(--ok)">&#9989; VERIFIED</span>';
-
-  // Green borders on OTP boxes
-  for (var j = 0; j < 6; j++) {
-    var box2 = document.getElementById('op' + j);
-    if (box2) box2.style.borderColor = 'var(--ok)';
-  }
-
-  // Remove demo hint
+  var pv = document.getElementById('phoneVerified');
+  if (pv) pv.style.display = 'block';
+  var timer = document.getElementById('otpTimer');
+  if (timer) timer.style.display = 'none';
+  var vb = document.getElementById('verifyOtpBtn');
+  if (vb) vb.style.display = 'none';
+  var badge = document.getElementById('phoneVerifyBadge');
+  if (badge) badge.innerHTML = '<span style="color:var(--ok)">&#9989; VERIFIED</span>';
   var hint = document.getElementById('otpHint');
   if (hint) hint.remove();
 }
 
-/* ── Google OAuth ──────────────────────────────────────────── */
+/* ── Google OAuth ── */
 function signInWithGoogle() {
-  // Google One Tap / OAuth flow
-  // In production: configure with your Google Client ID from console.cloud.google.com
-  var GOOGLE_CLIENT_ID = ''; // Replace with your actual client ID
-
-  if (!GOOGLE_CLIENT_ID) {
-    // Show setup instructions
-    showGoogleSetupModal();
-    return;
-  }
-
-  // Use Google Identity Services
-  if (typeof google !== 'undefined' && google.accounts) {
-    google.accounts.id.initialize({
-      client_id: GOOGLE_CLIENT_ID,
-      callback: handleGoogleResponse,
-      auto_select: false,
-    });
+  var GOOGLE_CLIENT_ID = '';
+  if (!GOOGLE_CLIENT_ID) { showGoogleSetup(); return; }
+  if (typeof google !== 'undefined') {
+    google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleResponse });
     google.accounts.id.prompt();
   }
 }
 
 function handleGoogleResponse(response) {
-  // Decode the JWT credential
-  var credential = response.credential;
-  var parts = credential.split('.');
-  var payload = JSON.parse(atob(parts[1]));
-
-  var email = payload.email;
-  var name  = payload.name || '';
-  var googleId = payload.sub;
-
-  if (!email) { showErr('Could not get email from Google.'); return; }
-
-  // Check if account already exists
-  var existing = AUTH.getUserByEmail ? AUTH.getUserByEmail(email) : null;
-
-  if (existing) {
-    // Log them in
-    var loginResult = AUTH.loginWithOAuth(email, 'google', googleId);
-    if (loginResult.ok) {
-      window.location.href = 'dashboard/index.html';
-    } else {
-      showErr(loginResult.error || 'Login failed.');
-    }
-    return;
-  }
-
-  // Auto-register with Google data
-  var nameParts = name.split(' ');
-  var firstName = nameParts[0] || '';
-  var lastName  = nameParts.slice(1).join(' ') || '';
-
-  // Pre-fill form
-  var fn = document.getElementById('fn');
-  var ln = document.getElementById('ln');
-  var em = document.getElementById('em');
-  if (fn) fn.value = firstName;
-  if (ln) ln.value = lastName;
-  if (em) { em.value = email; em.readOnly = true; }
-
-  // Mark as Google account
-  localStorage.setItem('pm_oauth_pending', JSON.stringify({
-    provider: 'google', email: email, name: name, id: googleId
-  }));
-
-  showSuccess('Google account connected! Complete your registration below.');
-  document.getElementById('pw').value = 'GoogleAuth_' + googleId.slice(0,8);
-  document.getElementById('pw2').value = 'GoogleAuth_' + googleId.slice(0,8);
-  document.getElementById('pw').parentElement.style.display = 'none';
-  document.getElementById('pw2').parentElement.style.display = 'none';
+  try {
+    var parts = response.credential.split('.');
+    var payload = JSON.parse(atob(parts[1]));
+    var email = payload.email;
+    var name  = payload.name || '';
+    if (!email) { showErr('Could not get email from Google.'); return; }
+    var fn = document.getElementById('fn');
+    var em = document.getElementById('em');
+    var nameParts = name.split(' ');
+    if (fn) fn.value = nameParts[0] || '';
+    var ln = document.getElementById('ln');
+    if (ln) ln.value = nameParts.slice(1).join(' ') || '';
+    if (em) { em.value = email; em.readOnly = true; }
+    showOk('Google account connected! Complete registration below.');
+    var pw = document.getElementById('pw');
+    var pw2 = document.getElementById('pw2');
+    if (pw)  { pw.value  = 'GoogleAuth_' + payload.sub.slice(0,8) + 'A1'; }
+    if (pw2) { pw2.value = pw.value; }
+  } catch(e) { showErr('Google sign-in failed. Please register with email.'); }
 }
 
-function showGoogleSetupModal() {
-  var modal = document.createElement('div');
-  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:3000;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px)';
-  modal.innerHTML = '<div style="background:rgba(6,13,26,.98);border:1px solid rgba(0,255,136,.18);border-radius:12px;max-width:480px;width:100%;padding:2rem">'
-    + '<div style="font-family:var(--mono);font-size:.7rem;color:var(--g2);letter-spacing:.12em;margin-bottom:1rem">&#128274; GOOGLE OAUTH SETUP</div>'
-    + '<div style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85;margin-bottom:1.2rem">'
-    + 'To enable Google Sign-In, you need to:<br><br>'
-    + '<strong style="color:var(--g)">1.</strong> Go to <a href="https://console.cloud.google.com" target="_blank" style="color:var(--g2)">console.cloud.google.com</a><br>'
-    + '<strong style="color:var(--g)">2.</strong> Create a project or select existing<br>'
-    + '<strong style="color:var(--g)">3.</strong> APIs &amp; Services → Credentials → OAuth 2.0 Client<br>'
-    + '<strong style="color:var(--g)">4.</strong> Add <code style="background:rgba(0,255,136,.08);padding:.1rem .4rem;border-radius:3px">https://erprakashmijar.com</code> as authorized origin<br>'
-    + '<strong style="color:var(--g)">5.</strong> Copy your Client ID and paste it in <code style="background:rgba(0,255,136,.08);padding:.1rem .4rem;border-radius:3px">register.html</code> → GOOGLE_CLIENT_ID variable<br><br>'
-    + '<strong style="color:var(--warn)">Free tier:</strong> 100M monthly active users. No credit card needed.'
-    + '</div>'
-    + '<div style="display:flex;gap:.6rem">'
-    + '<a href="https://console.cloud.google.com" target="_blank" style="flex:1;text-align:center;background:var(--g);color:#040810;border:none;border-radius:5px;padding:.65rem;font-family:var(--mono);font-size:.65rem;font-weight:700;cursor:pointer;text-decoration:none">OPEN GOOGLE CONSOLE &#8594;</a>'
-    + '<button onclick="this.parentElement.parentElement.parentElement.remove()" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:5px;padding:.65rem .9rem;font-family:var(--mono);font-size:.65rem;color:var(--muted);cursor:pointer">CLOSE</button>'
-    + '</div></div>';
-  document.body.appendChild(modal);
-  modal.onclick = function(e){ if(e.target===modal) modal.remove(); };
+function showGoogleSetup() {
+  alert('To enable Google Sign-In:\n\n1. Go to console.cloud.google.com\n2. Create OAuth 2.0 credentials\n3. Add your domain as authorized origin\n4. Paste Client ID in register.html → GOOGLE_CLIENT_ID variable\n\nFor now, please register with email below.');
 }
 
-/* ── GitHub OAuth ──────────────────────────────────────────── */
 function signInWithGitHub() {
-  // GitHub OAuth requires a backend redirect
-  // Replace with your actual GitHub App Client ID
-  var GITHUB_CLIENT_ID = ''; // Get from github.com/settings/applications/new
-
+  var GITHUB_CLIENT_ID = '';
   if (!GITHUB_CLIENT_ID) {
-    showGitHubSetupModal();
+    alert('GitHub OAuth not configured.\n\nTo enable:\n1. github.com/settings/applications/new\n2. Set callback URL to your Railway backend\n3. Paste Client ID in register.html');
     return;
   }
-
   var state = Math.random().toString(36).slice(2);
   localStorage.setItem('gh_oauth_state', state);
-  var params = new URLSearchParams({
-    client_id: GITHUB_CLIENT_ID,
-    redirect_uri: window.location.origin + '/auth/github/callback',
-    scope: 'user:email',
-    state: state,
-  });
-  window.location.href = 'https://github.com/login/oauth/authorize?' + params;
+  window.location.href = 'https://github.com/login/oauth/authorize?client_id=' + GITHUB_CLIENT_ID + '&scope=user:email&state=' + state;
 }
 
-function showGitHubSetupModal() {
-  var modal = document.createElement('div');
-  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:3000;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px)';
-  modal.innerHTML = '<div style="background:rgba(6,13,26,.98);border:1px solid rgba(0,255,136,.18);border-radius:12px;max-width:480px;width:100%;padding:2rem">'
-    + '<div style="font-family:var(--mono);font-size:.7rem;color:var(--g2);letter-spacing:.12em;margin-bottom:1rem">&#128025; GITHUB OAUTH SETUP</div>'
-    + '<div style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85;margin-bottom:1.2rem">'
-    + 'To enable GitHub Sign-In, you need to:<br><br>'
-    + '<strong style="color:var(--g)">1.</strong> Go to <a href="https://github.com/settings/applications/new" target="_blank" style="color:var(--g2)">github.com/settings/applications/new</a><br>'
-    + '<strong style="color:var(--g)">2.</strong> Set Homepage URL: <code style="background:rgba(0,255,136,.08);padding:.1rem .4rem;border-radius:3px">https://erprakashmijar.com</code><br>'
-    + '<strong style="color:var(--g)">3.</strong> Set Callback URL: <code style="background:rgba(0,255,136,.08);padding:.1rem .4rem;border-radius:3px">https://erprakashmijar.com/auth/github/callback</code><br>'
-    + '<strong style="color:var(--g)">4.</strong> Copy Client ID + Secret to Railway environment variables<br>'
-    + '<strong style="color:var(--g)">5.</strong> Paste Client ID into <code style="background:rgba(0,255,136,.08);padding:.1rem .4rem;border-radius:3px">GITHUB_CLIENT_ID</code> in register.html'
-    + '</div>'
-    + '<div style="display:flex;gap:.6rem">'
-    + '<a href="https://github.com/settings/applications/new" target="_blank" style="flex:1;text-align:center;background:#24292f;color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:5px;padding:.65rem;font-family:var(--mono);font-size:.65rem;font-weight:700;cursor:pointer;text-decoration:none">OPEN GITHUB SETTINGS &#8594;</a>'
-    + '<button onclick="this.parentElement.parentElement.parentElement.remove()" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:5px;padding:.65rem .9rem;font-family:var(--mono);font-size:.65rem;color:var(--muted);cursor:pointer">CLOSE</button>'
-    + '</div></div>';
-  document.body.appendChild(modal);
-  modal.onclick = function(e){ if(e.target===modal) modal.remove(); };
-}
-
-/* ── Update doRegister to include phone verification ────────── */
-var _origDoRegister = typeof doRegister === 'function' ? doRegister : null;
-
+/* ══════════════════════════════════════════════════
+   MAIN REGISTER FUNCTION — single clean version
+══════════════════════════════════════════════════ */
 function doRegister() {
-  // Check phone: if phone was entered but not verified, warn
-  var phVal = (document.getElementById('ph')||{}).value||'';
-  if (phVal.trim() && !_phoneVerified) {
-    var proceed = confirm('Your phone number has not been verified. Verify it for extra account security?\n\nClick OK to verify, Cancel to continue without phone verification.');
-    if (!proceed) {
-      // Proceed without phone verification
-      if (_origDoRegister) _origDoRegister();
-      else callOrigRegister();
+  // Get all fields
+  var fn  = (document.getElementById('fn')||{value:''}).value.trim();
+  var ln  = (document.getElementById('ln')||{value:''}).value.trim();
+  var em  = (document.getElementById('em')||{value:''}).value.trim();
+  var pw  = (document.getElementById('pw')||{value:''}).value;
+  var pw2 = (document.getElementById('pw2')||{value:''}).value;
+  var co  = (document.getElementById('co')||{value:''}).value.trim();
+  var ph  = (document.getElementById('ph')||{value:''}).value.trim();
+  var t1  = (document.getElementById('t1')||{checked:false}).checked;
+  var t2  = (document.getElementById('t2')||{checked:false}).checked;
+
+  // Validate
+  if (!fn)                          { showErr('Please enter your first name.'); return; }
+  if (!em || !em.includes('@'))     { showErr('Please enter a valid email address.'); return; }
+  if (!pw)                          { showErr('Please enter a password.'); return; }
+  if (pw.length < 8)                { showErr('Password must be at least 8 characters.'); return; }
+  if (!/[A-Z]/.test(pw))           { showErr('Password needs at least one uppercase letter (e.g. Password1).'); return; }
+  if (!/[0-9]/.test(pw))           { showErr('Password needs at least one number (e.g. Password1).'); return; }
+  if (pw !== pw2)                   { showErr('Passwords do not match.'); return; }
+  if (!t1)                          { showErr('Please check the Security Engagement Agreement checkbox.'); return; }
+  if (!t2)                          { showErr('Please check the legal acknowledgement checkbox.'); return; }
+
+  // Phone check — if entered but not verified, just warn and continue
+  if (ph && !_phoneVerified) {
+    var go = confirm('Phone number not verified yet.\nContinue without phone verification?\n\n(You can verify later in Settings)');
+    if (!go) return;
+  }
+
+  var btn = document.getElementById('regBtn');
+  var txt = document.getElementById('regBtnTxt');
+  if (btn) btn.disabled = true;
+  if (txt) txt.textContent = 'CREATING ACCOUNT...';
+
+  setTimeout(function() {
+    var fullName = (fn + ' ' + ln).trim();
+    var result = AUTH.register(fullName, em, pw);
+
+    if (!result.ok) {
+      showErr(result.error || 'Registration failed. Please try again.');
+      if (btn) btn.disabled = false;
+      if (txt) txt.textContent = 'CREATE ACCOUNT →';
       return;
     }
-    // Focus the send OTP button
-    var sendBtn = document.getElementById('sendOtpBtn');
-    if (sendBtn && !sendBtn.disabled) sendPhoneOTP();
-    else document.getElementById('ph').focus();
-    return;
-  }
-  if (_origDoRegister) _origDoRegister();
-  else callOrigRegister();
+
+    // Save extra fields to user record
+    var users = AUTH.getUsers();
+    var idx = users.findIndex(function(u){ return u.email === em.toLowerCase(); });
+    if (idx >= 0) {
+      users[idx].company = co;
+      users[idx].phone   = ph;
+      users[idx].plan    = selPlan;
+      AUTH.saveUsers(users);
+    }
+
+    // Update session with plan info
+    var session = AUTH.getSession();
+    if (session) {
+      session.plan    = selPlan;
+      session.company = co;
+      session.phone   = ph;
+      sessionStorage.setItem('pm_session_v2', JSON.stringify(session));
+    }
+
+    showOk('Account created successfully! Redirecting to dashboard...');
+    setTimeout(function(){ window.location.href = 'dashboard/index.html'; }, 1000);
+  }, 400);
 }
 
-function callOrigRegister() {
-  // Fallback if original doRegister is not captured
-  // This shouldn't happen but provides safety
-  window.location.href = 'dashboard/index.html';
-}
+// Enter key support
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') doRegister();
+});
 
-function showSuccess(msg) {
-  var ok = document.getElementById('regOk');
-  if (!ok) {
-    ok = document.createElement('div');
-    ok.id = 'regOk';
-    ok.style.cssText = 'font-family:var(--mono);font-size:.65rem;padding:.65rem .9rem;border-radius:6px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);color:var(--ok);margin-bottom:.8rem;display:block';
-    var errEl = document.getElementById('regErr');
-    if (errEl) errEl.parentNode.insertBefore(ok, errEl.nextSibling);
-  }
-  ok.textContent = msg;
-  ok.style.display = 'block';
+/* ── PWA ── */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(function(){});
 }
-
 </script>
 </body>
 </html>

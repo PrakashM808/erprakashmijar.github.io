@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Reviews — PM::OFFSEC</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#040810;--bg2:#080f1e;--bg3:#0d1629;
+    --g:#00ff88;--g2:#00d4ff;--g3:#7b2fff;
+    --warn:#f5a623;--danger:#ff4d6a;--ok:#00ff88;
+    --white:#f0f6ff;--text:#8ab0cc;--muted:#2a4a62;
+    --border:rgba(0,255,136,.08);
+    --font:'Inter',sans-serif;--mono:'Space Mono',monospace;
+    --r:12px;--r-sm:8px;
+  }
+  body{font-family:var(--font);background:var(--bg);color:var(--white);min-height:100vh}
+  a{color:var(--g2);text-decoration:none}
+  button{cursor:pointer;font-family:var(--font)}
+
+  /* Grid bg */
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,136,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,.02) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+
+  /* Nav */
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:.9rem 2rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(4,8,16,.95);backdrop-filter:blur(8px);z-index:100}
+  .nav-logo{font-family:var(--mono);font-size:.85rem;color:var(--g);letter-spacing:.15em}
+  .nav-logo span{color:var(--g2)}
+  .nav-links{display:flex;gap:1.5rem;align-items:center}
+  .nav-links a{font-family:var(--mono);font-size:.63rem;color:var(--muted);letter-spacing:.1em;transition:color .2s}
+  .nav-links a:hover{color:var(--g)}
+  .nav-user{font-family:var(--mono);font-size:.63rem;color:var(--text)}
+
+  /* Layout */
+  .page{max-width:900px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+  /* Hero */
+  .hero{text-align:center;margin-bottom:3rem}
+  .hero-tag{font-family:var(--mono);font-size:.62rem;color:var(--g);letter-spacing:.2em;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
+  .hero-tag::before,.hero-tag::after{content:'';width:30px;height:1px;background:rgba(0,255,136,.3)}
+  .hero-title{font-size:2.2rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.6rem}
+  .hero-title em{font-style:normal;background:linear-gradient(135deg,var(--g),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .hero-sub{font-size:.9rem;color:var(--text);max-width:500px;margin:0 auto}
+
+  /* Stats */
+  .stats{display:flex;gap:2rem;justify-content:center;margin-bottom:2.5rem;flex-wrap:wrap}
+  .stat{text-align:center}
+  .stat-num{font-family:var(--mono);font-size:1.8rem;color:var(--g);font-weight:700;line-height:1}
+  .stat-lbl{font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:.1em;margin-top:.2rem}
+
+  /* Rating breakdown */
+  .rating-bar-row{display:flex;align-items:center;gap:.7rem;margin-bottom:.35rem}
+  .rating-bar-lbl{font-family:var(--mono);font-size:.6rem;color:var(--muted);width:40px;text-align:right}
+  .rating-bar-track{flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+  .rating-bar-fill{height:100%;background:linear-gradient(90deg,var(--warn),var(--g));border-radius:4px;transition:width .8s ease}
+  .rating-bar-cnt{font-family:var(--mono);font-size:.58rem;color:var(--muted);width:20px}
+
+  /* Stars */
+  .stars{display:flex;gap:2px;font-size:1rem}
+  .star{color:var(--warn)}
+  .star.empty{color:rgba(255,255,255,.1)}
+
+  /* Write review card */
+  .write-card{background:linear-gradient(135deg,rgba(0,255,136,.04),rgba(0,212,255,.02));border:1px solid rgba(0,255,136,.12);border-radius:var(--r);padding:1.8rem;margin-bottom:2rem}
+  .write-title{font-family:var(--mono);font-size:.72rem;color:var(--g);letter-spacing:.15em;margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem}
+  .write-title::after{content:'';flex:1;height:1px;background:rgba(0,255,136,.1)}
+  .star-picker{display:flex;gap:.3rem;margin-bottom:.9rem;cursor:pointer}
+  .star-pick{font-size:1.6rem;color:rgba(255,255,255,.15);transition:all .15s}
+  .star-pick.active,.star-pick:hover{color:var(--warn)}
+  .form-lbl{font-family:var(--mono);font-size:.62rem;color:var(--muted);letter-spacing:.1em;margin-bottom:.35rem;display:block}
+  .form-inp{width:100%;padding:.6rem .85rem;background:rgba(0,0,0,.3);border:1.5px solid rgba(0,255,136,.1);border-radius:var(--r-sm);font-family:var(--font);font-size:.85rem;color:var(--white);outline:none;transition:border-color .2s;resize:vertical}
+  .form-inp:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(0,255,136,.08)}
+  .form-inp::placeholder{color:var(--muted)}
+  .char-count{font-family:var(--mono);font-size:.55rem;color:var(--muted);text-align:right;margin-top:.25rem}
+  .submit-btn{background:linear-gradient(135deg,var(--g),#00d4ff);color:#040810;border:none;border-radius:var(--r-sm);padding:.65rem 1.4rem;font-family:var(--mono);font-size:.68rem;font-weight:700;letter-spacing:.1em;cursor:pointer;transition:all .2s;margin-top:.4rem}
+  .submit-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,255,136,.25)}
+  .submit-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+  .login-prompt{font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:1.5rem;background:rgba(0,0,0,.2);border-radius:var(--r-sm)}
+  .login-prompt a{color:var(--g2)}
+
+  /* Filter bar */
+  .filter-bar{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center}
+  .filter-btn{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;padding:.32rem .75rem;border-radius:20px;border:1px solid rgba(255,255,255,.08);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s}
+  .filter-btn:hover,.filter-btn.active{border-color:rgba(0,255,136,.3);color:var(--g);background:rgba(0,255,136,.06)}
+  .sort-select{font-family:var(--mono);font-size:.6rem;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:20px;color:var(--muted);padding:.32rem .75rem;margin-left:auto;outline:none}
+
+  /* Review card */
+  .review-card{background:rgba(8,15,32,.7);border:1px solid rgba(255,255,255,.06);border-radius:var(--r);padding:1.3rem 1.5rem;margin-bottom:.8rem;transition:border-color .2s;backdrop-filter:blur(4px)}
+  .review-card:hover{border-color:rgba(0,255,136,.12)}
+  .review-header{display:flex;align-items:flex-start;gap:.9rem;margin-bottom:.8rem}
+  .review-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.78rem;font-weight:700;flex-shrink:0}
+  .review-meta{flex:1}
+  .review-name{font-size:.9rem;font-weight:700;color:var(--white);margin-bottom:.15rem}
+  .review-info{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
+  .review-date{font-family:var(--mono);font-size:.58rem;color:var(--muted)}
+  .review-plan{font-family:var(--mono);font-size:.52rem;padding:.1rem .45rem;border-radius:3px}
+  .plan-free{background:rgba(255,255,255,.06);color:var(--muted)}
+  .plan-starter{background:rgba(0,255,136,.08);color:var(--g)}
+  .plan-pro{background:rgba(0,212,255,.08);color:var(--g2)}
+  .plan-enterprise{background:rgba(123,47,255,.1);color:#c084fc}
+  .verified-badge{font-family:var(--mono);font-size:.5rem;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);color:var(--g);padding:.1rem .4rem;border-radius:3px}
+  .review-feature{font-family:var(--mono);font-size:.55rem;color:var(--g2);background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.1);padding:.1rem .45rem;border-radius:3px}
+  .review-text{font-size:.86rem;color:var(--text);line-height:1.75;margin-bottom:.7rem}
+  .review-actions{display:flex;align-items:center;gap:.8rem}
+  .helpful-btn{font-family:var(--mono);font-size:.58rem;color:var(--muted);background:none;border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:.25rem .65rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.3rem}
+  .helpful-btn:hover,.helpful-btn.active{border-color:rgba(0,255,136,.25);color:var(--g)}
+  .helpful-btn.liked{border-color:rgba(0,255,136,.3);color:var(--g);background:rgba(0,255,136,.06)}
+
+  /* Admin reply */
+  .reply-section{margin-top:.9rem;padding-top:.8rem;border-top:1px solid rgba(0,255,136,.07)}
+  .reply-box{background:linear-gradient(135deg,rgba(0,255,136,.04),rgba(0,212,255,.02));border:1px solid rgba(0,255,136,.1);border-left:3px solid var(--g);border-radius:var(--r-sm);padding:.9rem 1rem;margin-top:.5rem}
+  .reply-header{display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem}
+  .reply-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--g),var(--g2));display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.58rem;font-weight:700;color:#040810;flex-shrink:0}
+  .reply-name{font-family:var(--mono);font-size:.62rem;color:var(--g);font-weight:700}
+  .reply-role{font-family:var(--mono);font-size:.52rem;color:var(--muted)}
+  .reply-text{font-size:.82rem;color:var(--text2);line-height:1.7}
+  .reply-form{margin-top:.7rem}
+  .reply-inp{width:100%;padding:.5rem .75rem;background:rgba(0,0,0,.3);border:1.5px solid rgba(0,255,136,.1);border-radius:6px;font-family:var(--font);font-size:.8rem;color:var(--white);outline:none;resize:vertical;transition:border-color .2s}
+  .reply-inp:focus{border-color:var(--g)}
+  .reply-submit{margin-top:.4rem;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2);border-radius:5px;padding:.35rem .8rem;font-family:var(--mono);font-size:.62rem;color:var(--g);cursor:pointer;transition:all .2s}
+  .reply-submit:hover{background:rgba(0,255,136,.18)}
+
+  /* Empty state */
+  .empty{text-align:center;padding:4rem 1rem;color:var(--muted)}
+  .empty-ico{font-size:2.5rem;margin-bottom:.8rem;opacity:.4}
+
+  /* Toast */
+  .toast{position:fixed;bottom:1.5rem;right:1.5rem;padding:.7rem 1.1rem;border-radius:8px;font-family:var(--mono);font-size:.72rem;font-weight:700;color:#fff;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.3);animation:toastIn .3s ease}
+  @keyframes toastIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+  /* Responsive */
+  @media(max-width:600px){
+    .hero-title{font-size:1.6rem}
+    .nav{padding:.75rem 1rem}
+    .page{padding:2rem 1rem 4rem}
+    .write-card{padding:1.2rem}
+  }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">PM<span>::</span>OFFSEC</a>
+  <div class="nav-links">
+    <a href="index.html">HOME</a>
+    <a href="dashboard/index.html">DASHBOARD</a>
+    <span class="nav-user" id="navUser"></span>
+    <a href="#" onclick="handleAuthLink()" id="authLink" style="background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2);border-radius:5px;padding:.3rem .8rem;color:var(--g)">SIGN IN</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-tag">COMMUNITY REVIEWS</div>
+    <h1 class="hero-title">What Our <em>Users Say</em></h1>
+    <p class="hero-sub">Real reviews from security professionals using PM::OFFSEC. Every review is verified and responded to personally.</p>
+  </div>
+
+  <!-- Overall rating stats -->
+  <div style="display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:center;background:rgba(8,15,32,.6);border:1px solid rgba(0,255,136,.08);border-radius:var(--r);padding:1.5rem;margin-bottom:2rem">
+    <div style="text-align:center;padding-right:2rem;border-right:1px solid rgba(255,255,255,.06)">
+      <div style="font-family:var(--mono);font-size:3.5rem;color:var(--g);font-weight:700;line-height:1" id="overallRating">4.8</div>
+      <div class="stars" style="justify-content:center;margin:.4rem 0" id="overallStars"></div>
+      <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)" id="totalReviews">0 reviews</div>
+    </div>
+    <div id="ratingBreakdown"></div>
+  </div>
+
+  <!-- Write a review -->
+  <div class="write-card" id="writeSection">
+    <div class="write-title">&#9997; WRITE A REVIEW</div>
+    <div id="writeFormArea"></div>
+  </div>
+
+  <!-- Filter + sort -->
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterReviews('all',this)">ALL</button>
+    <button class="filter-btn" onclick="filterReviews('5',this)">&#11088; 5 Stars</button>
+    <button class="filter-btn" onclick="filterReviews('4',this)">&#11088; 4 Stars</button>
+    <button class="filter-btn" onclick="filterReviews('3',this)">3 & Below</button>
+    <button class="filter-btn" onclick="filterReviews('verified',this)">&#9989; Verified</button>
+    <select class="sort-select" onchange="sortReviews(this.value)">
+      <option value="newest">Newest First</option>
+      <option value="highest">Highest Rating</option>
+      <option value="lowest">Lowest Rating</option>
+      <option value="helpful">Most Helpful</option>
+    </select>
+  </div>
+
+  <!-- Reviews list -->
+  <div id="reviewsList"></div>
+
+</div>
+
+<script src="assets/auth.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   PM::OFFSEC REVIEWS PAGE
+   Users write reviews, admin replies
+═══════════════════════════════════════════════════════════════ */
+
+var CURRENT_USER = null;
+var CURRENT_FILTER = 'all';
+var CURRENT_SORT   = 'newest';
+var SELECTED_RATING = 0;
+
+// ── Seed reviews (realistic initial data) ──────────────────────
+var SEED_REVIEWS = [
+  {
+    id:'rev-001', userId:'seed', name:'Marcus Webb', plan:'pro', verified:true,
+    rating:5, feature:'SSH Scanner',
+    text:'PM::OFFSEC found 3 critical vulnerabilities on my VPS within seconds that I had missed for months. The AI Fix button gave me the exact bash commands to patch them. Went from a D grade to A in one afternoon.',
+    date:'2025-12-15', helpful:24, helpedBy:[], reply:{
+      text:'Thank you Marcus! That is exactly what the platform is built for — finding the issues that are easy to miss. Glad the AI Fix commands made it easy to remediate.',
+      date:'2025-12-16'
+    }
+  },
+  {
+    id:'rev-002', userId:'seed', name:'Priya Sharma', plan:'starter', verified:true,
+    rating:5, feature:'Client Portal',
+    text:'The client portal is a game-changer for my consulting work. Instead of writing 20-page Word documents, I just send my clients a link. They see their score, approve fixes in plain English, and I get notified. My clients love it.',
+    date:'2025-12-20', helpful:18, helpedBy:[], reply:{
+      text:'This is exactly the workflow we designed the client portal for! The approve/decline feature was built specifically for consultants like you. Thanks for the feedback Priya.',
+      date:'2025-12-21'
+    }
+  },
+  {
+    id:'rev-003', userId:'seed', name:'James Okafor', plan:'enterprise', verified:true,
+    rating:5, feature:'ATM Security',
+    text:'We manage 47 ATMs across three branches. The ATM Security module gives us the first real security visibility we have ever had into our fleet. The PCI DSS compliance check alone saved us weeks of manual audit work.',
+    date:'2025-12-28', helpful:31, helpedBy:[], reply:{
+      text:'Managing 47 ATMs is exactly the use case we built the fleet dashboard for. PCI DSS compliance for ATM operators is a huge gap in the market — glad PM::OFFSEC is filling it for you.',
+      date:'2025-12-29'
+    }
+  },
+  {
+    id:'rev-004', userId:'seed', name:'Sofia Delgado', plan:'starter', verified:false,
+    rating:4, feature:'Website Scanner',
+    text:'Really impressed with the website scanner. Found missing security headers and an expired SSL chain on my staging server I completely forgot about. Would love to see automatic SSL renewal suggestions in the future.',
+    date:'2026-01-05', helpful:9, helpedBy:[], reply:{
+      text:'Great suggestion Sofia — automatic SSL renewal reminders via email are actually on the roadmap for Q1. Will tag you when it ships. Thanks for the feedback!',
+      date:'2026-01-06'
+    }
+  },
+  {
+    id:'rev-005', userId:'seed', name:'Alex Kim', plan:'pro', verified:true,
+    rating:5, feature:'AI Analysis',
+    text:'The AI analysis is surprisingly good. It maps vulnerabilities to MITRE ATT&CK techniques and gives you business impact in plain English. I have been doing pentests for 8 years and this saves me hours on report writing.',
+    date:'2026-01-10', helpful:15, helpedBy:[], reply:null
+  },
+  {
+    id:'rev-006', userId:'seed', name:'Rachel Torres', plan:'free', verified:false,
+    rating:3, feature:'General',
+    text:'Good tool for the free tier. The scanner works well but I wish there were more scans per day on the free plan. Thinking about upgrading to Starter.',
+    date:'2026-01-12', helpful:5, helpedBy:[], reply:{
+      text:'Hi Rachel! Totally understand — the free tier is intentionally limited to encourage upgrading. Starter ($19/mo) gives you 50 scans/day which should be plenty for most use cases. Feel free to email me if you want a discount code.',
+      date:'2026-01-13'
+    }
+  },
+];
+
+var ALL_REVIEWS = [];
+var SHOWN_REVIEWS = [];
+
+/* ── Init ──────────────────────────────────────────────────── */
+(function init() {
+  // Load session
+  try { CURRENT_USER = AUTH.getSession(); } catch(e) { CURRENT_USER = null; }
+
+  // Update nav
+  updateNav();
+
+  // Load reviews (seed + user-submitted)
+  var saved = JSON.parse(localStorage.getItem('pm_reviews_public') || '[]');
+  ALL_REVIEWS = SEED_REVIEWS.concat(saved);
+
+  // Render everything
+  renderStats();
+  renderWriteForm();
+  renderReviews();
+})();
+
+/* ── Nav ───────────────────────────────────────────────────── */
+function updateNav() {
+  var userEl   = document.getElementById('navUser');
+  var authLink = document.getElementById('authLink');
+  if (CURRENT_USER) {
+    if (userEl)   userEl.textContent = CURRENT_USER.name || CURRENT_USER.email;
+    if (authLink) { authLink.textContent = 'DASHBOARD'; authLink.href = 'dashboard/index.html'; }
+  } else {
+    if (userEl)   userEl.textContent = '';
+    if (authLink) { authLink.textContent = 'SIGN IN'; }
+  }
+}
+
+function handleAuthLink() {
+  if (CURRENT_USER) window.location.href = 'dashboard/index.html';
+  else window.location.href = 'login.html?redirect=reviews.html';
+}
+
+/* ── Stats ─────────────────────────────────────────────────── */
+function renderStats() {
+  var total  = ALL_REVIEWS.length;
+  var avg    = total ? (ALL_REVIEWS.reduce(function(s,r){return s+r.rating;},0)/total).toFixed(1) : '0.0';
+
+  document.getElementById('overallRating').textContent = avg;
+  document.getElementById('totalReviews').textContent  = total + ' review' + (total!==1?'s':'');
+
+  var starsEl = document.getElementById('overallStars');
+  if (starsEl) {
+    var full = Math.round(parseFloat(avg));
+    starsEl.innerHTML = [1,2,3,4,5].map(function(i){
+      return '<span class="star'+(i>full?' empty':'')+'">&#11088;</span>';
+    }).join('');
+  }
+
+  var breakdown = document.getElementById('ratingBreakdown');
+  if (breakdown) {
+    breakdown.innerHTML = [5,4,3,2,1].map(function(star) {
+      var cnt = ALL_REVIEWS.filter(function(r){return r.rating===star;}).length;
+      var pct = total > 0 ? Math.round(cnt/total*100) : 0;
+      return '<div class="rating-bar-row">'
+        +'<div class="rating-bar-lbl">'+star+' &#11088;</div>'
+        +'<div class="rating-bar-track"><div class="rating-bar-fill" style="width:'+pct+'%"></div></div>'
+        +'<div class="rating-bar-cnt">'+cnt+'</div>'
+        +'</div>';
+    }).join('');
+  }
+}
+
+/* ── Write form ────────────────────────────────────────────── */
+function renderWriteForm() {
+  var area = document.getElementById('writeFormArea');
+  if (!area) return;
+
+  if (!CURRENT_USER) {
+    area.innerHTML = '<div class="login-prompt">&#128274; Please <a href="login.html?redirect=reviews.html">sign in</a> or <a href="register.html">create an account</a> to write a review.<br/><span style="opacity:.7">Using demo? Login with user@demo.com / User@1234</span></div>';
+    return;
+  }
+
+  // Check if user already reviewed
+  var existing = ALL_REVIEWS.find(function(r){ return r.userId === CURRENT_USER.id && r.userId !== 'seed'; });
+  if (existing) {
+    area.innerHTML = '<div style="font-family:var(--mono);font-size:.65rem;color:var(--ok);padding:.8rem;background:rgba(0,255,136,.06);border-radius:6px;border:1px solid rgba(0,255,136,.15)">&#9989; You already submitted a review. Thank you for your feedback!</div>';
+    return;
+  }
+
+  area.innerHTML = ''
+    + '<div style="margin-bottom:.7rem">'
+    + '<div class="form-lbl">YOUR RATING</div>'
+    + '<div class="star-picker" id="starPicker">'
+    + [1,2,3,4,5].map(function(i){ return '<span class="star-pick" data-val="'+i+'" onclick="pickStar('+i+')" onmouseover="hoverStar('+i+')" onmouseout="resetStars()">&#11088;</span>'; }).join('')
+    + '</div>'
+    + '<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted)" id="starLabel">Click to rate</div>'
+    + '</div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:.7rem">'
+    + '<div><div class="form-lbl">FEATURE REVIEWED</div>'
+    + '<select class="form-inp" id="reviewFeature" style="height:42px">'
+    + ['General','SSH Scanner','Website Scanner','AI Analysis','ATM Security','Vending Security','Client Portal','Compliance','OSINT Tools','Phishing Sim','Dark Web Monitor','SOAR Automation','Threat Feed','MSP Dashboard'].map(function(f){ return '<option>'+f+'</option>'; }).join('')
+    + '</select></div>'
+    + '<div><div class="form-lbl">YOUR PLAN</div>'
+    + '<select class="form-inp" id="reviewPlan" style="height:42px">'
+    + '<option value="free">Free</option><option value="starter">Starter</option><option value="pro">Professional</option><option value="enterprise">Enterprise</option>'
+    + '</select></div>'
+    + '</div>'
+    + '<div style="margin-bottom:.7rem"><div class="form-lbl">YOUR REVIEW</div>'
+    + '<textarea class="form-inp" id="reviewText" rows="4" placeholder="Share your experience with PM::OFFSEC. What did you use it for? What problems did it solve?" oninput="updateCharCount(this)"></textarea>'
+    + '<div class="char-count"><span id="charCount">0</span>/500 characters</div>'
+    + '</div>'
+    + '<div style="display:flex;align-items:center;gap:.8rem;flex-wrap:wrap">'
+    + '<button class="submit-btn" onclick="submitReview()" id="submitReviewBtn">&#9997; SUBMIT REVIEW</button>'
+    + '<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">Logged in as <strong style="color:var(--text)">' + (CURRENT_USER.name || CURRENT_USER.email) + '</strong></div>'
+    + '</div>'
+    + '<div id="reviewFormErr" style="display:none;font-family:var(--mono);font-size:.63rem;color:var(--danger);margin-top:.5rem;padding:.5rem .7rem;background:rgba(255,59,92,.06);border-radius:5px"></div>';
+}
+
+function pickStar(val) {
+  SELECTED_RATING = val;
+  updateStarPicker(val);
+  var labels = ['','Terrible','Poor','Average','Good','Excellent!'];
+  var lbl = document.getElementById('starLabel');
+  if (lbl) lbl.textContent = labels[val] || '';
+}
+
+function hoverStar(val) { updateStarPicker(val); }
+function resetStars()   { updateStarPicker(SELECTED_RATING); }
+
+function updateStarPicker(val) {
+  document.querySelectorAll('.star-pick').forEach(function(s, i) {
+    s.classList.toggle('active', i < val);
+  });
+}
+
+function updateCharCount(el) {
+  var cnt = document.getElementById('charCount');
+  if (cnt) cnt.textContent = el.value.length;
+}
+
+function submitReview() {
+  if (!CURRENT_USER) { window.location.href = 'login.html?redirect=reviews.html'; return; }
+
+  var text    = (document.getElementById('reviewText')||{}).value || '';
+  var feature = (document.getElementById('reviewFeature')||{}).value || 'General';
+  var plan    = (document.getElementById('reviewPlan')||{}).value || 'free';
+  var errEl   = document.getElementById('reviewFormErr');
+
+  function showFormErr(msg) {
+    if (errEl) { errEl.textContent = msg; errEl.style.display = 'block'; }
+  }
+
+  if (!SELECTED_RATING) { showFormErr('Please select a star rating.'); return; }
+  if (text.trim().length < 20) { showFormErr('Please write at least 20 characters.'); return; }
+  if (text.length > 500) { showFormErr('Review must be under 500 characters.'); return; }
+
+  var review = {
+    id: 'rev-' + Date.now().toString(36),
+    userId: CURRENT_USER.id,
+    name: CURRENT_USER.name || CURRENT_USER.email.split('@')[0],
+    plan: plan, verified: CURRENT_USER.plan !== 'free',
+    rating: SELECTED_RATING, feature: feature,
+    text: text.trim(),
+    date: new Date().toISOString().split('T')[0],
+    helpful: 0, helpedBy: [], reply: null
+  };
+
+  // Save to localStorage
+  var saved = JSON.parse(localStorage.getItem('pm_reviews_public') || '[]');
+  saved.unshift(review);
+  localStorage.setItem('pm_reviews_public', JSON.stringify(saved));
+
+  ALL_REVIEWS.unshift(review);
+  renderStats();
+  renderWriteForm();
+  renderReviews();
+  showToast('Review submitted! Thank you.', 'var(--g)');
+
+  // Scroll to their review
+  setTimeout(function() {
+    var el = document.getElementById('review-' + review.id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 300);
+}
+
+/* ── Reviews list ──────────────────────────────────────────── */
+function renderReviews() {
+  var reviews = ALL_REVIEWS.slice();
+
+  // Filter
+  if (CURRENT_FILTER === '5')        reviews = reviews.filter(function(r){return r.rating===5;});
+  else if (CURRENT_FILTER === '4')   reviews = reviews.filter(function(r){return r.rating===4;});
+  else if (CURRENT_FILTER === '3')   reviews = reviews.filter(function(r){return r.rating<=3;});
+  else if (CURRENT_FILTER === 'verified') reviews = reviews.filter(function(r){return r.verified;});
+
+  // Sort
+  if (CURRENT_SORT === 'newest')     reviews.sort(function(a,b){ return b.date.localeCompare(a.date); });
+  else if (CURRENT_SORT === 'highest') reviews.sort(function(a,b){ return b.rating-a.rating; });
+  else if (CURRENT_SORT === 'lowest')  reviews.sort(function(a,b){ return a.rating-b.rating; });
+  else if (CURRENT_SORT === 'helpful') reviews.sort(function(a,b){ return b.helpful-a.helpful; });
+
+  SHOWN_REVIEWS = reviews;
+  var list = document.getElementById('reviewsList');
+  if (!list) return;
+
+  if (!reviews.length) {
+    list.innerHTML = '<div class="empty"><div class="empty-ico">&#128172;</div><div style="font-family:var(--mono);font-size:.75rem;color:var(--text)">No reviews match this filter.</div></div>';
+    return;
+  }
+
+  var isAdmin = CURRENT_USER && CURRENT_USER.role === 'admin';
+
+  list.innerHTML = reviews.map(function(rv) {
+    var initials = rv.name.split(' ').map(function(n){return n[0]||'';}).join('').slice(0,2).toUpperCase();
+    var avatarBg = rv.rating>=4?'linear-gradient(135deg,rgba(0,255,136,.3),rgba(0,212,255,.2))':'linear-gradient(135deg,rgba(255,140,66,.2),rgba(255,59,92,.15))';
+    var stars    = [1,2,3,4,5].map(function(i){ return '<span class="star'+(i>rv.rating?' empty':'')+'">&#11088;</span>'; }).join('');
+    var liked    = CURRENT_USER && rv.helpedBy && rv.helpedBy.includes(CURRENT_USER.id);
+    var planClass= 'plan-'+(rv.plan||'free');
+    var dateStr  = new Date(rv.date).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+
+    var replyHtml = '';
+    if (rv.reply) {
+      replyHtml = '<div class="reply-section">'
+        + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:.1em;margin-bottom:.5rem">&#128737; RESPONSE FROM PM::OFFSEC</div>'
+        + '<div class="reply-box">'
+        + '<div class="reply-header">'
+        + '<div class="reply-avatar">PM</div>'
+        + '<div><div class="reply-name">Prakash Mijar</div><div class="reply-role">Founder — PM::OFFSEC</div></div>'
+        + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-left:auto">'+new Date(rv.reply.date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+'</div>'
+        + '</div>'
+        + '<div class="reply-text">'+rv.reply.text+'</div>'
+        + '</div></div>';
+    } else if (isAdmin) {
+      replyHtml = '<div class="reply-section">'
+        + '<div class="reply-form">'
+        + '<textarea class="reply-inp" id="reply-inp-'+rv.id+'" rows="2" placeholder="Write a reply as PM::OFFSEC founder..."></textarea>'
+        + '<button class="reply-submit" onclick="submitReply(\''+rv.id+'\')">&#9997; REPLY AS ADMIN</button>'
+        + '</div></div>';
+    }
+
+    return '<div class="review-card" id="review-'+rv.id+'">'
+      + '<div class="review-header">'
+      + '<div class="review-avatar" style="background:'+avatarBg+';color:var(--white)">'+initials+'</div>'
+      + '<div class="review-meta">'
+      + '<div class="review-name">'+rv.name+'</div>'
+      + '<div class="review-info">'
+      + '<div class="stars">'+stars+'</div>'
+      + '<span class="review-date">'+dateStr+'</span>'
+      + '<span class="review-plan '+planClass+'">'+rv.plan.toUpperCase()+'</span>'
+      + (rv.verified?'<span class="verified-badge">&#9989; VERIFIED</span>':'')
+      + '<span class="review-feature">'+rv.feature+'</span>'
+      + '</div>'
+      + '</div>'
+      + (isAdmin && rv.userId !== 'seed' ? '<button onclick="deleteReview(\''+rv.id+'\')" style="background:none;border:none;color:var(--muted);font-size:.7rem;cursor:pointer;flex-shrink:0;opacity:.5" title="Delete">&#128465;</button>' : '')
+      + '</div>'
+      + '<div class="review-text">'+escHtml(rv.text)+'</div>'
+      + '<div class="review-actions">'
+      + '<button class="helpful-btn'+(liked?' liked':'')+'" onclick="markHelpful(\''+rv.id+'\')">'
+      + '&#128077; Helpful &nbsp;<span id="helpful-'+rv.id+'">'+rv.helpful+'</span>'
+      + '</button>'
+      + '</div>'
+      + replyHtml
+      + '</div>';
+  }).join('');
+}
+
+function escHtml(str) {
+  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br/>');
+}
+
+function filterReviews(filter, btn) {
+  CURRENT_FILTER = filter;
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  renderReviews();
+}
+
+function sortReviews(val) {
+  CURRENT_SORT = val;
+  renderReviews();
+}
+
+/* ── Helpful ───────────────────────────────────────────────── */
+function markHelpful(id) {
+  if (!CURRENT_USER) { showToast('Sign in to mark reviews helpful', '#f5a623'); return; }
+  var rev = ALL_REVIEWS.find(function(r){ return r.id === id; });
+  if (!rev) return;
+  rev.helpedBy = rev.helpedBy || [];
+  var idx = rev.helpedBy.indexOf(CURRENT_USER.id);
+  if (idx >= 0) {
+    rev.helpful = Math.max(0, rev.helpful - 1);
+    rev.helpedBy.splice(idx, 1);
+  } else {
+    rev.helpful++;
+    rev.helpedBy.push(CURRENT_USER.id);
+  }
+  saveUserReviews();
+  var cnt = document.getElementById('helpful-' + id);
+  if (cnt) cnt.textContent = rev.helpful;
+  var btn = cnt ? cnt.closest('.helpful-btn') : null;
+  if (btn) btn.classList.toggle('liked', idx < 0);
+}
+
+/* ── Admin reply ───────────────────────────────────────────── */
+function submitReply(reviewId) {
+  if (!CURRENT_USER || CURRENT_USER.role !== 'admin') {
+    showToast('Only admin can reply', '#ff4d6a'); return;
+  }
+  var inp = document.getElementById('reply-inp-' + reviewId);
+  if (!inp || !inp.value.trim()) {
+    showToast('Write a reply first', '#f5a623'); return;
+  }
+  var rev = ALL_REVIEWS.find(function(r){ return r.id === reviewId; });
+  if (!rev) return;
+  rev.reply = {
+    text: inp.value.trim(),
+    date: new Date().toISOString().split('T')[0]
+  };
+  saveUserReviews();
+  renderReviews();
+  showToast('Reply posted!', 'var(--g)');
+}
+
+/* ── Admin delete ──────────────────────────────────────────── */
+function deleteReview(id) {
+  if (!CURRENT_USER || CURRENT_USER.role !== 'admin') return;
+  if (!confirm('Delete this review?')) return;
+  ALL_REVIEWS = ALL_REVIEWS.filter(function(r){ return r.id !== id; });
+  var saved = JSON.parse(localStorage.getItem('pm_reviews_public') || '[]');
+  saved = saved.filter(function(r){ return r.id !== id; });
+  localStorage.setItem('pm_reviews_public', JSON.stringify(saved));
+  renderStats();
+  renderReviews();
+  showToast('Review deleted', '#f5a623');
+}
+
+/* ── Save user reviews ─────────────────────────────────────── */
+function saveUserReviews() {
+  var nonSeed = ALL_REVIEWS.filter(function(r){ return r.userId !== 'seed'; });
+  localStorage.setItem('pm_reviews_public', JSON.stringify(nonSeed));
+}
+
+/* ── Toast ─────────────────────────────────────────────────── */
+function showToast(msg, color) {
+  var t = document.createElement('div');
+  t.className = 'toast';
+  t.style.background = color || 'var(--g)';
+  t.style.color = color === 'var(--g)' ? '#040810' : '#fff';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(function(){ t.style.opacity='0';t.style.transition='opacity .4s';setTimeout(function(){t.remove();},400); }, 3000);
+}
+</script>
+</body>
+</html>
