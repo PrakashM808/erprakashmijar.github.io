@@ -471,7 +471,7 @@ function doRegister() {
       var session = AUTH.getSession();
       if (session) {
         session.plan = selPlan; session.company = co; session.phone = ph;
-        localStorage.setItem('pm_session_v2', JSON.stringify(session));
+        sessionStorage.setItem('pm_session_v2', JSON.stringify(session));
       }
     }
 

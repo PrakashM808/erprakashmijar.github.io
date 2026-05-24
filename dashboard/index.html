@@ -697,8 +697,12 @@
           <div class="panel"><div class="ph"><div class="pt">Backend API URL</div></div><div class="pb">
             <div class="form-group">
               <label class="form-label">FASTAPI BACKEND URL</label>
-              <input class="form-input" id="apiUrlInput" placeholder="http://localhost:8000"/>
-              <div class="form-hint">Your Python FastAPI backend URL. Local: http://localhost:8000 · Railway: https://your-app.railway.app</div>
+              <input class="form-input" id="apiUrlInput" placeholder="https://your-app.up.railway.app"/>
+              <div class="form-hint" style="font-size:.62rem;color:var(--muted);margin-top:.3rem">
+                &#127960; <strong style="color:var(--g2)">Railway URL:</strong> Go to railway.app → your project → Settings → copy the domain URL<br/>
+                &#128187; <strong style="color:var(--text2)">Local dev:</strong> http://localhost:8000<br/>
+                <span style="color:var(--warn)">&#9888; This URL is saved per-device. Each laptop/computer needs to set it once.</span>
+              </div>
             </div>
             <div class="form-group">
               <label class="form-label">CONNECTION STATUS</label>
@@ -2163,7 +2167,12 @@
   <div class="modal">
     <div class="modal-bar"></div>
     <div class="modal-hdr">
-      <div class="modal-title">SCAN DEVICE</div>
+      <div>
+        <div class="modal-title">SCAN A SERVER</div>
+        <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:.1rem">
+          Your browser &#8594; Railway backend &#8594; scans the target server
+        </div>
+      </div>
       <button class="modal-close" onclick="closeScanModal()">✕</button>
     </div>
     <div class="modal-body">
@@ -2174,8 +2183,13 @@
       <!-- LOCAL TAB -->
       <div id="dtab-local">
         <div style="background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.1);border-radius:6px;padding:.9rem 1rem;margin-bottom:1rem">
-          <div style="font-family:var(--mono);font-size:.58rem;color:var(--g);margin-bottom:.3rem">⚡ LOCAL SCAN</div>
-          <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.7">Scans the machine running your FastAPI backend. Checks ports, SSH config, firewall, packages, permissions, and auth logs in real time.</div>
+          <div style="font-family:var(--mono);font-size:.58rem;color:var(--g);margin-bottom:.3rem">&#9889; LOCAL SCAN — Scans Your Backend Server</div>
+          <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.8">
+            Scans the server running your FastAPI backend (Railway or localhost).<br/>
+            <span style="color:var(--warn)">&#9888; This does NOT scan your laptop.</span><br/>
+            Your browser just sends the command — the backend scans itself.<br/>
+            <span style="color:var(--g2)">&#128161; To scan your own server: use Remote Scan and enter your server IP.</span>
+          </div>
         </div>
         <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-bottom:1rem">
           API Status: <span id="localApiStatus" style="color:var(--danger)">Not connected</span>
@@ -2260,7 +2274,23 @@ let DEVICES    = JSON.parse(localStorage.getItem('pm_devices_v3') || '[]');
 let ACTIVITY   = JSON.parse(localStorage.getItem('pm_activity_v3') || '[]');
 let DISMISSED  = new Set();
 let SCAN_COUNT = parseInt(localStorage.getItem('pm_scan_count_v3') || '0');
-let SETTINGS   = JSON.parse(localStorage.getItem('pm_settings_v3') || '{"apiUrl":"http://localhost:8000","apiKey":"","apiMode":"backend"}');
+// Auto-detect backend URL:
+// 1. Use saved setting from localStorage (user configured in Settings)
+// 2. If site is on erprakashmijar.com → use Railway backend
+// 3. If site is on localhost → use localhost:8000
+(function() {
+  var saved = JSON.parse(localStorage.getItem('pm_settings_v3') || 'null');
+  if (!saved) {
+    var isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    var defaultUrl = isLocalhost
+      ? 'http://localhost:8000'
+      : 'https://pm-offsec-backend-production.up.railway.app'; // Update with your Railway URL
+    saved = { apiUrl: defaultUrl, apiKey: '', apiMode: 'backend' };
+    localStorage.setItem('pm_settings_v3', JSON.stringify(saved));
+  }
+  window._SETTINGS_INIT = saved;
+})();
+let SETTINGS = window._SETTINGS_INIT || JSON.parse(localStorage.getItem('pm_settings_v3') || '{"apiUrl":"http://localhost:8000","apiKey":"","apiMode":"backend"}');
 let API_ONLINE = false;
 let chatHistory = [];
 let activeDeviceTab = 'local';
@@ -2981,6 +3011,14 @@ function saveApiSettings() {
   localStorage.setItem('pm_settings_v3', JSON.stringify(SETTINGS));
   const msg=document.getElementById('settingsSaved');msg.style.display='inline';setTimeout(()=>msg.style.display='none',2000);
   checkApiStatus();
+  // Show Railway URL prompt if using localhost on a non-local device
+  if (SETTINGS.apiUrl && SETTINGS.apiUrl.includes('localhost') && 
+      window.location.hostname !== 'localhost' && 
+      window.location.hostname !== '127.0.0.1') {
+    setTimeout(function() {
+      showRailwayPrompt();
+    }, 2000);
+  }
 }
 
 function toggleApiKey() {
@@ -9546,6 +9584,64 @@ function mspEmailClient(id) {
   var c = clients.find(function(x){return x.id===id;});
   if (!c) return;
   window.open('mailto:'+c.email+'?subject=Your Security Report is Ready&body=Hi,\n\nYour latest security assessment is ready.\n\nView it at: https://erprakashmijar.com/client/index.html\n\nBest regards,\nPM::OFFSEC','_blank');
+}
+
+
+/* ─ RAILWAY URL SETUP PROMPT ─ */
+function showRailwayPrompt() {
+  if (document.getElementById('railwayPrompt')) return;
+  var banner = document.createElement('div');
+  banner.id = 'railwayPrompt';
+  banner.style.cssText = 'position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:8000;background:rgba(6,13,26,.98);border:1px solid rgba(245,158,11,.3);border-radius:10px;padding:1rem 1.3rem;max-width:480px;width:calc(100%-2rem);box-shadow:0 10px 30px rgba(0,0,0,.5)';
+    // Build using DOM to avoid quote conflicts
+  var row = document.createElement('div');
+  row.style.cssText = 'display:flex;align-items:flex-start;gap:.8rem';
+  var ico = document.createElement('span');
+  ico.style.fontSize = '1.2rem';
+  ico.innerHTML = '&#9888;';
+  var bodyDiv = document.createElement('div');
+  bodyDiv.style.cssText = 'flex:1';
+  bodyDiv.innerHTML = '<div style="font-family:var(--mono);font-size:.68rem;color:var(--warn);font-weight:700;margin-bottom:.3rem">BACKEND NOT CONFIGURED</div>'
+    + '<div style="font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.7;margin-bottom:.6rem">API is set to localhost but you are on another device. Enter your Railway URL.</div>';
+  var inputRow = document.createElement('div');
+  inputRow.style.cssText = 'display:flex;gap:.5rem;margin-bottom:.3rem';
+  var inp = document.createElement('input');
+  inp.id = 'railwayUrlInput';
+  inp.className = 'form-input';
+  inp.placeholder = 'https://your-app.up.railway.app';
+  inp.style.cssText = 'flex:1;font-size:.63rem;padding:.38rem .65rem';
+  var sb = document.createElement('button');
+  sb.style.cssText = 'background:var(--g);color:#040810;border:none;border-radius:5px;padding:.38rem .7rem;font-family:var(--mono);font-size:.62rem;font-weight:700;cursor:pointer';
+  sb.textContent = 'SAVE';
+  sb.onclick = saveRailwayUrl;
+  inputRow.appendChild(inp);
+  inputRow.appendChild(sb);
+  bodyDiv.appendChild(inputRow);
+  var hint = document.createElement('div');
+  hint.style.cssText = 'font-family:var(--mono);font-size:.55rem;color:var(--muted)';
+  hint.textContent = 'Find URL: railway.app then your project then Settings then Domains';
+  bodyDiv.appendChild(hint);
+  var closeBtn = document.createElement('button');
+  closeBtn.style.cssText = 'background:none;border:none;color:var(--muted);font-size:1rem;cursor:pointer;line-height:1;flex-shrink:0';
+  closeBtn.innerHTML = '&#10005;';
+  closeBtn.onclick = function(){ banner.remove(); };
+  row.appendChild(ico);
+  row.appendChild(bodyDiv);
+  row.appendChild(closeBtn);
+  banner.appendChild(row);
+  document.body.appendChild(banner);
+}
+
+function saveRailwayUrl() {
+  var url = (document.getElementById('railwayUrlInput')||{}).value || '';
+  if (!url.startsWith('http')) { if(typeof showToast==='function') showToast('Enter a valid URL starting with https://','warn'); return; }
+  url = url.replace(/\/+$/, '');
+  SETTINGS.apiUrl = url;
+  localStorage.setItem('pm_settings_v3', JSON.stringify(SETTINGS));
+  var p = document.getElementById('railwayPrompt');
+  if (p) p.remove();
+  if(typeof showToast==='function') showToast('Railway URL saved — testing connection...','ok');
+  if(typeof checkApiStatus==='function') checkApiStatus();
 }
 </script>
 </body>
