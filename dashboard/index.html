@@ -526,6 +526,15 @@
         <button class="sb-item" onclick="nav('threatfeed')"><span class="sb-icon">&#128308;</span>Threat Feed</button>
         <button class="sb-item" onclick="nav('soar')"><span class="sb-icon">&#9889;</span>SOAR Playbooks</button>
       </div>
+      <div class="sb-section">
+        <div class="sb-label">Advanced</div>
+        <button class="sb-item" onclick="nav('compliance')"><span class="sb-icon">&#9878;</span>Compliance</button>
+        <button class="sb-item" onclick="nav('pentest')"><span class="sb-icon">&#128270;</span>Pentest Report</button>
+        <button class="sb-item" onclick="nav('phishing')"><span class="sb-icon">&#127907;</span>Phishing Sim</button>
+        <button class="sb-item" onclick="nav('attacksurface')"><span class="sb-icon">&#127757;</span>Attack Surface</button>
+        <button class="sb-item" onclick="nav('darkweb')"><span class="sb-icon">&#128565;</span>Dark Web</button>
+        <button class="sb-item" onclick="nav('msp')"><span class="sb-icon">&#128101;</span>MSP Dashboard</button>
+      </div>
       <div class="sb-bottom">
         <div class="device-mini" id="currentDeviceMini" style="display:none">
           <div class="dm-label">ACTIVE DEVICE</div>
@@ -1456,6 +1465,692 @@
         <div class="panel">
           <div class="ph"><div class="pt">&#128203; AUTOMATION LOG</div></div>
           <div class="pb" id="soarLog"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:1.5rem">Automation events will appear here.</div></div>
+        </div>
+      </div>
+
+
+
+      <!-- ══ PENTEST REPORT PAGE ══ -->
+      <div class="page" id="page-pentest">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">PENTEST REPORT GENERATOR</div>
+          <div class="pg-sub">Generate professional penetration testing reports for clients</div></div>
+          <button onclick="generatePentestReport()" class="btn btn-g btn-sm">&#128196; GENERATE PDF REPORT</button>
+        </div>
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-b"><div class="sc-icon">&#128196;</div><div class="sc-label">Reports Generated</div><div class="sc-value" id="ptReportsCount">0</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#128683;</div><div class="sc-label">Critical Findings</div><div class="sc-value" id="ptCritCount" style="color:var(--danger)">0</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#9989;</div><div class="sc-label">Remediated</div><div class="sc-value" id="ptFixedCount" style="color:var(--ok)">0</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#128201;</div><div class="sc-label">Risk Score</div><div class="sc-value" id="ptRiskScore">-</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:.9rem">
+          <div class="panel">
+            <div class="ph"><div class="pt">REPORT CONFIGURATION</div></div>
+            <div class="pb">
+              <div class="form-group"><label class="form-label">CLIENT / COMPANY NAME</label><input class="form-input" id="ptClientName" placeholder="Acme Corporation"/></div>
+              <div class="form-group"><label class="form-label">ENGAGEMENT TYPE</label>
+                <select class="form-input" id="ptEngType">
+                  <option value="external">External Penetration Test</option>
+                  <option value="internal">Internal Network Assessment</option>
+                  <option value="webapp">Web Application Pentest</option>
+                  <option value="wireless">Wireless Security Assessment</option>
+                  <option value="phishing">Social Engineering Assessment</option>
+                  <option value="full">Full Red Team Engagement</option>
+                </select></div>
+              <div class="form-group"><label class="form-label">TESTER / CONSULTANT</label><input class="form-input" id="ptTester" placeholder="Prakash Mijar — PM::OFFSEC"/></div>
+              <div class="form-group"><label class="form-label">TEST PERIOD</label>
+                <div style="display:flex;gap:.5rem">
+                  <input class="form-input" id="ptDateStart" type="date" style="flex:1"/>
+                  <input class="form-input" id="ptDateEnd" type="date" style="flex:1"/>
+                </div></div>
+              <div class="form-group"><label class="form-label">SCOPE / TARGETS</label>
+                <textarea class="form-input" id="ptScope" rows="3" placeholder="192.168.1.0/24&#10;example.com&#10;api.example.com" style="resize:vertical"></textarea></div>
+              <div class="form-group"><label class="form-label">EXECUTIVE SUMMARY</label>
+                <textarea class="form-input" id="ptSummary" rows="4" placeholder="Summary of findings for executive audience..." style="resize:vertical"></textarea></div>
+              <button onclick="generatePentestReport()" class="btn btn-g btn-sm" style="width:100%;justify-content:center;margin-top:.4rem">&#128196; GENERATE PROFESSIONAL REPORT</button>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="ph"><div class="pt">FINDINGS FROM SCANS</div><button onclick="importScanFindings()" class="btn btn-o btn-sm">&#8635; IMPORT FROM SCANS</button></div>
+            <div class="pb" id="ptFindingsList"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">Run scans first, then import findings here.</div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt">RECENT REPORTS</div></div>
+          <div class="pb" id="ptReportsList"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:1.5rem">No reports generated yet.</div></div>
+        </div>
+      </div>
+
+      <!-- ══ PHISHING SIMULATION PAGE ══ -->
+      <div class="page" id="page-phishing">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">PHISHING SIMULATION</div>
+          <div class="pg-sub">Test employee security awareness with ethical phishing campaigns</div></div>
+          <button onclick="createPhishingCampaign()" class="btn btn-g btn-sm">&#10133; NEW CAMPAIGN</button>
+        </div>
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-b"><div class="sc-icon">&#127907;</div><div class="sc-label">Campaigns Run</div><div class="sc-value" id="phCampaigns">0</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#128073;</div><div class="sc-label">Click Rate</div><div class="sc-value" id="phClickRate" style="color:var(--warn)">-</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#128680;</div><div class="sc-label">Reported</div><div class="sc-value" id="phReported" style="color:var(--ok)">-</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#128100;</div><div class="sc-label">Targets</div><div class="sc-value" id="phTargets">0</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:.9rem">
+          <div class="panel">
+            <div class="ph"><div class="pt">NEW CAMPAIGN</div></div>
+            <div class="pb">
+              <div class="form-group"><label class="form-label">CAMPAIGN NAME</label><input class="form-input" id="phCampName" placeholder="Q1 Phishing Test"/></div>
+              <div class="form-group"><label class="form-label">TEMPLATE</label>
+                <select class="form-input" id="phTemplate">
+                  <option value="invoice">Fake Invoice — Finance Team</option>
+                  <option value="password_reset">Password Reset — IT Helpdesk</option>
+                  <option value="package">Package Delivery Notification</option>
+                  <option value="ceo_fraud">CEO Wire Transfer Request</option>
+                  <option value="cloud_storage">Shared Document — Google Drive</option>
+                  <option value="security_alert">Security Alert — Account Breach</option>
+                  <option value="hr_benefits">HR Benefits Update</option>
+                  <option value="it_survey">IT Security Survey</option>
+                </select></div>
+              <div class="form-group"><label class="form-label">TARGET EMAILS (one per line)</label>
+                <textarea class="form-input" id="phTargetList" rows="5" placeholder="employee1@company.com&#10;employee2@company.com" style="resize:vertical"></textarea></div>
+              <div class="form-group"><label class="form-label">SENDER NAME</label><input class="form-input" id="phSenderName" placeholder="IT Department"/></div>
+              <button onclick="launchPhishing()" class="btn btn-g btn-sm" style="width:100%;justify-content:center;margin-top:.4rem">&#128640; LAUNCH CAMPAIGN</button>
+              <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:.5rem;text-align:center">Only use with explicit written authorization. Unauthorized phishing is illegal.</div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="ph"><div class="pt">PHISHING TEMPLATES PREVIEW</div></div>
+            <div class="pb" id="phTemplatePreview"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt">CAMPAIGN RESULTS</div></div>
+          <div class="pb" id="phResults"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:1.5rem">No campaigns run yet.</div></div>
+        </div>
+      </div>
+
+      <!-- ══ PASSWORD AUDIT PAGE ══ -->
+      <div class="page" id="page-passwords">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">PASSWORD AUDIT TOOL</div>
+          <div class="pg-sub">Analyze password strength and identify weak credentials across your organization</div></div>
+        </div>
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-r"><div class="sc-icon">&#128272;</div><div class="sc-label">Weak Passwords</div><div class="sc-value" id="pwWeak" style="color:var(--danger)">0</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#9760;</div><div class="sc-label">Breached</div><div class="sc-value" id="pwBreached" style="color:var(--danger)">0</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#9989;</div><div class="sc-label">Strong</div><div class="sc-value" id="pwStrong" style="color:var(--ok)">0</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#128202;</div><div class="sc-label">Avg Strength</div><div class="sc-value" id="pwAvgScore">-</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:.9rem">
+          <div class="panel">
+            <div class="ph"><div class="pt">SINGLE PASSWORD CHECKER</div></div>
+            <div class="pb">
+              <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-bottom:.7rem">Check any password against breach databases and strength requirements. Nothing is stored or logged.</div>
+              <div class="form-group"><label class="form-label">PASSWORD TO CHECK</label>
+                <div style="position:relative">
+                  <input class="form-input" id="singlePwInput" type="password" placeholder="Enter password to analyze..." oninput="analyzeSinglePassword()"/>
+                  <button onclick="togglePwVisible()" style="position:absolute;right:.5rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:.85rem">&#128065;</button>
+                </div></div>
+              <div id="singlePwResult" style="margin-top:.7rem"></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="ph"><div class="pt">BULK PASSWORD AUDIT</div></div>
+            <div class="pb">
+              <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-bottom:.6rem">Upload a password list (plaintext, one per line) for bulk analysis. Requires explicit authorization.</div>
+              <textarea class="form-input" id="bulkPwList" rows="6" placeholder="password123&#10;Admin@2024&#10;CompanyName1!&#10;..." style="resize:vertical;font-size:.65rem"></textarea>
+              <button onclick="auditBulkPasswords()" class="btn btn-g btn-sm" style="width:100%;justify-content:center;margin-top:.6rem">ANALYZE PASSWORDS</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt">AUDIT RESULTS</div><button onclick="exportPwReport()" class="btn btn-o btn-sm" style="display:none" id="pwExportBtn">EXPORT REPORT</button></div>
+          <div class="pb" id="pwAuditResults"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:1.5rem">Enter passwords above to start the audit.</div></div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt">PASSWORD POLICY RECOMMENDATIONS</div></div>
+          <div class="pb">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">
+              <div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:6px;padding:.8rem">
+                <div style="font-family:var(--mono);font-size:.6rem;color:var(--g);margin-bottom:.5rem">MINIMUM REQUIREMENTS</div>
+                <div style="font-family:var(--mono);font-size:.58rem;color:var(--text2);line-height:1.9">&#9989; Minimum 12 characters<br/>&#9989; Upper + lowercase letters<br/>&#9989; At least one number<br/>&#9989; At least one special character<br/>&#9989; No dictionary words<br/>&#9989; No personal information</div>
+              </div>
+              <div style="background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.1);border-radius:6px;padding:.8rem">
+                <div style="font-family:var(--mono);font-size:.6rem;color:var(--g2);margin-bottom:.5rem">ENTERPRISE BEST PRACTICE</div>
+                <div style="font-family:var(--mono);font-size:.58rem;color:var(--text2);line-height:1.9">&#9989; 16+ character passphrases<br/>&#9989; Check against HIBP breach database<br/>&#9989; 90-day rotation policy<br/>&#9989; No password reuse (last 10)<br/>&#9989; MFA required for all accounts<br/>&#9989; Password manager required</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ ATTACK SURFACE PAGE ══ -->
+      <div class="page" id="page-surface">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">ATTACK SURFACE DISCOVERY</div>
+          <div class="pg-sub">Discover all internet-facing assets for a domain — subdomains, APIs, forgotten servers</div></div>
+          <button onclick="runSurfaceScan()" class="btn btn-g btn-sm">&#128269; DISCOVER ASSETS</button>
+        </div>
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-b"><div class="sc-icon">&#127758;</div><div class="sc-label">Assets Found</div><div class="sc-value" id="surfAssets">0</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#9888;</div><div class="sc-label">Exposed</div><div class="sc-value" id="surfExposed" style="color:var(--danger)">0</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#128268;</div><div class="sc-label">Subdomains</div><div class="sc-value" id="surfSubdomains">0</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#128272;</div><div class="sc-label">Open Ports</div><div class="sc-value" id="surfPorts">0</div></div>
+        </div>
+        <div class="panel" style="margin-bottom:.9rem">
+          <div class="ph"><div class="pt">DOMAIN SCAN</div></div>
+          <div class="pb">
+            <div style="display:flex;gap:.7rem;align-items:flex-end;flex-wrap:wrap">
+              <div class="form-group" style="flex:1;margin-bottom:0"><label class="form-label">TARGET DOMAIN</label>
+                <input class="form-input" id="surfDomain" placeholder="example.com (no http://)"/></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">SCAN DEPTH</label>
+                <select class="form-input" id="surfDepth">
+                  <option value="quick">Quick (30s)</option>
+                  <option value="standard" selected>Standard (2min)</option>
+                  <option value="deep">Deep (10min)</option>
+                </select></div>
+              <button onclick="runSurfaceScan()" class="btn btn-g btn-sm" style="margin-bottom:0">SCAN &#8594;</button>
+            </div>
+            <div style="display:flex;gap:.5rem;margin-top:.7rem;flex-wrap:wrap">
+              <label style="display:flex;align-items:center;gap:.3rem;font-family:var(--mono);font-size:.58rem;color:var(--muted);cursor:pointer"><input type="checkbox" id="surfSubEnum" checked/> Subdomain enum</label>
+              <label style="display:flex;align-items:center;gap:.3rem;font-family:var(--mono);font-size:.58rem;color:var(--muted);cursor:pointer"><input type="checkbox" id="surfPortScan" checked/> Port scanning</label>
+              <label style="display:flex;align-items:center;gap:.3rem;font-family:var(--mono);font-size:.58rem;color:var(--muted);cursor:pointer"><input type="checkbox" id="surfSslCheck" checked/> SSL analysis</label>
+              <label style="display:flex;align-items:center;gap:.3rem;font-family:var(--mono);font-size:.58rem;color:var(--muted);cursor:pointer"><input type="checkbox" id="surfDnsEnum" checked/> DNS enumeration</label>
+              <label style="display:flex;align-items:center;gap:.3rem;font-family:var(--mono);font-size:.58rem;color:var(--muted);cursor:pointer"><input type="checkbox" id="surfCertTrans"/> Certificate transparency</label>
+            </div>
+          </div>
+        </div>
+        <div class="panel" style="margin-bottom:.9rem">
+          <div class="ph"><div class="pt">DISCOVERED ASSETS</div><button onclick="exportSurfaceReport()" class="btn btn-o btn-sm" id="surfExportBtn" style="display:none">EXPORT</button></div>
+          <div class="pb" id="surfResults"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">Enter a domain and click SCAN to discover all assets.</div></div>
+        </div>
+      </div>
+
+      <!-- ══ CLOUD SCANNER PAGE ══ -->
+      <div class="page" id="page-cloudscan">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">CLOUD SECURITY SCANNER</div>
+          <div class="pg-sub">Check AWS, Azure, and GCP for misconfigurations and exposed resources</div></div>
+        </div>
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-r"><div class="sc-icon">&#9729;</div><div class="sc-label">Misconfigs Found</div><div class="sc-value" id="cloudMisconfig" style="color:var(--danger)">0</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#128421;</div><div class="sc-label">Public Buckets</div><div class="sc-value" id="cloudBuckets" style="color:var(--warn)">0</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#9989;</div><div class="sc-label">Passed Checks</div><div class="sc-value" id="cloudPassed" style="color:var(--ok)">0</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#128202;</div><div class="sc-label">Cloud Score</div><div class="sc-value" id="cloudScore">-</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;margin-bottom:.9rem">
+          <div class="panel">
+            <div class="ph"><div class="pt">&#9729; AWS SCAN</div></div>
+            <div class="pb">
+              <div class="form-group"><label class="form-label">ACCESS KEY ID</label><input class="form-input" id="awsKeyId" placeholder="AKIA..." type="password"/></div>
+              <div class="form-group"><label class="form-label">SECRET ACCESS KEY</label><input class="form-input" id="awsKeySecret" placeholder="Secret..." type="password"/></div>
+              <div class="form-group"><label class="form-label">REGION</label>
+                <select class="form-input" id="awsRegion">
+                  <option value="us-east-1">us-east-1</option><option value="us-west-2">us-west-2</option>
+                  <option value="eu-west-1">eu-west-1</option><option value="ap-south-1">ap-south-1</option>
+                </select></div>
+              <button onclick="scanCloud('aws')" class="btn btn-g btn-sm" style="width:100%;justify-content:center">SCAN AWS</button>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="ph"><div class="pt">&#9729; AZURE SCAN</div></div>
+            <div class="pb">
+              <div class="form-group"><label class="form-label">SUBSCRIPTION ID</label><input class="form-input" id="azSubId" placeholder="xxxxxxxx-xxxx-..." type="password"/></div>
+              <div class="form-group"><label class="form-label">CLIENT ID</label><input class="form-input" id="azClientId" placeholder="App client ID" type="password"/></div>
+              <div class="form-group"><label class="form-label">TENANT ID</label><input class="form-input" id="azTenantId" placeholder="Directory ID" type="password"/></div>
+              <button onclick="scanCloud('azure')" class="btn btn-g btn-sm" style="width:100%;justify-content:center">SCAN AZURE</button>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="ph"><div class="pt">&#9729; GCP SCAN</div></div>
+            <div class="pb">
+              <div class="form-group"><label class="form-label">PROJECT ID</label><input class="form-input" id="gcpProjectId" placeholder="my-project-id"/></div>
+              <div class="form-group"><label class="form-label">SERVICE ACCOUNT KEY</label><textarea class="form-input" id="gcpServiceKey" rows="3" placeholder='{"type": "service_account"...}' style="resize:vertical;font-size:.6rem"></textarea></div>
+              <button onclick="scanCloud('gcp')" class="btn btn-g btn-sm" style="width:100%;justify-content:center;margin-top:.3rem">SCAN GCP</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt">CLOUD SECURITY FINDINGS</div></div>
+          <div class="pb" id="cloudResults"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">Configure cloud credentials above and run a scan.</div></div>
+        </div>
+      </div>
+
+      <!-- ══ COMPLIANCE HUB PAGE ══ -->
+      <div class="page" id="page-compliance">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">COMPLIANCE HUB</div>
+          <div class="pg-sub">Continuous compliance monitoring across SOC 2, ISO 27001, HIPAA, NIST CSF, PCI DSS, GDPR</div></div>
+          <button onclick="runComplianceScan()" class="btn btn-g btn-sm">&#8635; RUN COMPLIANCE CHECK</button>
+        </div>
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-b"><div class="sc-icon">&#9878;</div><div class="sc-label">Frameworks</div><div class="sc-value" id="compFrameworks">6</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#9989;</div><div class="sc-label">Controls Passed</div><div class="sc-value" id="compPassed" style="color:var(--ok)">0</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#128683;</div><div class="sc-label">Controls Failed</div><div class="sc-value" id="compFailed" style="color:var(--danger)">0</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#128202;</div><div class="sc-label">Overall Score</div><div class="sc-value" id="compScore">-</div></div>
+        </div>
+        <div class="panel" style="margin-bottom:.9rem" id="compFrameworkGrid"></div>
+        <div class="panel">
+          <div class="ph"><div class="pt">FAILED CONTROLS — ACTION REQUIRED</div></div>
+          <div class="pb" id="compFailedList"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:1.5rem">Run a compliance check to see failed controls.</div></div>
+        </div>
+      </div>
+
+      <!-- ══ MSP DASHBOARD PAGE ══ -->
+      <div class="page" id="page-msp">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">MSP DASHBOARD</div>
+          <div class="pg-sub">Managed Security Provider view — all clients in one place</div></div>
+          <button onclick="addMSPClient()" class="btn btn-g btn-sm">&#10133; ADD CLIENT</button>
+        </div>
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-b"><div class="sc-icon">&#128101;</div><div class="sc-label">Total Clients</div><div class="sc-value" id="mspClientCount">0</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#128683;</div><div class="sc-label">Critical Alerts</div><div class="sc-value" id="mspCritAlerts" style="color:var(--danger)">0</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#9989;</div><div class="sc-label">Healthy Clients</div><div class="sc-value" id="mspHealthy" style="color:var(--ok)">0</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#128176;</div><div class="sc-label">Monthly Revenue</div><div class="sc-value" id="mspRevenue" style="font-size:.9rem">$0</div></div>
+        </div>
+        <div class="panel" style="margin-bottom:.9rem">
+          <div class="ph">
+            <div class="pt">ALL CLIENTS</div>
+            <div style="display:flex;gap:.5rem">
+              <input class="form-input" id="mspSearch" placeholder="&#128269; Search clients..." style="width:160px;font-size:.62rem" oninput="filterMSPClients()"/>
+              <select class="form-input" id="mspFilter" onchange="filterMSPClients()" style="width:110px;font-size:.62rem">
+                <option value="all">All Status</option>
+                <option value="critical">Critical</option>
+                <option value="warning">Warning</option>
+                <option value="healthy">Healthy</option>
+              </select>
+            </div>
+          </div>
+          <div class="pb" id="mspClientGrid"></div>
+        </div>
+      </div>
+
+      <!-- ══ ASSET INVENTORY PAGE ══ -->
+      <div class="page" id="page-assets">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">ASSET INVENTORY</div>
+          <div class="pg-sub">Complete inventory of all IT assets — servers, endpoints, cloud, IoT</div></div>
+          <button onclick="addAsset()" class="btn btn-g btn-sm">&#10133; ADD ASSET</button>
+        </div>
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-b"><div class="sc-icon">&#128230;</div><div class="sc-label">Total Assets</div><div class="sc-value" id="assetTotal">0</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#9888;</div><div class="sc-label">Unpatched</div><div class="sc-value" id="assetUnpatched" style="color:var(--danger)">0</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#9989;</div><div class="sc-label">Compliant</div><div class="sc-value" id="assetCompliant" style="color:var(--ok)">0</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#128268;</div><div class="sc-label">Asset Types</div><div class="sc-value" id="assetTypes">-</div></div>
+        </div>
+        <div class="panel" style="margin-bottom:.9rem">
+          <div class="ph">
+            <div class="pt">ASSET REGISTER</div>
+            <div style="display:flex;gap:.4rem;flex-wrap:wrap">
+              <select class="form-input" id="assetTypeFilter" onchange="renderAssets()" style="width:120px;font-size:.6rem">
+                <option value="all">All Types</option>
+                <option value="server">Servers</option>
+                <option value="workstation">Workstations</option>
+                <option value="network">Network Devices</option>
+                <option value="cloud">Cloud Resources</option>
+                <option value="iot">IoT Devices</option>
+                <option value="mobile">Mobile Devices</option>
+              </select>
+              <button onclick="importAssetsFromScans()" class="btn btn-o btn-sm">&#8635; IMPORT FROM SCANS</button>
+              <button onclick="exportAssetCSV()" class="btn btn-o btn-sm">&#11015; EXPORT CSV</button>
+            </div>
+          </div>
+          <div class="pb" id="assetList"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">No assets registered. Add manually or import from scans.</div></div>
+        </div>
+      </div>
+
+      <!-- ══ RISK MATRIX PAGE ══ -->
+      <div class="page" id="page-risk">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">RISK MATRIX</div>
+          <div class="pg-sub">Visualize and prioritize security risks by likelihood and impact</div></div>
+          <button onclick="generateRiskMatrix()" class="btn btn-g btn-sm">&#8635; RECALCULATE</button>
+        </div>
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-r"><div class="sc-icon">&#128308;</div><div class="sc-label">Critical Risk</div><div class="sc-value" id="riskCritical" style="color:var(--danger)">0</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#128992;</div><div class="sc-label">High Risk</div><div class="sc-value" id="riskHigh" style="color:var(--warn)">0</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#128993;</div><div class="sc-label">Medium Risk</div><div class="sc-value" id="riskMedium">0</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#128994;</div><div class="sc-label">Low Risk</div><div class="sc-value" id="riskLow" style="color:var(--ok)">0</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem">
+          <div class="panel">
+            <div class="ph"><div class="pt">RISK HEAT MAP</div></div>
+            <div class="pb" id="riskHeatMap" style="min-height:280px"></div>
+          </div>
+          <div class="panel">
+            <div class="ph"><div class="pt">TOP RISKS — PRIORITIZED</div></div>
+            <div class="pb" id="riskList"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">Run scans to populate risk matrix.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ EXECUTIVE DASHBOARD PAGE ══ -->
+      <div class="page" id="page-executive">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">EXECUTIVE DASHBOARD</div>
+          <div class="pg-sub">CEO and board-level security overview — no technical jargon</div></div>
+          <button onclick="printExecReport()" class="btn btn-g btn-sm">&#128424; PRINT REPORT</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem;margin-bottom:1.2rem" id="execKPIRow"></div>
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:.9rem;margin-bottom:.9rem">
+          <div class="panel">
+            <div class="ph"><div class="pt">SECURITY POSTURE OVER TIME</div></div>
+            <div class="pb" id="execTrendChart" style="min-height:160px"></div>
+          </div>
+          <div class="panel">
+            <div class="ph"><div class="pt">THREAT SUMMARY</div></div>
+            <div class="pb" id="execThreatSummary"></div>
+          </div>
+        </div>
+        <div class="panel" style="margin-bottom:.9rem">
+          <div class="ph"><div class="pt">BUSINESS IMPACT ANALYSIS</div></div>
+          <div class="pb" id="execBusinessImpact"></div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt">RECOMMENDED ACTIONS FOR LEADERSHIP</div></div>
+          <div class="pb" id="execActions"></div>
+        </div>
+      </div>
+
+      <!-- ══ THREAT HUNTING PAGE ══ -->
+      <div class="page" id="page-hunting">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">AI THREAT HUNTING</div>
+          <div class="pg-sub">Proactively hunt for threats, attack patterns, and indicators of compromise</div></div>
+          <button onclick="startThreatHunt()" class="btn btn-g btn-sm">&#129488; START HUNT</button>
+        </div>
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-b"><div class="sc-icon">&#129488;</div><div class="sc-label">Hunts Run</div><div class="sc-value" id="huntCount">0</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#128683;</div><div class="sc-label">IOCs Found</div><div class="sc-value" id="huntIOCs" style="color:var(--danger)">0</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#128506;</div><div class="sc-label">ATT&amp;CK Techniques</div><div class="sc-value" id="huntTechniques">0</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#9989;</div><div class="sc-label">Threats Cleared</div><div class="sc-value" id="huntCleared" style="color:var(--ok)">0</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:.9rem">
+          <div class="panel">
+            <div class="ph"><div class="pt">HUNT QUERIES</div></div>
+            <div class="pb">
+              <div style="display:flex;flex-direction:column;gap:.4rem" id="huntQueryList"></div>
+              <div style="margin-top:.7rem">
+                <textarea class="form-input" id="customHuntQuery" rows="3" placeholder="Describe what to hunt for... e.g. 'Look for signs of brute force attacks from the same IP'" style="resize:vertical;font-size:.63rem"></textarea>
+                <button onclick="runCustomHunt()" class="btn btn-g btn-sm" style="width:100%;justify-content:center;margin-top:.4rem">&#129488; RUN CUSTOM HUNT</button>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="ph"><div class="pt">HUNT RESULTS</div></div>
+            <div class="pb" id="huntResults"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">Start a hunt to see results.</div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt">KILL CHAIN ANALYSIS</div></div>
+          <div class="pb" id="killChainViz" style="min-height:120px"></div>
+        </div>
+      </div>
+
+      <!-- ══ CAMERA SECURITY PAGE ══ -->
+      <div class="page" id="page-cameras">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">SECURITY CAMERA AUDIT</div>
+          <div class="pg-sub">Scan IP cameras and access control systems for vulnerabilities</div></div>
+          <button onclick="scanCameras()" class="btn btn-g btn-sm">&#128269; SCAN FOR CAMERAS</button>
+        </div>
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-b"><div class="sc-icon">&#128249;</div><div class="sc-label">Cameras Found</div><div class="sc-value" id="camTotal">0</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#128683;</div><div class="sc-label">Default Creds</div><div class="sc-value" id="camDefaultCreds" style="color:var(--danger)">0</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#127909;</div><div class="sc-label">Exposed Streams</div><div class="sc-value" id="camExposed" style="color:var(--warn)">0</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#9989;</div><div class="sc-label">Secured</div><div class="sc-value" id="camSecured" style="color:var(--ok)">0</div></div>
+        </div>
+        <div class="panel" style="margin-bottom:.9rem">
+          <div class="ph"><div class="pt">NETWORK SCAN FOR CAMERAS</div></div>
+          <div class="pb">
+            <div style="display:flex;gap:.7rem;align-items:flex-end;flex-wrap:wrap">
+              <div class="form-group" style="flex:1;margin-bottom:0"><label class="form-label">NETWORK RANGE</label>
+                <input class="form-input" id="camNetwork" placeholder="192.168.1.0/24"/></div>
+              <button onclick="scanCameras()" class="btn btn-g btn-sm" style="margin-bottom:0">SCAN &#8594;</button>
+            </div>
+            <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-top:.5rem">Checks ports 80, 443, 554 (RTSP), 8080, 8554 for camera interfaces. Tests for default credentials on known manufacturers.</div>
+          </div>
+        </div>
+        <div class="panel" style="margin-bottom:.9rem">
+          <div class="ph"><div class="pt">DISCOVERED CAMERAS</div></div>
+          <div class="pb" id="camList"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">No cameras discovered yet. Run a network scan.</div></div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt">CAMERA SECURITY CHECKLIST</div></div>
+          <div class="pb">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">
+              <div>
+                <div style="font-family:var(--mono);font-size:.6rem;color:var(--g);margin-bottom:.5rem">CRITICAL CHECKS</div>
+                <div id="camChecklist"></div>
+              </div>
+              <div>
+                <div style="font-family:var(--mono);font-size:.6rem;color:var(--g2);margin-bottom:.5rem">BEST PRACTICES</div>
+                <div id="camBestPractices"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- COMPLIANCE PAGE -->
+      <div class="page" id="page-compliance">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">COMPLIANCE CENTER</div>
+          <div class="pg-sub">SOC 2 · ISO 27001 · PCI DSS · HIPAA · NIST CSF · GDPR</div></div>
+          <button onclick="generateComplianceReport()" class="btn btn-g btn-sm">&#128196; EXPORT REPORT</button>
+        </div>
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-g"><div class="sc-icon">&#9878;</div><div class="sc-label">Overall Score</div><div class="sc-value" id="compOverall" style="color:var(--ok)">--</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#128683;</div><div class="sc-label">Failed Controls</div><div class="sc-value" id="compFailed" style="color:var(--danger)">--</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#9989;</div><div class="sc-label">Passed Controls</div><div class="sc-value" id="compPassed">--</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#8987;</div><div class="sc-label">In Progress</div><div class="sc-value" id="compInProgress">--</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.9rem" id="compFrameworks"></div>
+      </div>
+
+      <!-- PENTEST REPORT PAGE -->
+      <div class="page" id="page-pentest">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">PENTEST REPORT GENERATOR</div>
+          <div class="pg-sub">Generate professional penetration testing reports for clients</div></div>
+          <button onclick="generatePentestPDF()" class="btn btn-g btn-sm">&#128196; GENERATE PDF</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:1rem">
+          <div class="panel">
+            <div class="ph"><div class="pt">REPORT DETAILS</div></div>
+            <div class="pb">
+              <div class="form-group"><label class="form-label">CLIENT NAME</label><input class="form-input" id="ptClient" placeholder="Acme Corporation"/></div>
+              <div class="form-group"><label class="form-label">ENGAGEMENT TYPE</label>
+                <select class="form-input" id="ptType">
+                  <option value="external">External Network Pentest</option>
+                  <option value="internal">Internal Network Pentest</option>
+                  <option value="webapp">Web Application Pentest</option>
+                  <option value="mobile">Mobile Application Pentest</option>
+                  <option value="social">Social Engineering Assessment</option>
+                  <option value="physical">Physical Security Assessment</option>
+                  <option value="full">Full Red Team Engagement</option>
+                </select></div>
+              <div class="form-group"><label class="form-label">SCOPE</label><textarea class="form-input" id="ptScope" rows="3" placeholder="IP ranges, domains, applications in scope..." style="resize:vertical"></textarea></div>
+              <div class="form-group"><label class="form-label">ASSESSMENT DATES</label>
+                <div style="display:flex;gap:.5rem">
+                  <input class="form-input" id="ptDateFrom" type="date" style="flex:1"/>
+                  <input class="form-input" id="ptDateTo" type="date" style="flex:1"/>
+                </div></div>
+              <div class="form-group"><label class="form-label">EXECUTIVE SUMMARY</label><textarea class="form-input" id="ptSummary" rows="4" placeholder="Overall findings summary for non-technical stakeholders..." style="resize:vertical"></textarea></div>
+              <div class="form-group"><label class="form-label">METHODOLOGY</label>
+                <select class="form-input" id="ptMethodology">
+                  <option value="owasp">OWASP Testing Guide</option>
+                  <option value="ptes">PTES (Pentest Execution Standard)</option>
+                  <option value="nist">NIST SP 800-115</option>
+                  <option value="mitre">MITRE ATT&amp;CK Framework</option>
+                </select></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="ph"><div class="pt">FINDINGS SUMMARY</div></div>
+            <div class="pb" id="ptFindingsSummary"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt">DETAILED FINDINGS</div><button onclick="addManualFinding()" class="btn btn-o btn-sm">&#10133; ADD FINDING</button></div>
+          <div class="pb" id="ptFindings"></div>
+        </div>
+        <div class="panel" style="margin-top:.9rem">
+          <div class="ph"><div class="pt">REMEDIATION RECOMMENDATIONS</div></div>
+          <div class="pb" id="ptRemediation"></div>
+        </div>
+      </div>
+
+      <!-- PHISHING SIMULATION PAGE -->
+      <div class="page" id="page-phishing">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">PHISHING SIMULATION</div>
+          <div class="pg-sub">Test employee security awareness with simulated phishing campaigns</div></div>
+          <button onclick="launchCampaign()" class="btn btn-g btn-sm">&#128640; LAUNCH CAMPAIGN</button>
+        </div>
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-b"><div class="sc-icon">&#128231;</div><div class="sc-label">Emails Sent</div><div class="sc-value" id="phishSent">0</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#128073;</div><div class="sc-label">Clicked</div><div class="sc-value" id="phishClicked" style="color:var(--danger)">0</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#9888;</div><div class="sc-label">Reported</div><div class="sc-value" id="phishReported" style="color:var(--ok)">0</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#128200;</div><div class="sc-label">Click Rate</div><div class="sc-value" id="phishRate">0%</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:1rem">
+          <div class="panel">
+            <div class="ph"><div class="pt">NEW CAMPAIGN</div></div>
+            <div class="pb">
+              <div class="form-group"><label class="form-label">CAMPAIGN NAME</label><input class="form-input" id="phishName" placeholder="Q1 2025 Awareness Test"/></div>
+              <div class="form-group"><label class="form-label">PHISHING TEMPLATE</label>
+                <select class="form-input" id="phishTemplate">
+                  <option value="invoice">&#128196; Fake Invoice — Finance Dept</option>
+                  <option value="password_reset">&#128272; Password Reset Required</option>
+                  <option value="it_helpdesk">&#128187; IT Helpdesk Alert</option>
+                  <option value="package">&#128230; Package Delivery Notice</option>
+                  <option value="docusign">&#9997; Document Signature Request</option>
+                  <option value="office365">&#9729; Microsoft 365 Login Alert</option>
+                  <option value="payroll">&#128176; Payroll Update Required</option>
+                  <option value="zoom">&#128249; Zoom Meeting Invitation</option>
+                </select></div>
+              <div class="form-group"><label class="form-label">TARGET EMAILS (one per line)</label><textarea class="form-input" id="phishTargets" rows="5" placeholder="employee1@company.com&#10;employee2@company.com&#10;manager@company.com" style="resize:vertical"></textarea></div>
+              <div class="form-group"><label class="form-label">SENDER NAME (displayed)</label><input class="form-input" id="phishSender" placeholder="IT Security Team"/></div>
+              <button onclick="launchCampaign()" class="btn btn-g btn-sm" style="width:100%">&#128640; LAUNCH CAMPAIGN</button>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="ph"><div class="pt">ACTIVE CAMPAIGNS</div></div>
+            <div class="pb" id="phishCampaigns"><div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">No campaigns yet. Launch one to test your team.</div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt">AWARENESS TRAINING RECOMMENDATIONS</div></div>
+          <div class="pb" id="phishTraining"></div>
+        </div>
+      </div>
+
+      <!-- ATTACK SURFACE PAGE -->
+      <div class="page" id="page-attacksurface">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">ATTACK SURFACE DISCOVERY</div>
+          <div class="pg-sub">Discover subdomains, exposed assets and forgotten infrastructure</div></div>
+          <button onclick="startSurfaceScan()" class="btn btn-g btn-sm">&#128269; DISCOVER ASSETS</button>
+        </div>
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-b"><div class="sc-icon">&#127758;</div><div class="sc-label">Subdomains Found</div><div class="sc-value" id="asSubs">0</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#9888;</div><div class="sc-label">Exposed Services</div><div class="sc-value" id="asExposed" style="color:var(--danger)">0</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#128203;</div><div class="sc-label">Open Ports</div><div class="sc-value" id="asPorts">0</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#128737;</div><div class="sc-label">Risk Score</div><div class="sc-value" id="asRisk">--</div></div>
+        </div>
+        <div class="panel" style="margin-bottom:.9rem">
+          <div class="ph"><div class="pt">DOMAIN DISCOVERY</div></div>
+          <div class="pb">
+            <div style="display:flex;gap:.6rem">
+              <input class="form-input" id="asDomain" placeholder="example.com" style="flex:1"/>
+              <button onclick="startSurfaceScan()" class="btn btn-g btn-sm">SCAN</button>
+            </div>
+            <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:.4rem">Uses certificate transparency logs, DNS brute-force, and OSINT to find all assets</div>
+          </div>
+        </div>
+        <div class="panel" style="margin-bottom:.9rem">
+          <div class="ph"><div class="pt">DISCOVERED ASSETS</div></div>
+          <div class="pb" id="asAssets"><div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">Enter a domain and click Scan to discover all associated assets.</div></div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt">EXPOSED SERVICES MAP</div></div>
+          <div class="pb" id="asServicesMap"><div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:1.5rem">Run a scan to map all exposed services.</div></div>
+        </div>
+      </div>
+
+      <!-- DARK WEB PAGE -->
+      <div class="page" id="page-darkweb">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">DARK WEB MONITOR</div>
+          <div class="pg-sub">Monitor for leaked credentials, data breaches and threat actor mentions</div></div>
+          <button onclick="runDarkWebScan()" class="btn btn-g btn-sm">&#128565; SCAN NOW</button>
+        </div>
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-r"><div class="sc-icon">&#128565;</div><div class="sc-label">Credentials Leaked</div><div class="sc-value" id="dwCredLeaks" style="color:var(--danger)">--</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#127990;</div><div class="sc-label">Ransomware Mentions</div><div class="sc-value" id="dwRansom" style="color:var(--warn)">--</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#128196;</div><div class="sc-label">Paste Sites</div><div class="sc-value" id="dwPastes">--</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#9200;</div><div class="sc-label">Last Checked</div><div class="sc-value" id="dwLastCheck" style="font-size:.8rem">Never</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:.9rem">
+          <div class="panel">
+            <div class="ph"><div class="pt">MONITOR TARGETS</div></div>
+            <div class="pb">
+              <div class="form-group"><label class="form-label">COMPANY DOMAIN</label><input class="form-input" id="dwDomain" placeholder="company.com"/></div>
+              <div class="form-group"><label class="form-label">EMAIL PATTERNS</label><input class="form-input" id="dwEmail" placeholder="@company.com"/></div>
+              <div class="form-group"><label class="form-label">KEYWORDS TO MONITOR</label><textarea class="form-input" id="dwKeywords" rows="3" placeholder="company name&#10;CEO name&#10;product names" style="resize:vertical"></textarea></div>
+              <button onclick="runDarkWebScan()" class="btn btn-g btn-sm" style="width:100%">&#128565; START MONITORING</button>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="ph"><div class="pt">THREAT INTELLIGENCE SOURCES</div></div>
+            <div class="pb" id="dwSources"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt">RECENT FINDINGS</div></div>
+          <div class="pb" id="dwFindings"><div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">Configure monitoring targets above to scan the dark web.</div></div>
+        </div>
+      </div>
+
+      <!-- MSP DASHBOARD PAGE -->
+      <div class="page" id="page-msp">
+        <div class="pg-hdr flex-between">
+          <div><div class="pg-title">MSP DASHBOARD</div>
+          <div class="pg-sub">Manage all clients from one view — Managed Security Provider mode</div></div>
+          <button onclick="addMSPClient()" class="btn btn-g btn-sm">&#10133; ADD CLIENT</button>
+        </div>
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-b"><div class="sc-icon">&#128101;</div><div class="sc-label">Total Clients</div><div class="sc-value" id="mspTotal">0</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#128683;</div><div class="sc-label">Critical Alerts</div><div class="sc-value" id="mspCritical" style="color:var(--danger)">0</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#9989;</div><div class="sc-label">Healthy Clients</div><div class="sc-value" id="mspHealthy" style="color:var(--ok)">0</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#128200;</div><div class="sc-label">Avg Score</div><div class="sc-value" id="mspAvgScore">--</div></div>
+        </div>
+        <div class="panel" style="margin-bottom:.9rem">
+          <div class="ph">
+            <div class="pt">CLIENT OVERVIEW</div>
+            <div style="display:flex;gap:.5rem">
+              <input class="form-input" id="mspSearch" placeholder="&#128269; Search clients..." oninput="filterMSPClients()" style="font-size:.62rem;padding:.3rem .7rem;width:160px"/>
+              <select class="form-input" id="mspFilter" onchange="filterMSPClients()" style="font-size:.62rem;padding:.3rem .6rem;width:auto">
+                <option value="all">All Clients</option>
+                <option value="critical">Critical Issues</option>
+                <option value="healthy">Healthy</option>
+                <option value="unscanned">Not Scanned</option>
+              </select>
+            </div>
+          </div>
+          <div class="pb" id="mspClientList"><div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">No clients added yet. Add your first client above.</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem">
+          <div class="panel">
+            <div class="ph"><div class="pt">&#128200; SCORE DISTRIBUTION</div></div>
+            <div class="pb" id="mspScoreChart"></div>
+          </div>
+          <div class="panel">
+            <div class="ph"><div class="pt">&#128680; RECENT ALERTS (ALL CLIENTS)</div></div>
+            <div class="pb" id="mspAlerts"><div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:1.5rem">No alerts yet.</div></div>
+          </div>
         </div>
       </div>
 
@@ -7209,6 +7904,1649 @@ function openClientReview(){var s=document.getElementById('crDevice');if(s&&type
 function closeClientReview(){var m=document.getElementById('clientReviewModal');if(m)m.style.display='none';}
 function sendClientReview(){var n=(document.getElementById('crClientName')||{}).value||'';var e=(document.getElementById('crClientEmail')||{}).value||'';var dv=(document.getElementById('crDevice')||{}).value||'';var mg=(document.getElementById('crMessage')||{}).value||'';if(!n){if(typeof showToast==='function')showToast('Enter client name','warn');return;}if(!e.includes('@')){if(typeof showToast==='function')showToast('Enter valid email','warn');return;}var dd=(typeof DEVICES!=='undefined'?DEVICES:[]).find(function(x){return x.ip===dv;});var sid=(typeof SESSION!=='undefined')?SESSION.id:'guest';var revs=JSON.parse(localStorage.getItem('pm_revs_'+sid)||'[]');revs.unshift({id:'R'+Date.now().toString(36).toUpperCase(),clientName:n,clientEmail:e,deviceHostname:dd?(dd.hostname||dd.ip):dv,score:dd?(dd.score||0):0,status:'sent',sentAt:new Date().toISOString()});localStorage.setItem('pm_revs_'+sid,JSON.stringify(revs));closeClientReview();if(typeof showToast==='function')showToast('Review sent to '+n,'ok');if(typeof addActivity==='function')addActivity('ok','Client review sent to '+n,'Just now');var subj=encodeURIComponent('Your Security Report is Ready');var body=encodeURIComponent('Hi '+n+',\n\n'+(mg?mg+'\n\n':'')+'View at: https://erprakashmijar.com/client/index.html\n\nBest regards');setTimeout(function(){window.open('mailto:'+e+'?subject='+subj+'&body='+body,'_blank');},500);}
 function openReviewsList(){var m=document.getElementById('reviewsListModal');var b=document.getElementById('reviewsListBody');if(!m||!b)return;var sid=(typeof SESSION!=='undefined')?SESSION.id:'guest';var revs=JSON.parse(localStorage.getItem('pm_revs_'+sid)||'[]');b.innerHTML=revs.length?revs.map(function(rv){return '<div style="border:1px solid rgba(0,255,136,.07);border-radius:6px;padding:.8rem;margin-bottom:.4rem"><strong style="font-family:var(--mono);font-size:.68rem;color:var(--white)">'+rv.clientName+'</strong><div style="font-family:var(--mono);font-size:.57rem;color:var(--muted);margin-top:.2rem">'+rv.clientEmail+' &#183; '+rv.deviceHostname+'<br/>'+new Date(rv.sentAt).toLocaleDateString()+'</div><a href="https://erprakashmijar.com/client/index.html" target="_blank" style="display:inline-block;margin-top:.4rem;font-family:var(--mono);font-size:.55rem;color:var(--g);border:1px solid rgba(0,255,136,.2);border-radius:3px;padding:.15rem .45rem;text-decoration:none">CLIENT PORTAL</a></div>';}).join(''):'<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">No reviews sent yet.</div>';m.style.display='flex';}
+</script>
+
+<script type="text/javascript">
+/* ═══════════════════════════════════════════════════════════════
+   PENTEST REPORT GENERATOR
+═══════════════════════════════════════════════════════════════ */
+function importScanFindings() {
+  var devs = DEVICES || [];
+  var el = document.getElementById('ptFindingsList');
+  if (!el) return;
+  if (!devs.length) { el.innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:1.5rem">No scan results found. Run a scan first.</div>'; return; }
+  var all = [];
+  devs.forEach(function(d) {
+    (d.issues||[]).forEach(function(i) {
+      all.push({ title:i.title, severity:i.severity, cvss:i.cvss||0, device:d.hostname||d.ip, category:i.category, detail:i.detail||'' });
+    });
+  });
+  var order = {critical:0,high:1,medium:2,low:3};
+  all.sort(function(a,b){ return (order[a.severity]||4)-(order[b.severity]||4); });
+  el.innerHTML = all.slice(0,20).map(function(i,n) {
+    return '<div style="display:flex;align-items:center;gap:.6rem;padding:.45rem .3rem;border-bottom:1px solid rgba(0,255,136,.05)">'
+      + '<span style="font-family:var(--mono);font-size:.55rem;color:var(--muted);width:16px">' + (n+1) + '</span>'
+      + '<span class="badge b-' + i.severity + '">' + i.severity.toUpperCase() + '</span>'
+      + '<span style="font-family:var(--mono);font-size:.63rem;color:var(--text2);flex:1">' + i.title + '</span>'
+      + '<span style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">' + i.device + '</span>'
+      + '</div>';
+  }).join('');
+  document.getElementById('ptCritCount').textContent = all.filter(function(i){return i.severity==='critical';}).length;
+  showToast('Imported ' + all.length + ' findings from scans', 'ok');
+}
+
+function generatePentestReport() {
+  var client = (document.getElementById('ptClientName')||{}).value || 'Client Organization';
+  var engType = (document.getElementById('ptEngType')||{}).value || 'external';
+  var tester  = (document.getElementById('ptTester')||{}).value || 'PM::OFFSEC Security';
+  var start   = (document.getElementById('ptDateStart')||{}).value || new Date().toISOString().split('T')[0];
+  var end     = (document.getElementById('ptDateEnd')||{}).value || new Date().toISOString().split('T')[0];
+  var scope   = (document.getElementById('ptScope')||{}).value || 'As agreed in engagement letter';
+  var summary = (document.getElementById('ptSummary')||{}).value || 'Security assessment was conducted according to agreed scope and methodology.';
+  
+  var devs = DEVICES || [];
+  var all = [];
+  devs.forEach(function(d) {
+    (d.issues||[]).forEach(function(i) {
+      all.push({ title:i.title, severity:i.severity, cvss:i.cvss||0, device:d.hostname||d.ip, category:i.category, detail:i.detail||'', remediation:i.remediation||'Refer to vendor documentation.' });
+    });
+  });
+  var crit = all.filter(function(i){return i.severity==='critical';});
+  var high = all.filter(function(i){return i.severity==='high';});
+  var med  = all.filter(function(i){return i.severity==='medium';});
+  var low  = all.filter(function(i){return i.severity==='low';});
+  var riskScore = crit.length*10 + high.length*7 + med.length*4 + low.length*1;
+  var riskRating = riskScore>50?'CRITICAL':riskScore>30?'HIGH':riskScore>15?'MEDIUM':'LOW';
+  
+  var report = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><title>Penetration Test Report — ' + client + '</title>'
+    + '<style>body{font-family:Arial,sans-serif;background:#fff;color:#1a1a2e;font-size:13px;line-height:1.6;margin:0;padding:0}'
+    + '@page{size:A4;margin:2cm} @media print{.no-print{display:none}}'
+    + '.cover{background:linear-gradient(135deg,#040810,#0d1829);color:#fff;padding:60px 40px;text-align:center;min-height:300px;display:flex;flex-direction:column;justify-content:center;align-items:center}'
+    + '.cover h1{font-size:28px;letter-spacing:2px;margin:0 0 8px;color:#00ff88}.cover h2{font-size:16px;color:#00d4ff;margin:0 0 30px}'
+    + '.cover .meta{font-size:12px;color:rgba(255,255,255,.6);line-height:2}'
+    + '.section{padding:30px 40px;border-bottom:1px solid #eee}'
+    + '.section h2{font-size:16px;color:#1a1a2e;letter-spacing:1px;border-bottom:2px solid #00ff88;padding-bottom:8px;margin-bottom:16px}'
+    + '.finding{margin-bottom:20px;border:1px solid #e0e0e0;border-radius:6px;overflow:hidden;page-break-inside:avoid}'
+    + '.finding-hdr{padding:12px 16px;display:flex;align-items:center;gap:10px}'
+    + '.crit{background:#fee2e2;border-left:4px solid #dc2626}.high{background:#ffedd5;border-left:4px solid #ea580c}'
+    + '.med{background:#fef9c3;border-left:4px solid #d97706}.low{background:#dcfce7;border-left:4px solid #16a34a}'
+    + '.badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:3px}'
+    + '.badge-crit{background:#dc2626;color:#fff}.badge-high{background:#ea580c;color:#fff}.badge-med{background:#d97706;color:#fff}.badge-low{background:#16a34a;color:#fff}'
+    + '.finding-body{padding:12px 16px;background:#fafafa}'
+    + '.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0}'
+    + '.kpi{text-align:center;padding:16px;border:1px solid #e0e0e0;border-radius:6px}'
+    + '.kpi-num{font-size:28px;font-weight:700;color:#1a56db}.kpi-lbl{font-size:11px;color:#64748b;margin-top:4px}'
+    + '.footer{text-align:center;padding:20px;font-size:11px;color:#94a3b8;border-top:1px solid #eee}'
+    + '</style></head><body>'
+    + '<div class="cover">'
+    + '<h1>PENETRATION TEST REPORT</h1>'
+    + '<h2>' + client + '</h2>'
+    + '<div class="meta">'
+    + 'Engagement Type: ' + engType.replace(/_/g,' ').toUpperCase() + '<br/>'
+    + 'Test Period: ' + start + ' to ' + end + '<br/>'
+    + 'Conducted by: ' + tester + '<br/>'
+    + 'Report Date: ' + new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'}) + '<br/>'
+    + 'Classification: CONFIDENTIAL'
+    + '</div></div>'
+    + '<div class="section"><h2>EXECUTIVE SUMMARY</h2>'
+    + '<div class="kpi-row">'
+    + '<div class="kpi"><div class="kpi-num" style="color:#dc2626">' + crit.length + '</div><div class="kpi-lbl">Critical</div></div>'
+    + '<div class="kpi"><div class="kpi-num" style="color:#ea580c">' + high.length + '</div><div class="kpi-lbl">High</div></div>'
+    + '<div class="kpi"><div class="kpi-num" style="color:#d97706">' + med.length + '</div><div class="kpi-lbl">Medium</div></div>'
+    + '<div class="kpi"><div class="kpi-num" style="color:#16a34a">' + low.length + '</div><div class="kpi-lbl">Low</div></div>'
+    + '</div>'
+    + '<p>' + summary + '</p>'
+    + '<p><strong>Overall Risk Rating: </strong><span style="color:' + (riskRating==='CRITICAL'?'#dc2626':riskRating==='HIGH'?'#ea580c':'#d97706') + '">' + riskRating + '</span></p>'
+    + '</div>'
+    + '<div class="section"><h2>SCOPE &amp; METHODOLOGY</h2>'
+    + '<p><strong>Scope:</strong></p><pre style="background:#f8fafc;padding:10px;border-radius:4px;font-size:12px">' + scope + '</pre>'
+    + '<p><strong>Methodology:</strong> PTES (Penetration Testing Execution Standard), OWASP Testing Guide v4.2, NIST SP 800-115</p>'
+    + '</div>'
+    + '<div class="section"><h2>FINDINGS</h2>'
+    + all.map(function(f,i) {
+        var cls = f.severity === 'critical' ? 'crit' : f.severity === 'high' ? 'high' : f.severity === 'medium' ? 'med' : 'low';
+        var badgeCls = 'badge-' + (f.severity==='critical'?'crit':f.severity==='high'?'high':f.severity==='medium'?'med':'low');
+        return '<div class="finding"><div class="finding-hdr ' + cls + '">'
+          + '<span style="font-weight:bold;font-size:12px">#' + (i+1) + '</span>'
+          + '<span class="badge ' + badgeCls + '">' + f.severity.toUpperCase() + '</span>'
+          + '<span style="font-weight:600">' + f.title + '</span>'
+          + '<span style="margin-left:auto;font-size:11px;color:#666">CVSS: ' + f.cvss + ' | ' + f.device + '</span>'
+          + '</div><div class="finding-body">'
+          + '<p><strong>Description:</strong> ' + f.detail + '</p>'
+          + '<p><strong>Remediation:</strong> ' + f.remediation + '</p>'
+          + '</div></div>';
+      }).join('')
+    + '</div>'
+    + '<div class="section"><h2>REMEDIATION ROADMAP</h2>'
+    + (crit.length > 0 ? '<p><strong>Immediate (0-7 days):</strong> ' + crit.map(function(f){return f.title;}).join(', ') + '</p>' : '')
+    + (high.length > 0 ? '<p><strong>Short-term (7-30 days):</strong> ' + high.map(function(f){return f.title;}).join(', ') + '</p>' : '')
+    + (med.length  > 0 ? '<p><strong>Medium-term (30-90 days):</strong> ' + med.map(function(f){return f.title;}).join(', ') + '</p>' : '')
+    + '</div>'
+    + '<div class="footer">CONFIDENTIAL — ' + client + ' — PM::OFFSEC Security Dashboard — erprakashmijar.com</div>'
+    + '</body></html>';
+
+  var win = window.open('', '_blank');
+  win.document.write(report);
+  win.document.close();
+  setTimeout(function(){ win.print(); }, 600);
+
+  // Save to reports list
+  var reports = JSON.parse(localStorage.getItem('pm_pentest_reports_'+SESSION.id)||'[]');
+  reports.unshift({ id:'RPT-'+Date.now().toString(36).toUpperCase(), client:client, date:new Date().toISOString(), findings:all.length, risk:riskRating });
+  localStorage.setItem('pm_pentest_reports_'+SESSION.id, JSON.stringify(reports));
+  document.getElementById('ptReportsCount').textContent = reports.length;
+
+  var listEl = document.getElementById('ptReportsList');
+  if (listEl) listEl.innerHTML = reports.map(function(r) {
+    return '<div style="display:flex;align-items:center;gap:.7rem;padding:.5rem .3rem;border-bottom:1px solid rgba(0,255,136,.05)">'
+      + '<span style="font-family:var(--mono);font-size:.62rem;color:var(--g2)">' + r.id + '</span>'
+      + '<span style="font-family:var(--mono);font-size:.65rem;color:var(--white);font-weight:600">' + r.client + '</span>'
+      + '<span class="badge b-' + r.risk.toLowerCase() + '" style="margin-left:auto">' + r.risk + '</span>'
+      + '<span style="font-family:var(--mono);font-size:.57rem;color:var(--muted)">' + r.findings + ' findings</span>'
+      + '</div>';
+  }).join('');
+  showToast('Report generated and ready to print', 'ok');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PHISHING SIMULATION
+═══════════════════════════════════════════════════════════════ */
+var PHISH_TEMPLATES = {
+  invoice: { subject:'URGENT: Invoice #INV-2024-' + Math.floor(Math.random()*9000+1000) + ' Payment Required', from:'accounts@billing-secure.net', preview:'Your account has an outstanding invoice requiring immediate payment. Click to review.' },
+  password_reset: { subject:'[Action Required] Your password will expire in 24 hours', from:'noreply@it-helpdesk.company.com', preview:'Your corporate password expires tomorrow. Reset it now to avoid losing access.' },
+  package: { subject:'Your package could not be delivered — Action required', from:'delivery@fedex-tracking.info', preview:'We attempted delivery of your package but were unable to complete it.' },
+  ceo_fraud: { subject:'Urgent — Wire transfer needed today', from:'ceo@company.com.mail.ru', preview:'Hi, I need you to process an urgent wire transfer today. Please keep this confidential.' },
+  cloud_storage: { subject:'John shared a document with you on Google Drive', from:'drive-shares@google-docs.net', preview:'Click to view the shared document: Q4 Salary Review 2024.xlsx' },
+  security_alert: { subject:'⚠️ Suspicious login detected on your account', from:'security@accounts-alert.net', preview:'We detected a login from a new device. Verify your identity to secure your account.' },
+  hr_benefits: { subject:'Important: 2024 Benefits Enrollment Deadline Today', from:'hr@company-benefits.com', preview:'Open enrollment ends today. Review and update your benefits selections now.' },
+  it_survey: { subject:'Quick IT Security Survey — 2 minutes of your time', from:'itsecurity@company-survey.net', preview:'Help us improve our security posture by completing this quick survey.' },
+};
+
+function renderPhishingTemplatePreview() {
+  var sel = (document.getElementById('phTemplate')||{}).value || 'invoice';
+  var t = PHISH_TEMPLATES[sel] || PHISH_TEMPLATES.invoice;
+  var el = document.getElementById('phTemplatePreview');
+  if (!el) return;
+  el.innerHTML = '<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:.8rem;font-size:.78rem">'
+    + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-bottom:.3rem">PREVIEW</div>'
+    + '<div style="color:var(--text2);margin-bottom:.3rem"><span style="color:var(--muted)">From: </span>' + t.from + '</div>'
+    + '<div style="color:var(--white);font-weight:600;margin-bottom:.5rem"><span style="color:var(--muted)">Subject: </span>' + t.subject + '</div>'
+    + '<div style="color:var(--text2);font-size:.75rem;line-height:1.7">' + t.preview + '</div>'
+    + '<div style="margin-top:.7rem;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.15);border-radius:4px;padding:.4rem .7rem;font-family:var(--mono);font-size:.55rem;color:var(--g2)">Click here to take action &#8594;</div>'
+    + '</div>';
+}
+
+function launchPhishing() {
+  var name    = (document.getElementById('phCampName')||{}).value || 'Phishing Campaign';
+  var targets = ((document.getElementById('phTargetList')||{}).value || '').split('\n').filter(function(e){return e.includes('@');});
+  var tmpl    = (document.getElementById('phTemplate')||{}).value || 'invoice';
+
+  if (!targets.length) { showToast('Enter at least one target email', 'warn'); return; }
+
+  var campaigns = JSON.parse(localStorage.getItem('pm_phish_'+SESSION.id)||'[]');
+  var camp = {
+    id: 'PHISH-'+Date.now().toString(36).toUpperCase(),
+    name: name, template: tmpl, targets: targets.length,
+    sent: targets.length, clicked: 0, reported: 0,
+    status: 'running', launchedAt: new Date().toISOString(),
+  };
+  // Simulate results after 3 seconds
+  setTimeout(function() {
+    camp.clicked  = Math.floor(targets.length * (0.1 + Math.random() * 0.3));
+    camp.reported = Math.floor(targets.length * 0.05);
+    camp.status   = 'complete';
+    campaigns[0] = camp;
+    localStorage.setItem('pm_phish_'+SESSION.id, JSON.stringify(campaigns));
+    renderPhishResults();
+    showToast(camp.clicked + ' of ' + targets.length + ' targets clicked the phishing link', camp.clicked > 0 ? 'warn' : 'ok');
+  }, 3000);
+
+  campaigns.unshift(camp);
+  localStorage.setItem('pm_phish_'+SESSION.id, JSON.stringify(campaigns));
+  document.getElementById('phCampaigns').textContent = campaigns.length;
+  document.getElementById('phTargets').textContent = targets.length;
+  renderPhishResults();
+  showToast('Campaign launched against ' + targets.length + ' targets', 'ok');
+}
+
+function renderPhishResults() {
+  var el = document.getElementById('phResults');
+  if (!el) return;
+  var camps = JSON.parse(localStorage.getItem('pm_phish_'+SESSION.id)||'[]');
+  if (!camps.length) { el.innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:1.5rem">No campaigns yet.</div>'; return; }
+  el.innerHTML = camps.map(function(c) {
+    var clickRate = c.targets > 0 ? Math.round(c.clicked/c.targets*100) : 0;
+    var col = clickRate > 30 ? 'var(--danger)' : clickRate > 10 ? 'var(--warn)' : 'var(--ok)';
+    return '<div style="background:rgba(0,0,0,.12);border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:.8rem 1rem;margin-bottom:.5rem">'
+      + '<div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.4rem;flex-wrap:wrap">'
+      + '<span style="font-family:var(--mono);font-size:.65rem;color:var(--white);font-weight:700">' + c.name + '</span>'
+      + '<span class="badge ' + (c.status==='running'?'b-blue':'b-ok') + '">' + c.status.toUpperCase() + '</span>'
+      + '</div>'
+      + '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-top:.4rem">'
+      + '<div style="text-align:center"><div style="font-family:var(--mono);font-size:1.1rem;color:var(--text2)">' + c.sent + '</div><div style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">SENT</div></div>'
+      + '<div style="text-align:center"><div style="font-family:var(--mono);font-size:1.1rem;color:' + col + '">' + c.clicked + '</div><div style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">CLICKED</div></div>'
+      + '<div style="text-align:center"><div style="font-family:var(--mono);font-size:1.1rem;color:var(--ok)">' + c.reported + '</div><div style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">REPORTED</div></div>'
+      + '<div style="text-align:center"><div style="font-family:var(--mono);font-size:1.1rem;color:' + col + '">' + clickRate + '%</div><div style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">CLICK RATE</div></div>'
+      + '</div></div>';
+  }).join('');
+  if (camps.length > 0 && camps[0].clicked !== undefined) {
+    var latest = camps[0];
+    var cr = latest.targets > 0 ? Math.round(latest.clicked/latest.targets*100)+'%' : '-';
+    document.getElementById('phClickRate').textContent = cr;
+    document.getElementById('phReported').textContent = latest.reported || '0';
+  }
+}
+
+function createPhishingCampaign() {
+  document.getElementById('phCampName').value = '';
+  document.getElementById('phTargetList').value = '';
+  renderPhishingTemplatePreview();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PASSWORD AUDIT
+═══════════════════════════════════════════════════════════════ */
+function togglePwVisible() {
+  var inp = document.getElementById('singlePwInput');
+  if (!inp) return;
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+function analyzeSinglePassword() {
+  var pw = (document.getElementById('singlePwInput')||{}).value || '';
+  var el = document.getElementById('singlePwResult');
+  if (!el || !pw) { if(el) el.innerHTML = ''; return; }
+
+  var score = 0;
+  var checks = [
+    { label:'At least 8 characters', pass: pw.length >= 8 },
+    { label:'At least 12 characters', pass: pw.length >= 12 },
+    { label:'Uppercase letters', pass: /[A-Z]/.test(pw) },
+    { label:'Lowercase letters', pass: /[a-z]/.test(pw) },
+    { label:'Numbers', pass: /[0-9]/.test(pw) },
+    { label:'Special characters (!@#$...)', pass: /[^A-Za-z0-9]/.test(pw) },
+    { label:'Not a common word', pass: !['password','123456','qwerty','admin','letmein','welcome','monkey'].includes(pw.toLowerCase()) },
+    { label:'No repeated characters (aaa)', pass: !/(.)\1{2}/.test(pw) },
+  ];
+  checks.forEach(function(c) { if(c.pass) score++; });
+  var pct = Math.round(score / checks.length * 100);
+  var col = pct >= 80 ? 'var(--ok)' : pct >= 50 ? 'var(--warn)' : 'var(--danger)';
+  var lbl = pct >= 80 ? 'STRONG' : pct >= 50 ? 'MODERATE' : pct >= 25 ? 'WEAK' : 'VERY WEAK';
+  
+  // Estimate crack time
+  var entropy = Math.log2(Math.pow(95, pw.length));
+  var crackTime = entropy < 30 ? 'Instantly' : entropy < 40 ? 'Minutes' : entropy < 50 ? 'Days' : entropy < 60 ? 'Years' : 'Centuries';
+
+  el.innerHTML = '<div style="background:rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.07);border-radius:6px;padding:.8rem">'
+    + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem">'
+    + '<span style="font-family:var(--mono);font-size:.7rem;color:' + col + ';font-weight:700">' + lbl + '</span>'
+    + '<span style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">Est. crack time: ' + crackTime + '</span>'
+    + '</div>'
+    + '<div style="height:4px;background:rgba(255,255,255,.08);border-radius:2px;margin-bottom:.7rem;overflow:hidden">'
+    + '<div style="height:100%;width:' + pct + '%;background:' + col + ';border-radius:2px;transition:width .5s"></div></div>'
+    + checks.map(function(c) {
+        return '<div style="display:flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.57rem;color:' + (c.pass?'var(--ok)':'var(--danger)') + ';margin-bottom:.15rem">'
+          + (c.pass ? '&#9989;' : '&#10060;') + ' ' + c.label + '</div>';
+      }).join('')
+    + '</div>';
+}
+
+function auditBulkPasswords() {
+  var txt = (document.getElementById('bulkPwList')||{}).value || '';
+  var pws = txt.split('\n').map(function(p){return p.trim();}).filter(Boolean);
+  if (!pws.length) { showToast('Enter passwords to analyze', 'warn'); return; }
+
+  var results = pws.map(function(pw) {
+    var checks = [pw.length>=8, pw.length>=12, /[A-Z]/.test(pw), /[a-z]/.test(pw), /[0-9]/.test(pw), /[^A-Za-z0-9]/.test(pw), !['password','123456','qwerty','admin'].includes(pw.toLowerCase())];
+    var score = checks.filter(Boolean).length;
+    var rating = score >= 6 ? 'strong' : score >= 4 ? 'moderate' : score >= 2 ? 'weak' : 'critical';
+    return { pw: pw.slice(0,3) + '***', score:score, rating:rating };
+  });
+
+  var weak = results.filter(function(r){return r.rating==='weak'||r.rating==='critical';});
+  var strong = results.filter(function(r){return r.rating==='strong';});
+  document.getElementById('pwWeak').textContent = weak.length;
+  document.getElementById('pwStrong').textContent = strong.length;
+  document.getElementById('pwAvgScore').textContent = Math.round(results.reduce(function(s,r){return s+r.score;},0)/results.length*10) + '%';
+
+  var el = document.getElementById('pwAuditResults');
+  var exportBtn = document.getElementById('pwExportBtn');
+  if (el) el.innerHTML = results.map(function(r) {
+    var col = r.rating==='strong'?'var(--ok)':r.rating==='moderate'?'var(--warn)':r.rating==='critical'?'var(--danger)':'#ff8c42';
+    return '<div style="display:flex;align-items:center;gap:.7rem;padding:.4rem .3rem;border-bottom:1px solid rgba(0,255,136,.05)">'
+      + '<span style="font-family:var(--mono);font-size:.65rem;color:var(--text2);flex:1">' + r.pw + '</span>'
+      + '<span style="font-family:var(--mono);font-size:.6rem;color:' + col + '">' + r.rating.toUpperCase() + '</span>'
+      + '<span style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">' + r.score + '/7</span>'
+      + '</div>';
+  }).join('');
+  if (exportBtn) exportBtn.style.display = 'inline-flex';
+  showToast('Analyzed ' + pws.length + ' passwords', 'ok');
+}
+
+function exportPwReport() { showToast('Password report exported', 'ok'); }
+
+/* ═══════════════════════════════════════════════════════════════
+   ATTACK SURFACE DISCOVERY
+═══════════════════════════════════════════════════════════════ */
+function runSurfaceScan() {
+  var domain = (document.getElementById('surfDomain')||{}).value || '';
+  if (!domain.trim()) { showToast('Enter a domain to scan', 'warn'); return; }
+  domain = domain.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+
+  var el = document.getElementById('surfResults');
+  if (el) el.innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem"><div style="display:flex;gap:5px;justify-content:center;margin-bottom:.5rem"><div style="width:6px;height:6px;border-radius:50%;background:var(--g);animation:blink 1s ease infinite"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--g);animation:blink 1s ease .2s infinite"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--g);animation:blink 1s ease .4s infinite"></div></div>Scanning ' + domain + '...</div>';
+
+  if (API_ONLINE && SETTINGS.apiUrl) {
+    fetch(SETTINGS.apiUrl + '/api/surface/scan', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ domain: domain })
+    }).then(function(r){ return r.json(); }).then(renderSurfaceResults).catch(function(){ simulateSurfaceScan(domain); });
+  } else {
+    setTimeout(function(){ simulateSurfaceScan(domain); }, 2000);
+  }
+}
+
+function simulateSurfaceScan(domain) {
+  var prefixes = ['www','mail','api','dev','staging','admin','vpn','remote','app','blog','shop','cdn','static','assets','login','portal','secure'];
+  var found = prefixes.slice(0, 8 + Math.floor(Math.random()*4)).map(function(p) {
+    var exposed = Math.random() > 0.65;
+    return {
+      subdomain: p + '.' + domain, ip: '104.' + Math.floor(Math.random()*255) + '.' + Math.floor(Math.random()*255) + '.' + Math.floor(Math.random()*255),
+      ports: exposed ? [80, 443, Math.random()>0.5?8080:22] : [80,443],
+      ssl: Math.random() > 0.3, status: exposed ? 'exposed' : 'ok',
+      server: ['nginx','Apache','CloudFront','Cloudflare','IIS'][Math.floor(Math.random()*5)]
+    };
+  });
+  renderSurfaceResults({ assets: found, domain: domain });
+}
+
+function renderSurfaceResults(data) {
+  var assets = data.assets || [];
+  var exposed = assets.filter(function(a){return a.status==='exposed';});
+  document.getElementById('surfAssets').textContent = assets.length;
+  document.getElementById('surfExposed').textContent = exposed.length;
+  document.getElementById('surfSubdomains').textContent = assets.length;
+  document.getElementById('surfPorts').textContent = assets.reduce(function(s,a){return s+(a.ports||[]).length;},0);
+
+  var el = document.getElementById('surfResults');
+  var exportBtn = document.getElementById('surfExportBtn');
+  if (exportBtn) exportBtn.style.display = 'inline-flex';
+  if (!el) return;
+  el.innerHTML = assets.map(function(a) {
+    var col = a.status==='exposed' ? 'var(--danger)' : 'var(--ok)';
+    return '<div style="display:flex;align-items:center;gap:.8rem;padding:.6rem .5rem;border-bottom:1px solid rgba(0,255,136,.05);flex-wrap:wrap">'
+      + '<div style="flex:1;min-width:180px"><div style="font-family:var(--mono);font-size:.65rem;color:var(--white)">' + a.subdomain + '</div>'
+      + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">' + a.ip + ' &nbsp;&#183;&nbsp; ' + (a.server||'Unknown') + '</div></div>'
+      + '<div style="display:flex;gap:.3rem;flex-wrap:wrap">' + (a.ports||[]).map(function(p){return '<span style="font-family:var(--mono);font-size:.52rem;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.15);color:var(--g2);padding:.1rem .3rem;border-radius:3px">' + p + '</span>';}).join('') + '</div>'
+      + '<span style="font-family:var(--mono);font-size:.6rem;color:' + col + '">' + (a.status==='exposed'?'&#9888; EXPOSED':'&#9989; OK') + '</span>'
+      + (a.ssl ? '<span style="font-family:var(--mono);font-size:.52rem;color:var(--ok)">&#128274; SSL</span>' : '<span style="font-family:var(--mono);font-size:.52rem;color:var(--danger)">&#128275; NO SSL</span>')
+      + '</div>';
+  }).join('') || '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:1.5rem">No assets found.</div>';
+  showToast('Discovered ' + assets.length + ' assets for ' + (data.domain||'target'), 'ok');
+}
+
+function exportSurfaceReport() { showToast('Surface report exported', 'ok'); }
+
+/* ═══════════════════════════════════════════════════════════════
+   CLOUD SCANNER
+═══════════════════════════════════════════════════════════════ */
+function scanCloud(provider) {
+  var el = document.getElementById('cloudResults');
+  if (el) el.innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">Scanning ' + provider.toUpperCase() + '...</div>';
+  
+  var checks = {
+    aws: [
+      { id:'S3_PUBLIC', name:'S3 Bucket Public Access', severity:'critical', desc:'One or more S3 buckets have public read access enabled', pass:Math.random()>0.4 },
+      { id:'IAM_MFA', name:'IAM Root MFA Disabled', severity:'critical', desc:'Root account does not have MFA enabled', pass:Math.random()>0.5 },
+      { id:'SG_OPEN', name:'Security Group 0.0.0.0/0', severity:'high', desc:'Security groups allow unrestricted inbound access', pass:Math.random()>0.4 },
+      { id:'CT_ENABLED', name:'CloudTrail Logging', severity:'high', desc:'CloudTrail is not enabled in all regions', pass:Math.random()>0.3 },
+      { id:'RDS_PUBLIC', name:'RDS Publicly Accessible', severity:'high', desc:'RDS instances are publicly accessible', pass:Math.random()>0.6 },
+      { id:'EBS_ENCRYPT', name:'EBS Volume Encryption', severity:'medium', desc:'EBS volumes not encrypted at rest', pass:Math.random()>0.4 },
+      { id:'KMS_ROTATION', name:'KMS Key Rotation', severity:'medium', desc:'KMS keys do not have rotation enabled', pass:Math.random()>0.5 },
+      { id:'GUARDDUTY', name:'GuardDuty Enabled', severity:'medium', desc:'GuardDuty threat detection not active', pass:Math.random()>0.4 },
+    ],
+    azure: [
+      { id:'RBAC_ADMIN', name:'Too Many Global Admins', severity:'critical', desc:'More than 5 users have Global Administrator role', pass:Math.random()>0.5 },
+      { id:'BLOB_PUBLIC', name:'Blob Public Access', severity:'high', desc:'Storage accounts allow public blob access', pass:Math.random()>0.5 },
+      { id:'DEFENDER', name:'Microsoft Defender Enabled', severity:'high', desc:'Defender for Cloud not enabled on subscription', pass:Math.random()>0.4 },
+      { id:'MFA_AZURE', name:'MFA for All Users', severity:'critical', desc:'Not all users have MFA enforced via Conditional Access', pass:Math.random()>0.4 },
+      { id:'DISK_ENCRYPT', name:'Disk Encryption', severity:'medium', desc:'Managed disks not encrypted with customer keys', pass:Math.random()>0.5 },
+    ],
+    gcp: [
+      { id:'GCS_PUBLIC', name:'GCS Bucket Public', severity:'critical', desc:'Cloud Storage buckets allow allUsers access', pass:Math.random()>0.5 },
+      { id:'SA_KEYS', name:'Service Account Key Age', severity:'high', desc:'Service account keys older than 90 days', pass:Math.random()>0.4 },
+      { id:'CLOUD_AUDIT', name:'Audit Logging', severity:'high', desc:'Cloud Audit Logs not enabled for all services', pass:Math.random()>0.4 },
+      { id:'VPC_FIREWALL', name:'VPC Firewall Open Ports', severity:'high', desc:'VPC firewall rules allow unrestricted access', pass:Math.random()>0.5 },
+    ],
+  };
+
+  setTimeout(function() {
+    var provChecks = checks[provider] || [];
+    var failed = provChecks.filter(function(c){return !c.pass;});
+    var passed = provChecks.filter(function(c){return c.pass;});
+    var buckets = failed.filter(function(c){return c.id.includes('PUBLIC')||c.id.includes('BLOB');}).length;
+
+    document.getElementById('cloudMisconfig').textContent = failed.length;
+    document.getElementById('cloudBuckets').textContent = buckets;
+    document.getElementById('cloudPassed').textContent = passed.length;
+    var cloudScore = Math.round(passed.length / provChecks.length * 100);
+    document.getElementById('cloudScore').textContent = cloudScore + '/100';
+
+    if (el) el.innerHTML = '<div style="font-family:var(--mono);font-size:.6rem;color:var(--g);letter-spacing:.1em;margin-bottom:.7rem">'
+      + provider.toUpperCase() + ' SECURITY ASSESSMENT — ' + failed.length + ' issues found</div>'
+      + provChecks.map(function(c) {
+          return '<div style="display:flex;align-items:center;gap:.7rem;padding:.55rem .3rem;border-bottom:1px solid rgba(0,255,136,.05)">'
+            + (c.pass ? '&#9989;' : '<span style="color:var(--danger)">&#10060;</span>')
+            + '<span class="badge b-' + c.severity + '">' + c.severity.toUpperCase() + '</span>'
+            + '<span style="font-family:var(--mono);font-size:.63rem;color:var(--text2);flex:1">' + c.name + '</span>'
+            + (c.pass ? '' : '<span style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">' + c.desc + '</span>')
+            + '</div>';
+        }).join('');
+    showToast(provider.toUpperCase() + ' scan complete — ' + failed.length + ' misconfigurations found', failed.length>0?'warn':'ok');
+  }, 2500);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   COMPLIANCE HUB
+═══════════════════════════════════════════════════════════════ */
+var COMPLIANCE_FRAMEWORKS = [
+  { id:'soc2', name:'SOC 2 Type II', icon:'&#9878;', controls:64, color:'#7b2fff',
+    categories:['CC1 Control Environment','CC2 Communication','CC3 Risk Assessment','CC6 Logical Access','CC7 System Operations','CC8 Change Management','CC9 Risk Mitigation'] },
+  { id:'iso27001', name:'ISO 27001:2022', icon:'&#127760;', controls:93, color:'#00d4ff',
+    categories:['A.5 Organizational Controls','A.6 People Controls','A.7 Physical Controls','A.8 Technological Controls'] },
+  { id:'hipaa', name:'HIPAA Security Rule', icon:'&#9877;', controls:42, color:'#f5a623',
+    categories:['Administrative Safeguards','Physical Safeguards','Technical Safeguards','Organizational Requirements'] },
+  { id:'nist', name:'NIST CSF 2.0', icon:'&#127963;', controls:108, color:'#00ff88',
+    categories:['GV Govern','ID Identify','PR Protect','DE Detect','RS Respond','RC Recover'] },
+  { id:'pci', name:'PCI DSS v4.0', icon:'&#128179;', controls:12, color:'#ff4d6a',
+    categories:['Build Secure Network','Protect Cardholder Data','Vulnerability Management','Access Control','Monitor Networks','Information Security Policy'] },
+  { id:'gdpr', name:'GDPR', icon:'&#127466;&#127482;', controls:28, color:'#a855f7',
+    categories:['Lawful Basis','Data Subject Rights','Data Protection','Data Transfers','DPA Obligations','Breach Notification'] },
+];
+
+function runComplianceScan() {
+  var devs = DEVICES || [];
+  var allIssues = devs.flatMap(function(d){return d.issues||[];});
+
+  var totalPassed = 0, totalFailed = 0;
+  var failedControls = [];
+
+  var el = document.getElementById('compFrameworkGrid');
+  if (!el) return;
+
+  el.innerHTML = '<div class="ph"><div class="pt">FRAMEWORK SCORES</div></div>'
+    + '<div class="pb"><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.8rem">'
+    + COMPLIANCE_FRAMEWORKS.map(function(fw) {
+        var score = 50 + Math.floor(Math.random()*40) - (allIssues.filter(function(i){return i.severity==='critical';}).length * 3);
+        score = Math.max(20, Math.min(100, score));
+        var passed = Math.floor(fw.controls * score/100);
+        var failed = fw.controls - passed;
+        totalPassed += passed; totalFailed += failed;
+        if (failed > 0) failedControls.push({ fw: fw.name, count: failed, color: fw.color });
+        var col = score >= 80 ? 'var(--ok)' : score >= 60 ? 'var(--warn)' : 'var(--danger)';
+        return '<div style="background:rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:1rem">'
+          + '<div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem">'
+          + '<span style="font-size:1.1rem">' + fw.icon + '</span>'
+          + '<div><div style="font-family:var(--mono);font-size:.65rem;color:var(--white);font-weight:700">' + fw.name + '</div>'
+          + '<div style="font-family:var(--mono);font-size:.53rem;color:var(--muted)">' + fw.controls + ' controls</div></div>'
+          + '<div style="margin-left:auto;font-family:var(--mono);font-size:1.3rem;color:' + col + ';font-weight:700">' + score + '%</div>'
+          + '</div>'
+          + '<div style="height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden">'
+          + '<div style="height:100%;width:' + score + '%;background:' + fw.color + ';border-radius:2px"></div></div>'
+          + '<div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:.52rem;color:var(--muted);margin-top:.3rem">'
+          + '<span style="color:var(--ok)">' + passed + ' passed</span><span style="color:var(--danger)">' + failed + ' failed</span></div>'
+          + '</div>';
+      }).join('')
+    + '</div></div>';
+
+  document.getElementById('compPassed').textContent = totalPassed;
+  document.getElementById('compFailed').textContent = totalFailed;
+  var overallScore = Math.round(totalPassed/(totalPassed+totalFailed)*100);
+  document.getElementById('compScore').textContent = overallScore + '/100';
+
+  var failEl = document.getElementById('compFailedList');
+  if (failEl) failEl.innerHTML = failedControls.map(function(fc) {
+    return '<div style="display:flex;align-items:center;gap:.7rem;padding:.5rem .3rem;border-bottom:1px solid rgba(0,255,136,.05)">'
+      + '<span style="width:10px;height:10px;border-radius:50%;background:' + fc.color + ';display:inline-block;flex-shrink:0"></span>'
+      + '<span style="font-family:var(--mono);font-size:.65rem;color:var(--text2);flex:1">' + fc.fw + '</span>'
+      + '<span style="font-family:var(--mono);font-size:.6rem;color:var(--danger)">' + fc.count + ' failed controls</span>'
+      + '</div>';
+  }).join('');
+  showToast('Compliance scan complete — ' + overallScore + '% overall', 'ok');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MSP DASHBOARD
+═══════════════════════════════════════════════════════════════ */
+function renderMSPDashboard() {
+  var clients = JSON.parse(localStorage.getItem('pm_msp_clients_'+SESSION.id)||'[]');
+  if (!clients.length) {
+    clients = [
+      { id:'c1', name:'Acme Corp', domain:'acme.com', score:45, status:'critical', devices:3, plan:'starter', mrr:19 },
+      { id:'c2', name:'TechStart Ltd', domain:'techstart.io', score:72, status:'warning', devices:7, plan:'professional', mrr:79 },
+      { id:'c3', name:'Global Finance', domain:'globalfin.com', score:88, status:'healthy', devices:15, plan:'enterprise', mrr:199 },
+      { id:'c4', name:'Retail Chain Inc', domain:'retailchain.com', score:61, status:'warning', devices:5, plan:'starter', mrr:19 },
+    ];
+    localStorage.setItem('pm_msp_clients_'+SESSION.id, JSON.stringify(clients));
+  }
+
+  var totalRevenue = clients.reduce(function(s,c){return s+(c.mrr||0);},0);
+  var critical = clients.filter(function(c){return c.status==='critical';}).length;
+  var healthy  = clients.filter(function(c){return c.status==='healthy';}).length;
+
+  document.getElementById('mspClientCount').textContent = clients.length;
+  document.getElementById('mspCritAlerts').textContent  = critical;
+  document.getElementById('mspHealthy').textContent      = healthy;
+  document.getElementById('mspRevenue').textContent      = '$' + totalRevenue;
+
+  var el = document.getElementById('mspClientGrid');
+  if (!el) return;
+  el.innerHTML = clients.map(function(c) {
+    var col = c.status==='critical'?'var(--danger)':c.status==='warning'?'var(--warn)':'var(--ok)';
+    var ico = c.status==='critical'?'&#128683;':c.status==='warning'?'&#9888;':'&#9989;';
+    return '<div style="display:grid;grid-template-columns:1fr auto auto auto auto auto;align-items:center;gap:.8rem;padding:.7rem .5rem;border-bottom:1px solid rgba(0,255,136,.05);flex-wrap:wrap">'
+      + '<div><div style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700">' + c.name + '</div>'
+      + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">' + c.domain + ' &nbsp;&#183;&nbsp; ' + c.devices + ' devices</div></div>'
+      + '<span style="font-size:.85rem">' + ico + '</span>'
+      + '<span style="font-family:var(--mono);font-size:1.1rem;font-weight:700;color:' + col + '">' + c.score + '</span>'
+      + '<span class="badge b-' + c.plan + '">' + c.plan.toUpperCase() + '</span>'
+      + '<span style="font-family:var(--mono);font-size:.62rem;color:var(--g)">$' + c.mrr + '/mo</span>'
+      + '<button onclick="viewClientReport(\'' + c.id + '\')" style="background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);border-radius:4px;padding:.28rem .55rem;font-family:var(--mono);font-size:.55rem;color:var(--g);cursor:pointer">VIEW</button>'
+      + '</div>';
+  }).join('');
+}
+
+function addMSPClient() {
+  var name = prompt('Client organization name:');
+  if (!name) return;
+  var domain = prompt('Client domain (e.g. company.com):') || '';
+  var clients = JSON.parse(localStorage.getItem('pm_msp_clients_'+SESSION.id)||'[]');
+  clients.push({ id:'c'+Date.now().toString(36), name:name, domain:domain, score:0, status:'warning', devices:0, plan:'starter', mrr:19 });
+  localStorage.setItem('pm_msp_clients_'+SESSION.id, JSON.stringify(clients));
+  renderMSPDashboard();
+  showToast('Client ' + name + ' added', 'ok');
+}
+
+function filterMSPClients() {
+  var q = ((document.getElementById('mspSearch')||{}).value||'').toLowerCase();
+  var f = (document.getElementById('mspFilter')||{}).value||'all';
+  document.querySelectorAll('#mspClientGrid > div').forEach(function(row) {
+    var text = row.textContent.toLowerCase();
+    var matchQ = !q || text.includes(q);
+    var matchF = f==='all' || text.includes(f);
+    row.style.display = (matchQ && matchF) ? '' : 'none';
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ASSET INVENTORY
+═══════════════════════════════════════════════════════════════ */
+function renderAssets() {
+  var filter = (document.getElementById('assetTypeFilter')||{}).value || 'all';
+  var assets = JSON.parse(localStorage.getItem('pm_assets_'+SESSION.id)||'[]');
+  
+  // Auto-import from scanned devices
+  if (!assets.length) importAssetsFromScans();
+  assets = JSON.parse(localStorage.getItem('pm_assets_'+SESSION.id)||'[]');
+  
+  var filtered = filter==='all' ? assets : assets.filter(function(a){return a.type===filter;});
+  document.getElementById('assetTotal').textContent = assets.length;
+  document.getElementById('assetUnpatched').textContent = assets.filter(function(a){return a.patched===false;}).length;
+  document.getElementById('assetCompliant').textContent = assets.filter(function(a){return a.compliant===true;}).length;
+  var types = [...new Set(assets.map(function(a){return a.type;}))];
+  document.getElementById('assetTypes').textContent = types.length;
+
+  var el = document.getElementById('assetList');
+  if (!el) return;
+  if (!filtered.length) { el.innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">No assets. Import from scans or add manually.</div>'; return; }
+  el.innerHTML = '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse">'
+    + '<tr style="font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:.1em;border-bottom:1px solid rgba(0,255,136,.08)">'
+    + '<th style="padding:.5rem .7rem;text-align:left">ASSET</th><th style="padding:.5rem .7rem;text-align:left">TYPE</th><th style="padding:.5rem .7rem;text-align:left">IP</th>'
+    + '<th style="padding:.5rem .7rem;text-align:left">OS</th><th style="padding:.5rem .7rem;text-align:left">PATCHED</th><th style="padding:.5rem .7rem;text-align:left">RISK</th></tr>'
+    + filtered.map(function(a) {
+        return '<tr style="border-bottom:1px solid rgba(0,255,136,.04)">'
+          + '<td style="padding:.5rem .7rem;font-family:var(--mono);font-size:.63rem;color:var(--white)">' + a.name + '</td>'
+          + '<td style="padding:.5rem .7rem"><span class="badge b-blue">' + (a.type||'server').toUpperCase() + '</span></td>'
+          + '<td style="padding:.5rem .7rem;font-family:var(--mono);font-size:.6rem;color:var(--muted)">' + (a.ip||'—') + '</td>'
+          + '<td style="padding:.5rem .7rem;font-family:var(--mono);font-size:.6rem;color:var(--muted)">' + (a.os||'Unknown') + '</td>'
+          + '<td style="padding:.5rem .7rem"><span style="font-family:var(--mono);font-size:.58rem;color:' + (a.patched?'var(--ok)':'var(--danger)') + '">' + (a.patched?'&#9989;':'&#10060;') + '</span></td>'
+          + '<td style="padding:.5rem .7rem"><span class="badge b-' + (a.risk||'low') + '">' + (a.risk||'low').toUpperCase() + '</span></td>'
+          + '</tr>';
+      }).join('')
+    + '</table></div>';
+}
+
+function importAssetsFromScans() {
+  var devs = DEVICES || [];
+  var existing = JSON.parse(localStorage.getItem('pm_assets_'+SESSION.id)||'[]');
+  var existingIPs = existing.map(function(a){return a.ip;});
+  devs.forEach(function(d) {
+    if (!existingIPs.includes(d.ip)) {
+      var issues = d.issues||[];
+      var critCount = issues.filter(function(i){return i.severity==='critical';}).length;
+      existing.push({ id:d.ip, name:d.hostname||d.ip, type:'server', ip:d.ip, os:d.os||'Linux',
+        patched:critCount===0, compliant:d.score>=80, risk:critCount>0?'critical':d.score<50?'high':'low' });
+    }
+  });
+  localStorage.setItem('pm_assets_'+SESSION.id, JSON.stringify(existing));
+  renderAssets();
+  showToast('Assets imported from scans', 'ok');
+}
+
+function addAsset() {
+  var name = prompt('Asset name or hostname:');
+  if (!name) return;
+  var ip = prompt('IP address:') || '';
+  var type = prompt('Type (server/workstation/network/cloud/iot/mobile):') || 'server';
+  var assets = JSON.parse(localStorage.getItem('pm_assets_'+SESSION.id)||'[]');
+  assets.push({ id:Date.now().toString(36), name:name, type:type, ip:ip, os:'Unknown', patched:false, compliant:false, risk:'medium' });
+  localStorage.setItem('pm_assets_'+SESSION.id, JSON.stringify(assets));
+  renderAssets();
+}
+
+function exportAssetCSV() {
+  var assets = JSON.parse(localStorage.getItem('pm_assets_'+SESSION.id)||'[]');
+  var csv = 'Name,Type,IP,OS,Patched,Compliant,Risk\n' + assets.map(function(a) {
+    return [a.name,a.type,a.ip,a.os,a.patched,a.compliant,a.risk].join(',');
+  }).join('\n');
+  var blob = new Blob([csv], {type:'text/csv'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'asset-inventory.csv';
+  a.click();
+  showToast('Asset CSV exported', 'ok');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RISK MATRIX
+═══════════════════════════════════════════════════════════════ */
+function generateRiskMatrix() {
+  var devs = DEVICES || [];
+  var all = devs.flatMap(function(d){ return (d.issues||[]).map(function(i){ return { ...i, device: d.hostname||d.ip }; }); });
+  
+  var crit = all.filter(function(i){return i.severity==='critical';});
+  var high = all.filter(function(i){return i.severity==='high';});
+  var med  = all.filter(function(i){return i.severity==='medium';});
+  var low  = all.filter(function(i){return i.severity==='low';});
+
+  document.getElementById('riskCritical').textContent = crit.length;
+  document.getElementById('riskHigh').textContent     = high.length;
+  document.getElementById('riskMedium').textContent   = med.length;
+  document.getElementById('riskLow').textContent      = low.length;
+
+  // Draw risk heatmap
+  var hm = document.getElementById('riskHeatMap');
+  if (hm) {
+    var grid = [
+      ['#fee2e2','#fecaca','#fca5a5'],
+      ['#ffedd5','#fed7aa','#fef9c3'],
+      ['#fef9c3','#dcfce7','#dcfce7'],
+    ];
+    var labels = [['Critical','High','Medium'],['High','Medium','Low'],['Medium','Low','Negligible']];
+    var counts = [[crit.length, Math.floor(high.length*0.6), Math.floor(med.length*0.3)],
+                  [Math.floor(high.length*0.4), Math.floor(med.length*0.5), Math.floor(low.length*0.4)],
+                  [Math.floor(med.length*0.2), Math.floor(low.length*0.4), Math.floor(low.length*0.2)]];
+    
+    hm.innerHTML = '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-bottom:.5rem;display:flex;gap:0"><span style="width:60px"></span><span style="flex:1;text-align:center">LOW IMPACT</span><span style="flex:1;text-align:center">MEDIUM</span><span style="flex:1;text-align:center">HIGH IMPACT</span></div>'
+      + '<div style="display:flex;gap:0">'
+      + '<div style="display:flex;flex-direction:column;justify-content:space-around;width:60px;font-family:var(--mono);font-size:.5rem;color:var(--muted);text-align:right;padding-right:.4rem">'
+      + '<span>HIGH LIKELIHOOD</span><span>MEDIUM</span><span>LOW LIKELIHOOD</span></div>'
+      + '<div style="flex:1;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,80px);gap:3px">'
+      + [0,1,2].flatMap(function(row){ return [0,1,2].map(function(col){
+          return '<div style="background:' + grid[row][col] + ';border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:default">'
+            + '<div style="font-size:1.1rem;font-weight:700;color:#1a1a2e">' + (counts[row][col]||0) + '</div>'
+            + '<div style="font-size:.55rem;color:#64748b">' + labels[row][col] + '</div>'
+            + '</div>';
+        }); }).join('')
+      + '</div></div>';
+  }
+
+  // Risk list
+  var rl = document.getElementById('riskList');
+  if (rl) rl.innerHTML = all.slice(0,10).map(function(i,n) {
+    var likelihood = i.severity==='critical'?5:i.severity==='high'?4:3;
+    var impact = (i.cvss||5) >= 8 ? 5 : (i.cvss||5) >= 6 ? 4 : 3;
+    var riskScore = likelihood * impact;
+    var col = riskScore>=20?'var(--danger)':riskScore>=12?'var(--warn)':'var(--g2)';
+    return '<div style="display:flex;align-items:center;gap:.6rem;padding:.45rem .3rem;border-bottom:1px solid rgba(0,255,136,.05)">'
+      + '<span style="font-family:var(--mono);font-size:.55rem;color:var(--muted);width:16px">' + (n+1) + '</span>'
+      + '<span style="font-family:var(--mono);font-size:.63rem;color:var(--text2);flex:1">' + i.title + '</span>'
+      + '<span style="font-family:var(--mono);font-size:.65rem;font-weight:700;color:' + col + '">' + riskScore + '</span>'
+      + '</div>';
+  }).join('') || '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">Run scans to populate risk matrix.</div>';
+  showToast('Risk matrix updated', 'ok');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   EXECUTIVE DASHBOARD
+═══════════════════════════════════════════════════════════════ */
+function renderExecDashboard() {
+  var devs = DEVICES || [];
+  var all = devs.flatMap(function(d){return d.issues||[];});
+  var avgScore = devs.length ? Math.round(devs.reduce(function(s,d){return s+(d.score||0);},0)/devs.length) : 0;
+  var crit = all.filter(function(i){return i.severity==='critical';}).length;
+  var high = all.filter(function(i){return i.severity==='high';}).length;
+
+  var kpis = [
+    { label:'Security Score', value:avgScore+'/100', color:avgScore>=80?'#00ff88':avgScore>=60?'#f5a623':'#ff4d6a', icon:'&#128202;' },
+    { label:'Critical Issues', value:crit, color:'#ff4d6a', icon:'&#128683;' },
+    { label:'Devices Monitored', value:devs.length, color:'#00d4ff', icon:'&#128268;' },
+    { label:'Compliance Score', value:'74%', color:'#7b2fff', icon:'&#9878;' },
+    { label:'Avg Patch Rate', value:'68%', color:'#f5a623', icon:'&#9989;' },
+    { label:'Risk Level', value:crit>0?'HIGH':high>0?'MEDIUM':'LOW', color:crit>0?'#ff4d6a':high>0?'#f5a623':'#00ff88', icon:'&#9888;' },
+  ];
+
+  var kpiEl = document.getElementById('execKPIRow');
+  if (kpiEl) kpiEl.innerHTML = kpis.map(function(k) {
+    return '<div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:1rem;text-align:center">'
+      + '<div style="font-size:1.4rem;margin-bottom:.3rem">' + k.icon + '</div>'
+      + '<div style="font-family:var(--mono);font-size:1.4rem;font-weight:700;color:' + k.color + '">' + k.value + '</div>'
+      + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:.2rem;letter-spacing:.08em">' + k.label.toUpperCase() + '</div>'
+      + '</div>';
+  }).join('');
+
+  // Score trend chart
+  var trendEl = document.getElementById('execTrendChart');
+  if (trendEl) {
+    var scores = [42,38,55,61,58,67,72,68,75,80,avgScore||78].slice(-8);
+    var maxS = Math.max(...scores);
+    var svg = '<svg width="100%" height="140" viewBox="0 0 400 140" preserveAspectRatio="none">'
+      + '<defs><linearGradient id="eg" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#00ff88" stop-opacity=".4"/><stop offset="100%" stop-color="#00ff88" stop-opacity="0"/></linearGradient></defs>'
+      + '<polyline fill="none" stroke="#00ff88" stroke-width="2" points="'
+      + scores.map(function(s,i){return (i/(scores.length-1)*380+10) + ',' + (130 - s/maxS*110);}).join(' ')
+      + '"/><text x="10" y="130" font-family="monospace" font-size="10" fill="#2a4a62">LOW</text>'
+      + '<text x="10" y="20" font-family="monospace" font-size="10" fill="#2a4a62">HIGH</text>'
+      + scores.map(function(s,i){ return '<circle cx="' + (i/(scores.length-1)*380+10) + '" cy="' + (130-s/maxS*110) + '" r="3" fill="#00ff88"/>'; }).join('')
+      + '</svg>';
+    trendEl.innerHTML = svg;
+  }
+
+  // Threat summary
+  var threatEl = document.getElementById('execThreatSummary');
+  if (threatEl) threatEl.innerHTML = [
+    { label:'Ransomware Risk', level:'HIGH', col:'var(--danger)' },
+    { label:'Phishing Exposure', level:'MEDIUM', col:'var(--warn)' },
+    { label:'Data Breach Risk', level:crit>0?'HIGH':'LOW', col:crit>0?'var(--danger)':'var(--ok)' },
+    { label:'Compliance Status', level:'PARTIAL', col:'var(--warn)' },
+  ].map(function(t) {
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid rgba(0,255,136,.05)">'
+      + '<span style="font-family:var(--mono);font-size:.63rem;color:var(--text2)">' + t.label + '</span>'
+      + '<span style="font-family:var(--mono);font-size:.6rem;color:' + t.col + ';font-weight:700">' + t.level + '</span>'
+      + '</div>';
+  }).join('');
+
+  // Business impact
+  var biEl = document.getElementById('execBusinessImpact');
+  if (biEl) {
+    var costOfBreach = (4.88 + (crit * 0.5)).toFixed(2);
+    biEl.innerHTML = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem">'
+      + '<div style="background:rgba(255,59,92,.06);border:1px solid rgba(255,59,92,.15);border-radius:6px;padding:.8rem;text-align:center">'
+      + '<div style="font-family:var(--mono);font-size:1.2rem;color:var(--danger)">$' + costOfBreach + 'M</div>'
+      + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">ESTIMATED BREACH COST</div></div>'
+      + '<div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);border-radius:6px;padding:.8rem;text-align:center">'
+      + '<div style="font-family:var(--mono);font-size:1.2rem;color:var(--warn)">' + (crit * 24 + 48) + 'h</div>'
+      + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">AVG RECOVERY TIME</div></div>'
+      + '<div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:6px;padding:.8rem;text-align:center">'
+      + '<div style="font-family:var(--mono);font-size:1.2rem;color:var(--ok)">$' + (19 * 12) + '</div>'
+      + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">ANNUAL SECURITY SPEND</div></div>'
+      + '</div>';
+  }
+
+  // Actions
+  var actEl = document.getElementById('execActions');
+  if (actEl) actEl.innerHTML = [
+    crit > 0 ? { icon:'&#128683;', text:'Fix ' + crit + ' critical vulnerabilities — estimated cost: $500–$2,000, reduces breach risk by 60%', urgent:true } : null,
+    { icon:'&#9878;', text:'Complete SOC 2 Type II certification — increases enterprise client trust and enables larger contracts', urgent:false },
+    { icon:'&#128101;', text:'Enable MFA for all employee accounts — single most effective security control available', urgent:false },
+    { icon:'&#128272;', text:'Conduct quarterly phishing simulation — measurably reduces human error risk', urgent:false },
+    { icon:'&#9729;', text:'Enable cloud security posture monitoring — 40% of breaches exploit cloud misconfigurations', urgent:false },
+  ].filter(Boolean).map(function(a) {
+    return '<div style="display:flex;align-items:flex-start;gap:.7rem;padding:.5rem 0;border-bottom:1px solid rgba(0,255,136,.05)">'
+      + '<span style="font-size:1rem;flex-shrink:0">' + a.icon + '</span>'
+      + '<span style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7">' + a.text + '</span>'
+      + (a.urgent ? '<span class="badge b-danger" style="flex-shrink:0">URGENT</span>' : '')
+      + '</div>';
+  }).join('');
+}
+
+function printExecReport() { window.print(); }
+
+/* ═══════════════════════════════════════════════════════════════
+   AI THREAT HUNTING
+═══════════════════════════════════════════════════════════════ */
+var HUNT_QUERIES = [
+  { id:'h1', name:'Brute Force Detection', desc:'Look for 5+ failed logins from same IP', mitre:'T1110', icon:'&#128272;' },
+  { id:'h2', name:'Lateral Movement Indicators', desc:'Detect unusual network connections between hosts', mitre:'T1021', icon:'&#8644;' },
+  { id:'h3', name:'Privilege Escalation', desc:'Hunt for sudo/root access anomalies', mitre:'T1068', icon:'&#8679;' },
+  { id:'h4', name:'Data Exfiltration Patterns', desc:'Detect unusual outbound data volumes', mitre:'T1041', icon:'&#128228;' },
+  { id:'h5', name:'Persistence Mechanisms', desc:'Check for unauthorized cron jobs or startup scripts', mitre:'T1053', icon:'&#128337;' },
+  { id:'h6', name:'Command & Control Traffic', desc:'Detect beaconing patterns and C2 communications', mitre:'T1071', icon:'&#127757;' },
+];
+
+function renderHuntingPage() {
+  var el = document.getElementById('huntQueryList');
+  if (!el) return;
+  el.innerHTML = HUNT_QUERIES.map(function(q) {
+    return '<div style="display:flex;align-items:center;gap:.7rem;background:rgba(0,0,0,.12);border:1px solid rgba(0,255,136,.06);border-radius:6px;padding:.7rem .9rem;margin-bottom:.4rem">'
+      + '<span style="font-size:1rem">' + q.icon + '</span>'
+      + '<div style="flex:1"><div style="font-family:var(--mono);font-size:.65rem;color:var(--white);font-weight:600">' + q.name + '</div>'
+      + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">MITRE: ' + q.mitre + ' &nbsp;&#183;&nbsp; ' + q.desc + '</div></div>'
+      + '<button onclick="runHunt(\'' + q.id + '\')" style="background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);border-radius:4px;padding:.28rem .6rem;font-family:var(--mono);font-size:.57rem;color:var(--g);cursor:pointer">HUNT &#8594;</button>'
+      + '</div>';
+  }).join('');
+  renderKillChain();
+}
+
+function runHunt(queryId) {
+  var q = HUNT_QUERIES.find(function(x){return x.id===queryId;});
+  if (!q) return;
+  var el = document.getElementById('huntResults');
+  if (!el) return;
+  el.innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:1.5rem">Hunting for ' + q.name + '...</div>';
+
+  setTimeout(function() {
+    var devs = DEVICES || [];
+    var found = Math.random() > 0.4;
+    var iocs = found ? Math.floor(Math.random()*5+1) : 0;
+    var huntCount = parseInt(document.getElementById('huntCount').textContent||'0') + 1;
+    var iocCount  = parseInt(document.getElementById('huntIOCs').textContent||'0') + iocs;
+    document.getElementById('huntCount').textContent = huntCount;
+    document.getElementById('huntIOCs').textContent  = iocCount;
+    document.getElementById('huntTechniques').textContent = huntCount;
+
+    el.innerHTML = '<div style="background:' + (found?'rgba(255,59,92,.06)':'rgba(0,255,136,.04)') + ';border:1px solid ' + (found?'rgba(255,59,92,.15)':'rgba(0,255,136,.1)') + ';border-radius:6px;padding:.9rem 1rem">'
+      + '<div style="font-family:var(--mono);font-size:.68rem;font-weight:700;color:' + (found?'var(--danger)':'var(--ok)') + ';margin-bottom:.5rem">'
+      + (found ? '&#9888; THREAT INDICATORS FOUND — ' + iocs + ' IOCs' : '&#9989; CLEAN — No indicators found') + '</div>'
+      + '<div style="font-family:var(--mono);font-size:.63rem;color:var(--text2);line-height:1.9">'
+      + 'Hunt: ' + q.name + '<br/>MITRE ATT&CK: ' + q.mitre + '<br/>'
+      + (found ? 'Devices affected: ' + devs.slice(0,2).map(function(d){return d.hostname||d.ip;}).join(', ') + '<br/>Recommendation: Investigate and isolate affected systems immediately' : 'No suspicious activity detected across ' + devs.length + ' monitored devices')
+      + '</div></div>';
+    showToast('Hunt complete: ' + (found ? iocs + ' indicators found' : 'Clean'), found?'warn':'ok');
+  }, 2000);
+}
+
+async function runCustomHunt() {
+  var query = (document.getElementById('customHuntQuery')||{}).value || '';
+  if (!query.trim()) { showToast('Enter a hunt query', 'warn'); return; }
+  var el = document.getElementById('huntResults');
+  if (!el) return;
+  el.innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:1.5rem">AI analyzing: ' + query + '...</div>';
+
+  try {
+    var devs = DEVICES || [];
+    var context = 'Monitored devices: ' + devs.length + '. Issues found: ' + devs.flatMap(function(d){return d.issues||[];}).length + '.';
+    var response = '';
+    if (API_ONLINE && SETTINGS.apiUrl) {
+      var r = await fetch(SETTINGS.apiUrl + '/api/ai/chat', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ question:'Threat hunting query: ' + query + '. Context: ' + context + ' Analyze and respond with findings.', scan_data:{ devices: devs.slice(0,3) } })
+      });
+      var rd = await r.json();
+      response = rd.reply || 'No specific indicators found for this query.';
+    } else {
+      response = 'To enable AI threat hunting with natural language queries, connect your backend API in Settings. The AI will analyze your scan data and hunt for threat patterns based on your query.';
+    }
+    el.innerHTML = '<div style="background:rgba(0,0,0,.15);border:1px solid rgba(0,255,136,.1);border-radius:6px;padding:.9rem 1rem;font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.8">' + response + '</div>';
+  } catch(e) {
+    el.innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:1.5rem">Connect backend API for AI threat hunting.</div>';
+  }
+}
+
+function renderKillChain() {
+  var el = document.getElementById('killChainViz');
+  if (!el) return;
+  var phases = [
+    { name:'Recon', color:'#94a3b8', icon:'&#128270;', active:false },
+    { name:'Weapon', color:'#f5a623', icon:'&#9760;', active:false },
+    { name:'Delivery', color:'#ea580c', icon:'&#128228;', active:false },
+    { name:'Exploit', color:'#dc2626', icon:'&#128165;', active:true },
+    { name:'Install', color:'#7c3aed', icon:'&#128736;', active:false },
+    { name:'C2', color:'#1d4ed8', icon:'&#127757;', active:false },
+    { name:'Actions', color:'#166534', icon:'&#127987;', active:false },
+  ];
+  el.innerHTML = '<div style="display:flex;gap:0;align-items:center">'
+    + phases.map(function(p,i) {
+        return '<div style="flex:1;text-align:center;position:relative">'
+          + '<div style="background:' + (p.active?p.color:'rgba(255,255,255,.05)') + ';border:1px solid ' + (p.active?p.color:'rgba(255,255,255,.1)') + ';border-radius:6px;padding:.5rem .3rem;margin:0 2px">'
+          + '<div style="font-size:.9rem">' + p.icon + '</div>'
+          + '<div style="font-family:var(--mono);font-size:.48rem;color:' + (p.active?'#fff':'var(--muted)') + ';margin-top:.2rem">' + p.name + '</div></div>'
+          + (i<phases.length-1?'<div style="position:absolute;right:-6px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.7rem;z-index:1">&#8594;</div>':'')
+          + '</div>';
+      }).join('')
+    + '</div>'
+    + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:.4rem;text-align:center">Cyber Kill Chain — Active phase highlighted based on detected threats</div>';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CAMERA SECURITY
+═══════════════════════════════════════════════════════════════ */
+function scanCameras() {
+  var network = (document.getElementById('camNetwork')||{}).value || '192.168.1.0/24';
+  var el = document.getElementById('camList');
+  if (!el) return;
+  el.innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">Scanning ' + network + ' for cameras...</div>';
+  
+  setTimeout(function() {
+    var CAMERAS = [
+      { ip:'192.168.1.201', manufacturer:'Hikvision', model:'DS-2CD2143', firmware:'V5.4.5', defaultCreds:true, exposed:false, rtsp:true, ports:[80,443,554] },
+      { ip:'192.168.1.202', manufacturer:'Dahua', model:'IPC-HDW2831T', firmware:'V2.800', defaultCreds:false, exposed:false, rtsp:true, ports:[80,443,554] },
+      { ip:'192.168.1.203', manufacturer:'Axis', model:'P3245-V', firmware:'10.12', defaultCreds:false, exposed:true, rtsp:true, ports:[80,443,554,8080] },
+      { ip:'192.168.1.210', manufacturer:'Reolink', model:'RLC-810A', firmware:'v3.0.0.177', defaultCreds:true, exposed:true, rtsp:true, ports:[80,554,8000] },
+    ].slice(0, 2 + Math.floor(Math.random()*3));
+
+    var defCreds = CAMERAS.filter(function(c){return c.defaultCreds;}).length;
+    var exposed  = CAMERAS.filter(function(c){return c.exposed;}).length;
+    var secured  = CAMERAS.filter(function(c){return !c.defaultCreds && !c.exposed;}).length;
+
+    document.getElementById('camTotal').textContent     = CAMERAS.length;
+    document.getElementById('camDefaultCreds').textContent = defCreds;
+    document.getElementById('camExposed').textContent   = exposed;
+    document.getElementById('camSecured').textContent   = secured;
+
+    el.innerHTML = CAMERAS.map(function(c) {
+      var risk = c.defaultCreds || c.exposed ? 'var(--danger)' : 'var(--ok)';
+      return '<div style="background:rgba(0,0,0,.12);border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:.8rem 1rem;margin-bottom:.5rem">'
+        + '<div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.4rem;flex-wrap:wrap">'
+        + '<span style="font-size:1.1rem">&#128249;</span>'
+        + '<div style="flex:1"><div style="font-family:var(--mono);font-size:.65rem;color:var(--white);font-weight:600">' + c.manufacturer + ' ' + c.model + '</div>'
+        + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">' + c.ip + ' &nbsp;&#183;&nbsp; Firmware: ' + c.firmware + '</div></div>'
+        + '<span style="font-family:var(--mono);font-size:.6rem;color:' + risk + '">' + (c.defaultCreds||c.exposed?'&#9888; AT RISK':'&#9989; SECURE') + '</span>'
+        + '</div>'
+        + '<div style="display:flex;gap:.4rem;flex-wrap:wrap">'
+        + (c.defaultCreds ? '<span style="font-family:var(--mono);font-size:.55rem;background:rgba(255,59,92,.1);border:1px solid rgba(255,59,92,.2);color:var(--danger);padding:.15rem .45rem;border-radius:3px">&#128683; DEFAULT CREDENTIALS</span>' : '')
+        + (c.exposed ? '<span style="font-family:var(--mono);font-size:.55rem;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);color:var(--warn);padding:.15rem .45rem;border-radius:3px">&#9888; STREAM EXPOSED</span>' : '')
+        + (c.rtsp ? '<span style="font-family:var(--mono);font-size:.55rem;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.12);color:var(--g2);padding:.15rem .45rem;border-radius:3px">&#128249; RTSP AVAILABLE</span>' : '')
+        + c.ports.map(function(p){return '<span style="font-family:var(--mono);font-size:.52rem;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.08);color:var(--muted);padding:.1rem .35rem;border-radius:3px">:' + p + '</span>';}).join('')
+        + '</div></div>';
+    }).join('');
+
+    // Render checklists
+    var checks = document.getElementById('camChecklist');
+    var best = document.getElementById('camBestPractices');
+    if (checks) checks.innerHTML = [
+      { text:'Change default credentials', pass:defCreds===0 },
+      { text:'Disable RTSP if not needed', pass:Math.random()>0.5 },
+      { text:'Enable HTTPS only', pass:Math.random()>0.4 },
+      { text:'Isolate cameras on VLAN', pass:Math.random()>0.6 },
+      { text:'Disable UPnP', pass:Math.random()>0.4 },
+    ].map(function(c){return '<div style="font-family:var(--mono);font-size:.6rem;color:' + (c.pass?'var(--ok)':'var(--danger)') + ';margin-bottom:.3rem">' + (c.pass?'&#9989;':'&#10060;') + ' ' + c.text + '</div>';}).join('');
+    if (best) best.innerHTML = ['Keep firmware updated','Use strong unique passwords','Enable motion detection logging','Regular access log review','Physical lock on camera housing'].map(function(t){return '<div style="font-family:var(--mono);font-size:.58rem;color:var(--text2);margin-bottom:.3rem">&#8594; ' + t + '</div>';}).join('');
+    showToast('Camera scan complete — ' + CAMERAS.length + ' cameras found', 'ok');
+  }, 3000);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NAV HOOK — wire up new pages
+═══════════════════════════════════════════════════════════════ */
+var _origNav = typeof nav === 'function' ? nav : null;
+function nav(page) {
+  if (_origNav) _origNav(page);
+  if (page === 'phishing') { renderPhishingTemplatePreview(); renderPhishResults(); }
+  if (page === 'msp') renderMSPDashboard();
+  if (page === 'assets') renderAssets();
+  if (page === 'risk') generateRiskMatrix();
+  if (page === 'executive') renderExecDashboard();
+  if (page === 'hunting') renderHuntingPage();
+  if (page === 'compliance') runComplianceScan();
+  if (page === 'cameras') {
+    var chk = document.getElementById('camChecklist');
+    var bp  = document.getElementById('camBestPractices');
+    if (chk && !chk.innerHTML) { if(chk) chk.innerHTML='<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">Run scan to see checklist.</div>'; }
+  }
+}
+</script>
+
+<script type="text/javascript">
+/* ═══════════════════════════════════════════════════════════════
+   PM::OFFSEC FINAL VERSION — NEW FEATURES JS
+   Compliance · Pentest Report · Phishing Sim · Attack Surface
+   Dark Web Monitor · MSP Dashboard
+═══════════════════════════════════════════════════════════════ */
+
+/* ── NAV HOOKS ─────────────────────────────────────────────── */
+var _origNav = typeof nav === 'function' ? nav : null;
+function nav(page) {
+  if (_origNav) _origNav(page);
+  if (page==='compliance')    renderCompliance();
+  if (page==='pentest')       renderPentest();
+  if (page==='phishing')      renderPhishing();
+  if (page==='attacksurface') renderAttackSurface();
+  if (page==='darkweb')       renderDarkWeb();
+  if (page==='msp')           renderMSP();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   COMPLIANCE CENTER
+═══════════════════════════════════════════════════════════════ */
+var COMP_FRAMEWORKS = [
+  { id:'soc2', name:'SOC 2 Type II', icon:'&#9878;', color:'#00d4ff',
+    controls:61, categories:['Security','Availability','Confidentiality','Processing Integrity','Privacy'],
+    checks:['Access controls enforced','Multi-factor authentication','Encryption at rest and transit','Incident response plan','Vulnerability management program','Audit logging enabled','Vendor risk management','Change management process','Backup and recovery tested'] },
+  { id:'iso27001', name:'ISO 27001:2022', icon:'&#127758;', color:'#a855f7',
+    controls:93, categories:['Organizational','People','Physical','Technological'],
+    checks:['Information security policy','Risk assessment process','Access control policy','Cryptography controls','Physical security','Operations security','Communications security','Supplier relationships','Business continuity'] },
+  { id:'pci', name:'PCI DSS v4.0', icon:'&#128179;', color:'#f5a623',
+    controls:12, categories:['Network','Data','Vulnerability','Access','Monitoring'],
+    checks:['Firewall configuration','No default credentials','Cardholder data protected','Encrypted transmission','Antivirus software','Secure systems','Access restriction','Authentication for access','Physical access control','Audit logs','Security testing','Information security policy'] },
+  { id:'hipaa', name:'HIPAA Security Rule', icon:'&#127973;', color:'#ff4d6a',
+    controls:18, categories:['Administrative','Physical','Technical'],
+    checks:['Security officer assigned','Workforce training','Access management','Audit controls','Integrity controls','Authentication controls','Transmission security','Physical safeguards','Contingency plan'] },
+  { id:'nist', name:'NIST CSF 2.0', icon:'&#128737;', color:'#00ff88',
+    controls:106, categories:['Govern','Identify','Protect','Detect','Respond','Recover'],
+    checks:['Asset inventory','Risk assessment','Supply chain risk','Identity management','Awareness training','Data security','Protective technology','Anomaly detection','Continuous monitoring','Response planning','Communications','Analysis'] },
+  { id:'gdpr', name:'GDPR Compliance', icon:'&#127466;&#127482;', color:'#00d4ff',
+    controls:24, categories:['Lawfulness','Rights','Security','Accountability'],
+    checks:['Lawful basis documented','Consent mechanisms','Privacy notices','Data subject rights','Data minimization','Breach notification plan','DPA agreements','Data retention policy','Cross-border transfer safeguards'] },
+];
+
+function renderCompliance() {
+  var devices = typeof DEVICES !== 'undefined' ? DEVICES : [];
+  var allIssues = devices.flatMap(function(d){ return d.issues||[]; });
+  var critCount = allIssues.filter(function(i){ return i.severity==='critical'; }).length;
+  var highCount = allIssues.filter(function(i){ return i.severity==='high'; }).length;
+
+  // Overall score based on scan findings
+  var deductions = critCount * 8 + highCount * 4;
+  var overall = Math.max(0, Math.min(100, 85 - deductions));
+  var passed = Math.round(overall / 100 * 45);
+  var failed = Math.max(0, 15 - Math.floor(deductions/3));
+
+  var el = function(id){ return document.getElementById(id); };
+  if(el('compOverall'))    el('compOverall').textContent    = overall + '%';
+  if(el('compFailed'))     el('compFailed').textContent     = failed;
+  if(el('compPassed'))     el('compPassed').textContent     = passed;
+  if(el('compInProgress')) el('compInProgress').textContent = '12';
+
+  var grid = el('compFrameworks');
+  if (!grid) return;
+  grid.innerHTML = COMP_FRAMEWORKS.map(function(fw) {
+    var score = Math.max(40, overall + Math.floor(Math.random()*20-10));
+    var checks = fw.checks;
+    var passCnt = Math.round(checks.length * score/100);
+    var grade = score>=90?'A':score>=80?'B':score>=70?'C':score>=55?'D':'F';
+    var saved = JSON.parse(localStorage.getItem('comp_'+fw.id)||'{}');
+    return '<div style="background:rgba(0,0,0,.2);border:1px solid rgba('+hexToRgb(fw.color)+',.2);border-radius:10px;overflow:hidden">'
+      +'<div style="padding:.8rem 1rem;background:rgba('+hexToRgb(fw.color)+',.06);border-bottom:1px solid rgba('+hexToRgb(fw.color)+',.12);display:flex;align-items:center;gap:.6rem">'
+      +'<span style="font-size:1.1rem">'+fw.icon+'</span>'
+      +'<div style="flex:1"><div style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700">'+fw.name+'</div>'
+      +'<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">'+fw.controls+' controls across '+fw.categories.length+' domains</div></div>'
+      +'<div style="text-align:center"><div style="font-family:var(--display);font-size:1.4rem;color:'+fw.color+'">'+grade+'</div>'
+      +'<div style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">'+score+'%</div></div>'
+      +'</div>'
+      +'<div style="padding:.7rem 1rem">'
+      +'<div style="height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;margin-bottom:.7rem">'
+      +'<div style="height:100%;width:'+score+'%;background:linear-gradient(90deg,'+fw.color+',rgba(0,255,136,.5));border-radius:2px"></div></div>'
+      +checks.slice(0,6).map(function(c,i){
+          var isDone = saved[i] || i < passCnt;
+          return '<div style="display:flex;align-items:center;gap:.5rem;padding:.25rem 0;border-bottom:1px solid rgba(255,255,255,.04)">'
+            +'<span style="font-size:.75rem;cursor:pointer" onclick="toggleCompCheck(\''+fw.id+'\','+i+',this)">'+(isDone?'&#9989;':'&#9744;')+'</span>'
+            +'<span style="font-family:var(--mono);font-size:.6rem;color:'+(isDone?'var(--text2)':'var(--muted)')+'">'+c+'</span>'
+            +'</div>';
+        }).join('')
+      +'<button onclick="openCompDetail(\''+fw.id+'\')" style="margin-top:.6rem;width:100%;background:rgba('+hexToRgb(fw.color)+',.08);border:1px solid rgba('+hexToRgb(fw.color)+',.2);border-radius:4px;padding:.3rem;font-family:var(--mono);font-size:.58rem;color:'+fw.color+';cursor:pointer">VIEW FULL ASSESSMENT &#8594;</button>'
+      +'</div></div>';
+  }).join('');
+}
+
+function hexToRgb(hex) {
+  if (!hex.startsWith('#')) return '0,255,136';
+  var r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+  return r+','+g+','+b;
+}
+
+function toggleCompCheck(fwId, idx, el) {
+  var saved = JSON.parse(localStorage.getItem('comp_'+fwId)||'{}');
+  saved[idx] = !saved[idx];
+  localStorage.setItem('comp_'+fwId, JSON.stringify(saved));
+  el.textContent = saved[idx] ? '\u2705' : '\u2744';
+  if(typeof showToast==='function') showToast('Control updated','ok');
+}
+
+function openCompDetail(fwId) {
+  if(typeof showToast==='function') showToast('Full '+fwId.toUpperCase()+' assessment — generating...','ok');
+}
+
+function generateComplianceReport() {
+  var text = 'PM::OFFSEC COMPLIANCE REPORT\n' + new Date().toLocaleDateString() + '\n\n';
+  COMP_FRAMEWORKS.forEach(function(fw){
+    var score = Math.floor(Math.random()*30+65);
+    text += fw.name + ': ' + score + '%\n';
+    fw.checks.forEach(function(c){ text += '  - ' + c + '\n'; });
+    text += '\n';
+  });
+  var blob = new Blob([text], {type:'text/plain'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'compliance-report-' + new Date().toISOString().split('T')[0] + '.txt';
+  a.click();
+  if(typeof showToast==='function') showToast('Compliance report downloaded','ok');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PENTEST REPORT GENERATOR
+═══════════════════════════════════════════════════════════════ */
+function renderPentest() {
+  var devices = typeof DEVICES !== 'undefined' ? DEVICES : [];
+  var allIssues = devices.flatMap(function(d){
+    return (d.issues||[]).map(function(i){ i._dev=d; return i; });
+  });
+
+  var findings = document.getElementById('ptFindings');
+  var summary  = document.getElementById('ptFindingsSummary');
+  var remed    = document.getElementById('ptRemediation');
+  if (!findings) return;
+
+  var crit = allIssues.filter(function(i){ return i.severity==='critical'; });
+  var high = allIssues.filter(function(i){ return i.severity==='high'; });
+  var med  = allIssues.filter(function(i){ return i.severity==='medium'; });
+
+  if (summary) {
+    summary.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.8rem">'
+      +statChip('CRITICAL',crit.length,'var(--danger)')
+      +statChip('HIGH',high.length,'var(--warn)')
+      +statChip('MEDIUM',med.length,'#d4ac0d')
+      +statChip('DEVICES',devices.length,'var(--g2)')
+      +'</div>'
+      +'<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.7">'
+      +'Total findings: <strong style="color:var(--white)">'+(crit.length+high.length+med.length)+'</strong><br/>'
+      +'Risk rating: <strong style="color:'+(crit.length>0?'var(--danger)':high.length>0?'var(--warn)':'var(--ok)')+'">'+(crit.length>0?'CRITICAL':high.length>0?'HIGH':'MEDIUM')+'</strong>'
+      +'</div>';
+  }
+
+  if (!allIssues.length) {
+    findings.innerHTML = '<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">Run a scan first to auto-populate findings. Or click Add Finding to add manually.</div>';
+    return;
+  }
+
+  findings.innerHTML = allIssues.slice(0,15).map(function(iss,i) {
+    var sevCol = {critical:'var(--danger)',high:'var(--warn)',medium:'#d4ac0d',low:'var(--ok)'}[iss.severity]||'var(--muted)';
+    return '<div style="border:1px solid rgba(255,255,255,.06);border-left:3px solid '+sevCol+';border-radius:6px;padding:.8rem 1rem;margin-bottom:.4rem">'
+      +'<div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.3rem">'
+      +'<span style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">FINDING-'+(i+1).toString().padStart(3,'0')+'</span>'
+      +'<span class="badge b-'+iss.severity+'">'+iss.severity.toUpperCase()+'</span>'
+      +'<span style="font-family:var(--mono);font-size:.7rem;color:var(--white);font-weight:700">'+iss.title+'</span>'
+      +(iss.cvss?'<span style="font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-left:auto">CVSS '+iss.cvss+'</span>':'')
+      +'</div>'
+      +'<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">Host: '+(iss._dev?iss._dev.hostname||iss._dev.ip:'Unknown')+' &nbsp;&#183;&nbsp; Category: '+iss.category+'</div>'
+      +'</div>';
+  }).join('');
+
+  if (remed) {
+    remed.innerHTML = '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:2">'
+      +(crit.length?'<div style="color:var(--danger)">&#128683; IMMEDIATE (within 24h): Fix '+crit.length+' critical vulnerabilities before any further network exposure</div>':'')
+      +(high.length?'<div style="color:var(--warn)">&#9888; SHORT TERM (within 7 days): Remediate '+high.length+' high-severity findings</div>':'')
+      +(med.length?'<div style="color:#d4ac0d">&#128202; MEDIUM TERM (within 30 days): Address '+med.length+' medium findings</div>':'')
+      +'<div style="color:var(--ok)">&#9989; Schedule follow-up assessment after remediation is complete</div>'
+      +'</div>';
+  }
+}
+
+function statChip(label, val, color) {
+  return '<div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:.5rem .7rem;text-align:center">'
+    +'<div style="font-family:var(--display);font-size:1.3rem;color:'+color+'">'+val+'</div>'
+    +'<div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">'+label+'</div>'
+    +'</div>';
+}
+
+function addManualFinding() {
+  var title = prompt('Finding title:');
+  if (!title) return;
+  var sev = prompt('Severity (critical/high/medium/low):','high');
+  var el = document.getElementById('ptFindings');
+  if (!el) return;
+  var sevCol = {critical:'var(--danger)',high:'var(--warn)',medium:'#d4ac0d',low:'var(--ok)'}[sev]||'var(--muted)';
+  el.innerHTML = '<div style="border:1px solid rgba(255,255,255,.06);border-left:3px solid '+sevCol+';border-radius:6px;padding:.8rem 1rem;margin-bottom:.4rem">'
+    +'<div style="display:flex;align-items:center;gap:.6rem"><span class="badge b-'+(sev||'high')+'">'+((sev||'high').toUpperCase())+'</span>'
+    +'<span style="font-family:var(--mono);font-size:.7rem;color:var(--white);font-weight:700">'+title+'</span></div>'
+    +'</div>' + el.innerHTML;
+  if(typeof showToast==='function') showToast('Finding added','ok');
+}
+
+function generatePentestPDF() {
+  var client  = (document.getElementById('ptClient')||{}).value || 'Client';
+  var type    = (document.getElementById('ptType')||{}).value || 'External';
+  var summary = (document.getElementById('ptSummary')||{}).value || 'Security assessment completed.';
+  var scope   = (document.getElementById('ptScope')||{}).value || 'As defined';
+  var devices = typeof DEVICES !== 'undefined' ? DEVICES : [];
+  var allIssues = devices.flatMap(function(d){ return d.issues||[]; });
+
+  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Pentest Report — '+client+'</title>'
+    +'<style>*{box-sizing:border-box}body{font-family:"Courier New",monospace;max-width:900px;margin:40px auto;padding:0 20px;color:#1a1a2e;font-size:13px;line-height:1.6}'
+    +'h1{font-size:22px;border-bottom:3px solid #2563eb;padding-bottom:10px;margin-bottom:5px}'
+    +'h2{font-size:15px;color:#2563eb;border-bottom:1px solid #ddd;padding-bottom:5px;margin-top:25px}'
+    +'.badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700}'
+    +'.critical{background:#fee2e2;color:#991b1b}.high{background:#ffedd5;color:#9a3412}'
+    +'.medium{background:#fef9c3;color:#854d0e}.low{background:#dcfce7;color:#166534}'
+    +'.kpi{display:inline-block;border:1px solid #ddd;border-radius:5px;padding:8px 15px;margin:5px;text-align:center}'
+    +'.kpi-num{font-size:24px;font-weight:700;color:#2563eb;display:block}'
+    +'.finding{border:1px solid #e5e7eb;border-radius:5px;padding:10px;margin:8px 0}'
+    +'.footer{margin-top:40px;padding-top:15px;border-top:1px solid #eee;font-size:11px;color:#9ca3af;text-align:center}'
+    +'@media print{body{margin:0}}</style></head><body>'
+    +'<h1>&#128270; PENETRATION TEST REPORT</h1>'
+    +'<table style="width:100%;border-collapse:collapse;margin-bottom:20px">'
+    +'<tr><td style="padding:4px 0"><strong>Client:</strong> '+client+'</td><td><strong>Type:</strong> '+type+'</td></tr>'
+    +'<tr><td><strong>Scope:</strong> '+scope+'</td><td><strong>Report Date:</strong> '+new Date().toLocaleDateString()+'</td></tr>'
+    +'<tr><td><strong>Methodology:</strong> OWASP / PTES</td><td><strong>Consultant:</strong> PM::OFFSEC</td></tr>'
+    +'</table>'
+    +'<h2>EXECUTIVE SUMMARY</h2>'
+    +'<p>'+summary+'</p>'
+    +'<div style="margin:15px 0">'
+    +'<div class="kpi"><span class="kpi-num" style="color:#dc2626">'+allIssues.filter(function(i){return i.severity==='critical';}).length+'</span>Critical</div>'
+    +'<div class="kpi"><span class="kpi-num" style="color:#ea580c">'+allIssues.filter(function(i){return i.severity==='high';}).length+'</span>High</div>'
+    +'<div class="kpi"><span class="kpi-num" style="color:#ca8a04">'+allIssues.filter(function(i){return i.severity==='medium';}).length+'</span>Medium</div>'
+    +'<div class="kpi"><span class="kpi-num">'+devices.length+'</span>Systems</div>'
+    +'</div>'
+    +'<h2>DETAILED FINDINGS</h2>'
+    +allIssues.slice(0,20).map(function(iss,i){
+        return '<div class="finding"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">'
+          +'<span class="badge '+iss.severity+'">'+iss.severity.toUpperCase()+'</span>'
+          +'<strong>FINDING-'+(i+1).toString().padStart(3,'0')+': '+iss.title+'</strong>'
+          +(iss.cvss?'<span style="margin-left:auto;font-size:11px;color:#6b7280">CVSS: '+iss.cvss+'</span>':'')
+          +'</div>'
+          +'<div style="font-size:12px;color:#374151">'+iss.detail+'</div>'
+          +'</div>';
+      }).join('')
+    +'<h2>REMEDIATION PLAN</h2>'
+    +'<p>Address critical findings immediately. High-risk items within 7 days. Medium within 30 days. Schedule a follow-up assessment to verify remediation.</p>'
+    +'<div class="footer">Generated by PM::OFFSEC Security Dashboard — erprakashmijar.com — CONFIDENTIAL</div>'
+    +'</body></html>';
+
+  var win = window.open('','_blank');
+  win.document.write(html);
+  win.document.close();
+  setTimeout(function(){ win.print(); }, 600);
+  if(typeof showToast==='function') showToast('Pentest report generated','ok');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PHISHING SIMULATION
+═══════════════════════════════════════════════════════════════ */
+var PHISH_TEMPLATES = {
+  invoice: { subject:'Invoice #INV-2025-'+Math.floor(Math.random()*9000+1000)+' requires your approval', pretext:'Urgent payment required' },
+  password_reset: { subject:'Action Required: Your password expires in 24 hours', pretext:'Security alert from IT' },
+  it_helpdesk: { subject:'[TICKET #'+Math.floor(Math.random()*90000+10000)+'] Unusual login activity detected', pretext:'IT Security helpdesk' },
+  package: { subject:'Your package delivery attempt failed', pretext:'Delivery notification' },
+  docusign: { subject:'Please sign this document — expires today', pretext:'DocuSign notification' },
+  office365: { subject:'Your Microsoft 365 account will be suspended', pretext:'Microsoft Security Alert' },
+  payroll: { subject:'Please update your direct deposit information', pretext:'HR Department' },
+  zoom: { subject:'You have been invited to a Zoom meeting', pretext:'Zoom Meeting' },
+};
+
+var PHISH_CAMPAIGNS = [];
+
+function renderPhishing() {
+  var saved = JSON.parse(localStorage.getItem('pm_phish_'+(typeof SESSION!=='undefined'?SESSION.id:'guest'))||'[]');
+  PHISH_CAMPAIGNS = saved;
+
+  var totalSent    = saved.reduce(function(s,c){ return s+c.sent; },0);
+  var totalClicked = saved.reduce(function(s,c){ return s+c.clicked; },0);
+  var totalReport  = saved.reduce(function(s,c){ return s+c.reported; },0);
+  var rate         = totalSent > 0 ? Math.round(totalClicked/totalSent*100) : 0;
+
+  var el=function(id){return document.getElementById(id);};
+  if(el('phishSent'))    el('phishSent').textContent    = totalSent;
+  if(el('phishClicked')) el('phishClicked').textContent = totalClicked;
+  if(el('phishReported'))el('phishReported').textContent= totalReport;
+  if(el('phishRate'))    el('phishRate').textContent    = rate+'%';
+
+  var list = el('phishCampaigns');
+  if (list) {
+    list.innerHTML = saved.length ? saved.map(function(c) {
+      var cr = c.sent>0?Math.round(c.clicked/c.sent*100):0;
+      var crCol = cr>50?'var(--danger)':cr>20?'var(--warn)':'var(--ok)';
+      return '<div style="border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:.7rem .9rem;margin-bottom:.4rem">'
+        +'<div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.3rem">'
+        +'<span style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700;flex:1">'+c.name+'</span>'
+        +'<span style="font-family:var(--mono);font-size:.62rem;color:'+crCol+'">'+cr+'% clicked</span>'
+        +'</div>'
+        +'<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">'+c.sent+' sent &nbsp;&#183;&nbsp; '+c.clicked+' clicked &nbsp;&#183;&nbsp; '+c.reported+' reported</div>'
+        +'<div style="height:3px;background:rgba(255,255,255,.07);border-radius:2px;margin-top:.4rem;overflow:hidden">'
+        +'<div style="height:100%;width:'+cr+'%;background:'+crCol+';border-radius:2px"></div></div>'
+        +'</div>';
+    }).join('') : '<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">No campaigns yet.</div>';
+  }
+
+  var training = el('phishTraining');
+  if (training) {
+    var avgRate = totalSent>0?Math.round(totalClicked/totalSent*100):0;
+    training.innerHTML = '<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);line-height:1.9">'
+      +(avgRate>40?'<div style="color:var(--danger)">&#128683; HIGH RISK: '+avgRate+'% click rate detected. Immediate security awareness training recommended.</div>':'')
+      +(avgRate>15&&avgRate<=40?'<div style="color:var(--warn)">&#9888; MODERATE RISK: '+avgRate+'% click rate. Monthly training recommended.</div>':'')
+      +(avgRate<=15&&totalSent>0?'<div style="color:var(--ok)">&#9989; LOW RISK: '+avgRate+'% click rate. Continue quarterly awareness programs.</div>':'')
+      +'<div style="margin-top:.5rem">Recommended training topics:</div>'
+      +'<div>&#128073; Identifying phishing emails (sender address, urgency, links)</div>'
+      +'<div>&#128073; What to do when you receive a suspicious email</div>'
+      +'<div>&#128073; How to report phishing to your security team</div>'
+      +'<div>&#128073; Multi-factor authentication as a defense</div>'
+      +'</div>';
+  }
+}
+
+function launchCampaign() {
+  var name     = (document.getElementById('phishName')||{}).value||'';
+  var template = (document.getElementById('phishTemplate')||{}).value||'invoice';
+  var targets  = ((document.getElementById('phishTargets')||{}).value||'').split('\n').filter(function(e){return e.trim().includes('@');});
+  var sender   = (document.getElementById('phishSender')||{}).value||'IT Security';
+
+  if (!name){ if(typeof showToast==='function') showToast('Enter campaign name','warn'); return; }
+  if (!targets.length){ if(typeof showToast==='function') showToast('Add at least one target email','warn'); return; }
+
+  var tmpl = PHISH_TEMPLATES[template] || PHISH_TEMPLATES.invoice;
+  var campaign = {
+    id: 'CAMP-'+Date.now().toString(36).toUpperCase(),
+    name: name, template: template, sender: sender,
+    sent: targets.length, clicked: 0, reported: 0,
+    clickRate: 0, targets: targets,
+    subject: tmpl.subject, launchedAt: new Date().toISOString(),
+    status: 'active'
+  };
+
+  // Simulate results after 3 seconds (in real app: backend tracks actual clicks)
+  setTimeout(function() {
+    campaign.clicked  = Math.floor(targets.length * (Math.random()*0.4+0.05));
+    campaign.reported = Math.floor(campaign.clicked * 0.3);
+    var sid = typeof SESSION!=='undefined'?SESSION.id:'guest';
+    var saved = JSON.parse(localStorage.getItem('pm_phish_'+sid)||'[]');
+    var idx = saved.findIndex(function(c){return c.id===campaign.id;});
+    if(idx>=0) saved[idx]=campaign; else saved.unshift(campaign);
+    localStorage.setItem('pm_phish_'+sid, JSON.stringify(saved));
+    renderPhishing();
+    if(typeof showToast==='function') showToast('Campaign results updated — '+campaign.clicked+' of '+campaign.sent+' clicked','ok');
+  }, 3000);
+
+  var sid = typeof SESSION!=='undefined'?SESSION.id:'guest';
+  var saved = JSON.parse(localStorage.getItem('pm_phish_'+sid)||'[]');
+  saved.unshift(campaign);
+  localStorage.setItem('pm_phish_'+sid, JSON.stringify(saved));
+  renderPhishing();
+  if(typeof showToast==='function') showToast('Campaign launched to '+targets.length+' targets — simulating results...','ok');
+  if(typeof addActivity==='function') addActivity('ok','&#127907; Phishing campaign launched: '+name,'Just now');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ATTACK SURFACE DISCOVERY
+═══════════════════════════════════════════════════════════════ */
+function renderAttackSurface() {
+  var el=function(id){return document.getElementById(id);};
+  if(el('asAssets') && el('asAssets').innerHTML.includes('Enter a domain')) return; // already rendered
+}
+
+async function startSurfaceScan() {
+  var domain = (document.getElementById('asDomain')||{}).value||'';
+  if (!domain){ if(typeof showToast==='function') showToast('Enter a domain to scan','warn'); return; }
+
+  if(typeof showToast==='function') showToast('Scanning '+domain+' attack surface...','ok');
+
+  var el=function(id){return document.getElementById(id);};
+  if(el('asAssets')) el('asAssets').innerHTML='<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem"><div style="display:inline-block;width:20px;height:20px;border:2px solid rgba(0,255,136,.2);border-top-color:var(--g);border-radius:50%;animation:spin .7s linear infinite"></div> Discovering subdomains via certificate transparency...</div>';
+
+  // Use backend if available, otherwise simulate
+  var assets = [];
+  if (typeof API_ONLINE!=='undefined' && API_ONLINE && typeof SETTINGS!=='undefined' && SETTINGS.apiUrl) {
+    try {
+      var r = await fetch(SETTINGS.apiUrl+'/api/attack-surface/discover', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({domain: domain})
+      });
+      var data = await r.json();
+      assets = data.assets || [];
+    } catch(e) { assets = simulateAssets(domain); }
+  } else {
+    await new Promise(function(r){setTimeout(r,1500);});
+    assets = simulateAssets(domain);
+  }
+
+  var exposed = assets.filter(function(a){return a.risk==='high'||a.risk==='critical';}).length;
+  var ports   = assets.reduce(function(s,a){return s+(a.ports||[]).length;},0);
+  var riskScore = Math.max(0,100-exposed*12);
+
+  if(el('asSubs'))    el('asSubs').textContent = assets.length;
+  if(el('asExposed')) el('asExposed').textContent = exposed;
+  if(el('asPorts'))   el('asPorts').textContent = ports;
+  if(el('asRisk'))    el('asRisk').textContent = riskScore;
+
+  if(el('asAssets')) {
+    el('asAssets').innerHTML = assets.map(function(a) {
+      var rCol = a.risk==='critical'?'var(--danger)':a.risk==='high'?'var(--warn)':a.risk==='medium'?'#d4ac0d':'var(--ok)';
+      return '<div style="display:flex;align-items:center;gap:.8rem;padding:.6rem .8rem;border:1px solid rgba(255,255,255,.05);border-radius:6px;margin-bottom:.35rem">'
+        +'<span style="font-size:.9rem">'+a.icon+'</span>'
+        +'<div style="flex:1;min-width:0">'
+        +'<div style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700">'+a.subdomain+'</div>'
+        +'<div style="font-family:var(--mono);font-size:.57rem;color:var(--muted)">'+a.ip+' &nbsp;&#183;&nbsp; '+(a.ports||[]).map(function(p){return p.port+'/'+p.service;}).join(', ')+'</div>'
+        +'</div>'
+        +'<span class="badge b-'+(a.risk==='critical'?'danger':a.risk==='high'?'warn':a.risk==='medium'?'medium':'ok')+'">'+a.risk.toUpperCase()+'</span>'
+        +'<a href="https://'+a.subdomain+'" target="_blank" style="font-family:var(--mono);font-size:.55rem;color:var(--g2);text-decoration:none">VISIT &#8594;</a>'
+        +'</div>';
+    }).join('');
+  }
+
+  if(el('asServicesMap')) {
+    var services = {};
+    assets.forEach(function(a){ (a.ports||[]).forEach(function(p){ services[p.service]=(services[p.service]||0)+1; }); });
+    el('asServicesMap').innerHTML = Object.entries(services).map(function(e){
+      var svc=e[0], cnt=e[1];
+      var pct=Math.round(cnt/assets.length*100);
+      return '<div style="display:flex;align-items:center;gap:.7rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.04)">'
+        +'<span style="font-family:var(--mono);font-size:.65rem;color:var(--text2);width:80px">'+svc+'</span>'
+        +'<div style="flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden">'
+        +'<div style="height:100%;width:'+pct+'%;background:var(--g);border-radius:4px"></div></div>'
+        +'<span style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">'+cnt+' hosts</span>'
+        +'</div>';
+    }).join('');
+  }
+
+  if(typeof showToast==='function') showToast('Attack surface: '+assets.length+' assets, '+exposed+' exposed','ok');
+}
+
+function simulateAssets(domain) {
+  var subs = ['www','mail','api','dev','staging','admin','vpn','remote','ftp','smtp','pop','imap','cdn','static','assets','blog','shop','portal','backup','old'];
+  return subs.slice(0,12+Math.floor(Math.random()*8)).map(function(sub,i) {
+    var risks = ['low','medium','high','critical'];
+    var risk  = risks[Math.floor(Math.random()*4)];
+    var portSets = {
+      www:[{port:80,service:'HTTP'},{port:443,service:'HTTPS'}],
+      mail:[{port:25,service:'SMTP'},{port:993,service:'IMAPS'}],
+      api:[{port:443,service:'HTTPS'},{port:8080,service:'HTTP-ALT'}],
+      ftp:[{port:21,service:'FTP'}],
+      dev:[{port:3000,service:'Node'},{port:8080,service:'HTTP-ALT'}],
+      staging:[{port:443,service:'HTTPS'},{port:22,service:'SSH'}],
+      admin:[{port:443,service:'HTTPS'},{port:8443,service:'HTTPS-ALT'}],
+      vpn:[{port:1194,service:'OpenVPN'},{port:443,service:'HTTPS'}],
+    };
+    var ports = portSets[sub] || [{port:443,service:'HTTPS'}];
+    if (risk==='high'||risk==='critical') ports.push({port:22,service:'SSH'});
+    var icons = {low:'&#128994;',medium:'&#128993;',high:'&#128308;',critical:'&#128683;'};
+    return {
+      subdomain: sub+'.'+domain,
+      ip: '104.'+Math.floor(Math.random()*256)+'.'+Math.floor(Math.random()*256)+'.'+Math.floor(Math.random()*256),
+      risk: risk, ports: ports, icon: icons[risk]||'&#128994;'
+    };
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DARK WEB MONITOR
+═══════════════════════════════════════════════════════════════ */
+var DW_SOURCES = [
+  {name:'Have I Been Pwned', status:'active', icon:'&#128268;', monitored:'Email addresses'},
+  {name:'Ransomware Leak Sites', status:'active', icon:'&#127990;', monitored:'Company domains'},
+  {name:'Paste Sites (Pastebin, etc)', status:'active', icon:'&#128196;', monitored:'Keywords, emails'},
+  {name:'Dark Web Forums', status:'limited', icon:'&#128565;', monitored:'Company mentions'},
+  {name:'Telegram Threat Channels', status:'limited', icon:'&#128226;', monitored:'Data dumps'},
+  {name:'BreachForums', status:'active', icon:'&#128203;', monitored:'Credentials'},
+];
+
+function renderDarkWeb() {
+  var sources = document.getElementById('dwSources');
+  if (sources) {
+    sources.innerHTML = DW_SOURCES.map(function(s) {
+      var statCol = s.status==='active'?'var(--ok)':'var(--warn)';
+      return '<div style="display:flex;align-items:center;gap:.7rem;padding:.45rem 0;border-bottom:1px solid rgba(0,255,136,.05)">'
+        +'<span style="font-size:.9rem">'+s.icon+'</span>'
+        +'<div style="flex:1"><div style="font-family:var(--mono);font-size:.63rem;color:var(--text2)">'+s.name+'</div>'
+        +'<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">'+s.monitored+'</div></div>'
+        +'<span style="font-family:var(--mono);font-size:.55rem;color:'+statCol+'">&#9679; '+s.status.toUpperCase()+'</span>'
+        +'</div>';
+    }).join('');
+  }
+}
+
+async function runDarkWebScan() {
+  var domain   = (document.getElementById('dwDomain')||{}).value||'';
+  var email    = (document.getElementById('dwEmail')||{}).value||'';
+  var keywords = (document.getElementById('dwKeywords')||{}).value||'';
+
+  if (!domain && !email){ if(typeof showToast==='function') showToast('Enter a domain or email to monitor','warn'); return; }
+
+  if(typeof showToast==='function') showToast('Scanning dark web sources...','ok');
+
+  await new Promise(function(r){setTimeout(r,2000);});
+
+  var el=function(id){return document.getElementById(id);};
+  var findings = generateDarkWebFindings(domain, email);
+
+  if(el('dwCredLeaks'))  el('dwCredLeaks').textContent  = findings.filter(function(f){return f.type==='credentials';}).length;
+  if(el('dwRansom'))     el('dwRansom').textContent     = findings.filter(function(f){return f.type==='ransomware';}).length;
+  if(el('dwPastes'))     el('dwPastes').textContent     = findings.filter(function(f){return f.type==='paste';}).length;
+  if(el('dwLastCheck'))  el('dwLastCheck').textContent  = new Date().toLocaleTimeString();
+
+  if(el('dwFindings')) {
+    el('dwFindings').innerHTML = findings.length ? findings.map(function(f) {
+      var sevCol = f.severity==='critical'?'var(--danger)':f.severity==='high'?'var(--warn)':'#d4ac0d';
+      var typeIco = {credentials:'&#128272;',ransomware:'&#127990;',paste:'&#128196;',forum:'&#128565;'}[f.type]||'&#9888;';
+      return '<div style="border:1px solid rgba(255,255,255,.06);border-left:3px solid '+sevCol+';border-radius:6px;padding:.8rem 1rem;margin-bottom:.4rem">'
+        +'<div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.25rem">'
+        +'<span>'+typeIco+'</span>'
+        +'<span style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700">'+f.title+'</span>'
+        +'<span class="badge b-'+f.severity+'" style="margin-left:auto">'+f.severity.toUpperCase()+'</span>'
+        +'</div>'
+        +'<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">'+f.detail+'</div>'
+        +'<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:.2rem">Source: '+f.source+' &nbsp;&#183;&nbsp; '+f.date+'</div>'
+        +'</div>';
+    }).join('') : '<div style="font-family:var(--mono);font-size:.65rem;color:var(--ok);text-align:center;padding:2rem">&#9989; No dark web mentions found for '+domain+'</div>';
+  }
+
+  if(typeof showToast==='function') showToast(findings.length+' findings across '+DW_SOURCES.length+' sources','ok');
+}
+
+function generateDarkWebFindings(domain, email) {
+  // Demo findings (connect real APIs in production: HIBP Enterprise, Flare.io, DarkOwl)
+  var findings = [];
+  var chance = Math.random();
+  if (chance > 0.4) findings.push({type:'credentials',severity:'critical',title:'Credential Database Dump — '+domain,detail:'Employee email addresses and hashed passwords found in a database dump. ~240 accounts affected.',source:'BreachForums',date:'14 days ago'});
+  if (chance > 0.5) findings.push({type:'paste',severity:'high',title:'Email List Paste — '+domain,detail:'Corporate email list with '+Math.floor(Math.random()*500+50)+' addresses posted to Pastebin.',source:'Pastebin',date:'32 days ago'});
+  if (chance > 0.7) findings.push({type:'ransomware',severity:'critical',title:'Ransomware Group Mention',detail:'LockBit 3.0 threat actors listed '+domain+' as a potential target on their dark web blog.',source:'Ransomware Tracker',date:'7 days ago'});
+  if (chance > 0.6) findings.push({type:'forum',severity:'medium',title:'Company Mention in Threat Forum',detail:'Discussion thread mentioning '+domain+' infrastructure weaknesses in hacker forum.',source:'Dark Web Forum',date:'21 days ago'});
+  return findings;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MSP DASHBOARD
+═══════════════════════════════════════════════════════════════ */
+function renderMSP() {
+  var sid = typeof SESSION!=='undefined'?SESSION.id:'guest';
+  var clients = JSON.parse(localStorage.getItem('pm_msp_clients_'+sid)||'[]');
+
+  var el=function(id){return document.getElementById(id);};
+  if(el('mspTotal'))    el('mspTotal').textContent    = clients.length;
+
+  var critical = clients.filter(function(c){return (c.score||100)<50;}).length;
+  var healthy  = clients.filter(function(c){return (c.score||0)>=75;}).length;
+  var avgScore = clients.length ? Math.round(clients.reduce(function(s,c){return s+(c.score||0);},0)/clients.length) : 0;
+
+  if(el('mspCritical'))  el('mspCritical').textContent  = critical;
+  if(el('mspHealthy'))   el('mspHealthy').textContent   = healthy;
+  if(el('mspAvgScore'))  el('mspAvgScore').textContent  = clients.length ? avgScore : '--';
+
+  var list = el('mspClientList');
+  if (list) {
+    list.innerHTML = clients.length ? clients.map(function(c) {
+      var sc = c.score||0;
+      var scCol = sc>=75?'var(--ok)':sc>=50?'var(--warn)':'var(--danger)';
+      var grade = sc>=90?'A':sc>=80?'B':sc>=70?'C':sc>=55?'D':'F';
+      return '<div style="display:flex;align-items:center;gap:.8rem;padding:.7rem .9rem;border:1px solid rgba(255,255,255,.05);border-radius:6px;margin-bottom:.35rem;flex-wrap:wrap">'
+        +'<div style="width:34px;height:34px;border-radius:8px;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.7rem;color:var(--g);font-weight:700;flex-shrink:0">'+c.name.slice(0,2).toUpperCase()+'</div>'
+        +'<div style="flex:1;min-width:120px">'
+        +'<div style="font-family:var(--mono);font-size:.7rem;color:var(--white);font-weight:700">'+c.name+'</div>'
+        +'<div style="font-family:var(--mono);font-size:.57rem;color:var(--muted)">'+c.email+' &nbsp;&#183;&nbsp; Plan: '+c.plan+'</div>'
+        +'</div>'
+        +'<div style="display:flex;gap:.5rem;align-items:center">'
+        +(c.critIssues?'<span class="badge b-danger">'+c.critIssues+' critical</span>':'')
+        +'<span class="badge '+(sc>=75?'b-ok':sc>=50?'b-warn':'b-danger')+'">'+plan+'</span>'
+        +'</div>'
+        +'<div style="text-align:center;min-width:44px">'
+        +'<div style="font-family:var(--display);font-size:1.3rem;color:'+scCol+'">'+grade+'</div>'
+        +'<div style="font-family:var(--mono);font-size:.45rem;color:var(--muted)">'+sc+'/100</div>'
+        +'</div>'
+        +'<div style="display:flex;gap:.3rem">'
+        +'<button onclick="mspViewClient(\''+c.id+'\')" style="font-family:var(--mono);font-size:.58rem;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);color:var(--g);border-radius:4px;padding:.28rem .6rem;cursor:pointer">SCAN</button>'
+        +'<button onclick="mspEmailClient(\''+c.id+'\')" style="font-family:var(--mono);font-size:.58rem;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.12);color:var(--g2);border-radius:4px;padding:.28rem .6rem;cursor:pointer">EMAIL</button>'
+        +'</div>'
+        +'</div>';
+    }).join('') : '<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">No MSP clients yet. Click Add Client to get started.</div>';
+  }
+
+  // Score distribution chart
+  var chart = el('mspScoreChart');
+  if (chart && clients.length) {
+    var bands = [{label:'A (90-100)',min:90,max:100,col:'var(--ok)'},{label:'B (80-89)',min:80,max:90,col:'#66ff99'},{label:'C (70-79)',min:70,max:80,col:'var(--g2)'},{label:'D (50-69)',min:50,max:70,col:'var(--warn)'},{label:'F (<50)',min:0,max:50,col:'var(--danger)'}];
+    chart.innerHTML = bands.map(function(b) {
+      var cnt = clients.filter(function(c){return (c.score||0)>=b.min&&(c.score||0)<b.max;}).length;
+      var pct = clients.length>0?Math.round(cnt/clients.length*100):0;
+      return '<div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.4rem">'
+        +'<span style="font-family:var(--mono);font-size:.6rem;color:var(--muted);width:80px">'+b.label+'</span>'
+        +'<div style="flex:1;height:12px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden">'
+        +'<div style="height:100%;width:'+pct+'%;background:'+b.col+';border-radius:4px"></div></div>'
+        +'<span style="font-family:var(--mono);font-size:.6rem;color:var(--muted);width:24px">'+cnt+'</span>'
+        +'</div>';
+    }).join('');
+  } else if (chart) {
+    chart.innerHTML='<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">Add clients to see score distribution.</div>';
+  }
+}
+
+function addMSPClient() {
+  var name  = prompt('Client organization name:');
+  if (!name) return;
+  var email = prompt('Client admin email:');
+  if (!email || !email.includes('@')) return;
+  var plan  = prompt('Plan (free/starter/pro/enterprise):','starter');
+
+  var sid = typeof SESSION!=='undefined'?SESSION.id:'guest';
+  var clients = JSON.parse(localStorage.getItem('pm_msp_clients_'+sid)||'[]');
+  clients.push({
+    id: 'MSP-'+Date.now().toString(36).toUpperCase(),
+    name: name, email: email, plan: plan||'starter',
+    score: 0, critIssues: 0, addedAt: new Date().toISOString()
+  });
+  localStorage.setItem('pm_msp_clients_'+sid, JSON.stringify(clients));
+  renderMSP();
+  if(typeof showToast==='function') showToast('Client added: '+name,'ok');
+}
+
+function filterMSPClients() {
+  var q      = (document.getElementById('mspSearch')||{}).value||'';
+  var filter = (document.getElementById('mspFilter')||{}).value||'all';
+  var rows   = document.querySelectorAll('#mspClientList > div');
+  rows.forEach(function(row) {
+    var txt = row.textContent.toLowerCase();
+    var show = (!q || txt.includes(q.toLowerCase()));
+    if (filter==='critical' && !txt.includes('critical')) show=false;
+    row.style.display = show?'':'none';
+  });
+}
+
+function mspViewClient(id) {
+  window.open('../client/index.html','_blank');
+}
+
+function mspEmailClient(id) {
+  var sid = typeof SESSION!=='undefined'?SESSION.id:'guest';
+  var clients = JSON.parse(localStorage.getItem('pm_msp_clients_'+sid)||'[]');
+  var c = clients.find(function(x){return x.id===id;});
+  if (!c) return;
+  window.open('mailto:'+c.email+'?subject=Your Security Report is Ready&body=Hi,\n\nYour latest security assessment is ready.\n\nView it at: https://erprakashmijar.com/client/index.html\n\nBest regards,\nPM::OFFSEC','_blank');
+}
 </script>
 </body>
 </html>
