@@ -39,7 +39,8 @@ from database import (
     scan_count_get_today, incident_create, incident_get_all, incident_update,
     agreement_save, agreements_get_all, alert_prefs_set, alert_prefs_get,
     plan_set, plan_get, subscription_save, subscription_get,
-    ioc_add, iocs_get_all, get_dashboard_stats, get_score_history
+    ioc_add, iocs_get_all, get_dashboard_stats, get_score_history,
+    POSTGRES_AVAILABLE, get_db
 )
 
 init_stripe()
@@ -610,6 +611,26 @@ async def fetch_cisa_kev() -> list:
         print(f"[INFO] CISA KEV unavailable: {e}")
     return []
 
+def audit_action(action: str, resource: str, user_id: str, 
+                 request: Request = None, status: str = "ok", detail: str = ""):
+    """Write to audit log — PostgreSQL if available, print otherwise"""
+    ip = request.client.host if request and request.client else "unknown"
+    ua = request.headers.get("user-agent","") if request else ""
+    
+    if POSTGRES_AVAILABLE:
+        try:
+            with get_db() as conn:
+                cur = conn.cursor()
+                cur.execute("""
+                    INSERT INTO audit_log 
+                    (user_id, action, resource, detail, ip_address, user_agent, status, created_at)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,NOW())
+                """, (user_id or "anonymous", action, resource, detail, ip, ua[:200], status))
+        except Exception as e:
+            print(f"[AUDIT] {action} {resource} user={user_id} ip={ip} status={status}")
+    else:
+        print(f"[AUDIT] {action} | resource={resource} | user={user_id} | ip={ip} | {status}")
+
 async def hibp_check_email(email: str) -> dict:
     """Real HIBP breach check — requires HIBP_API_KEY"""
     api_key = os.getenv("HIBP_API_KEY")
@@ -727,26 +748,6 @@ import time as _time
 # In-memory rate limit store (PostgreSQL used when available)
 _rate_store = _defaultdict(list)
 _rate_lock  = __import__('threading').Lock()
-
-def audit_action(action: str, resource: str, user_id: str, 
-                 request: Request = None, status: str = "ok", detail: str = ""):
-    """Write to audit log — PostgreSQL if available, print otherwise"""
-    ip = request.client.host if request and request.client else "unknown"
-    ua = request.headers.get("user-agent","") if request else ""
-    
-    if POSTGRES_AVAILABLE:
-        try:
-            with get_db() as conn:
-                cur = conn.cursor()
-                cur.execute("""
-                    INSERT INTO audit_log 
-                    (user_id, action, resource, detail, ip_address, user_agent, status, created_at)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,NOW())
-                """, (user_id or "anonymous", action, resource, detail, ip, ua[:200], status))
-        except Exception as e:
-            print(f"[AUDIT] {action} {resource} user={user_id} ip={ip} status={status}")
-    else:
-        print(f"[AUDIT] {action} | resource={resource} | user={user_id} | ip={ip} | {status}")
 
 def check_rate_limit(key: str, limit: int = 10, window_seconds: int = 60) -> tuple:
     """Per-user rate limiting — returns (allowed: bool, remaining: int)"""

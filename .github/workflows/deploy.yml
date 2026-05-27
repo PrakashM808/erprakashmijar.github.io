@@ -35,22 +35,27 @@ jobs:
       - name: Check JavaScript syntax
         run: |
           echo "=== Checking JS syntax ==="
-          # Extract and check inline JS from dashboard
           node -e "
             const fs = require('fs');
+            const {spawnSync} = require('child_process');
             const html = fs.readFileSync('dashboard/index.html', 'utf8');
-            const scripts = [...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)];
-            let mainJs = '';
-            for (const s of scripts) {
-              if (s[1].length > 1000) mainJs = s[1];
+            const re = /<script[^>]*>([\s\S]*?)<\/script>/g;
+            let m, errors = 0, checked = 0;
+            while ((m = re.exec(html)) !== null) {
+              const code = m[1].trim();
+              if (code.length < 100) continue;
+              fs.writeFileSync('/tmp/chk.js', code);
+              const r = spawnSync('node', ['--check', '/tmp/chk.js'], {encoding:'utf8'});
+              if (r.status !== 0) {
+                console.error('JS block error: ' + r.stderr.slice(0,120));
+                errors++;
+              } else { checked++; }
             }
-            if (!mainJs) { console.log('❌ No main JS found'); process.exit(1); }
-            fs.writeFileSync('/tmp/dash_check.js', mainJs);
-            console.log('✅ Dashboard JS extracted: ' + mainJs.length + ' chars');
+            console.log('Checked ' + checked + ' blocks, ' + errors + ' errors');
+            if (errors > 0) process.exit(1);
           "
-          node --check /tmp/dash_check.js && echo "✅ Dashboard JS syntax valid" || exit 1
-          node --check assets/auth.js && echo "✅ auth.js syntax valid" || exit 1
-
+          echo "=== auth.js ==="
+          node --check assets/auth.js && echo "auth.js OK" || exit 1
       - name: Check auth.js exports
         run: |
           node -e "
@@ -120,6 +125,24 @@ jobs:
             python3 -m py_compile "$f" && echo "✅ $f" || exit 1
           done
 
+      - name: Test backend imports
+        run: |
+          cd backend
+          python3 -c "
+          import sys
+          try:
+              from database import POSTGRES_AVAILABLE, get_db, init_db
+              print('✅ database.py imports OK')
+          except ImportError as e:
+              print('❌ database.py import failed:', e)
+              sys.exit(1)
+          try:
+              from billing import PLANS
+              print('✅ billing.py PLANS:', list(PLANS.keys()))
+          except ImportError as e:
+              print('❌ billing.py import failed:', e)
+          "
+
       - name: Check required endpoints
         run: |
           cd backend
@@ -169,7 +192,7 @@ jobs:
         run: |
           echo "=== Checking for hardcoded secrets ==="
           # Check for API keys accidentally committed
-          if grep -r "sk-ant-api03\|SG\.\|sk_live_\|rk_live_" --include="*.py" --include="*.js" --include="*.html" . 2>/dev/null | grep -v ".env.example" | grep -v "YOUR_KEY\|placeholder\|example"; then
+          if grep -rE "sk-ant-api03|SG\.|sk_live_|rk_live_" --include="*.py" --include="*.js" --include="*.html" . 2>/dev/null | grep -v ".env.example" | grep -v "YOUR_KEY\|placeholder\|example"; then
             echo "❌ POSSIBLE HARDCODED SECRET FOUND - review above"
             exit 1
           fi

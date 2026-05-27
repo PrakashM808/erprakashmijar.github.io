@@ -2582,7 +2582,7 @@ let SCAN_COUNT = parseInt(localStorage.getItem('pm_scan_count_v3') || '0');
     var isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     var defaultUrl = isLocalhost
       ? 'http://localhost:8000'
-      : 'https://pm-offsec-backend-production.up.railway.app'; // Update with your Railway URL
+      : localStorage.getItem('pm_railway_url') || 'https://pm-offsec-backend-production.up.railway.app';
     saved = { apiUrl: defaultUrl, apiKey: '', apiMode: 'backend' };
     localStorage.setItem('pm_settings_v3', JSON.stringify(saved));
   }
@@ -10271,9 +10271,63 @@ function checkFreeTrial() {
 
 /* ── UPGRADE MODAL — proper plan selector ─────────────────── */
 var PLAN_PRICES = {
-  starter:    { name:'Starter',    price:'$19',  period:'month', devices:10,  scans:50,  features:['AI analysis','Email alerts','Scan history','Client portal'] },
-  pro:        { name:'Professional', price:'$79', period:'month', devices:50,  scans:500, features:['Everything in Starter','PDF reports','Scheduled scans','Compliance reports','Priority support'] },
-  enterprise: { name:'Enterprise',  price:'$199', period:'month', devices:999, scans:9999,features:['Everything in Pro','Unlimited devices','MSP dashboard','White-label reports','Dedicated support','API access'] },
+  free: {
+    name:'Free', price:'$0', period:'month', devices:3, scans:10,
+    badge:'', color:'#00ff88',
+    features:[
+      '3 devices monitored',
+      '10 scans per day',
+      'Basic security score',
+      'TXT report export',
+      '7-day scan history',
+      'Community support'
+    ]
+  },
+  starter: {
+    name:'Starter', price:'$19', period:'month', devices:10, scans:50,
+    badge:'POPULAR', color:'#00ff88',
+    features:[
+      '10 devices monitored',
+      '50 scans per day',
+      'AI vulnerability analysis',
+      'Email alerts (instant)',
+      'Network discovery',
+      '30-day scan history',
+      'JSON + TXT export',
+      'Client portal access',
+      'Email support'
+    ]
+  },
+  professional: {
+    name:'Professional', price:'$79', period:'month', devices:50, scans:500,
+    badge:'BEST VALUE', color:'#7b2fff',
+    features:[
+      '50 devices monitored',
+      '500 scans per day',
+      'AI analysis + chat',
+      'Scheduled automatic scans',
+      'PDF executive reports',
+      'Email alerts (instant)',
+      '90-day scan history',
+      'Compliance scoring (6 frameworks)',
+      'Priority support'
+    ]
+  },
+  enterprise: {
+    name:'Enterprise', price:'$199', period:'month', devices:9999, scans:9999,
+    badge:'', color:'#00d4ff',
+    features:[
+      'Unlimited devices',
+      'Unlimited scans',
+      'Everything in Professional',
+      'MSP white-label dashboard',
+      'Custom report branding',
+      'Dedicated account manager',
+      'API access',
+      'SLA guarantee',
+      'Phone support'
+    ]
+  }
 };
 
 function openUpgradeModal() {
@@ -10299,16 +10353,20 @@ function openUpgradeModal() {
         var key = entry[0], plan = entry[1];
         var isCurrent = currentPlan === key;
         var accentCol = key==='pro' ? '#7b2fff' : key==='enterprise' ? '#00d4ff' : '#00ff88';
-        return '<div style="background:rgba(0,0,0,.2);border:2px solid rgba('+hexToRgb(accentCol)+',.2);border-radius:10px;padding:1.2rem;display:flex;flex-direction:column;gap:.4rem">'
-          + '<div style="font-family:var(--mono);font-size:.7rem;color:'+accentCol+';letter-spacing:.12em;font-weight:700">'+plan.name.toUpperCase()+'</div>'
+        var planColor = plan.color || '#00ff88';
+        return '<div style="background:rgba(0,0,0,.2);border:2px solid '+(isCurrent?planColor:'rgba(255,255,255,.07)')+';border-radius:10px;padding:1.2rem;display:flex;flex-direction:column;gap:.4rem;position:relative">'
+          + (plan.badge ? '<div style="position:absolute;top:-10px;right:10px;background:'+planColor+';color:#040810;font-family:var(--mono);font-size:.5rem;font-weight:700;padding:.15rem .5rem;border-radius:4px">'+plan.badge+'</div>' : '')
+          + '<div style="font-family:var(--mono);font-size:.7rem;color:'+planColor+';letter-spacing:.12em;font-weight:700">'+plan.name.toUpperCase()+'</div>'
           + '<div style="font-family:var(--mono);font-size:1.8rem;color:var(--white);font-weight:700;line-height:1">'+plan.price+'<span style="font-size:.65rem;color:var(--muted)">/'+plan.period+'</span></div>'
-          + '<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);margin:auto 0">'
+          + '<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-bottom:.3rem">' + (plan.devices < 9000 ? plan.devices + ' devices · ' + plan.scans + ' scans/day' : 'Unlimited devices & scans') + '</div>'
+          + '<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);flex:1">'
           + plan.features.map(function(f){ return '<div style="padding:.2rem 0;border-bottom:1px solid rgba(255,255,255,.04)">&#9989; '+f+'</div>'; }).join('')
           + '</div>'
           + '<button onclick="selectUpgradePlan(\''+key+'\')" '
           + (isCurrent?'disabled style="background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);color:var(--g);border-radius:5px;padding:.5rem;font-family:var(--mono);font-size:.62rem;cursor:not-allowed">'
-                      :'style="background:'+accentCol+';color:#040810;border:none;border-radius:5px;padding:.5rem;font-family:var(--mono);font-size:.65rem;font-weight:700;cursor:pointer;transition:all .2s">')
-          + (isCurrent ? 'CURRENT PLAN' : 'SELECT PLAN &#8594;')
+                      :'style="background:'+planColor+';color:#040810;border:none;border-radius:5px;padding:.5rem;font-family:var(--mono);font-size:.65rem;font-weight:700;cursor:pointer;transition:all .2s">'
+          )
+          + (isCurrent ? '&#9989; CURRENT PLAN' : 'GET ' + plan.name.toUpperCase() + ' &#8594;')
           + '</button>'
           + '</div>';
       }).join('')
