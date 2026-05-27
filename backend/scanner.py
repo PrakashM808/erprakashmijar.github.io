@@ -160,7 +160,7 @@ def check_failed_logins_local() -> dict:
     for log_file in log_files:
         try:
             r = subprocess.run(
-                ['grep', '-i', 'failed password\|invalid user\|authentication failure', log_file],
+                ['grep', '-iE', 'failed password|invalid user|authentication failure', log_file],
                 capture_output=True, text=True, timeout=10
             )
             lines = [l for l in r.stdout.strip().split('\n') if l]

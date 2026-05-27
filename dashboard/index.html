@@ -2530,21 +2530,7 @@ function loadReferralPanel() {
 }
 
 /* ── Init: run all page-level loaders after nav ─────────────── */
-(function patchNav() {
-  var _prevNav = typeof nav === 'function' ? nav : null;
-  var navCallbacks = {
-    billing:  function(){ loadSubscriptionDetails(); },
-    settings: function(){ loadApiKeysSection(); loadScheduledScans(); loadReferralPanel(); checkMFAStatus(); },
-    profile:  function(){ checkMFAStatus(); },
-    iocs:     function(){ if(typeof renderIOCs==='function') renderIOCs(); },
-    incidents:function(){ if(typeof renderIncidents==='function') renderIncidents(); },
-    dashboard:function(){ setTimeout(loadScoreTrend, 300); setTimeout(loadRealThreatFeed, 500); },
-  };
-  window.nav = function(page) {
-    if (_prevNav) _prevNav(page);
-    if (navCallbacks[page]) setTimeout(navCallbacks[page], 100);
-  };
-})();
+/* nav hook registry - nav() handles all hooks */
 
 /* ── Run on initial load ─────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', function() {
@@ -3683,29 +3669,60 @@ function addActivity(type, text, time) {
    NAVIGATION
 ═══════════════════════════════════════════════════════════════ */
 function nav(page) {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
-  const target=document.getElementById('page-'+page);
-  if(target)target.classList.add('active');
-  document.querySelectorAll('.sb-item').forEach(b=>{if(b.getAttribute('onclick')?.includes(`'${page}'`))b.classList.add('active');});
-  if(page==='admin')renderAdmin();
-  if(page==='users'){renderAdmin();renderUsersPage();}
-  if(page==='billing'){loadSubscriptionDetails();}
-  if(page==='billing_x')renderBillingPage();
-  if(page==='profile')loadProfile();
-  if(page==='settings')loadSettings();
-  if(page==='incidents')renderIncidents();
-  if(page==='iocs')renderIocs();
-  if(page==='mitre')refreshMitre();
-  if(page==='playbooks')renderPlaybooks();
-  if(page==='wazuh')loadWazuh();
-  if(page==='reports'){renderReports();updateDeviceSelects();}
-  if(page==='learn')renderLearnContent('');
-  if(page==='atm'){renderATMDeviceList();updateATMStats();renderATMThreatIntel();}
-  if(page==='fleet'){renderFleet();}
-  if(page==='threatfeed'){renderThreatFeed();}
-  if(page==='soar'){renderSOAR();}
-  if(page==='vending'){renderVendingList();updateVendingStats();}
+  // Hide all pages, deactivate all sidebar items
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.sb-item').forEach(function(b){ b.classList.remove('active'); });
+  
+  // Show target page
+  var target = document.getElementById('page-' + page);
+  if (target) target.classList.add('active');
+  
+  // Highlight active sidebar item
+  document.querySelectorAll('.sb-item').forEach(function(b){
+    var oc = b.getAttribute('onclick') || '';
+    if (oc.indexOf("'" + page + "'") >= 0 || oc.indexOf('"' + page + '"') >= 0) {
+      b.classList.add('active');
+    }
+  });
+  
+  currentPage = page;
+  
+  // ── Core page renderers ──────────────────────────────────
+  if (page==='admin')           renderAdmin();
+  if (page==='users')           { renderAdmin(); renderUsersPage(); }
+  if (page==='billing')         { if(typeof loadSubscriptionDetails==='function') loadSubscriptionDetails(); }
+  if (page==='profile')         { if(typeof loadProfile==='function') loadProfile(); if(typeof checkMFAStatus==='function') checkMFAStatus(); }
+  if (page==='settings')        { if(typeof loadSettings==='function') loadSettings(); if(typeof loadApiKeysSection==='function') loadApiKeysSection(); if(typeof loadScheduledScans==='function') loadScheduledScans(); }
+  if (page==='incidents')       { if(typeof renderIncidents==='function') renderIncidents(); }
+  if (page==='iocs')            { if(typeof renderIocs==='function') renderIocs(); }
+  if (page==='mitre')           { if(typeof refreshMitre==='function') refreshMitre(); }
+  if (page==='playbooks')       { if(typeof renderPlaybooks==='function') renderPlaybooks(); }
+  if (page==='wazuh')           { if(typeof loadWazuh==='function') loadWazuh(); }
+  if (page==='reports')         { if(typeof renderReports==='function') renderReports(); if(typeof updateDeviceSelects==='function') updateDeviceSelects(); }
+  if (page==='learn')           { if(typeof renderLearnContent==='function') renderLearnContent(''); }
+  if (page==='atm')             { if(typeof renderATMDeviceList==='function') renderATMDeviceList(); if(typeof updateATMStats==='function') updateATMStats(); if(typeof renderATMThreatIntel==='function') renderATMThreatIntel(); }
+  if (page==='fleet')           { if(typeof renderFleet==='function') renderFleet(); }
+  if (page==='threatfeed')      { if(typeof renderThreatFeed==='function') renderThreatFeed(); }
+  if (page==='soar')            { if(typeof renderSOAR==='function') renderSOAR(); }
+  if (page==='vending')         { if(typeof renderVendingList==='function') renderVendingList(); if(typeof updateVendingStats==='function') updateVendingStats(); }
+  // ── Advanced page renderers ──────────────────────────────
+  if (page==='compliance')      { if(typeof renderCompliance==='function')   setTimeout(function(){ renderCompliance(); }, 50); }
+  if (page==='pentest')         { if(typeof renderPentest==='function')      setTimeout(function(){ renderPentest(); }, 50); }
+  if (page==='phishing')        { if(typeof renderPhishing==='function')     setTimeout(function(){ renderPhishing(); }, 50); }
+  if (page==='attacksurface')   { if(typeof renderAttackSurface==='function')setTimeout(function(){ renderAttackSurface(); }, 50); }
+  if (page==='darkweb')         { if(typeof renderDarkWeb==='function')      setTimeout(function(){ renderDarkWeb(); }, 50); }
+  if (page==='msp')             { if(typeof renderMSP==='function')          setTimeout(function(){ renderMSP(); }, 50); }
+  if (page==='dashboard')       { if(typeof loadScoreTrend==='function')     setTimeout(function(){ loadScoreTrend(); }, 300); }
+  if (page==='assets')          { if(typeof renderAssets==='function')       renderAssets(); }
+  if (page==='risk')            { if(typeof generateRiskMatrix==='function') generateRiskMatrix(); }
+  if (page==='executive')       { if(typeof renderExecDashboard==='function') renderExecDashboard(); }
+  if (page==='hunting')         { if(typeof renderHuntingPage==='function')  renderHuntingPage(); }
+  if (page==='cameras')         {
+    var chk = document.getElementById('camChecklist');
+    if (chk && !chk.innerHTML) chk.innerHTML = '<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">Run scan to see checklist.</div>';
+  }
+  if (page==='osint')           { if(typeof renderOsintPage==='function') renderOsintPage(); }
+  if (page==='webscan')         { if(typeof renderWebscanPage==='function') renderWebscanPage(); }
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -4858,7 +4875,6 @@ function closeMobileSidebar(){
   document.body.classList.remove('mob-menu-open');
 }
 // Close sidebar on nav (mobile)
-const _origNav = nav;
 window.nav = function(page){
   _origNav(page);
   if(window.innerWidth<=768) closeMobileSidebar();
@@ -9396,22 +9412,7 @@ function scanCameras() {
 /* ═══════════════════════════════════════════════════════════════
    NAV HOOK — wire up new pages
 ═══════════════════════════════════════════════════════════════ */
-var _origNav = typeof nav === 'function' ? nav : null;
-function nav(page) {
-  if (_origNav) _origNav(page);
-  if (page === 'phishing') { renderPhishingTemplatePreview(); renderPhishResults(); }
-  if (page === 'msp') renderMSPDashboard();
-  if (page === 'assets') renderAssets();
-  if (page === 'risk') generateRiskMatrix();
-  if (page === 'executive') renderExecDashboard();
-  if (page === 'hunting') renderHuntingPage();
-  if (page === 'compliance') runComplianceScan();
-  if (page === 'cameras') {
-    var chk = document.getElementById('camChecklist');
-    var bp  = document.getElementById('camBestPractices');
-    if (chk && !chk.innerHTML) { if(chk) chk.innerHTML='<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">Run scan to see checklist.</div>'; }
-  }
-}
+/* nav hooks merged into main nav() */
 </script>
 
 <script type="text/javascript">
@@ -9422,16 +9423,7 @@ function nav(page) {
 ═══════════════════════════════════════════════════════════════ */
 
 /* ── NAV HOOKS ─────────────────────────────────────────────── */
-var _origNav = typeof nav === 'function' ? nav : null;
-function nav(page) {
-  if (_origNav) _origNav(page);
-  if (page==='compliance')    renderCompliance();
-  if (page==='pentest')       renderPentest();
-  if (page==='phishing')      renderPhishing();
-  if (page==='attacksurface') renderAttackSurface();
-  if (page==='darkweb')       renderDarkWeb();
-  if (page==='msp')           renderMSP();
-}
+/* nav hooks merged into main nav() */
 
 /* ═══════════════════════════════════════════════════════════════
    COMPLIANCE CENTER
@@ -10888,20 +10880,6 @@ function renderAIFixResult(result, bodyEl) {
 // Frontend calls it with issue + device context
 
 /* ── Ensure nav hooks for new pages ─────────────────────────── */
-var _origNavFinal = typeof nav === 'function' ? nav : null;
-function nav(page) {
-  if (_origNavFinal) _origNavFinal(page);
-  // Hook any pages that need post-nav actions
-  var hooks = {
-    msp:          function(){ if(typeof renderMSP==='function') setTimeout(renderMSP, 50); },
-    compliance:   function(){ if(typeof renderCompliance==='function') setTimeout(renderCompliance, 50); },
-    pentest:      function(){ if(typeof renderPentest==='function') setTimeout(renderPentest, 50); },
-    phishing:     function(){ if(typeof renderPhishing==='function') setTimeout(renderPhishing, 50); },
-    attacksurface:function(){ if(typeof renderAttackSurface==='function') setTimeout(renderAttackSurface, 50); },
-    darkweb:      function(){ if(typeof renderDarkWeb==='function') setTimeout(renderDarkWeb, 50); },
-  };
-  if (hooks[page]) hooks[page]();
-}
 </script>
 
 <script type="text/javascript">

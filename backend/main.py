@@ -453,7 +453,7 @@ def save_scan_result(user_id: str, target_host: str, scan_type: str,
     return result_id
 
 @app.get("/api/history/{user_id}")
-async def get_scan_history(user_id: str, days: int = 90, _opt_user: dict = Depends(get_optional_user)):
+async def get_scan_history(user_id: str, days: int = 90):
     """Get scan history for a user — 90-day trend data"""
     if not POSTGRES_AVAILABLE:
         # Return demo trend data when no DB
@@ -509,7 +509,7 @@ async def get_scan_history(user_id: str, days: int = 90, _opt_user: dict = Depen
         raise HTTPException(500, str(e))
 
 @app.get("/api/history/{user_id}/hosts")
-async def get_scanned_hosts(user_id: str, _opt_user: dict = Depends(get_optional_user)):
+async def get_scanned_hosts(user_id: str):
     """Get list of all hosts scanned by a user"""
     if not POSTGRES_AVAILABLE:
         return {"ok": True, "hosts": [{"host": "demo-server", "last_score": 72, "scan_count": 5}]}
