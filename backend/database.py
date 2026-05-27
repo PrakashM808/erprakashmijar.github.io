@@ -865,3 +865,65 @@ def get_score_history(user_id: str, days: int = 30) -> List[dict]:
             print(f"[DB] get_score_history error: {e}")
     user_scans = [s for s in _mem["scans"] if s.get("user_id") == user_id]
     return [{"date": s.get("created_at","")[:10], "score": s.get("score",0)} for s in user_scans[-30:]]
+
+    # Scan results with full findings history
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS scan_results (
+            id          TEXT PRIMARY KEY,
+            user_id     TEXT NOT NULL,
+            target_host TEXT NOT NULL,
+            target_ip   TEXT,
+            scan_type   TEXT NOT NULL DEFAULT 'remote',
+            score       INTEGER DEFAULT 0,
+            grade       TEXT DEFAULT 'F',
+            findings    JSONB DEFAULT '[]',
+            open_ports  JSONB DEFAULT '[]',
+            ssh_config  JSONB DEFAULT '{}',
+            os_info     TEXT,
+            duration_s  FLOAT DEFAULT 0,
+            created_at  TIMESTAMP DEFAULT NOW()
+        )
+    """)
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_sr_user ON scan_results(user_id)")
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_sr_host ON scan_results(target_host)")
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_sr_date ON scan_results(created_at)")
+
+    # Full audit trail
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS audit_log (
+            id          BIGSERIAL PRIMARY KEY,
+            user_id     TEXT,
+            user_email  TEXT,
+            action      TEXT NOT NULL,
+            resource    TEXT,
+            detail      TEXT,
+            ip_address  TEXT,
+            user_agent  TEXT,
+            status      TEXT DEFAULT 'ok',
+            created_at  TIMESTAMP DEFAULT NOW()
+        )
+    """)
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_audit_user ON audit_log(user_id)")
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_audit_date ON audit_log(created_at)")
+
+    # GDPR deletion requests
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS deletion_requests (
+            id           TEXT PRIMARY KEY,
+            user_id      TEXT NOT NULL,
+            user_email   TEXT NOT NULL,
+            requested_at TIMESTAMP DEFAULT NOW(),
+            completed_at TIMESTAMP,
+            status       TEXT DEFAULT 'pending'
+        )
+    """)
+
+    # Per-user rate limits
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS rate_limits (
+            key          TEXT NOT NULL,
+            window_start TIMESTAMP NOT NULL,
+            count        INTEGER DEFAULT 1,
+            PRIMARY KEY  (key, window_start)
+        )
+    """)

@@ -929,7 +929,22 @@
             </div></div>
           </div>
         </div>
-      </div>
+      
+        <div class="panel" style="margin-top:.9rem">
+          <div class="ph"><div class="pt">SECURITY</div></div>
+          <div class="pb">
+            <div id="mfaStatusCard" style="background:rgba(0,0,0,.15);border:1px solid rgba(0,255,136,.08);border-radius:8px;padding:.9rem 1rem">
+              <div style="display:flex;align-items:center;gap:.7rem">
+                <span style="font-size:1.1rem">&#128274;</span>
+                <div style="flex:1">
+                  <div style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700">TWO-FACTOR AUTHENTICATION</div>
+                  <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)" id="mfaStatusText">Not configured</div>
+                </div>
+                <button id="mfaSetupBtn" onclick="window.location.href='../2fa-setup.html'" class="btn btn-g btn-sm">SETUP 2FA</button>
+              </div>
+            </div>
+          </div>
+        </div></div>
 
       <!-- ── BILLING & PLAN ── -->
       <div class="page" id="page-billing">
@@ -950,6 +965,9 @@
             </div>
           </div>
           <div class="bc-features" id="billingPlanFeatures"></div>
+        </div>
+        <div id="subscriptionDetails" style="margin-bottom:.9rem;background:rgba(0,0,0,.15);border:1px solid rgba(0,255,136,.07);border-radius:8px;padding:.8rem 1rem">
+          <div style="font-family:var(--mono);font-size:.62rem;color:var(--muted)">Connect Stripe to see subscription details.</div>
         </div>
         <div class="panel">
           <div class="ph"><div class="pt">TODAY'S USAGE</div><span id="billingUsageDate" style="font-family:var(--mono);font-size:.55rem;color:var(--muted)"></span></div>
@@ -1004,11 +1022,7 @@
       </div>
 
 
-      <!-- ══ SCANNER ══ -->
-      <div class="page" id="page-scan">
-        <div class="pg-hdr"><div><div class="pg-title">SCANNER</div><div class="pg-sub">Live scan results</div></div></div>
-        <div id="scannerBody"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:3rem">Click SCAN DEVICE in the header to run a scan.</div></div>
-      </div>
+<div id="scannerBody"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:3rem">Click SCAN DEVICE in the header to run a scan.</div></div>
 
       <!-- ══ WEBSITE SCANNER ══ -->
       <div class="page" id="page-webscan">
@@ -1048,6 +1062,7 @@
             <div id="pwCheckResult"></div>
           </div></div>
         </div>
+        <div id="breachResults" style="margin-top:.8rem"></div>
         <div class="panel"><div class="ph"><div class="pt">Username Lookup</div></div><div class="pb">
           <div style="display:flex;gap:.6rem;margin-bottom:.8rem"><input class="form-input" id="usernameInput" placeholder="username..." style="flex:1"/><button onclick="runUsernameLookup()" class="btn btn-g btn-sm" id="usernameBtn">SEARCH</button></div>
           <div id="usernameResults"></div>
@@ -1768,6 +1783,16 @@
           </div>
           <div class="pb" id="mspClientGrid"></div>
         </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-top:.9rem">
+          <div class="panel">
+            <div class="ph"><div class="pt">SCORE DISTRIBUTION</div></div>
+            <div class="pb" id="mspScoreChart"></div>
+          </div>
+          <div class="panel">
+            <div class="ph"><div class="pt">RECENT ALERTS</div></div>
+            <div class="pb" id="mspAlerts"><div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:1rem">No alerts yet.</div></div>
+          </div>
+        </div>
       </div>
 
       <!-- ══ ASSET INVENTORY PAGE ══ -->
@@ -1938,30 +1963,14 @@
       </div>
 
 
-      <!-- COMPLIANCE PAGE -->
-      <div class="page" id="page-compliance">
-        <div class="pg-hdr flex-between">
-          <div><div class="pg-title">COMPLIANCE CENTER</div>
-          <div class="pg-sub">SOC 2 · ISO 27001 · PCI DSS · HIPAA · NIST CSF · GDPR</div></div>
-          <button onclick="generateComplianceReport()" class="btn btn-g btn-sm">&#128196; EXPORT REPORT</button>
-        </div>
-        <div class="g4" style="margin-bottom:1.2rem">
+<div class="g4" style="margin-bottom:1.2rem">
           <div class="sc sc-g"><div class="sc-icon">&#9878;</div><div class="sc-label">Overall Score</div><div class="sc-value" id="compOverall" style="color:var(--ok)">--</div></div>
           <div class="sc sc-r"><div class="sc-icon">&#128683;</div><div class="sc-label">Failed Controls</div><div class="sc-value" id="compFailed" style="color:var(--danger)">--</div></div>
           <div class="sc sc-b"><div class="sc-icon">&#9989;</div><div class="sc-label">Passed Controls</div><div class="sc-value" id="compPassed">--</div></div>
           <div class="sc sc-b"><div class="sc-icon">&#8987;</div><div class="sc-label">In Progress</div><div class="sc-value" id="compInProgress">--</div></div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.9rem" id="compFrameworks"></div>
-      </div>
-
-      <!-- PENTEST REPORT PAGE -->
-      <div class="page" id="page-pentest">
-        <div class="pg-hdr flex-between">
-          <div><div class="pg-title">PENTEST REPORT GENERATOR</div>
-          <div class="pg-sub">Generate professional penetration testing reports for clients</div></div>
-          <button onclick="generatePentestPDF()" class="btn btn-g btn-sm">&#128196; GENERATE PDF</button>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:1rem">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:1rem">
           <div class="panel">
             <div class="ph"><div class="pt">REPORT DETAILS</div></div>
             <div class="pb">
@@ -2005,16 +2014,7 @@
           <div class="ph"><div class="pt">REMEDIATION RECOMMENDATIONS</div></div>
           <div class="pb" id="ptRemediation"></div>
         </div>
-      </div>
-
-      <!-- PHISHING SIMULATION PAGE -->
-      <div class="page" id="page-phishing">
-        <div class="pg-hdr flex-between">
-          <div><div class="pg-title">PHISHING SIMULATION</div>
-          <div class="pg-sub">Test employee security awareness with simulated phishing campaigns</div></div>
-          <button onclick="launchCampaign()" class="btn btn-g btn-sm">&#128640; LAUNCH CAMPAIGN</button>
-        </div>
-        <div class="g4" style="margin-bottom:1.2rem">
+<div class="g4" style="margin-bottom:1.2rem">
           <div class="sc sc-b"><div class="sc-icon">&#128231;</div><div class="sc-label">Emails Sent</div><div class="sc-value" id="phishSent">0</div></div>
           <div class="sc sc-r"><div class="sc-icon">&#128073;</div><div class="sc-label">Clicked</div><div class="sc-value" id="phishClicked" style="color:var(--danger)">0</div></div>
           <div class="sc sc-g"><div class="sc-icon">&#9888;</div><div class="sc-label">Reported</div><div class="sc-value" id="phishReported" style="color:var(--ok)">0</div></div>
@@ -2050,8 +2050,6 @@
           <div class="ph"><div class="pt">AWARENESS TRAINING RECOMMENDATIONS</div></div>
           <div class="pb" id="phishTraining"></div>
         </div>
-      </div>
-
       <!-- ATTACK SURFACE PAGE -->
       <div class="page" id="page-attacksurface">
         <div class="pg-hdr flex-between">
@@ -2083,8 +2081,6 @@
           <div class="ph"><div class="pt">EXPOSED SERVICES MAP</div></div>
           <div class="pb" id="asServicesMap"><div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:1.5rem">Run a scan to map all exposed services.</div></div>
         </div>
-      </div>
-
       <!-- DARK WEB PAGE -->
       <div class="page" id="page-darkweb">
         <div class="pg-hdr flex-between">
@@ -2119,14 +2115,7 @@
         </div>
       </div>
 
-      <!-- MSP DASHBOARD PAGE -->
-      <div class="page" id="page-msp">
-        <div class="pg-hdr flex-between">
-          <div><div class="pg-title">MSP DASHBOARD</div>
-          <div class="pg-sub">Manage all clients from one view — Managed Security Provider mode</div></div>
-          <button onclick="addMSPClient()" class="btn btn-g btn-sm">&#10133; ADD CLIENT</button>
-        </div>
-        <div class="g4" style="margin-bottom:1.2rem">
+<div class="g4" style="margin-bottom:1.2rem">
           <div class="sc sc-b"><div class="sc-icon">&#128101;</div><div class="sc-label">Total Clients</div><div class="sc-value" id="mspTotal">0</div></div>
           <div class="sc sc-r"><div class="sc-icon">&#128683;</div><div class="sc-label">Critical Alerts</div><div class="sc-value" id="mspCritical" style="color:var(--danger)">0</div></div>
           <div class="sc sc-g"><div class="sc-icon">&#9989;</div><div class="sc-label">Healthy Clients</div><div class="sc-value" id="mspHealthy" style="color:var(--ok)">0</div></div>
@@ -2170,6 +2159,7 @@
     <div class="modal-hdr">
       <div>
         <div class="modal-title">SCAN A SERVER</div>
+        <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-top:.15rem" id="scanQuotaDisplay"></div>
         <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:.1rem">
           Your browser &#8594; Railway backend &#8594; scans the target server
         </div>
@@ -2261,6 +2251,327 @@
 </div>
 
 <script src="../assets/auth.js"></script>
+<script type="text/javascript">
+/* ═══════════════════════════════════════════════════════════════
+   CORE UTILITY FUNCTIONS — showToast, scoreColor,
+   modal open/close helpers, missing function stubs
+   All 100+ showToast calls now have a real implementation
+═══════════════════════════════════════════════════════════════ */
+
+/* ── showToast — used 100+ times throughout dashboard ─────── */
+function showToast(msg, type) {
+  // type: 'ok' | 'warn' | 'danger' | 'info' | string color
+  var colors = {
+    ok:     {bg:'#00ff88', text:'#040810'},
+    warn:   {bg:'#f5a623', text:'#040810'},
+    danger: {bg:'#ff4d6a', text:'#fff'},
+    info:   {bg:'#00d4ff', text:'#040810'},
+    error:  {bg:'#ff4d6a', text:'#fff'},
+  };
+  var col = colors[type] || colors.ok;
+  
+  // Remove any existing toast
+  var existing = document.querySelector('.pm-toast');
+  if (existing) existing.remove();
+  
+  var t = document.createElement('div');
+  t.className = 'pm-toast';
+  t.style.cssText = [
+    'position:fixed', 'bottom:1.5rem', 'right:1.5rem', 'z-index:99999',
+    'background:' + col.bg, 'color:' + col.text,
+    'font-family:var(--mono,monospace)', 'font-size:.72rem', 'font-weight:700',
+    'padding:.65rem 1.1rem', 'border-radius:8px',
+    'box-shadow:0 4px 20px rgba(0,0,0,.4)',
+    'max-width:340px', 'line-height:1.4',
+    'animation:toastIn .25s ease',
+    'cursor:pointer'
+  ].join(';');
+  t.textContent = msg;
+  t.onclick = function() { t.remove(); };
+  
+  // Add CSS animation if not present
+  if (!document.getElementById('toastStyles')) {
+    var style = document.createElement('style');
+    style.id = 'toastStyles';
+    style.textContent = '@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}@keyframes toastOut{from{opacity:1}to{opacity:0;transform:translateY(4px)}}';
+    document.head.appendChild(style);
+  }
+  
+  document.body.appendChild(t);
+  setTimeout(function() {
+    if (t.parentNode) {
+      t.style.animation = 'toastOut .3s ease forwards';
+      setTimeout(function() { if (t.parentNode) t.remove(); }, 300);
+    }
+  }, 3500);
+}
+
+/* ── scoreColor — converts score to color string ──────────── */
+function scoreColor(score) {
+  if (score >= 90) return 'var(--ok, #00ff88)';
+  if (score >= 75) return '#66dd88';
+  if (score >= 55) return 'var(--warn, #f5a623)';
+  if (score >= 35) return '#ff8c42';
+  return 'var(--danger, #ff4d6a)';
+}
+
+function scoreGrade(score) {
+  if (score >= 90) return 'A';
+  if (score >= 80) return 'B';
+  if (score >= 70) return 'C';
+  if (score >= 55) return 'D';
+  return 'F';
+}
+
+/* ── renderRemediationError — AI fix error display ────────── */
+function renderRemediationError(msg) {
+  var bodyEl = document.getElementById('remModalBody');
+  if (bodyEl) {
+    bodyEl.innerHTML = '<div style="font-family:var(--mono);font-size:.65rem;color:var(--danger, #ff4d6a);padding:1.2rem;background:rgba(255,59,92,.06);border:1px solid rgba(255,59,92,.15);border-radius:6px;line-height:1.7">'
+      + '<strong>&#9888; Cannot generate AI fix:</strong><br/>' + msg
+      + '<br/><br/><span style="color:var(--muted)">Ensure ANTHROPIC_API_KEY is set in your Railway environment variables.</span>'
+      + '</div>';
+  }
+}
+
+/* ── discoverNetwork — network discovery wrapper ───────────── */
+function discoverNetwork() {
+  var modal = document.getElementById('discoverModal');
+  if (modal) {
+    modal.style.display = 'flex';
+  } else if (typeof showToast === 'function') {
+    showToast('Network discovery requires backend connection', 'info');
+  }
+}
+
+/* ── Incident modal helpers ─────────────────────────────────── */
+function openIncidentModal() {
+  var modal = document.getElementById('incidentModal');
+  if (modal) modal.style.display = 'flex';
+}
+function closeIncidentModal() {
+  var modal = document.getElementById('incidentModal');
+  if (modal) modal.style.display = 'none';
+}
+
+/* ── IOC modal helpers ───────────────────────────────────────── */
+function openIocModal() {
+  var modal = document.getElementById('iocModal');
+  if (modal) modal.style.display = 'flex';
+}
+function closeIocModal() {
+  var modal = document.getElementById('iocModal');
+  if (modal) modal.style.display = 'none';
+}
+
+/* ── addIocEntry — save IOC from modal ───────────────────────── */
+function addIocEntry() {
+  var value    = (document.getElementById('iocValue') || {}).value || '';
+  var severity = (document.getElementById('iocSeverity') || {}).value || 'high';
+  var desc     = (document.getElementById('iocDesc') || {}).value || '';
+  var source   = (document.getElementById('iocSource') || {}).value || 'manual';
+  
+  if (!value.trim()) { showToast('Enter an IOC value', 'warn'); return; }
+  
+  var ioc = {
+    id: 'IOC-' + Date.now().toString(36).toUpperCase(),
+    value: value.trim(), type: detectIocType(value),
+    severity: severity, description: desc, source: source,
+    addedAt: new Date().toISOString(), status: 'active'
+  };
+  
+  var sid = typeof SESSION !== 'undefined' ? SESSION.id : 'guest';
+  var iocs = JSON.parse(localStorage.getItem('pm_iocs_' + sid) || '[]');
+  iocs.unshift(ioc);
+  localStorage.setItem('pm_iocs_' + sid, JSON.stringify(iocs));
+  
+  closeIocModal();
+  showToast('IOC added: ' + value.trim().slice(0, 30), 'ok');
+  if (typeof renderIOCs === 'function') renderIOCs();
+  if (typeof addActivity === 'function') addActivity('ok', '&#128203; IOC added: ' + value.trim().slice(0, 30), 'Just now');
+}
+
+function detectIocType(value) {
+  if (/^(\d{1,3}\.){3}\d{1,3}$/.test(value)) return 'IP';
+  if (/^[a-fA-F0-9]{32,64}$/.test(value)) return 'Hash';
+  if (/^https?:\/\//.test(value)) return 'URL';
+  if (/^[a-zA-Z0-9][a-zA-Z0-9-]*\.[a-zA-Z]{2,}/.test(value)) return 'Domain';
+  if (/@/.test(value)) return 'Email';
+  return 'Other';
+}
+
+/* ── createIncident — save incident from modal ───────────────── */
+function createIncident() {
+  var title    = (document.getElementById('incTitle') || {}).value || '';
+  var severity = (document.getElementById('incSeverity') || {}).value || 'medium';
+  var source   = (document.getElementById('incSource') || {}).value || 'manual';
+  var devices  = (document.getElementById('incDevices') || {}).value || '';
+  var desc     = (document.getElementById('incDesc') || {}).value || '';
+  
+  if (!title.trim()) { showToast('Enter an incident title', 'warn'); return; }
+  
+  var incident = {
+    id: 'INC-' + Date.now().toString(36).toUpperCase(),
+    title: title.trim(), severity: severity, source: source,
+    devices: devices.split(',').map(function(s){ return s.trim(); }).filter(Boolean),
+    description: desc, status: 'open',
+    createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
+  };
+  
+  var sid = typeof SESSION !== 'undefined' ? SESSION.id : 'guest';
+  var incidents = JSON.parse(localStorage.getItem('pm_incidents_' + sid) || '[]');
+  incidents.unshift(incident);
+  localStorage.setItem('pm_incidents_' + sid, JSON.stringify(incidents));
+  
+  // Also save to backend if online
+  if (typeof API_ONLINE !== 'undefined' && API_ONLINE && typeof SETTINGS !== 'undefined' && SETTINGS.apiUrl) {
+    fetch(SETTINGS.apiUrl + '/api/soc/incidents', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({...incident, user_id: typeof SESSION !== 'undefined' ? SESSION.id : ''})
+    }).catch(function(){});
+  }
+  
+  closeIncidentModal();
+  showToast('Incident created: ' + title.trim(), 'ok');
+  if (typeof renderIncidents === 'function') renderIncidents();
+  if (typeof addActivity === 'function') addActivity('warn', '&#128680; Incident created: ' + title.trim(), 'Just now');
+}
+
+/* ── MFA status check ────────────────────────────────────────── */
+function checkMFAStatus() {
+  var card = document.getElementById('mfaStatusCard');
+  var text = document.getElementById('mfaStatusText');
+  var btn  = document.getElementById('mfaSetupBtn');
+  if (!card) return;
+  
+  card.style.display = 'block';
+  var session = typeof AUTH !== 'undefined' && AUTH.getSession ? AUTH.getSession() : null;
+  var mfaEnabled = session && session.mfaEnabled;
+  
+  if (text) {
+    text.textContent = mfaEnabled ? '&#9989; Enabled and active' : '&#9888; Not configured — strongly recommended';
+    text.style.color = mfaEnabled ? 'var(--ok)' : 'var(--warn)';
+  }
+  if (btn) {
+    btn.textContent = mfaEnabled ? 'MANAGE 2FA' : 'SETUP 2FA';
+  }
+}
+
+/* ── subscriptionDetails populate ──────────────────────────── */
+function loadSubscriptionDetails() {
+  var el = document.getElementById('subscriptionDetails');
+  if (!el) return;
+  el.style.display = 'block';
+  
+  var plan = typeof getUserPlan === 'function' ? getUserPlan() : 'free';
+  var prices = {free:'$0',starter:'$19',pro:'$79',professional:'$79',enterprise:'$199'};
+  var limits = {free:'3 scans/day · 1 device',starter:'20 scans/day · 10 devices',
+                pro:'60 scans/day · 50 devices',professional:'60 scans/day · 50 devices',
+                enterprise:'Unlimited scans · Unlimited devices'};
+  
+  el.innerHTML = '<div style="display:flex;align-items:center;gap:.8rem;flex-wrap:wrap">'
+    + '<div><div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">CURRENT PLAN</div>'
+    + '<div style="font-family:var(--mono);font-size:.85rem;color:var(--white);font-weight:700">' + plan.toUpperCase() + ' — ' + (prices[plan]||'$0') + '/mo</div></div>'
+    + '<div style="margin-left:auto"><div style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">' + (limits[plan]||'') + '</div>'
+    + (plan === 'free' ? '<button onclick="openUpgradeModal()" class="btn btn-g btn-sm" style="margin-top:.3rem">&#9889; UPGRADE</button>' : '')
+    + '</div></div>';
+}
+
+/* ── API Keys section ────────────────────────────────────────── */
+function loadApiKeysSection() {
+  var container = document.getElementById('apiKeysContainer');
+  if (!container) return;
+  container.style.display = 'block';
+  container.innerHTML = '<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);line-height:1.9">'
+    + '<div><strong style="color:var(--text2)">Configure API keys in Railway environment variables:</strong></div>'
+    + '<div>ANTHROPIC_API_KEY → AI Analysis, AI Fix, AI Chat</div>'
+    + '<div>HIBP_API_KEY → Real breach monitoring ($3.50/mo)</div>'
+    + '<div>VIRUSTOTAL_API_KEY → IOC reputation (free)</div>'
+    + '<div>ABUSEIPDB_API_KEY → IP reputation (free)</div>'
+    + '<div>SHODAN_API_KEY → Port intelligence ($49/mo)</div>'
+    + '<div>STRIPE_SECRET_KEY → Payment processing</div>'
+    + '</div>';
+}
+
+/* ── Scheduled scans section ────────────────────────────────── */
+function loadScheduledScans() {
+  var container = document.getElementById('scheduledScansBody');
+  if (!container) return;
+  container.style.display = 'block';
+  var sid = typeof SESSION !== 'undefined' ? SESSION.id : 'guest';
+  var schedules = JSON.parse(localStorage.getItem('pm_schedules_' + sid) || '[]');
+  container.innerHTML = schedules.length
+    ? schedules.map(function(s) {
+        return '<div style="display:flex;align-items:center;gap:.7rem;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.04);font-family:var(--mono);font-size:.62rem">'
+          + '<span style="color:var(--g2)">&#128337;</span>'
+          + '<span style="color:var(--white)">' + s.host + '</span>'
+          + '<span style="color:var(--muted)">' + s.frequency + '</span>'
+          + '<span style="margin-left:auto;color:var(--muted)">Next: ' + (s.nextRun || 'Pending') + '</span>'
+          + '</div>';
+      }).join('')
+    : '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted)">No scheduled scans. Use Settings to configure automatic scanning.</div>';
+}
+
+/* ── Referral panel ─────────────────────────────────────────── */
+function loadReferralPanel() {
+  var container = document.getElementById('referralPanel');
+  if (!container) return;
+  container.style.display = 'block';
+  var sid = typeof SESSION !== 'undefined' ? SESSION.id : 'guest';
+  var code = 'PM' + sid.toUpperCase().slice(0, 6);
+  container.innerHTML = '<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);line-height:1.9">'
+    + '<div style="color:var(--white);font-weight:700;margin-bottom:.4rem">Refer a friend — earn 1 month free</div>'
+    + '<div style="display:flex;gap:.5rem;align-items:center">'
+    + '<code style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.15);border-radius:4px;padding:.3rem .7rem;color:var(--g);flex:1">' + code + '</code>'
+    + '<button onclick="navigator.clipboard.writeText(\'' + code + '\').then(function(){showToast(\'Code copied!\',\'ok\');})" class="btn btn-o btn-sm">COPY</button>'
+    + '</div>'
+    + '<div style="margin-top:.3rem">Share your code. When they sign up and pay, you both get 1 month free.</div>'
+    + '</div>';
+}
+
+/* ── Init: run all page-level loaders after nav ─────────────── */
+(function patchNav() {
+  var _prevNav = typeof nav === 'function' ? nav : null;
+  var navCallbacks = {
+    billing:  function(){ loadSubscriptionDetails(); },
+    settings: function(){ loadApiKeysSection(); loadScheduledScans(); loadReferralPanel(); checkMFAStatus(); },
+    profile:  function(){ checkMFAStatus(); },
+    iocs:     function(){ if(typeof renderIOCs==='function') renderIOCs(); },
+    incidents:function(){ if(typeof renderIncidents==='function') renderIncidents(); },
+    dashboard:function(){ setTimeout(loadScoreTrend, 300); setTimeout(loadRealThreatFeed, 500); },
+  };
+  window.nav = function(page) {
+    if (_prevNav) _prevNav(page);
+    if (navCallbacks[page]) setTimeout(navCallbacks[page], 100);
+  };
+})();
+
+/* ── Run on initial load ─────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    checkMFAStatus();
+    loadScoreTrend && loadScoreTrend();
+    loadRealThreatFeed && loadRealThreatFeed();
+    updateScanQuotaDisplay && updateScanQuotaDisplay();
+  }, 1500);
+});
+
+/* ── escHtml — sanitize user content before innerHTML ────── */
+function escHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+    .replace(/[/]/g, '&#x2F;');
+}
+
+/* ── safeName — escape user name/hostname for display ─────── */
+function safeName(str) { return escHtml(String(str || '').slice(0, 100)); }
+</script>
+
 <script>
 /* ═══════════════════════════════════════════════════════════════
    AUTH GUARD
@@ -3555,13 +3866,13 @@ function updateUsageUI() {
 // ── Show upgrade modal ─────────────────────────────────────────
 function showUpgradeModal(featureName, requiredPlan) {
   const plan = getUserPlan();
-  document.getElementById('upgradeLockedText').textContent =
+  document.getElementById('upgradePayModalTitle').textContent =
     `${featureName} requires ${requiredPlan ? PLANS_DEF[requiredPlan]?.name : 'a paid'} plan or higher. You are currently on the ${PLANS_DEF[plan]?.name || 'Free'} plan.`;
 
   // Build plan cards for plans above current
   const currentIdx = PLAN_ORDER.indexOf(plan);
   const upgradePlans = PLAN_ORDER.filter((p,i) => i > currentIdx && p !== 'free');
-  const container = document.getElementById('upgradeModalPlans');
+  const container = document.getElementById('upgradePayModalBody');
   container.innerHTML = upgradePlans.map(p => {
     const d = PLANS_DEF[p];
     const recommended = p === upgradePlans[0];
@@ -3575,7 +3886,7 @@ function showUpgradeModal(featureName, requiredPlan) {
     </div>`;
   }).join('');
 
-  document.getElementById('upgradeModal').style.display = 'flex';
+  document.getElementById('upgradePayModal').style.display = 'flex';
 }
 
 // ── Feature gate check — call before locked features ──────────
@@ -3608,7 +3919,7 @@ function getNextPlan(current) {
 
 // ── Start upgrade flow ─────────────────────────────────────────
 async function startUpgrade(planKey) {
-  document.getElementById('upgradeModal').style.display = 'none';
+  document.getElementById('upgradePayModal').style.display = 'none';
   const apiUrl2 = SETTINGS.apiUrl?.replace(/\/$/, '') || 'http://localhost:8000';
   if (!API_ONLINE) {
     // Demo mode — simulate upgrade
@@ -4914,7 +5225,7 @@ async function fixIssueWithAI(issue, device) {
       </div>
       <div style="font-family:var(--mono);font-size:.63rem;color:var(--muted)">Analyzing vulnerability and generating fix plan...</div>
     </div>`;
-  document.getElementById('remediationModal').style.display = 'flex';
+  document.getElementById('remModal').style.display = 'flex';
 
   const prompt = `Security vulnerability found on ${device?.hostname||'Linux server'} (${device?.os||'Ubuntu'}):
 Title: ${issue.title}
@@ -5057,7 +5368,7 @@ function renderRemediationText(text, issue) {
 }
 
 function closeRemediationModal() {
-  document.getElementById('remediationModal').style.display = 'none';
+  document.getElementById('remModal').style.display = 'none';
   currentRemIssue = null; currentRemDevice = null;
 }
 
@@ -7921,6 +8232,180 @@ if ('serviceWorker' in navigator) {
     <div id="chatBadge" style="display:none;position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:var(--danger);font-family:var(--mono);font-size:.6rem;color:#fff;display:flex;align-items:center;justify-content:center">1</div>
   </button>
 </div>
+<!-- ══════════════════════════════════════════════════════════
+     ALL MISSING MODAL HTML + KEY ELEMENT IDs
+     Insert before </body> in dashboard/index.html
+══════════════════════════════════════════════════════════════ -->
+
+<!-- INCIDENT CREATION MODAL -->
+<div id="incidentModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeIncidentModal()">
+  <div class="modal" style="max-width:560px;width:100%">
+    <div class="modal-bar"></div>
+    <div class="modal-hdr">
+      <div><div class="modal-title">&#128680; CREATE INCIDENT</div>
+      <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">Log a new security incident for tracking and response</div></div>
+      <button class="modal-close" onclick="closeIncidentModal()">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">TITLE <span style="color:var(--danger)">*</span></label>
+        <input class="form-input" id="incTitle" placeholder="e.g. Suspicious SSH Login Attempt"/></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem">
+        <div class="form-group"><label class="form-label">SEVERITY</label>
+          <select class="form-input" id="incSeverity">
+            <option value="critical">&#128683; Critical</option>
+            <option value="high">&#128308; High</option>
+            <option value="medium" selected>&#128993; Medium</option>
+            <option value="low">&#128994; Low</option>
+          </select></div>
+        <div class="form-group"><label class="form-label">SOURCE</label>
+          <select class="form-input" id="incSource">
+            <option value="scanner">Security Scanner</option>
+            <option value="manual">Manual Report</option>
+            <option value="alert">Automated Alert</option>
+            <option value="client">Client Report</option>
+            <option value="external">External Notification</option>
+          </select></div>
+      </div>
+      <div class="form-group"><label class="form-label">AFFECTED DEVICES <span style="color:var(--muted);font-size:.58rem">comma-separated</span></label>
+        <input class="form-input" id="incDevices" placeholder="192.168.1.1, web-server-01"/></div>
+      <div class="form-group"><label class="form-label">DESCRIPTION</label>
+        <textarea class="form-input" id="incDesc" rows="3" placeholder="Describe what happened, when, and what systems are affected..." style="resize:vertical"></textarea></div>
+    </div>
+    <div style="display:flex;gap:.5rem;justify-content:flex-end;padding:.9rem 1.2rem;border-top:1px solid rgba(0,255,136,.07)">
+      <button onclick="closeIncidentModal()" class="btn btn-o btn-sm">CANCEL</button>
+      <button onclick="createIncident()" class="btn btn-g btn-sm">&#128680; CREATE INCIDENT</button>
+    </div>
+  </div>
+</div>
+
+<!-- IOC ADD MODAL -->
+<div id="iocModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeIocModal()">
+  <div class="modal" style="max-width:500px;width:100%">
+    <div class="modal-bar"></div>
+    <div class="modal-hdr">
+      <div><div class="modal-title">&#128203; ADD IOC</div>
+      <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">Add an Indicator of Compromise to the database</div></div>
+      <button class="modal-close" onclick="closeIocModal()">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">IOC VALUE <span style="color:var(--danger)">*</span></label>
+        <input class="form-input" id="iocValue" placeholder="IP address, domain, file hash, URL..."/></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem">
+        <div class="form-group"><label class="form-label">SEVERITY</label>
+          <select class="form-input" id="iocSeverity">
+            <option value="critical">&#128683; Critical</option>
+            <option value="high" selected>&#128308; High</option>
+            <option value="medium">&#128993; Medium</option>
+            <option value="low">&#128994; Low</option>
+          </select></div>
+        <div class="form-group"><label class="form-label">SOURCE</label>
+          <select class="form-input" id="iocSource">
+            <option value="internal">Internal Discovery</option>
+            <option value="virustotal">VirusTotal</option>
+            <option value="abuseipdb">AbuseIPDB</option>
+            <option value="hibp">HIBP</option>
+            <option value="manual">Manual Entry</option>
+            <option value="threat_feed">Threat Feed</option>
+          </select></div>
+      </div>
+      <div class="form-group"><label class="form-label">DESCRIPTION</label>
+        <textarea class="form-input" id="iocDesc" rows="2" placeholder="Context about this IOC..." style="resize:vertical"></textarea></div>
+    </div>
+    <div style="display:flex;gap:.5rem;justify-content:flex-end;padding:.9rem 1.2rem;border-top:1px solid rgba(0,255,136,.07)">
+      <button onclick="closeIocModal()" class="btn btn-o btn-sm">CANCEL</button>
+      <button onclick="addIocEntry()" class="btn btn-g btn-sm">&#10133; ADD IOC</button>
+    </div>
+  </div>
+</div>
+
+<!-- UPGRADE MODAL (with proper IDs) -->
+<div id="upgradePayModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal" style="max-width:720px;width:100%">
+    <div class="modal-bar"></div>
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-title" id="upgradePayModalTitle">&#9889; UPGRADE YOUR PLAN</div>
+        <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:.15rem" id="upgradePayModalSubtitle">Unlock more scans, devices, and enterprise features</div>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('upgradePayModal').style.display='none'">&#10005;</button>
+    </div>
+    <div class="modal-body" id="upgradePayModalBody">
+      <!-- Populated by openUpgradeModal() JS function -->
+    </div>
+    <div style="padding:.8rem 1.2rem;border-top:1px solid rgba(0,255,136,.07);font-family:var(--mono);font-size:.57rem;color:var(--muted);text-align:center">
+      &#128272; Secure payment via Stripe &nbsp;&#183;&nbsp; Cancel anytime &nbsp;&#183;&nbsp; No contracts
+    </div>
+  </div>
+</div>
+
+<!-- MFA STATUS CARD (in profile/settings) -->
+<div id="mfaStatusCard" style="display:none;background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.08);border-radius:8px;padding:.9rem 1rem;margin-top:.8rem">
+  <div style="display:flex;align-items:center;gap:.7rem">
+    <span style="font-size:1.1rem">&#128274;</span>
+    <div style="flex:1">
+      <div style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700">TWO-FACTOR AUTHENTICATION</div>
+      <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)" id="mfaStatusText">Status loading...</div>
+    </div>
+    <button id="mfaSetupBtn" onclick="window.location.href='../2fa-setup.html'" class="btn btn-g btn-sm">SETUP 2FA</button>
+  </div>
+</div>
+
+<!-- TREND CHART PANEL (injected into dashboard page) -->
+<div id="trendChartPanel" style="display:none">
+  <div class="panel" style="margin-top:.9rem">
+    <div class="ph">
+      <div class="pt">90-DAY SECURITY TREND</div>
+      <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)" id="trendLabel"></div>
+    </div>
+    <div class="pb"><div id="trendChart" style="min-height:130px;width:100%"></div></div>
+  </div>
+</div>
+
+<!-- SCAN QUOTA DISPLAY (in scan modal header) -->
+<div id="scanQuotaDisplay" style="font-family:var(--mono);font-size:.58rem;color:var(--muted);display:inline"></div>
+
+<!-- SUBSCRIPTION DETAILS PANEL -->
+<div id="subscriptionDetails" style="display:none;background:rgba(0,0,0,.15);border:1px solid rgba(0,255,136,.07);border-radius:8px;padding:.9rem 1rem;margin-top:.6rem">
+  <div style="font-family:var(--mono);font-size:.62rem;color:var(--muted)">Loading subscription details...</div>
+</div>
+
+<!-- SCHEDULED SCANS BODY -->
+<div id="scheduledScansBody" style="display:none"></div>
+
+<!-- API KEYS CONTAINER -->
+<div id="apiKeysContainer" style="display:none"></div>
+
+<!-- REFERRAL PANEL -->
+<div id="referralPanel" style="display:none"></div>
+
+<!-- BREACH RESULTS PANEL -->
+<div id="breachResults" style="display:none"></div>
+
+<!-- ONBOARDING MODAL -->
+<div id="onboardingModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal" style="max-width:520px;width:100%">
+    <div class="modal-bar"></div>
+    <div class="modal-hdr">
+      <div class="modal-title">&#127775; WELCOME TO PM::OFFSEC</div>
+      <button class="modal-close" onclick="document.getElementById('onboardingModal').style.display='none'">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div style="text-align:center;padding:1rem 0">
+        <div style="font-size:2rem;margin-bottom:.8rem">&#128737;</div>
+        <div style="font-family:var(--mono);font-size:.75rem;color:var(--white);font-weight:700;margin-bottom:.5rem">Your Security Dashboard is Ready</div>
+        <div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);line-height:1.8;margin-bottom:1.2rem">
+          Start by adding a device to scan.<br/>
+          Go to <strong style="color:var(--g)">Settings</strong> to connect your Railway backend.<br/>
+          Use <strong style="color:var(--g2)">Demo Mode</strong> to explore with sample data.
+        </div>
+        <div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap">
+          <button onclick="openScanModal();document.getElementById('onboardingModal').style.display='none'" class="btn btn-g btn-sm">&#128269; SCAN A SERVER</button>
+          <button onclick="nav('settings');document.getElementById('onboardingModal').style.display='none'" class="btn btn-o btn-sm">&#9881; OPEN SETTINGS</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Chat FAB -->
 <div class="chat-launcher" id="chatLauncher">
@@ -7933,10 +8418,10 @@ if ('serviceWorker' in navigator) {
 <script type="text/javascript">
 function closeRemModal(){var m=document.getElementById('remModal');if(m)m.style.display='none';}
 function copyAllCommands(){var b=document.getElementById('remModalBody');if(!b)return;var c=b.querySelectorAll('code,pre');var t=Array.from(c).map(function(x){return x.textContent;}).join('\n\n');if(!t)t=b.innerText;navigator.clipboard.writeText(t).then(function(){if(typeof showToast==='function')showToast('Copied','ok');}).catch(function(){});}
-function openClientReview(){var s=document.getElementById('crDevice');if(s&&typeof DEVICES!=='undefined')s.innerHTML='<option value="">Select...</option>'+DEVICES.map(function(dv){return '<option value="'+dv.ip+'">'+(dv.hostname||dv.ip)+'</option>';}).join('');var m=document.getElementById('clientReviewModal');if(m)m.style.display='flex';}
-function closeClientReview(){var m=document.getElementById('clientReviewModal');if(m)m.style.display='none';}
+function openClientReview(){var s=document.getElementById('crDevice');if(s&&typeof DEVICES!=='undefined')s.innerHTML='<option value="">Select...</option>'+DEVICES.map(function(dv){return '<option value="'+dv.ip+'">'+(dv.hostname||dv.ip)+'</option>';}).join('');var m=document.getElementById('remModal');if(m)m.style.display='flex';}
+function closeClientReview(){var m=document.getElementById('remModal');if(m)m.style.display='none';}
 function sendClientReview(){var n=(document.getElementById('crClientName')||{}).value||'';var e=(document.getElementById('crClientEmail')||{}).value||'';var dv=(document.getElementById('crDevice')||{}).value||'';var mg=(document.getElementById('crMessage')||{}).value||'';if(!n){if(typeof showToast==='function')showToast('Enter client name','warn');return;}if(!e.includes('@')){if(typeof showToast==='function')showToast('Enter valid email','warn');return;}var dd=(typeof DEVICES!=='undefined'?DEVICES:[]).find(function(x){return x.ip===dv;});var sid=(typeof SESSION!=='undefined')?SESSION.id:'guest';var revs=JSON.parse(localStorage.getItem('pm_revs_'+sid)||'[]');revs.unshift({id:'R'+Date.now().toString(36).toUpperCase(),clientName:n,clientEmail:e,deviceHostname:dd?(dd.hostname||dd.ip):dv,score:dd?(dd.score||0):0,status:'sent',sentAt:new Date().toISOString()});localStorage.setItem('pm_revs_'+sid,JSON.stringify(revs));closeClientReview();if(typeof showToast==='function')showToast('Review sent to '+n,'ok');if(typeof addActivity==='function')addActivity('ok','Client review sent to '+n,'Just now');var subj=encodeURIComponent('Your Security Report is Ready');var body=encodeURIComponent('Hi '+n+',\n\n'+(mg?mg+'\n\n':'')+'View at: https://erprakashmijar.com/client/index.html\n\nBest regards');setTimeout(function(){window.open('mailto:'+e+'?subject='+subj+'&body='+body,'_blank');},500);}
-function openReviewsList(){var m=document.getElementById('reviewsListModal');var b=document.getElementById('reviewsListBody');if(!m||!b)return;var sid=(typeof SESSION!=='undefined')?SESSION.id:'guest';var revs=JSON.parse(localStorage.getItem('pm_revs_'+sid)||'[]');b.innerHTML=revs.length?revs.map(function(rv){return '<div style="border:1px solid rgba(0,255,136,.07);border-radius:6px;padding:.8rem;margin-bottom:.4rem"><strong style="font-family:var(--mono);font-size:.68rem;color:var(--white)">'+rv.clientName+'</strong><div style="font-family:var(--mono);font-size:.57rem;color:var(--muted);margin-top:.2rem">'+rv.clientEmail+' &#183; '+rv.deviceHostname+'<br/>'+new Date(rv.sentAt).toLocaleDateString()+'</div><a href="https://erprakashmijar.com/client/index.html" target="_blank" style="display:inline-block;margin-top:.4rem;font-family:var(--mono);font-size:.55rem;color:var(--g);border:1px solid rgba(0,255,136,.2);border-radius:3px;padding:.15rem .45rem;text-decoration:none">CLIENT PORTAL</a></div>';}).join(''):'<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">No reviews sent yet.</div>';m.style.display='flex';}
+function openReviewsList(){var m=document.getElementById('remModal');var b=document.getElementById('reviewsListBody');if(!m||!b)return;var sid=(typeof SESSION!=='undefined')?SESSION.id:'guest';var revs=JSON.parse(localStorage.getItem('pm_revs_'+sid)||'[]');b.innerHTML=revs.length?revs.map(function(rv){return '<div style="border:1px solid rgba(0,255,136,.07);border-radius:6px;padding:.8rem;margin-bottom:.4rem"><strong style="font-family:var(--mono);font-size:.68rem;color:var(--white)">'+rv.clientName+'</strong><div style="font-family:var(--mono);font-size:.57rem;color:var(--muted);margin-top:.2rem">'+rv.clientEmail+' &#183; '+rv.deviceHostname+'<br/>'+new Date(rv.sentAt).toLocaleDateString()+'</div><a href="https://erprakashmijar.com/client/index.html" target="_blank" style="display:inline-block;margin-top:.4rem;font-family:var(--mono);font-size:.55rem;color:var(--g);border:1px solid rgba(0,255,136,.2);border-radius:3px;padding:.15rem .45rem;text-decoration:none">CLIENT PORTAL</a></div>';}).join(''):'<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">No reviews sent yet.</div>';m.style.display='flex';}
 </script>
 
 <script type="text/javascript">
@@ -10082,6 +10567,659 @@ function addMSPClient() {
 // Call checkFreeTrial after main init
 document.addEventListener('DOMContentLoaded', function() {
   setTimeout(checkFreeTrial, 1500);
+});
+</script>
+
+<script type="text/javascript">
+/* ═══════════════════════════════════════════════════════════════
+   PHASE 1 HARDENING — IP Validation, Disclaimers, Security Fixes
+═══════════════════════════════════════════════════════════════ */
+
+/* ── IP Validation — block dangerous targets ─────────────────── */
+var BLOCKED_IP_RANGES = [
+  /^127\./, /^localhost$/i, /^10\./, /^172\.(1[6-9]|2[0-9]|3[01])\./,
+  /^192\.168\./, /^169\.254\./, /^::1$/, /^0\.0\.0\.0$/,
+  /^metadata\.google\.internal$/i, /^169\.254\.169\.254$/,
+  /^100\.64\./, /^198\.51\.100\./, /^203\.0\.113\./
+];
+
+function validateScanTarget(host) {
+  if (!host || host.trim().length < 4) {
+    return { ok: false, reason: 'Please enter a valid hostname or IP address.' };
+  }
+  host = host.trim().toLowerCase();
+  for (var i = 0; i < BLOCKED_IP_RANGES.length; i++) {
+    if (BLOCKED_IP_RANGES[i].test(host)) {
+      return { ok: false, reason: 'Scanning internal/private IP ranges is not allowed. Enter a public server IP or hostname.' };
+    }
+  }
+  // Block obviously invalid inputs
+  if (host.includes('..') || host.includes('/') || host.includes(';') || host.includes('|')) {
+    return { ok: false, reason: 'Invalid hostname format.' };
+  }
+  return { ok: true };
+}
+
+/* ── Scan disclaimer ─────────────────────────────────────────── */
+function getScanDisclaimer() {
+  return '<div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:6px;padding:.65rem .9rem;margin-bottom:.8rem;display:flex;gap:.5rem;align-items:flex-start">'
+    + '<span style="font-size:.85rem;flex-shrink:0">&#9888;</span>'
+    + '<div style="font-family:var(--mono);font-size:.58rem;color:var(--text2);line-height:1.7">'
+    + '<strong style="color:var(--warn)">RISK INDICATOR SCAN</strong> — These results identify common security misconfigurations and known risk patterns. '
+    + 'Findings are indicators, not confirmed exploits. Professional verification is recommended before remediation decisions. '
+    + '<span style="color:var(--muted)">PM::OFFSEC is not liable for actions taken based on these results.</span>'
+    + '</div></div>';
+}
+
+/* ── Patch runRemoteScan to validate IP first ────────────────── */
+var _origRunRemoteScan = typeof runRemoteScan === 'function' ? runRemoteScan : null;
+function runRemoteScan() {
+  var host = (document.getElementById('remoteHost') || {}).value || '';
+  var check = validateScanTarget(host);
+  if (!check.ok) {
+    if (typeof showToast === 'function') showToast(check.reason, 'warn');
+    var errEl = document.getElementById('remoteScanError');
+    if (errEl) { errEl.textContent = check.reason; errEl.style.display = 'block'; }
+    return;
+  }
+  if (_origRunRemoteScan) _origRunRemoteScan();
+}
+
+/* ── Add disclaimer to scan results ─────────────────────────── */
+var _origRenderScanResult = typeof renderScanResult === 'function' ? renderScanResult : null;
+function renderScanResult(data) {
+  if (_origRenderScanResult) _origRenderScanResult(data);
+  // Inject disclaimer after results render
+  var panel = document.getElementById('scannerBody');
+  if (panel && !panel.querySelector('.scan-disclaimer')) {
+    var disc = document.createElement('div');
+    disc.className = 'scan-disclaimer';
+    disc.innerHTML = getScanDisclaimer();
+    panel.insertBefore(disc, panel.firstChild);
+  }
+}
+
+/* ── Dark web demo label ─────────────────────────────────────── */
+var _origRunDarkWebScan = typeof runDarkWebScan === 'function' ? runDarkWebScan : null;
+async function runDarkWebScan() {
+  var isReal = typeof API_ONLINE !== 'undefined' && API_ONLINE && 
+               typeof SETTINGS !== 'undefined' && SETTINGS.apiUrl;
+  if (!isReal) {
+    var findingsEl = document.getElementById('dwFindings');
+    if (findingsEl) {
+      findingsEl.innerHTML = '<div style="background:rgba(123,47,255,.06);border:1px solid rgba(123,47,255,.2);border-radius:6px;padding:.8rem 1rem;margin-bottom:.8rem;font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.7">'
+        + '<strong style="color:#c084fc">&#128737; DEMO MODE</strong> — Dark web monitoring requires a connected backend with HIBP API key configured. '
+        + 'Results below are simulated for demonstration. Connect your Railway backend and add HIBP_API_KEY to see real breach data.'
+        + '</div>';
+    }
+  }
+  if (_origRunDarkWebScan) await _origRunDarkWebScan();
+}
+
+/* ── Compliance score disclaimer ─────────────────────────────── */
+var _origRenderCompliance = typeof renderCompliance === 'function' ? renderCompliance : null;
+function renderCompliance() {
+  if (_origRenderCompliance) _origRenderCompliance();
+  var el = document.getElementById('compFrameworks');
+  if (el && !el.querySelector('.comp-disclaimer')) {
+    var disc = document.createElement('div');
+    disc.className = 'comp-disclaimer';
+    disc.style.cssText = 'grid-column:1/-1;background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.12);border-radius:8px;padding:.8rem 1rem;font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.7;margin-bottom:.5rem';
+    disc.innerHTML = '<strong style="color:var(--g2)">&#128203; COMPLIANCE INDICATOR</strong> — These scores are calculated from scan findings and self-assessed controls. '
+      + 'They indicate your compliance posture but do not constitute a certified audit. '
+      + 'For official certification (SOC 2, ISO 27001, etc.) you need a qualified third-party auditor.';
+    el.insertBefore(disc, el.firstChild);
+  }
+}
+
+/* ── Session security — validate plan server-side ───────────── */
+function getSecurePlan() {
+  // In production this should be verified by the backend JWT
+  // For now, read from session but cap at what's stored in auth
+  var session = typeof AUTH !== 'undefined' && AUTH.getSession ? AUTH.getSession() : null;
+  if (!session) return 'free';
+  var plan = session.plan || 'free';
+  // Validate against known plans
+  var validPlans = ['free', 'starter', 'pro', 'professional', 'enterprise'];
+  return validPlans.includes(plan) ? plan : 'free';
+}
+
+/* ── Audit log (localStorage until backend connected) ────────── */
+var AUDIT_LOG_KEY = 'pm_audit_log';
+function auditLog(action, detail) {
+  try {
+    var logs = JSON.parse(localStorage.getItem(AUDIT_LOG_KEY) || '[]');
+    logs.unshift({
+      ts: new Date().toISOString(),
+      user: typeof SESSION !== 'undefined' ? (SESSION.email || SESSION.id) : 'unknown',
+      action: action,
+      detail: detail || '',
+      ip: 'client-side'
+    });
+    // Keep last 500 entries
+    localStorage.setItem(AUDIT_LOG_KEY, JSON.stringify(logs.slice(0, 500)));
+  } catch(e) {}
+}
+
+/* ── Hook scan functions for audit logging ───────────────────── */
+var _origRunLocalScan = typeof runLocalScan === 'function' ? runLocalScan : null;
+function runLocalScan() {
+  auditLog('SCAN_LOCAL', 'Local backend scan initiated');
+  if (_origRunLocalScan) _origRunLocalScan();
+}
+
+/* ── Patch openScanModal to show authorization reminder ─────── */
+var _origOpenScanModal = typeof openScanModal === 'function' ? openScanModal : null;
+function openScanModal() {
+  if (_origOpenScanModal) _origOpenScanModal();
+  // Remind user about authorization on remote tab
+  setTimeout(function() {
+    var remTab = document.querySelector('[onclick*="dtab-remote"]');
+    if (remTab && !remTab._authReminderAdded) {
+      remTab._authReminderAdded = true;
+      remTab.addEventListener('click', function() {
+        setTimeout(function() {
+          var authBox = document.getElementById('remoteScanAuthReminder');
+          if (!authBox) {
+            var box = document.createElement('div');
+            box.id = 'remoteScanAuthReminder';
+            box.style.cssText = 'background:rgba(255,59,92,.06);border:1px solid rgba(255,59,92,.2);border-radius:6px;padding:.6rem .8rem;font-family:var(--mono);font-size:.58rem;color:var(--text2);line-height:1.7;margin-bottom:.7rem';
+            box.innerHTML = '&#9878; <strong style="color:var(--danger)">LEGAL REQUIREMENT:</strong> Only scan systems you own or have written authorization to test. Unauthorized scanning is a crime under CFAA (18 U.S.C. § 1030).';
+            var remotePanel = document.getElementById('dtab-remote');
+            if (remotePanel) remotePanel.insertBefore(box, remotePanel.firstChild);
+          }
+        }, 100);
+      });
+    }
+  }, 500);
+}
+</script>
+
+<script type="text/javascript">
+/* ═══════════════════════════════════════════════════════════════
+   FINAL LAUNCH FIXES — All missing functions
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Missing onclick handlers ─────────────────────────────── */
+function startDiscover() {
+  var btn = document.getElementById('discoverBtn');
+  if (btn) btn.textContent = '⟳ SCANNING...';
+  if (typeof discoverNetwork === 'function') discoverNetwork();
+  else if (typeof openDiscoverModal === 'function') openDiscoverModal();
+  else if(typeof showToast==='function') showToast('Network discovery requires backend connection','ok');
+}
+
+function startThreatHunt() {
+  if(typeof showToast==='function') showToast('AI Threat Hunt started — analyzing scan data for attack patterns...','ok');
+  var resultsEl = document.getElementById('huntResults');
+  if (!resultsEl) return;
+  var devices = typeof DEVICES !== 'undefined' ? DEVICES : [];
+  var allIssues = devices.flatMap(function(d){ return d.issues||[]; });
+  if (!allIssues.length) {
+    resultsEl.innerHTML = '<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">Run scans first to enable threat hunting.</div>';
+    return;
+  }
+  // Build threat hunting analysis
+  var critIssues = allIssues.filter(function(i){ return i.severity==='critical'; });
+  var patterns = [];
+  if (critIssues.some(function(i){ return i.category==='SSH'; }))
+    patterns.push({name:'Lateral Movement Risk',tactic:'TA0008',severity:'critical',detail:'SSH misconfiguration could allow attackers to move between systems'});
+  if (critIssues.some(function(i){ return (i.title||'').includes('CVE'); }))
+    patterns.push({name:'Known Exploit Available',tactic:'TA0002',severity:'critical',detail:'Unpatched CVE with public exploit code detected'});
+  if (allIssues.some(function(i){ return (i.title||'').toLowerCase().includes('firewall'); }))
+    patterns.push({name:'Defense Evasion',tactic:'TA0005',severity:'high',detail:'Firewall gaps may allow attacker traffic to go undetected'});
+  patterns.push({name:'No anomalous patterns',tactic:'TA0043',severity:'low',detail:'No active attack chains detected in current scan data'});
+  
+  resultsEl.innerHTML = patterns.map(function(p) {
+    var col = p.severity==='critical'?'var(--danger)':p.severity==='high'?'var(--warn)':'var(--ok)';
+    return '<div style="border:1px solid rgba(255,255,255,.06);border-left:3px solid '+col+';border-radius:6px;padding:.8rem 1rem;margin-bottom:.4rem">'
+      +'<div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.2rem">'
+      +'<span class="badge b-'+p.severity+'">'+p.severity.toUpperCase()+'</span>'
+      +'<span style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700">'+p.name+'</span>'
+      +'<span style="font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-left:auto">'+p.tactic+'</span>'
+      +'</div>'
+      +'<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">'+p.detail+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function viewClientReport(clientId) {
+  window.open('../client/index.html', '_blank');
+}
+
+/* ── AI Fix endpoint backend call ─────────────────────────── */
+async function fixIssueWithAI(issue, device) {
+  currentRemIssue  = issue;
+  currentRemDevice = device;
+  allRemCommands   = [];
+  var modal = document.getElementById('remModal');
+  if (!modal) return;
+  modal.style.display = 'flex';
+
+  var titleEl = document.getElementById('remModalTitle');
+  var subEl   = document.getElementById('remModalSub');
+  var bodyEl  = document.getElementById('remModalBody');
+  if (titleEl) titleEl.textContent = '🤖 AI FIX — ' + (issue.title||'').toUpperCase();
+  if (subEl)   subEl.textContent   = (issue.category||'') + ' · CVSS ' + (issue.cvss||0) + ' · ' + (issue.severity||'').toUpperCase();
+  if (bodyEl)  bodyEl.innerHTML    = '<div style="text-align:center;padding:2.5rem"><div style="display:inline-block;width:24px;height:24px;border:2px solid rgba(0,255,136,.2);border-top-color:var(--g);border-radius:50%;animation:spin .7s linear infinite"></div><div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);margin-top:1rem">Claude is analyzing this vulnerability...</div></div>';
+
+  try {
+    var result = null;
+    // Try backend first
+    if (typeof API_ONLINE !== 'undefined' && API_ONLINE && typeof SETTINGS !== 'undefined' && SETTINGS.apiUrl) {
+      var resp = await fetch(SETTINGS.apiUrl + '/api/ai/fix', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ issue: issue, device: device, user_id: typeof SESSION!=='undefined'?SESSION.id:'demo' })
+      });
+      if (resp.ok) result = await resp.json();
+    }
+    // Fallback: call Claude API directly from client
+    if (!result) {
+      result = await callClaudeForFix(issue, device);
+    }
+    renderAIFixResult(result, bodyEl);
+  } catch(e) {
+    if (bodyEl) bodyEl.innerHTML = '<div style="font-family:var(--mono);font-size:.65rem;color:var(--danger);padding:1rem">Error: ' + e.message + '<br/><br/>Connect backend with ANTHROPIC_API_KEY to enable AI fixes.</div>';
+  }
+}
+
+async function callClaudeForFix(issue, device) {
+  var prompt = 'You are a Linux security engineer. Fix this vulnerability:\n\n'
+    + 'Issue: ' + issue.title + '\n'
+    + 'Severity: ' + issue.severity + ' (CVSS ' + issue.cvss + ')\n'
+    + 'Category: ' + issue.category + '\n'
+    + 'Detail: ' + issue.detail + '\n'
+    + 'OS: ' + (device.os||'Linux') + '\n'
+    + 'Hostname: ' + (device.hostname||device.ip||'server') + '\n\n'
+    + 'Respond ONLY with valid JSON (no markdown):\n'
+    + '{"explanation":"plain English explanation","commands":["cmd1","cmd2"],"verify":"command to verify fix","risk":"low|medium|high","time":"estimated time","reboot":false}';
+
+  var resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  if (!resp.ok) throw new Error('API returned ' + resp.status);
+  var data = await resp.json();
+  var text = (data.content||[]).map(function(c){ return c.text||''; }).join('');
+  try {
+    return JSON.parse(text.replace(/```json?|```/g,'').trim());
+  } catch(e) {
+    return { explanation: text, commands: [], verify: '', risk: issue.severity, time: '5-10 min', reboot: false };
+  }
+}
+
+function renderAIFixResult(result, bodyEl) {
+  if (!bodyEl) return;
+  var riskCol = result.risk==='high'?'var(--danger)':result.risk==='medium'?'var(--warn)':'var(--ok)';
+  allRemCommands = result.commands || [];
+  bodyEl.innerHTML = '<div style="margin-bottom:.9rem">'
+    + '<div style="font-family:var(--mono);font-size:.6rem;color:var(--g);letter-spacing:.1em;margin-bottom:.4rem">EXPLANATION</div>'
+    + '<div style="font-family:var(--mono);font-size:.7rem;color:var(--text);line-height:1.7">' + (result.explanation||'') + '</div>'
+    + '</div>'
+    + (result.commands&&result.commands.length ? '<div style="margin-bottom:.9rem">'
+      + '<div style="font-family:var(--mono);font-size:.6rem;color:var(--g);letter-spacing:.1em;margin-bottom:.4rem">FIX COMMANDS</div>'
+      + result.commands.map(function(cmd) {
+          return '<div style="background:rgba(0,0,0,.4);border:1px solid rgba(0,255,136,.1);border-radius:5px;padding:.5rem .8rem;margin-bottom:.3rem;font-family:var(--mono);font-size:.65rem;color:var(--g2);display:flex;align-items:center;gap:.6rem">'
+            + '<code style="flex:1;word-break:break-all">'+cmd+'</code>'
+            + '<button onclick="navigator.clipboard.writeText('+JSON.stringify(cmd)+')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:.7rem;flex-shrink:0">&#128203;</button>'
+            + '</div>';
+        }).join('')
+      + '</div>' : '')
+    + (result.verify ? '<div style="margin-bottom:.7rem">'
+      + '<div style="font-family:var(--mono);font-size:.6rem;color:var(--g2);letter-spacing:.1em;margin-bottom:.3rem">VERIFY FIX</div>'
+      + '<div style="background:rgba(0,0,0,.3);border:1px solid rgba(0,212,255,.1);border-radius:5px;padding:.4rem .7rem;font-family:var(--mono);font-size:.63rem;color:var(--g2)">' + result.verify + '</div>'
+      + '</div>' : '')
+    + '<div style="display:flex;gap:.7rem;flex-wrap:wrap">'
+    + '<span style="font-family:var(--mono);font-size:.58rem;color:'+riskCol+'">&#9888; Fix risk: '+result.risk+'</span>'
+    + '<span style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">&#8987; Est. time: '+(result.time||'5 min')+'</span>'
+    + (result.reboot ? '<span style="font-family:var(--mono);font-size:.58rem;color:var(--warn)">&#128260; Requires reboot</span>' : '')
+    + '</div>'
+    + '<div style="margin-top:.6rem;font-family:var(--mono);font-size:.55rem;color:var(--muted);background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.1);border-radius:4px;padding:.4rem .7rem">&#9888; Review all commands before running. Test on non-production first.</div>';
+}
+
+/* ── Backend AI fix endpoint added in main.py ────────────────── */
+// The /api/ai/fix endpoint is handled by the backend
+// Frontend calls it with issue + device context
+
+/* ── Ensure nav hooks for new pages ─────────────────────────── */
+var _origNavFinal = typeof nav === 'function' ? nav : null;
+function nav(page) {
+  if (_origNavFinal) _origNavFinal(page);
+  // Hook any pages that need post-nav actions
+  var hooks = {
+    msp:          function(){ if(typeof renderMSP==='function') setTimeout(renderMSP, 50); },
+    compliance:   function(){ if(typeof renderCompliance==='function') setTimeout(renderCompliance, 50); },
+    pentest:      function(){ if(typeof renderPentest==='function') setTimeout(renderPentest, 50); },
+    phishing:     function(){ if(typeof renderPhishing==='function') setTimeout(renderPhishing, 50); },
+    attacksurface:function(){ if(typeof renderAttackSurface==='function') setTimeout(renderAttackSurface, 50); },
+    darkweb:      function(){ if(typeof renderDarkWeb==='function') setTimeout(renderDarkWeb, 50); },
+  };
+  if (hooks[page]) hooks[page]();
+}
+</script>
+
+<script type="text/javascript">
+/* ═══════════════════════════════════════════════════════════════
+   FRONTEND UPGRADES: 90-day history, real threat feed,
+   HIBP live check, GDPR controls, rate limit display
+═══════════════════════════════════════════════════════════════ */
+
+/* ── 90-day Score Trend Chart ─────────────────────────────── */
+async function loadScoreTrend() {
+  var chartEl = document.getElementById('trendChart');
+  var trendEl = document.getElementById('trendLabel');
+  if (!chartEl) return;
+
+  var uid = typeof SESSION !== 'undefined' ? SESSION.id : 'guest';
+  var data = null;
+
+  if (typeof API_ONLINE !== 'undefined' && API_ONLINE && typeof SETTINGS !== 'undefined' && SETTINGS.apiUrl) {
+    try {
+      var r = await fetch(SETTINGS.apiUrl + '/api/history/' + uid + '?days=90');
+      if (r.ok) data = await r.json();
+    } catch(e) {}
+  }
+
+  if (!data || !data.history || !data.history.length) {
+    // Build from local scan history
+    var scanHistory = JSON.parse(localStorage.getItem('pm_scan_history_v3')||'[]');
+    if (scanHistory.length) {
+      data = {
+        history: scanHistory.slice(-30).map(function(s){
+          return {date: s.date||new Date(s.ts||Date.now()).toISOString().split('T')[0],
+                  score: s.score||0, grade: s.grade||'F', host: s.hostname||'local'};
+        }),
+        trend: 'local'
+      };
+    } else {
+      chartEl.innerHTML = '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:center;padding:2rem">Run scans to see score trend over time.</div>';
+      return;
+    }
+  }
+
+  var hist    = data.history;
+  var maxScore = 100;
+  var w = chartEl.offsetWidth || 400;
+  var h = 120;
+  var pad = { l:36, r:10, t:10, b:30 };
+  var innerW = w - pad.l - pad.r;
+  var innerH = h - pad.t - pad.b;
+
+  // Build SVG chart
+  var pts = hist.map(function(h2, i) {
+    var x = pad.l + (i / Math.max(hist.length-1, 1)) * innerW;
+    var y = pad.t + (1 - h2.score/100) * innerH;
+    return {x:x, y:y, score:h2.score, date:h2.date, grade:h2.grade};
+  });
+
+  var polyline = pts.map(function(p){return p.x+','+p.y;}).join(' ');
+  var areaPoints = polyline + ' ' + pts[pts.length-1].x+',' +(h-pad.b)+' '+pad.l+','+(h-pad.b);
+
+  // Color gradient by last score
+  var lastScore = hist[hist.length-1].score;
+  var lineCol = lastScore>=75?'#00ff88':lastScore>=50?'#f5a623':'#ff4d6a';
+
+  var yLabels = [0,25,50,75,100].map(function(v){
+    var y = pad.t + (1-v/100)*innerH;
+    return '<text x="'+(pad.l-6)+'" y="'+(y+4)+'" text-anchor="end" fill="rgba(255,255,255,.25)" font-size="8">' + v + '</text>'
+      + '<line x1="'+pad.l+'" y1="'+y+'" x2="'+(w-pad.r)+'" y2="'+y+'" stroke="rgba(255,255,255,.04)"/>';
+  }).join('');
+
+  var xLabels = '';
+  var step = Math.max(1, Math.floor(hist.length/5));
+  for (var xi=0; xi < hist.length; xi+=step) {
+    var xp = pad.l + (xi/Math.max(hist.length-1,1))*innerW;
+    var lbl = hist[xi].date ? hist[xi].date.slice(5) : '';
+    xLabels += '<text x="'+xp+'" y="'+(h-pad.b+14)+'" text-anchor="middle" fill="rgba(255,255,255,.25)" font-size="7">' + lbl + '</text>';
+  }
+
+  var dots = pts.map(function(p){
+    var col = p.score>=75?'#00ff88':p.score>=50?'#f5a623':'#ff4d6a';
+    return '<circle cx="'+p.x+'" cy="'+p.y+'" r="3" fill="'+col+'" stroke="#040810" stroke-width="1.5">'
+      + '<title>'+p.date+' — Score: '+p.score+' ('+p.grade+')</title>'
+      + '</circle>';
+  }).join('');
+
+  chartEl.innerHTML = '<svg width="100%" viewBox="0 0 '+w+' '+h+'" style="overflow:visible">'
+    + '<defs><linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">'
+    + '<stop offset="0%" stop-color="'+lineCol+'" stop-opacity="0.2"/>'
+    + '<stop offset="100%" stop-color="'+lineCol+'" stop-opacity="0"/>'
+    + '</linearGradient></defs>'
+    + yLabels + xLabels
+    + '<polygon points="'+areaPoints+'" fill="url(#trendGrad)"/>'
+    + '<polyline points="'+polyline+'" fill="none" stroke="'+lineCol+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>'
+    + dots
+    + '</svg>';
+
+  if (trendEl) {
+    var trendMap = {improving:'&#11015; Improving',declining:'&#11014; Declining',stable:'&#8594; Stable',local:'From local history'};
+    trendEl.innerHTML = '<span style="color:'+lineCol+'">' + (trendMap[data.trend]||data.trend) + '</span>';
+    trendEl.style.fontFamily = 'var(--mono)';
+    trendEl.style.fontSize = '.62rem';
+  }
+}
+
+/* ── Real Threat Feed from Backend ───────────────────────── */
+async function loadRealThreatFeed() {
+  var feedEl = document.getElementById('threatFeedList');
+  if (!feedEl) return;
+  if (!API_ONLINE || !SETTINGS || !SETTINGS.apiUrl) return;
+
+  try {
+    var r = await fetch(SETTINGS.apiUrl + '/api/threat/feed');
+    if (!r.ok) return;
+    var data = await r.json();
+
+    var html = '';
+
+    // CISA KEV exploited CVEs
+    if (data.exploited_cves && data.exploited_cves.length) {
+      html += data.exploited_cves.slice(0,5).map(function(v) {
+        return '<div style="display:flex;align-items:center;gap:.6rem;padding:.45rem 0;border-bottom:1px solid rgba(255,59,92,.07)">'
+          + '<span style="font-family:var(--mono);font-size:.58rem;color:var(--danger);width:100px;flex-shrink:0">' + v.cve_id + '</span>'
+          + '<div style="flex:1;min-width:0">'
+          + '<div style="font-family:var(--mono);font-size:.62rem;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + v.vuln_name + '</div>'
+          + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">' + v.vendor + ' ' + v.product + '</div>'
+          + '</div>'
+          + '<span style="font-family:var(--mono);font-size:.52rem;color:var(--danger);white-space:nowrap">CISA KEV</span>'
+          + '</div>';
+      }).join('');
+    }
+
+    // Ransomware groups
+    if (data.ransomware_groups && data.ransomware_groups.length) {
+      html += data.ransomware_groups.slice(0,5).map(function(g) {
+        return '<div style="display:flex;align-items:center;gap:.6rem;padding:.45rem 0;border-bottom:1px solid rgba(245,158,11,.06)">'
+          + '<span style="font-family:var(--mono);font-size:.58rem;color:var(--warn);width:100px;flex-shrink:0">RANSOMWARE</span>'
+          + '<div style="flex:1"><div style="font-family:var(--mono);font-size:.62rem;color:var(--white)">' + g.name + '</div>'
+          + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">' + g.posts + ' known victims</div>'
+          + '</div>'
+          + '<span style="font-family:var(--mono);font-size:.52rem;color:var(--warn)">ACTIVE</span>'
+          + '</div>';
+      }).join('');
+    }
+
+    if (html) feedEl.innerHTML = html;
+  } catch(e) {}
+}
+
+/* ── Real HIBP Breach Check ──────────────────────────────── */
+async function checkEmailBreachReal(email) {
+  if (!email) {
+    email = prompt('Enter email to check for breaches:');
+    if (!email) return;
+  }
+  if (!API_ONLINE || !SETTINGS || !SETTINGS.apiUrl) {
+    if(typeof showToast==='function') showToast('Connect backend for real HIBP breach checking','warn');
+    return;
+  }
+
+  if(typeof showToast==='function') showToast('Checking HIBP for ' + email + '...','ok');
+  try {
+    var r = await fetch(SETTINGS.apiUrl + '/api/threat/breach-check', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({email: email, user_id: typeof SESSION!=='undefined'?SESSION.id:''})
+    });
+    var data = await r.json();
+
+    var modal = document.getElementById('breachCheckModal');
+    var body  = modal ? modal.querySelector('.modal-body') : null;
+    if (!modal) {
+      // Show in a simple overlay
+      var overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(4,8,16,.9);z-index:9000;display:flex;align-items:center;justify-content:center;padding:1rem';
+      overlay.onclick = function(e){ if(e.target===overlay) overlay.remove(); };
+
+      var box = document.createElement('div');
+      box.style.cssText = 'background:rgba(6,13,26,.98);border:1px solid rgba(0,255,136,.15);border-radius:12px;max-width:560px;width:100%;max-height:80vh;overflow-y:auto;padding:1.5rem';
+      box.innerHTML = buildBreachResult(email, data);
+      overlay.appendChild(box);
+      document.body.appendChild(overlay);
+    }
+  } catch(e) {
+    if(typeof showToast==='function') showToast('Breach check failed: ' + e.message, 'warn');
+  }
+}
+
+function buildBreachResult(email, data) {
+  if (data.error && !data.demo) {
+    return '<div style="font-family:var(--mono);font-size:.65rem;color:var(--danger);padding:1rem">'
+      + '&#10060; Error: ' + data.error + '<br/><br/>'
+      + 'Add HIBP_API_KEY to Railway environment variables.<br/>'
+      + '<a href="https://haveibeenpwned.com/API/Key" target="_blank" style="color:var(--g2)">Get API key — $3.50/month &#8594;</a>'
+      + '</div>';
+  }
+
+  var html = '<div style="font-family:var(--mono);margin-bottom:1rem">'
+    + '<div style="font-size:.8rem;color:var(--white);font-weight:700;margin-bottom:.3rem">BREACH CHECK: ' + email + '</div>';
+
+  if (data.demo) {
+    html += '<div style="font-size:.6rem;color:var(--warn);margin-bottom:.5rem">&#9888; Demo mode — add HIBP_API_KEY for real results</div>';
+  }
+
+  if (data.breached === false) {
+    html += '<div style="color:var(--ok);font-size:.72rem">&#9989; No breaches found for this email</div>';
+  } else if (data.breached === true) {
+    html += '<div style="color:var(--danger);font-size:.72rem;margin-bottom:.7rem">&#128683; Found in ' + data.breach_count + ' breach' + (data.breach_count!==1?'es':'') + '</div>'
+      + (data.breaches||[]).map(function(b) {
+          var sevCol = b.severity==='critical'?'var(--danger)':'var(--warn)';
+          return '<div style="border:1px solid rgba(255,255,255,.07);border-left:3px solid '+sevCol+';border-radius:6px;padding:.6rem .8rem;margin-bottom:.4rem">'
+            + '<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.2rem">'
+            + '<span style="font-size:.72rem;font-weight:700;color:var(--white)">' + b.name + '</span>'
+            + '<span style="font-size:.55rem;color:'+sevCol+';margin-left:auto">' + b.severity.toUpperCase() + '</span>'
+            + '</div>'
+            + '<div style="font-size:.6rem;color:var(--muted)">Date: ' + b.date + ' &nbsp;&#183;&nbsp; ' + (b.pwn_count||0).toLocaleString() + ' accounts</div>'
+            + '<div style="font-size:.58rem;color:var(--text2);margin-top:.2rem">Exposed: ' + (b.data_classes||[]).join(', ') + '</div>'
+            + '</div>';
+        }).join('')
+      + '<div style="margin-top:.8rem;font-size:.6rem;color:var(--muted)">Recommendation: Change passwords for affected accounts. Enable 2FA everywhere.</div>';
+  }
+
+  html += '</div><button onclick="this.closest(\'[style*=position]\').remove()" '
+    + 'style="background:var(--g);color:#040810;border:none;border-radius:5px;padding:.4rem 1rem;font-family:var(--mono);font-size:.65rem;font-weight:700;cursor:pointer">CLOSE</button>';
+  return html;
+}
+
+/* ── GDPR controls in Settings ─────────────────────────────── */
+function openGDPRPanel() {
+  var existing = document.getElementById('gdprPanel');
+  if (existing) { existing.style.display='flex'; return; }
+
+  var modal = document.createElement('div');
+  modal.id = 'gdprPanel';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(4,8,16,.9);z-index:9000;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(8px)';
+  modal.onclick = function(e){ if(e.target===modal) modal.style.display='none'; };
+  modal.innerHTML = '<div style="background:rgba(6,13,26,.98);border:1px solid rgba(0,212,255,.15);border-radius:12px;max-width:520px;width:100%;padding:1.5rem">'
+    + '<div style="font-family:var(--mono);font-size:.85rem;color:var(--white);font-weight:700;margin-bottom:.4rem">&#127466;&#127482; YOUR DATA RIGHTS (GDPR)</div>'
+    + '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-bottom:1.2rem;line-height:1.7">You have the right to access, export, and delete all your personal data stored by PM::OFFSEC.</div>'
+    + '<div style="display:flex;flex-direction:column;gap:.6rem">'
+    + '<button onclick="exportMyData()" style="background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);border-radius:6px;padding:.7rem 1rem;font-family:var(--mono);font-size:.65rem;color:var(--g2);cursor:pointer;text-align:left">&#128229; EXPORT MY DATA (Article 20)<br/><span style="font-size:.55rem;color:var(--muted)">Download all your scan history, audit logs, and account data as JSON</span></button>'
+    + '<button onclick="deleteMyData()" style="background:rgba(255,59,92,.06);border:1px solid rgba(255,59,92,.2);border-radius:6px;padding:.7rem 1rem;font-family:var(--mono);font-size:.65rem;color:var(--danger);cursor:pointer;text-align:left">&#128465; DELETE ALL MY DATA (Article 17)<br/><span style="font-size:.55rem;color:var(--muted)">Permanently erase all your data. This cannot be undone.</span></button>'
+    + '</div>'
+    + '<button onclick="document.getElementById(\'gdprPanel\').style.display=\'none\'" style="margin-top:1rem;background:none;border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:.4rem 1rem;font-family:var(--mono);font-size:.62rem;color:var(--muted);cursor:pointer;width:100%">CLOSE</button>'
+    + '</div>';
+  document.body.appendChild(modal);
+}
+
+async function exportMyData() {
+  if (!API_ONLINE || !SETTINGS || !SETTINGS.apiUrl) {
+    if(typeof showToast==='function') showToast('Connect backend to export data','warn'); return;
+  }
+  try {
+    var r = await fetch(SETTINGS.apiUrl + '/api/gdpr/export-my-data', {
+      headers: {'Authorization': 'Bearer ' + (localStorage.getItem('pm_jwt_token')||'')}
+    });
+    var data = await r.json();
+    var blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'pm-offsec-my-data-' + new Date().toISOString().split('T')[0] + '.json';
+    a.click();
+    if(typeof showToast==='function') showToast('Data exported successfully','ok');
+  } catch(e) {
+    if(typeof showToast==='function') showToast('Export failed: '+e.message,'warn');
+  }
+}
+
+async function deleteMyData() {
+  if (!confirm('This will PERMANENTLY delete ALL your data:\n- All scan results\n- Scan history\n- Incidents and alerts\n- Scheduled scans\n\nThis cannot be undone. Are you sure?')) return;
+  if (!confirm('FINAL CONFIRMATION: Delete everything?')) return;
+
+  if (!API_ONLINE || !SETTINGS || !SETTINGS.apiUrl) {
+    // Clear localStorage at minimum
+    var keys = Object.keys(localStorage).filter(function(k){ return k.startsWith('pm_'); });
+    keys.forEach(function(k){ localStorage.removeItem(k); });
+    if(typeof showToast==='function') showToast('Local data cleared. Connect backend to delete server data.','ok');
+    return;
+  }
+  try {
+    var r = await fetch(SETTINGS.apiUrl + '/api/gdpr/delete-my-data', {
+      method: 'DELETE',
+      headers: {'Authorization': 'Bearer ' + (localStorage.getItem('pm_jwt_token')||'')}
+    });
+    var data = await r.json();
+    if (data.ok) {
+      // Clear local storage too
+      var keys = Object.keys(localStorage).filter(function(k){ return k.startsWith('pm_'); });
+      keys.forEach(function(k){ localStorage.removeItem(k); });
+      if(typeof showToast==='function') showToast('All data deleted. Logging out...','ok');
+      setTimeout(function(){ window.location.href = '../login.html'; }, 2000);
+    }
+  } catch(e) {
+    if(typeof showToast==='function') showToast('Deletion failed: '+e.message,'warn');
+  }
+}
+
+/* ── Rate limit display ─────────────────────────────────────── */
+async function updateScanQuotaDisplay() {
+  var quotaEl = document.getElementById('scanQuotaDisplay');
+  if (!quotaEl || !API_ONLINE || !SETTINGS || !SETTINGS.apiUrl) return;
+  try {
+    var plan = typeof getUserPlan === 'function' ? getUserPlan() : 'free';
+    var limits = {free:3, starter:20, pro:60, professional:60, enterprise:999};
+    var limit = limits[plan] || 3;
+    var used  = parseInt(localStorage.getItem('pm_scan_count_v3')||'0');
+    var pct   = Math.min(100, Math.round(used/limit*100));
+    var col   = pct>80?'var(--danger)':pct>50?'var(--warn)':'var(--ok)';
+    quotaEl.innerHTML = '<span style="font-family:var(--mono);font-size:.6rem;color:'+col+'">'
+      + used + '/' + limit + ' scans today</span>';
+  } catch(e) {}
+}
+
+/* ── Init hooks ─────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    loadScoreTrend();
+    loadRealThreatFeed();
+    updateScanQuotaDisplay();
+  }, 2000);
 });
 </script>
 </body>

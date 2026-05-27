@@ -11,7 +11,7 @@ const AUTH = (() => {
   const DEFAULTS = [
     {
       id: 'admin-1', name: 'Prakash Mijar',
-      email: 'admin@erprakashmijar.com', password: 'Admin@2026',
+      email: 'admin@erprakashmijar.com', password: 'Admin@2026',  // Demo credential — change for production
       role: 'admin', avatar: 'PM', created: '2026-01-01',
       phone: '+1 (555) 000-0001', company: 'PM::OFFSEC',
       plan: 'enterprise'  /* admin always gets enterprise = unlimited */, status: 'active',
@@ -19,7 +19,7 @@ const AUTH = (() => {
     },
     {
       id: 'client-1', name: 'Demo Client',
-      email: 'client@demo.com', password: 'Client@123',
+      email: 'client@demo.com', password: 'Client@123',  // Demo only
       role: 'client', avatar: 'DC', created: '2026-01-01',
       phone: '', company: 'Demo Corp',
       plan: 'starter', status: 'active',
@@ -27,7 +27,7 @@ const AUTH = (() => {
     },
     {
       id: 'user-1', name: 'Demo User',
-      email: 'user@demo.com', password: 'User@1234',
+      email: 'user@demo.com', password: 'User@1234',   // Demo only
       role: 'user', avatar: 'DU', created: '2026-01-01',
       phone: '', company: 'Demo Business',
       plan: 'starter', status: 'active',
@@ -411,6 +411,14 @@ const AUTH = (() => {
   function requireAuth(redirectTo = '../login.html') {
     const s = getSession();
     if (!s) { window.location.href = redirectTo; return null; }
+    // Enforce 24-hour session expiry
+    const SESSION_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+    if (s.loginAt && (Date.now() - s.loginAt) > SESSION_MAX_AGE_MS) {
+      sessionStorage.removeItem('pm_session_v2');
+      localStorage.removeItem('pm_session_v2');
+      window.location.href = redirectTo;
+      return null;
+    }
     return s;
   }
   function requireGuest(redirectTo = 'dashboard/index.html') {
