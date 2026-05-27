@@ -1021,9 +1021,6 @@
         <div id="learnContent"></div>
       </div>
 
-
-<div id="scannerBody"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:3rem">Click SCAN DEVICE in the header to run a scan.</div></div>
-
       <!-- ══ WEBSITE SCANNER ══ -->
       <div class="page" id="page-webscan">
         <div class="pg-hdr"><div><div class="pg-title">WEBSITE SCANNER</div><div class="pg-sub">SSL · HTTP Headers · DNS · Exposed Files</div></div></div>
@@ -1539,6 +1536,87 @@
           <div class="ph"><div class="pt">RECENT REPORTS</div></div>
           <div class="pb" id="ptReportsList"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:1.5rem">No reports generated yet.</div></div>
         </div>
+      
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:1rem">
+          <div class="panel">
+            <div class="ph"><div class="pt">REPORT DETAILS</div></div>
+            <div class="pb">
+              <div class="form-group"><label class="form-label">CLIENT NAME</label><input class="form-input" id="ptClient" placeholder="Acme Corporation"/></div>
+              <div class="form-group"><label class="form-label">ENGAGEMENT TYPE</label>
+                <select class="form-input" id="ptType">
+                  <option value="external">External Network Pentest</option>
+                  <option value="internal">Internal Network Pentest</option>
+                  <option value="webapp">Web Application Pentest</option>
+                  <option value="mobile">Mobile Application Pentest</option>
+                  <option value="social">Social Engineering Assessment</option>
+                  <option value="physical">Physical Security Assessment</option>
+                  <option value="full">Full Red Team Engagement</option>
+                </select></div>
+              <div class="form-group"><label class="form-label">SCOPE</label><textarea class="form-input" id="ptScope" rows="3" placeholder="IP ranges, domains, applications in scope..." style="resize:vertical"></textarea></div>
+              <div class="form-group"><label class="form-label">ASSESSMENT DATES</label>
+                <div style="display:flex;gap:.5rem">
+                  <input class="form-input" id="ptDateFrom" type="date" style="flex:1"/>
+                  <input class="form-input" id="ptDateTo" type="date" style="flex:1"/>
+                </div></div>
+              <div class="form-group"><label class="form-label">EXECUTIVE SUMMARY</label><textarea class="form-input" id="ptSummary" rows="4" placeholder="Overall findings summary for non-technical stakeholders..." style="resize:vertical"></textarea></div>
+              <div class="form-group"><label class="form-label">METHODOLOGY</label>
+                <select class="form-input" id="ptMethodology">
+                  <option value="owasp">OWASP Testing Guide</option>
+                  <option value="ptes">PTES (Pentest Execution Standard)</option>
+                  <option value="nist">NIST SP 800-115</option>
+                  <option value="mitre">MITRE ATT&amp;CK Framework</option>
+                </select></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="ph"><div class="pt">FINDINGS SUMMARY</div></div>
+            <div class="pb" id="ptFindingsSummary"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt">DETAILED FINDINGS</div><button onclick="addManualFinding()" class="btn btn-o btn-sm">&#10133; ADD FINDING</button></div>
+          <div class="pb" id="ptFindings"></div>
+        </div>
+        <div class="panel" style="margin-top:.9rem">
+          <div class="ph"><div class="pt">REMEDIATION RECOMMENDATIONS</div></div>
+          <div class="pb" id="ptRemediation"></div>
+        </div>
+<div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-b"><div class="sc-icon">&#128231;</div><div class="sc-label">Emails Sent</div><div class="sc-value" id="phishSent">0</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#128073;</div><div class="sc-label">Clicked</div><div class="sc-value" id="phishClicked" style="color:var(--danger)">0</div></div>
+          <div class="sc sc-g"><div class="sc-icon">&#9888;</div><div class="sc-label">Reported</div><div class="sc-value" id="phishReported" style="color:var(--ok)">0</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#128200;</div><div class="sc-label">Click Rate</div><div class="sc-value" id="phishRate">0%</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:1rem">
+          <div class="panel">
+            <div class="ph"><div class="pt">NEW CAMPAIGN</div></div>
+            <div class="pb">
+              <div class="form-group"><label class="form-label">CAMPAIGN NAME</label><input class="form-input" id="phishName" placeholder="Q1 2025 Awareness Test"/></div>
+              <div class="form-group"><label class="form-label">PHISHING TEMPLATE</label>
+                <select class="form-input" id="phishTemplate">
+                  <option value="invoice">&#128196; Fake Invoice — Finance Dept</option>
+                  <option value="password_reset">&#128272; Password Reset Required</option>
+                  <option value="it_helpdesk">&#128187; IT Helpdesk Alert</option>
+                  <option value="package">&#128230; Package Delivery Notice</option>
+                  <option value="docusign">&#9997; Document Signature Request</option>
+                  <option value="office365">&#9729; Microsoft 365 Login Alert</option>
+                  <option value="payroll">&#128176; Payroll Update Required</option>
+                  <option value="zoom">&#128249; Zoom Meeting Invitation</option>
+                </select></div>
+              <div class="form-group"><label class="form-label">TARGET EMAILS (one per line)</label><textarea class="form-input" id="phishTargets" rows="5" placeholder="employee1@company.com&#10;employee2@company.com&#10;manager@company.com" style="resize:vertical"></textarea></div>
+              <div class="form-group"><label class="form-label">SENDER NAME (displayed)</label><input class="form-input" id="phishSender" placeholder="IT Security Team"/></div>
+              <button onclick="launchCampaign()" class="btn btn-g btn-sm" style="width:100%">&#128640; LAUNCH CAMPAIGN</button>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="ph"><div class="pt">ACTIVE CAMPAIGNS</div></div>
+            <div class="pb" id="phishCampaigns"><div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">No campaigns yet. Launch one to test your team.</div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt">AWARENESS TRAINING RECOMMENDATIONS</div></div>
+          <div class="pb" id="phishTraining"></div>
+        </div>
       </div>
 
       <!-- ══ PHISHING SIMULATION PAGE ══ -->
@@ -1753,6 +1831,15 @@
           <div class="ph"><div class="pt">FAILED CONTROLS — ACTION REQUIRED</div></div>
           <div class="pb" id="compFailedList"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:1.5rem">Run a compliance check to see failed controls.</div></div>
         </div>
+      
+        <div class="g4" style="margin-bottom:1.2rem">
+          <div class="sc sc-g"><div class="sc-icon">&#9878;</div><div class="sc-label">Overall Score</div><div class="sc-value" id="compOverall" style="color:var(--ok)">--</div></div>
+          <div class="sc sc-r"><div class="sc-icon">&#128683;</div><div class="sc-label">Failed Controls</div><div class="sc-value" id="compFailed" style="color:var(--danger)">--</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#9989;</div><div class="sc-label">Passed Controls</div><div class="sc-value" id="compPassed">--</div></div>
+          <div class="sc sc-b"><div class="sc-icon">&#8987;</div><div class="sc-label">In Progress</div><div class="sc-value" id="compInProgress">--</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.9rem" id="compFrameworks"></div>
+      <!-- ATTACK SURFACE PAGE -->
       </div>
 
       <!-- ══ MSP DASHBOARD PAGE ══ -->
@@ -1962,96 +2049,7 @@
         </div>
       </div>
 
-
-<div class="g4" style="margin-bottom:1.2rem">
-          <div class="sc sc-g"><div class="sc-icon">&#9878;</div><div class="sc-label">Overall Score</div><div class="sc-value" id="compOverall" style="color:var(--ok)">--</div></div>
-          <div class="sc sc-r"><div class="sc-icon">&#128683;</div><div class="sc-label">Failed Controls</div><div class="sc-value" id="compFailed" style="color:var(--danger)">--</div></div>
-          <div class="sc sc-b"><div class="sc-icon">&#9989;</div><div class="sc-label">Passed Controls</div><div class="sc-value" id="compPassed">--</div></div>
-          <div class="sc sc-b"><div class="sc-icon">&#8987;</div><div class="sc-label">In Progress</div><div class="sc-value" id="compInProgress">--</div></div>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.9rem" id="compFrameworks"></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:1rem">
-          <div class="panel">
-            <div class="ph"><div class="pt">REPORT DETAILS</div></div>
-            <div class="pb">
-              <div class="form-group"><label class="form-label">CLIENT NAME</label><input class="form-input" id="ptClient" placeholder="Acme Corporation"/></div>
-              <div class="form-group"><label class="form-label">ENGAGEMENT TYPE</label>
-                <select class="form-input" id="ptType">
-                  <option value="external">External Network Pentest</option>
-                  <option value="internal">Internal Network Pentest</option>
-                  <option value="webapp">Web Application Pentest</option>
-                  <option value="mobile">Mobile Application Pentest</option>
-                  <option value="social">Social Engineering Assessment</option>
-                  <option value="physical">Physical Security Assessment</option>
-                  <option value="full">Full Red Team Engagement</option>
-                </select></div>
-              <div class="form-group"><label class="form-label">SCOPE</label><textarea class="form-input" id="ptScope" rows="3" placeholder="IP ranges, domains, applications in scope..." style="resize:vertical"></textarea></div>
-              <div class="form-group"><label class="form-label">ASSESSMENT DATES</label>
-                <div style="display:flex;gap:.5rem">
-                  <input class="form-input" id="ptDateFrom" type="date" style="flex:1"/>
-                  <input class="form-input" id="ptDateTo" type="date" style="flex:1"/>
-                </div></div>
-              <div class="form-group"><label class="form-label">EXECUTIVE SUMMARY</label><textarea class="form-input" id="ptSummary" rows="4" placeholder="Overall findings summary for non-technical stakeholders..." style="resize:vertical"></textarea></div>
-              <div class="form-group"><label class="form-label">METHODOLOGY</label>
-                <select class="form-input" id="ptMethodology">
-                  <option value="owasp">OWASP Testing Guide</option>
-                  <option value="ptes">PTES (Pentest Execution Standard)</option>
-                  <option value="nist">NIST SP 800-115</option>
-                  <option value="mitre">MITRE ATT&amp;CK Framework</option>
-                </select></div>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="ph"><div class="pt">FINDINGS SUMMARY</div></div>
-            <div class="pb" id="ptFindingsSummary"></div>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="ph"><div class="pt">DETAILED FINDINGS</div><button onclick="addManualFinding()" class="btn btn-o btn-sm">&#10133; ADD FINDING</button></div>
-          <div class="pb" id="ptFindings"></div>
-        </div>
-        <div class="panel" style="margin-top:.9rem">
-          <div class="ph"><div class="pt">REMEDIATION RECOMMENDATIONS</div></div>
-          <div class="pb" id="ptRemediation"></div>
-        </div>
-<div class="g4" style="margin-bottom:1.2rem">
-          <div class="sc sc-b"><div class="sc-icon">&#128231;</div><div class="sc-label">Emails Sent</div><div class="sc-value" id="phishSent">0</div></div>
-          <div class="sc sc-r"><div class="sc-icon">&#128073;</div><div class="sc-label">Clicked</div><div class="sc-value" id="phishClicked" style="color:var(--danger)">0</div></div>
-          <div class="sc sc-g"><div class="sc-icon">&#9888;</div><div class="sc-label">Reported</div><div class="sc-value" id="phishReported" style="color:var(--ok)">0</div></div>
-          <div class="sc sc-b"><div class="sc-icon">&#128200;</div><div class="sc-label">Click Rate</div><div class="sc-value" id="phishRate">0%</div></div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:1rem">
-          <div class="panel">
-            <div class="ph"><div class="pt">NEW CAMPAIGN</div></div>
-            <div class="pb">
-              <div class="form-group"><label class="form-label">CAMPAIGN NAME</label><input class="form-input" id="phishName" placeholder="Q1 2025 Awareness Test"/></div>
-              <div class="form-group"><label class="form-label">PHISHING TEMPLATE</label>
-                <select class="form-input" id="phishTemplate">
-                  <option value="invoice">&#128196; Fake Invoice — Finance Dept</option>
-                  <option value="password_reset">&#128272; Password Reset Required</option>
-                  <option value="it_helpdesk">&#128187; IT Helpdesk Alert</option>
-                  <option value="package">&#128230; Package Delivery Notice</option>
-                  <option value="docusign">&#9997; Document Signature Request</option>
-                  <option value="office365">&#9729; Microsoft 365 Login Alert</option>
-                  <option value="payroll">&#128176; Payroll Update Required</option>
-                  <option value="zoom">&#128249; Zoom Meeting Invitation</option>
-                </select></div>
-              <div class="form-group"><label class="form-label">TARGET EMAILS (one per line)</label><textarea class="form-input" id="phishTargets" rows="5" placeholder="employee1@company.com&#10;employee2@company.com&#10;manager@company.com" style="resize:vertical"></textarea></div>
-              <div class="form-group"><label class="form-label">SENDER NAME (displayed)</label><input class="form-input" id="phishSender" placeholder="IT Security Team"/></div>
-              <button onclick="launchCampaign()" class="btn btn-g btn-sm" style="width:100%">&#128640; LAUNCH CAMPAIGN</button>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="ph"><div class="pt">ACTIVE CAMPAIGNS</div></div>
-            <div class="pb" id="phishCampaigns"><div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">No campaigns yet. Launch one to test your team.</div></div>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="ph"><div class="pt">AWARENESS TRAINING RECOMMENDATIONS</div></div>
-          <div class="pb" id="phishTraining"></div>
-        </div>
-      <!-- ATTACK SURFACE PAGE -->
-      <div class="page" id="page-attacksurface">
+<div class="page" id="page-attacksurface">
         <div class="pg-hdr flex-between">
           <div><div class="pg-title">ATTACK SURFACE DISCOVERY</div>
           <div class="pg-sub">Discover subdomains, exposed assets and forgotten infrastructure</div></div>
