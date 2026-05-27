@@ -134,7 +134,7 @@
     <div class="plan-cards">
 
       <div class="plan-card sel" data-plan="free" onclick="selectPlan('free',this)">
-        <div class="pct"><div><div class="pname">FREE</div><div class="pprice">$0 / forever</div></div><div class="pdot">&#10003;</div></div>
+        <div class="pct"><div><div class="pname">FREE</div><div class="pprice">$0 / 7-day trial</div></div><div class="pdot">&#10003;</div></div>
         <div class="plan-feats">
           <div class="pf"><span class="ok">&#10003;</span>3 devices · 10 scans/day</div>
           <div class="pf"><span class="ok">&#10003;</span>Security score + issue list</div>
@@ -380,10 +380,26 @@ var _otpExpiry     = null;
 /* ── Plan selection ── */
 function selectPlan(p, el) {
   selPlan = p;
-  document.querySelectorAll('.plan-card').forEach(function(c){ c.classList.remove('selected'); });
-  if (el) el.classList.add('selected');
+  // Use 'sel' class to match CSS styling
+  document.querySelectorAll('.plan-card').forEach(function(c){ 
+    c.classList.remove('sel', 'selected'); 
+  });
+  if (el) {
+    el.classList.add('sel');
+    // Also handle mobile tab buttons
+    var dataEl = document.querySelector('.plan-card[data-plan="'+p+'"]');
+    if (dataEl && dataEl !== el) dataEl.classList.add('sel');
+  } else {
+    // Called without element ref (mobile tabs) - find by data-plan
+    var target = document.querySelector('.plan-card[data-plan="'+p+'"]');
+    if (target) target.classList.add('sel');
+  }
   var badge = document.getElementById('selectedPlanBadge');
-  if (badge) badge.textContent = PLAN_LABELS[p] || p;
+  if (badge) {
+    var labels = { free:'Free Plan — $0/mo', starter:'Starter — $19/mo', 
+                   professional:'Professional — $79/mo', enterprise:'Enterprise — $199/mo' };
+    badge.textContent = labels[p] || (PLAN_LABELS && PLAN_LABELS[p]) || p;
+  }
 }
 
 function mobTab(el) {

@@ -2708,8 +2708,21 @@ function mockScan(host, type) {
    SCAN MODAL
 ═══════════════════════════════════════════════════════════════ */
 function openScanModal() {
-  document.getElementById('scanModal').style.display='flex';
-  checkApiStatus().then(updateApiStatusUI);
+  var modal = document.getElementById('scanModal');
+  if (!modal) { console.error('scanModal not found!'); return; }
+  modal.style.display = 'flex';
+  updateScanQuota();
+  checkApiStatus().then(updateApiStatusUI).catch(function(){});
+}
+
+function updateScanQuota() {
+  var el = document.getElementById('scanQuotaDisplay');
+  if (!el) return;
+  var plan = typeof getUserPlan === 'function' ? getUserPlan() : 'free';
+  var defs = { free:{scans:10}, starter:{scans:50}, professional:{scans:500}, enterprise:{scans:9999} };
+  var def = defs[plan] || defs.free;
+  var used = typeof getScansToday === 'function' ? getScansToday() : 0;
+  el.textContent = used + '/' + (def.scans < 9999 ? def.scans : '∞') + ' scans today';
 }
 function closeScanModal() { document.getElementById('scanModal').style.display='none'; }
 
@@ -3009,9 +3022,9 @@ function renderDevicesGrid() {
           </div>
         </div>
         <div class="device-actions">
-          <button onclick="scanDeviceById('${d.ip}')" class="btn btn-o btn-sm">VIEW SCAN</button>
-          <button onclick="openRescanModal('${d.ip}','${d.scan_type}')" class="btn btn-g btn-sm">RE-SCAN</button>
-          <button onclick="removeDevice('${d.ip}')" class="btn btn-r btn-sm">REMOVE</button>
+          <button onclick="try{scanDeviceById('${d.ip}');}catch(e){console.error('VIEW SCAN error:',e);}" class="btn btn-o btn-sm">VIEW SCAN</button>
+          <button onclick="try{openRescanModal('${d.ip}','${d.scan_type}');}catch(e){console.error('RE-SCAN error:',e);}" class="btn btn-g btn-sm">RE-SCAN</button>
+          <button onclick="try{removeDevice('${d.ip}');}catch(e){console.error('REMOVE error:',e);}" class="btn btn-r btn-sm">REMOVE</button>
         </div>
       </div>
     </div>`;
@@ -3721,6 +3734,16 @@ function nav(page) {
   }
   if (page==='osint')           { if(typeof renderOsintPage==='function') renderOsintPage(); }
   if (page==='webscan')         { if(typeof renderWebscanPage==='function') renderWebscanPage(); }
+  // Pages that need render on nav
+  if (page==='devices')         { if(typeof renderDevicesGrid==='function') setTimeout(renderDevicesGrid, 50); }
+  if (page==='scan')            { if(typeof renderDevicesGrid==='function') setTimeout(renderDevicesGrid, 50); }
+  if (page==='alerts')          { if(typeof renderAlerts==='function') setTimeout(renderAlerts, 50); }
+  if (page==='ai')              { if(typeof renderAIPage==='function') setTimeout(renderAIPage, 50); }
+  if (page==='threat')          { if(typeof renderThreatIntel==='function') setTimeout(renderThreatIntel, 50); }
+  if (page==='reports')         { if(typeof renderReports==='function') setTimeout(renderReports, 50); }
+  if (page==='passwords')       { if(typeof renderPasswordAudit==='function') setTimeout(renderPasswordAudit, 50); }
+  if (page==='surface')         { if(typeof renderSurface==='function') setTimeout(renderSurface, 50); }
+  if (page==='cloudscan')       { if(typeof renderCloudScan==='function') setTimeout(renderCloudScan, 50); }
 }
 
 /* ═══════════════════════════════════════════════════════════════
