@@ -555,7 +555,7 @@
     <main class="main" id="mainContent">
 
       <!-- ── DASHBOARD ── -->
-      <div class="page active" id="page-dashboard">
+      <div class="page" id="page-dashboard">
         <div class="pg-hdr">
           <div><div class="pg-title">DASHBOARD</div><div class="pg-sub" id="dashWelcome">Loading...</div></div>
           <button class="btn btn-g" onclick="openScanModal()">+ SCAN DEVICE</button>
@@ -2571,6 +2571,7 @@ if (!SESSION) throw new Error('Not authenticated');
    STATE
 ═══════════════════════════════════════════════════════════════ */
 let DEVICES    = JSON.parse(localStorage.getItem('pm_devices_v3') || '[]');
+let currentPage = localStorage.getItem('pm_last_page') || 'dashboard';
 let ACTIVITY   = JSON.parse(localStorage.getItem('pm_activity_v3') || '[]');
 let DISMISSED  = new Set();
 let SCAN_COUNT = parseInt(localStorage.getItem('pm_scan_count_v3') || '0');
@@ -2648,9 +2649,13 @@ function handlePlanError(msg) {
 
 async function checkApiStatus() {
   try {
-    await fetch(apiUrl('/api/health'), { signal: AbortSignal.timeout(3000) });
+    // Use AbortController for broad browser support (Safari, older Chrome)
+    var _ctrl = new AbortController();
+    var _timer = setTimeout(function(){ _ctrl.abort(); }, 3000);
+    await fetch(apiUrl('/api/health'), { signal: _ctrl.signal });
+    clearTimeout(_timer);
     API_ONLINE = true;
-  } catch {
+  } catch(e) {
     API_ONLINE = false;
   }
   updateApiStatusUI();
@@ -3713,6 +3718,7 @@ function nav(page) {
   });
   
   currentPage = page;
+  localStorage.setItem('pm_last_page', page);   // persist across refreshes
   
   // ── Core page renderers ──────────────────────────────────
   if (page==='admin')           renderAdmin();
@@ -4183,6 +4189,18 @@ function init() {
   checkPaymentReturn();
   document.getElementById('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}});
   document.getElementById('chatInput').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,72)+'px';});
+
+  // Restore last visited page after refresh (or default to dashboard)
+  var _lastPage = localStorage.getItem('pm_last_page') || 'dashboard';
+  setTimeout(function() {
+    nav(_lastPage);
+    // Ensure dashboard renders its data when landing there
+    if (_lastPage === 'dashboard') {
+      renderDashboard();
+      renderDevicesGrid();
+      renderAlerts();
+    }
+  }, 100);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -10363,6 +10381,8 @@ function renderDarkWeb() {
 }
 
 async function renderDarkWebThreatFeed() {
+  try {
+
   var findingsEl = document.getElementById('dwFindings');
   var credEl     = document.getElementById('dwCredLeaks');
   var ransomEl   = document.getElementById('dwRansom');
@@ -10504,6 +10524,16 @@ async function renderDarkWebThreatFeed() {
   if (lastEl) lastEl.textContent = new Date().toLocaleTimeString();
   if (credEl)  credEl.textContent = '0';
   if (pasteEl) pasteEl.textContent = '0';
+
+  } catch(err) {
+    console.error('Dark web feed error:', err);
+    var fe = document.getElementById('dwFindings');
+    if (fe) fe.innerHTML = '<div style="padding:2rem;font-family:var(--mono);font-size:.63rem">'
+      + '<div style="color:var(--warn);margin-bottom:.5rem">&#9888; Error loading threat feeds</div>'
+      + '<div style="color:var(--muted)">' + (err.message||'Unknown error') + '</div>'
+      + '<div style="color:var(--muted);margin-top:.5rem">Ensure backend is connected in Settings</div>'
+      + '</div>';
+  }
 }
 
 function dwDoBreachCheck() {
