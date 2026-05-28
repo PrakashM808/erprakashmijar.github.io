@@ -77,6 +77,14 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
+<div id="loginLangBar" style="position:fixed;top:0;right:0;z-index:999;padding:.5rem 1.2rem">
+  <div style="position:relative;display:inline-block">
+    <button id="loginLangBtn" onclick="loginBuildLangDropdown()"
+      style="padding:.3rem .7rem;border-radius:6px;border:1px solid rgba(255,255,255,.1);background:rgba(6,13,26,.8);font-family:monospace;font-size:.6rem;color:#fff;cursor:pointer;display:flex;align-items:center;gap:.35rem;backdrop-filter:blur(8px)">
+      🇺🇸 English <span style="opacity:.6;font-size:.55rem">▾</span>
+    </button>
+  </div>
+</div>
 <canvas id="bgCanvas"></canvas>
 
 <div class="login-page">
@@ -164,6 +172,7 @@
 </div>
 
 <script src="assets/auth.js"></script>
+  <script src="assets/i18n.js"></script>
 <script>
 AUTH.requireGuest('dashboard/index.html');
 
@@ -392,6 +401,49 @@ function cancelMFA() {
   document.getElementById('loginBtnTxt').textContent='SIGN IN \u2192';
 }
 
+
+/* ── Login page language ─── */
+(function(){
+  var lang = localStorage.getItem('pm_lang') || 'en';
+  var labels = { en:{flag:'🇺🇸',name:'English'}, ne:{flag:'🇳🇵',name:'नेपाली'}, es:{flag:'🇪🇸',name:'Español'} };
+  var translations = {
+    en: { title:'Sign In', email:'Email Address', password:'Password', btn:'SIGN IN', forgot:'Forgot password?', register:'Create account' },
+    ne: { title:'साइन इन', email:'इमेल ठेगाना', password:'पासवर्ड', btn:'साइन इन', forgot:'पासवर्ड बिर्सनु भयो?', register:'खाता बनाउनुहोस्' },
+    es: { title:'Iniciar Sesión', email:'Correo Electrónico', password:'Contraseña', btn:'INICIAR SESIÓN', forgot:'¿Olvidaste tu contraseña?', register:'Crear cuenta' }
+  };
+  function applyLoginLang(l) {
+    var t = translations[l] || translations.en;
+    var el; 
+    if(el=document.querySelector('h1,h2,.auth-title')) el.textContent=t.title;
+    if(el=document.querySelector('input[type=email]')) el.placeholder=t.email;
+    if(el=document.querySelector('input[type=password]')) el.placeholder=t.password;
+    if(el=document.querySelector('button[type=submit],.btn-primary')) el.textContent=t.btn;
+    var lb = document.getElementById('loginLangBtn');
+    if(lb) lb.innerHTML = labels[l].flag + ' ' + labels[l].name + ' <span style="opacity:.6;font-size:.55rem">▾</span>';
+    document.documentElement.lang = l;
+  }
+  window.loginBuildLangDropdown = function() {
+    var ex = document.getElementById('loginLangDropdown');
+    if(ex){ex.remove();return;}
+    var dd = document.createElement('div');
+    dd.id='loginLangDropdown';
+    dd.style.cssText='position:absolute;top:calc(100% + 4px);right:0;background:rgba(6,13,26,.98);border:1px solid rgba(255,255,255,.1);border-radius:8px;overflow:hidden;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.6);min-width:130px';
+    ['en','ne','es'].forEach(function(code){
+      var l=labels[code], item=document.createElement('div');
+      item.style.cssText='padding:.5rem .85rem;cursor:pointer;font-family:monospace;font-size:.62rem;color:#fff;display:flex;align-items:center;gap:.5rem;transition:background .15s';
+      item.innerHTML='<span style="font-size:.85rem">'+l.flag+'</span><span>'+l.name+'</span>';
+      item.onclick=function(e){e.stopPropagation();localStorage.setItem('pm_lang',code);applyLoginLang(code);dd.remove();};
+      item.onmouseenter=function(){this.style.background='rgba(255,255,255,.05)';};
+      item.onmouseleave=function(){this.style.background='';};
+      dd.appendChild(item);
+    });
+    var btn=document.getElementById('loginLangBtn');
+    btn.parentElement.style.position='relative';
+    btn.parentElement.appendChild(dd);
+    setTimeout(function(){document.addEventListener('click',function h(e){var d=document.getElementById('loginLangDropdown');if(d&&!d.contains(e.target)){d.remove();document.removeEventListener('click',h);}});},10);
+  };
+  document.addEventListener('DOMContentLoaded',function(){applyLoginLang(lang);});
+})();
 </script>
 
 <!-- 2FA Verification Modal -->

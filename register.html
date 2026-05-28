@@ -123,6 +123,15 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
+<div id="regLangBar" style="position:fixed;top:0;right:0;z-index:999;padding:.5rem 1.2rem;display:flex;gap:.4rem;align-items:center">
+  <div style="position:relative;display:inline-block">
+    <button id="regLangBtn" onclick="regBuildLangDropdown()"
+      style="padding:.3rem .7rem;border-radius:6px;border:1px solid rgba(255,255,255,.1);background:rgba(6,13,26,.8);font-family:monospace;font-size:.6rem;color:#fff;cursor:pointer;display:flex;align-items:center;gap:.35rem;backdrop-filter:blur(8px)">
+      🇺🇸 English <span style="opacity:.6;font-size:.55rem">▾</span>
+    </button>
+  </div>
+</div>
+
 <canvas id="bgCanvas"></canvas>
 <div class="reg-page">
 
@@ -275,7 +284,8 @@
             <span id="phoneVerifyBadge" style="font-size:.55rem;color:var(--g2);letter-spacing:.08em">OPTIONAL — VERIFY FOR 2FA</span>
           </label>
           <select id="countryCode" class="form-input" style="margin-bottom:.5rem;font-size:.63rem" onchange="updatePhoneFlag()">
-            <option value="+1" selected>&#127482;&#127480; United States (+1)</option>
+            <option value="+977" selected>🇳🇵 Nepal (+977)</option>
+            <option value="+1">&#127482;&#127480; United States (+1)</option>
             <option value="+44">&#127468;&#127463; United Kingdom (+44)</option>
             <option value="+91">&#127470;&#127475; India (+91)</option>
             <option value="+61">&#127462;&#127482; Australia (+61)</option>
@@ -287,7 +297,14 @@
             <option value="+81">&#127471;&#127477; Japan (+81)</option>
             <option value="+55">&#127463;&#127479; Brazil (+55)</option>
             <option value="+27">&#127487;&#127462; South Africa (+27)</option>
-            <option value="+234">&#127475;&#127468; Nigeria (+234)</option>
+            <option value="+234">🇳🇬 Nigeria (+234)</option>
+            <option value="+34">🇪🇸 Spain (+34)</option>
+            <option value="+52">🇲🇽 Mexico (+52)</option>
+            <option value="+54">🇦🇷 Argentina (+54)</option>
+            <option value="+56">🇨🇱 Chile (+56)</option>
+            <option value="+57">🇨🇴 Colombia (+57)</option>
+            <option value="+51">🇵🇪 Peru (+51)</option>
+            <option value="+593">🇪🇨 Ecuador (+593)</option>
           </select>
           <div style="position:relative">
             <input class="form-input" id="ph" type="tel"
@@ -359,6 +376,7 @@
 </div>
 
 <script src="assets/auth.js"></script>
+  <script src="assets/i18n.js"></script>
 <script>
 AUTH.requireGuest('dashboard/index.html');
 initCanvas('bgCanvas');
@@ -674,6 +692,119 @@ document.addEventListener('keydown', function(e) {
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js').catch(function(){});
 }
+
+/* ── Language switcher for register page ─── */
+var _regLang = localStorage.getItem('pm_lang') || 'en';
+var _regLabels = {
+  en: { flag:'🇺🇸', name:'English' },
+  ne: { flag:'🇳🇵', name:'नेपाली' },
+  es: { flag:'🇪🇸', name:'Español' }
+};
+var _regTranslations = {
+  en: {
+    title:'Create Account', subtitle:'Join PM::OFFSEC Security Dashboard. Free to start.',
+    fname:'First Name', lname:'Last Name', email:'Email Address',
+    password:'Password', confirm:'Confirm Password', company:'Company',
+    phone:'Phone Number', send_code:'SEND CODE',
+    btn_register:'CREATE ACCOUNT', already:'Already have an account?',
+    choose_plan:'CHOOSE YOUR PLAN', free_badge:'FREE PLAN — $0/month'
+  },
+  ne: {
+    title:'खाता बनाउनुहोस्', subtitle:'PM::OFFSEC सुरक्षा ड्यासबोर्डमा सामेल हुनुहोस्।',
+    fname:'पहिलो नाम', lname:'थर', email:'इमेल ठेगाना',
+    password:'पासवर्ड', confirm:'पासवर्ड पुष्टि', company:'कम्पनी',
+    phone:'फोन नम्बर', send_code:'कोड पठाउनुहोस्',
+    btn_register:'खाता बनाउनुहोस्', already:'पहिले नै खाता छ?',
+    choose_plan:'योजना छान्नुहोस्', free_badge:'नि:शुल्क योजना — $0/महिना'
+  },
+  es: {
+    title:'Crear Cuenta', subtitle:'Únete al Panel de Seguridad PM::OFFSEC.',
+    fname:'Nombre', lname:'Apellido', email:'Correo Electrónico',
+    password:'Contraseña', confirm:'Confirmar Contraseña', company:'Empresa',
+    phone:'Número de Teléfono', send_code:'ENVIAR CÓDIGO',
+    btn_register:'CREAR CUENTA', already:'¿Ya tienes una cuenta?',
+    choose_plan:'ELIGE TU PLAN', free_badge:'PLAN GRATIS — $0/mes'
+  }
+};
+
+function regT(key) {
+  return (_regTranslations[_regLang] || _regTranslations.en)[key] || key;
+}
+
+function regApplyLanguage() {
+  var t = _regTranslations[_regLang] || _regTranslations.en;
+  var map = {
+    'regTitle': 'title', 'regSubtitle': 'subtitle',
+    'regFname': 'fname', 'regLname': 'lname',
+    'regEmailLabel': 'email', 'regPasswordLabel': 'password',
+    'regConfirmLabel': 'confirm', 'regCompanyLabel': 'company',
+    'regPhoneLabel': 'phone', 'regSendCode': 'send_code',
+    'regSubmitBtn': 'btn_register', 'regAlready': 'already',
+    'regChoosePlan': 'choose_plan',
+  };
+  Object.keys(map).forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = t[map[id]];
+  });
+  // Placeholders
+  var placeholders = {
+    'firstName': t.fname, 'lastName': t.lname,
+    'email': t.email, 'password': t.password,
+    'confirmPassword': t.confirm
+  };
+  Object.keys(placeholders).forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.placeholder = placeholders[id];
+  });
+  // Plan badge
+  var badge = document.getElementById('selectedPlanBadge');
+  if (badge && badge.textContent.includes('FREE')) badge.textContent = '✓ ' + t.free_badge;
+  // Lang button
+  var btn = document.getElementById('regLangBtn');
+  if (btn) {
+    var l = _regLabels[_regLang] || _regLabels.en;
+    btn.innerHTML = l.flag + ' ' + l.name + ' <span style="opacity:.6;font-size:.55rem">▾</span>';
+  }
+  document.documentElement.lang = _regLang;
+}
+
+function regBuildLangDropdown() {
+  var existing = document.getElementById('regLangDropdown');
+  if (existing) { existing.remove(); return; }
+  var dropdown = document.createElement('div');
+  dropdown.id = 'regLangDropdown';
+  dropdown.style.cssText = 'position:absolute;top:calc(100% + 4px);right:0;background:rgba(6,13,26,.98);border:1px solid rgba(255,255,255,.1);border-radius:8px;overflow:hidden;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.6);min-width:130px';
+  ['en','ne','es'].forEach(function(code) {
+    var l = _regLabels[code];
+    var item = document.createElement('div');
+    item.style.cssText = 'padding:.5rem .85rem;cursor:pointer;font-family:monospace;font-size:.62rem;color:#fff;display:flex;align-items:center;gap:.5rem;transition:background .15s;' + (code===_regLang?'background:rgba(0,255,136,.08)':'');
+    item.innerHTML = '<span style="font-size:.85rem">' + l.flag + '</span><span>' + l.name + '</span>' + (code===_regLang?'<span style="color:#00ff88;margin-left:auto">✓</span>':'');
+    item.onmouseenter = function(){ this.style.background='rgba(255,255,255,.05)'; };
+    item.onmouseleave = function(){ this.style.background = code===_regLang?'rgba(0,255,136,.08)':''; };
+    item.onclick = function(e) {
+      e.stopPropagation();
+      _regLang = code;
+      localStorage.setItem('pm_lang', code);
+      regApplyLanguage();
+      document.getElementById('regLangDropdown').remove();
+    };
+    dropdown.appendChild(item);
+  });
+  var btn = document.getElementById('regLangBtn');
+  btn.parentElement.style.position = 'relative';
+  btn.parentElement.appendChild(dropdown);
+  setTimeout(function() {
+    document.addEventListener('click', function h(e) {
+      var dd = document.getElementById('regLangDropdown');
+      if (dd && !dd.contains(e.target)) { dd.remove(); document.removeEventListener('click', h); }
+    });
+  }, 10);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  _regLang = localStorage.getItem('pm_lang') || 'en';
+  setTimeout(regApplyLanguage, 100);
+});
 </script>
 </body>
 </html>

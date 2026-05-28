@@ -456,6 +456,12 @@
       <div class="hdr-avatar" id="hdrAvatar" onclick="nav('profile')">PM</div>
       <span class="hdr-name" id="hdrName">Prakash</span>
       <button class="hdr-btn hdr-scan" id="scanBtn" onclick="openScanModal()">SCAN DEVICE</button>
+      <div style="position:relative;display:inline-block">
+      <button id="langPickerBtn" onclick="buildLangDropdown()" title="Change language"
+        style="height:30px;padding:0 .7rem;border-radius:6px;border:1px solid rgba(0,255,136,.15);background:rgba(0,255,136,.06);font-family:var(--mono);font-size:.6rem;color:var(--white);cursor:pointer;display:flex;align-items:center;gap:.35rem;white-space:nowrap">
+        🇺🇸 English <span style="font-size:.55rem;opacity:.6">▾</span>
+      </button>
+    </div>
       <button id="themeToggle" onclick="toggleTheme()" title="Toggle dark/light mode" style="width:30px;height:30px;border-radius:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.9rem;transition:all .2s;flex-shrink:0" onmouseover="this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.background='rgba(255,255,255,.06)'">🌙</button>
       <button class="hdr-btn hdr-out" onclick="AUTH.logout()">LOGOUT</button>
       <button id="mobMenuBtn" onclick="toggleMobileSidebar()" aria-label="Menu" style="display:none;width:38px;height:38px;border-radius:6px;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.25);align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">
@@ -2092,24 +2098,21 @@
           <div class="sc sc-b"><div class="sc-icon">&#128196;</div><div class="sc-label">Paste Sites</div><div class="sc-value" id="dwPastes">--</div></div>
           <div class="sc sc-g"><div class="sc-icon">&#9200;</div><div class="sc-label">Last Checked</div><div class="sc-value" id="dwLastCheck" style="font-size:.8rem">Never</div></div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:.9rem">
-          <div class="panel">
-            <div class="ph"><div class="pt">MONITOR TARGETS</div></div>
-            <div class="pb">
-              <div class="form-group"><label class="form-label">COMPANY DOMAIN</label><input class="form-input" id="dwDomain" placeholder="company.com"/></div>
-              <div class="form-group"><label class="form-label">EMAIL PATTERNS</label><input class="form-input" id="dwEmail" placeholder="@company.com"/></div>
-              <div class="form-group"><label class="form-label">KEYWORDS TO MONITOR</label><textarea class="form-input" id="dwKeywords" rows="3" placeholder="company name&#10;CEO name&#10;product names" style="resize:vertical"></textarea></div>
-              <button onclick="runDarkWebScan()" class="btn btn-g btn-sm" style="width:100%">&#128565; START MONITORING</button>
-            </div>
-          </div>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:.9rem;margin-bottom:.9rem;align-items:start">
           <div class="panel">
             <div class="ph"><div class="pt">THREAT INTELLIGENCE SOURCES</div></div>
             <div class="pb" id="dwSources"></div>
           </div>
+          <div style="display:grid;gap:.5rem;min-width:160px">
+            <button onclick="runDarkWebScan()" class="btn btn-r btn-sm">&#128565; DOMAIN SCAN</button>
+            <button onclick="renderDarkWebThreatFeed()" class="btn btn-o btn-sm">&#128260; REFRESH FEEDS</button>
+          </div>
         </div>
-        <div class="panel">
-          <div class="ph"><div class="pt">RECENT FINDINGS</div></div>
-          <div class="pb" id="dwFindings"><div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">Configure monitoring targets above to scan the dark web.</div></div>
+        <div id="dwFindings">
+          <div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:3rem">
+            <div style="font-size:2rem;margin-bottom:.5rem">&#128565;</div>
+            Loading dark web intelligence...
+          </div>
         </div>
       </div>
 
@@ -2249,6 +2252,7 @@
 </div>
 
 <script src="../assets/auth.js"></script>
+  <script src="../assets/i18n.js"></script>
 <script type="text/javascript">
 /* ═══════════════════════════════════════════════════════════════
    CORE UTILITY FUNCTIONS — showToast, scoreColor,
@@ -5495,102 +5499,517 @@ function renderReports() {
    LEARNING CENTER
 ═══════════════════════════════════════════════════════════════ */
 const LEARN_CONTENT = [
+
+  /* ══ GETTING STARTED ══════════════════════════════════════════ */
   {
-    id: 'getting-started', icon: '🚀', title: 'Getting Started',
-    desc: 'First steps — scan your first device in 2 minutes',
-    tag: 'beginner',
-    sections: [
-      { title: 'What is this dashboard?', body: 'PM::OFFSEC Security Dashboard is a live security auditing platform. It connects to Linux machines via SSH, scans them for vulnerabilities, explains findings in plain English, and gives you exact commands to fix every issue.' },
-      { title: 'Step 1 — Start the backend', body: 'The dashboard needs a Python backend running to do live scans. Open a terminal in the backend/ folder and run:\n\npython main.py\n\nThis starts the API at http://localhost:8000. You can also deploy it to Railway for 24/7 access.', cmd: 'cd backend && python main.py' },
-      { title: 'Step 2 — Connect the dashboard', body: 'Go to Settings in the sidebar. Enter your backend URL (http://localhost:8000 or your Railway URL). Click Test Connection — you should see a green "Connected" status.' },
-      { title: 'Step 3 — Scan your first device', body: 'Click SCAN DEVICE in the header. Choose "This Machine" to scan the server running your backend, or "Remote via SSH" to scan any other Linux machine. The scan takes about 10 seconds.' },
-      { title: 'Step 4 — Read your report', body: 'After scanning, go to Reports in the sidebar. You\'ll see every issue sorted by severity (Critical → High → Medium → Low). Click "🤖 AI FIX" on any issue to get exact bash commands to fix it.' },
+    id:'getting-started', icon:'🚀', title:'Getting Started',
+    desc:'First steps — scan your first device in under 5 minutes',
+    tag:'beginner',
+    sections:[
+      { title:'What is PM::OFFSEC?',
+        body:'PM::OFFSEC is a live security auditing platform. It connects to Linux servers via SSH, scans them for real vulnerabilities, explains every finding in plain English, and gives you exact one-click bash commands to fix each issue. It also monitors compliance, tracks incidents, and alerts you when something goes wrong.' },
+      { title:'Step 1 — Deploy the backend to Railway',
+        body:'The dashboard needs a Python API backend running to do live scans. The easiest way is Railway (free tier available):\n1. Go to railway.app and create a new project\n2. Deploy from GitHub — point it to your fullproject/backend/ folder\n3. Add a PostgreSQL database service in Railway\n4. Set the required environment variables (see Settings → API Settings)', cmd:'railway up' },
+      { title:'Step 2 — Connect the dashboard to your backend',
+        body:'Go to API Settings in the left sidebar. Enter your Railway backend URL (e.g. https://your-app.up.railway.app). Click TEST CONNECTION — you should see a green ✅ API ONLINE badge appear in the header. If it stays red, double-check your Railway URL and that the backend is running.' },
+      { title:'Step 3 — Scan your first device',
+        body:'Click the green SCAN DEVICE button in the header (or the + ADD DEVICE button on the Devices page).\n• LOCAL SCAN — scans the server your backend is running on (Railway)\n• REMOTE SSH — scans any Linux machine by entering its IP, username, and password\n\nThe scan takes 10–30 seconds depending on the target.' },
+      { title:'Step 4 — Read your security report',
+        body:'After scanning, your device appears on the Devices page with a score out of 100. Click VIEW SCAN to see every finding sorted Critical → High → Medium → Low. Each finding shows the affected service, CVSS score, and what it means in plain English.' },
+      { title:'Step 5 — Fix issues with AI',
+        body:'On any finding, click the 🤖 AI FIX button. Claude AI analyzes the specific vulnerability on your specific OS version and returns:\n• Plain English explanation of the risk\n• Exact bash commands to fix it (click to copy)\n• A command to verify the fix worked\n• Estimated time and reboot requirement' },
     ]
   },
+
+  /* ══ DASHBOARD ════════════════════════════════════════════════ */
   {
-    id: 'scanner', icon: '🔍', title: 'System Scanner',
-    desc: 'How scanning works and what it checks',
-    tag: 'features',
-    sections: [
-      { title: 'What does the scanner check?', body: 'Every scan checks: Open ports and services, SSH configuration (root login, password auth), Firewall status (ufw/iptables), Outdated packages with known CVEs, File permissions on sensitive paths, Failed login attempts (brute-force detection), Disk encryption status, User accounts and sudo access.' },
-      { title: 'Local vs Remote scanning', body: 'Local scan: scans the machine running your backend API. Use this for your own servers.\n\nRemote scan: connects via SSH to any Linux machine. You provide the IP address, username, and password or SSH key. The machine must have SSH running on port 22 (or another port you specify).' },
-      { title: 'Security score explained', body: 'The score (0–100) starts at 100 and deductions are made for each issue found:\n\n• Critical issue: -12 to -15 points\n• High issue: -6 to -8 points\n• Medium issue: -2 to -4 points\n• Inactive firewall: -15 points\n• SSH root login: -10 points\n\nA score of 80+ is good. 60-80 needs attention. Below 60 is urgent.' },
-      { title: 'Network Discovery', body: 'Go to Devices → Discover Network. The scanner pings every host on your subnet (e.g. 192.168.1.0/24) to find live devices. It shows which ones have SSH open so you can scan them directly with one click.', cmd: '# Manually discover devices on your network:\nnmap -sn 192.168.1.0/24' },
+    id:'dashboard', icon:'📊', title:'Dashboard Overview',
+    desc:'Understanding the main dashboard — stats, trends, and activity feed',
+    tag:'beginner',
+    sections:[
+      { title:'The 4 stat cards',
+        body:'At the top of the dashboard:\n• ACTIVE DEVICES — total number of servers you have scanned and are monitoring\n• TOTAL ISSUES — sum of all open security findings across all devices\n• AVG SCORE — average security score (0–100) across all your devices. 90+ is excellent, below 50 is urgent\n• CRITICAL ALERTS — number of unresolved critical-severity findings that need immediate attention' },
+      { title:'90-Day Security Trend chart',
+        body:'The line chart below the stat cards shows your average security score over the last 90 days. A rising green line means your security posture is improving as you fix issues. A declining red line means new vulnerabilities are appearing faster than you fix them.\n\nThe trend label (Improving / Stable / Declining) is calculated by comparing the first half vs second half of the period.' },
+      { title:'Scanned Devices list',
+        body:'The left panel shows your most recently scanned devices with their score badge and issue count. The badge color tells you the severity:\n• Green (80–100) — Good security posture\n• Orange (55–79) — Moderate risk, should fix high issues\n• Red (0–54) — High risk, critical issues need immediate attention\n\nClick any device to jump to its scan results.' },
+      { title:'Recent Activity feed',
+        body:'The right panel shows a real-time log of everything happening — scans completed, issues found, alerts triggered, AI fixes applied. Each entry has a colored dot:\n• Green dot — positive event (scan complete, issue fixed)\n• Orange dot — warning (new finding, scan failed)\n• Red dot — critical event (critical vulnerability, breach alert)' },
+      { title:'Top Issues panel',
+        body:'The bottom panel shows the highest-severity issues across ALL your devices, sorted by CVSS score. This is your prioritization list — fix the items at the top first. Click any issue to see which device has it and get the AI fix.' },
     ]
   },
+
+  /* ══ DEVICES ══════════════════════════════════════════════════ */
   {
-    id: 'ai-fix', icon: '🤖', title: 'AI Fix Assistant',
-    desc: 'Let Claude explain and fix every vulnerability',
-    tag: 'features',
-    sections: [
-      { title: 'How the AI Fix Assistant works', body: 'After scanning, go to Reports. Every issue has an "🤖 AI FIX" button. Click it and Claude analyzes that specific vulnerability in the context of your server and generates:\n\n• Plain English explanation of the risk\n• Business impact if left unfixed\n• Step-by-step fix instructions\n• Exact bash commands (click any command to copy)\n• How to verify the fix worked\n• How to prevent it recurring' },
-      { title: 'AI Analysis vs AI Fix', body: 'AI Analysis (AI Analysis page): gives a full report on ALL findings at once — executive summary, top risks, 30-day roadmap.\n\nAI Fix (Reports page): deep-dives into ONE specific issue with exact commands. Use this when you want to fix a specific problem right now.' },
-      { title: 'AI Chat', body: 'The AI Chat on the AI Analysis page is a free-form assistant. You can ask anything:\n\n• "How do I disable root SSH login?"\n• "What is Kerberoasting?"\n• "Is port 6379 dangerous?"\n• "Give me a checklist to harden this server"\n\nThe AI has full context of your scan results.' },
-      { title: 'Requires API key', body: 'AI features need an Anthropic API key. Get one at console.anthropic.com (free $5 credits). Add it in Settings → API Settings → Anthropic API Key. You can also run the backend with the key in .env for security.' },
+    id:'devices', icon:'🖥️', title:'Device Management',
+    desc:'Adding, scanning, and managing all your monitored servers',
+    tag:'beginner',
+    sections:[
+      { title:'Adding a device',
+        body:'Click + ADD DEVICE or SCAN DEVICE in the header. Two scan types:\n\n• LOCAL SCAN — clicks a button, backend scans itself. Use this to audit your Railway server.\n• REMOTE SSH — enter any Linux machine\'s IP address, SSH port (default 22), username, and either password or SSH key path. Works on any server you have SSH access to.' },
+      { title:'What the device card shows',
+        body:'Each device card displays:\n• Hostname and IP address\n• OS version (Ubuntu, Debian, CentOS, etc.)\n• Last scan time and uptime\n• Security score (0–100)\n• Critical issue count\n• Total issue count\n\nDEMO DATA badge appears on simulated scans (when backend is offline).' },
+      { title:'VIEW SCAN button',
+        body:'Opens the full scan results for that device — all findings with severity, CVSS score, affected category (SSH, Firewall, Packages, etc.), and the AI FIX button. This is where you spend most of your time.' },
+      { title:'RE-SCAN button',
+        body:'Re-runs the full security scan on that device immediately. Use this after applying fixes to verify the issue is resolved and your score has improved. The scan takes 10–30 seconds.' },
+      { title:'REMOVE button',
+        body:'Removes the device from your monitoring list and deletes all its scan data. Cannot be undone. You will be asked to confirm. Useful when you decommission a server or want to add it fresh.' },
+      { title:'DISCOVER NETWORK button',
+        body:'Automatically scans your local network range (e.g. 192.168.1.0/24) to find all active Linux machines. Requires the backend to be running and connected. Discovered devices appear as candidates — click to add them to monitoring.' },
     ]
   },
+
+  /* ══ SCANNER ══════════════════════════════════════════════════ */
   {
-    id: 'website-scanner', icon: '🌐', title: 'Website Scanner',
-    desc: 'Check any website for security issues',
-    tag: 'features',
-    sections: [
-      { title: 'What the website scanner checks', body: 'Go to Website Scanner in the sidebar. Enter any domain (e.g. example.com). The scanner checks:\n\n• SSL/TLS certificate — valid? expired? weak cipher? days until expiry\n• HTTP security headers — HSTS, CSP, X-Frame-Options, etc.\n• DNS security — SPF, DMARC, DKIM records\n• Exposed files — .env, .git, phpMyAdmin, admin panels\n• Technology fingerprint — server, CMS, frameworks, CDN, WAF\n• Open web ports — 80, 443, 8080, 6379, etc.' },
-      { title: 'Understanding SPF and DMARC', body: 'SPF and DMARC are email authentication records. Without them, anyone can send emails pretending to be from your domain (email spoofing).\n\nSPF says which servers can send email for your domain.\nDMARC tells receivers what to do with emails that fail SPF/DKIM checks.\n\nIf either is missing, the scanner flags it as HIGH severity.', cmd: '# Check your SPF record:\ndig TXT yourdomain.com | grep spf\n\n# Check your DMARC record:\ndig TXT _dmarc.yourdomain.com' },
-      { title: 'Missing security headers', body: 'Security headers are HTTP response headers that protect visitors from common attacks:\n\n• Strict-Transport-Security — forces HTTPS\n• Content-Security-Policy — prevents XSS attacks\n• X-Frame-Options — prevents clickjacking\n• X-Content-Type-Options — prevents MIME sniffing\n\nAdd these in your nginx or Apache config, or in your web framework.' },
+    id:'scanner', icon:'🔍', title:'System Scanner',
+    desc:'What the scanner checks and how to interpret findings',
+    tag:'features',
+    sections:[
+      { title:'What the scanner checks (20 categories)',
+        body:'Every scan runs checks across:\n• Open ports and exposed services\n• SSH configuration (root login, password auth, protocol version)\n• Firewall status (ufw, iptables, nftables)\n• Outdated packages with known CVEs\n• Sensitive file permissions (/etc/passwd, /etc/shadow, SSH keys)\n• Failed login attempts and brute-force indicators\n• Disk encryption status\n• User accounts with sudo privileges\n• Running services and their security posture\n• SSL/TLS certificate validity\n• Docker security (if running)\n• Cron jobs and scheduled tasks\n• Kernel version and known exploits\n• Network interface configuration\n• Log rotation and audit logging\n• Password policy enforcement\n• Two-factor authentication status\n• Unnecessary open ports\n• SUID/SGID binary audit\n• Security banner configuration' },
+      { title:'Understanding CVSS scores',
+        body:'Every finding has a CVSS (Common Vulnerability Scoring System) score from 0 to 10:\n\n• 9.0–10.0 CRITICAL — Remote code execution, full system compromise possible. Fix immediately.\n• 7.0–8.9 HIGH — Significant risk. Privilege escalation or data exposure likely. Fix within 24 hours.\n• 4.0–6.9 MEDIUM — Moderate risk. Exploitable under certain conditions. Fix within a week.\n• 0.1–3.9 LOW — Minor risk. Best practice violations. Fix when possible.\n• 0.0 INFO — Not a vulnerability but worth knowing.' },
+      { title:'Score calculation',
+        body:'Your security score (0–100) is calculated as:\n100 − (critical × 20) − (high × 8) − (medium × 3) − (low × 1)\n\nMinimum score is 0. A device with 3 criticals starts at 40/100 regardless of other issues. Fixing all critical and high issues typically gets you to 75+.' },
+      { title:'Risk indicator vs confirmed exploit',
+        body:'Important: the scanner identifies RISK INDICATORS — configurations that are commonly exploited. It does not send attack payloads to confirm exploitability. For example, "SSH Root Login Enabled" is a critical risk indicator because it\'s commonly abused, even if no attacker has tried it yet.\n\nFor confirmed exploit verification, integrate Nuclei (see the Upgrade Roadmap in the admin panel).' },
+      { title:'Scanning remote servers',
+        body:'For remote SSH scans you need:\n• Target server running Linux (Ubuntu, Debian, CentOS, RHEL, Alpine)\n• SSH port open (default 22)\n• A user account with sudo/root access\n• The server\'s IP address or hostname\n\nThe backend connects, runs diagnostic commands, collects the output, and analyzes it. Your credentials are never stored — they are zeroed from memory immediately after the scan completes.', cmd:'ssh -p 22 root@your-server-ip' },
     ]
   },
+
+  /* ══ AI ANALYSIS ══════════════════════════════════════════════ */
   {
-    id: 'osint', icon: '🔎', title: 'OSINT & Threat Intel',
-    desc: 'Investigate emails, IPs, usernames, and threats',
-    tag: 'features',
-    sections: [
-      { title: 'Email breach check', body: 'Enter any email address on the OSINT page. The tool checks Have I Been Pwned to see if that email appeared in known data breaches. It shows which breaches, when, and what data was exposed (emails, passwords, phone numbers, etc.).\n\nRequires HIBP_API_KEY in .env ($3.50/month). Password check is free — uses k-anonymity so the password never leaves your browser.' },
-      { title: 'Username lookup', body: 'Enter a username to check if it exists across 12+ platforms including GitHub, Twitter/X, Reddit, LinkedIn, HackerOne, TryHackMe, HackTheBox, Medium, Dev.to, GitLab, and more.\n\nUseful for: OSINT investigations, brand monitoring, finding a threat actor\'s footprint.' },
-      { title: 'IP reputation check', body: 'Enter an IP address on the Threat Intel page. The tool queries:\n\n• AbuseIPDB — abuse confidence score, country, ISP, report count, TOR/proxy detection\n• VirusTotal — malware detection count across 70+ security vendors\n• Shodan — open ports, known vulnerabilities, organization\n\nAll free API tiers are sufficient for typical use.' },
+    id:'ai-analysis', icon:'🤖', title:'AI Analysis & Fix',
+    desc:'Using Claude AI to understand and fix every security issue',
+    tag:'features',
+    sections:[
+      { title:'What the AI does',
+        body:'PM::OFFSEC uses Claude (Anthropic\'s AI) to analyze each security finding in context:\n• Explains what the vulnerability means in plain English — no security jargon\n• Provides exact bash commands tailored to your specific OS version\n• Estimates how long the fix takes (usually 2–15 minutes)\n• Warns if a reboot is required\n• Gives a command to verify the fix worked\n• Rates the fix risk (Low/Medium/High — meaning risk of breaking something)' },
+      { title:'How to use the AI Fix button',
+        body:'1. Go to any device scan (Devices → VIEW SCAN)\n2. Find any finding with a 🤖 AI FIX button\n3. Click it — a modal opens while AI analyzes the finding\n4. Read the explanation first to understand what you\'re fixing\n5. Click the copy icon on each command to copy it\n6. SSH into the affected server and run the commands\n7. Run the verify command to confirm the fix\n8. Re-scan the device to see your improved score' },
+      { title:'AI Chat for custom questions',
+        body:'Click the 💬 chat button (bottom right of dashboard) to ask the AI anything:\n• "What does CVE-2024-XXXX mean for my Ubuntu server?"\n• "How do I harden SSH on Debian 12?"\n• "What\'s the difference between ufw and iptables?"\n• "Is port 8080 being open on a web server a problem?"\n\nThe AI has full context of your current scan results and can give specific advice.' },
+      { title:'AI-generated executive reports',
+        body:'On the Pentest Report page, the AI can generate a full professional report:\n• Executive summary for non-technical stakeholders\n• Technical findings with CVSS scores\n• Risk ratings and business impact\n• Remediation roadmap with priorities\n• Compliance mapping (GDPR, PCI DSS, etc.)\n\nDownload as PDF to share with clients or management.' },
+      { title:'Requires ANTHROPIC_API_KEY',
+        body:'AI features require your Anthropic API key set in Railway environment variables. Without it, the AI Fix button will show an error. Get your key at console.anthropic.com. Cost is typically $0.01–0.05 per fix request.' },
     ]
   },
+
+  /* ══ ALERTS ═══════════════════════════════════════════════════ */
   {
-    id: 'soc', icon: '🏢', title: 'SOC Platform',
-    desc: 'Incident management, IOCs, MITRE ATT&CK',
-    tag: 'advanced',
-    sections: [
-      { title: 'Incident Management', body: 'The Incidents page is your SOC ticket system. When the scanner finds critical issues, it can auto-create incidents. You can also create them manually.\n\nEach incident has: title, severity, status (open → investigating → contained → resolved → closed), timeline, affected devices, MITRE techniques, and MTTR tracking.' },
-      { title: 'IOC Database', body: 'IOC = Indicator of Compromise. Store known bad IPs, domains, file hashes, emails, or usernames. When your scanner finds a matching value (e.g. a brute-force IP), it automatically matches it against your IOC database and flags it.' },
-      { title: 'MITRE ATT&CK mapping', body: 'The MITRE ATT&CK framework is a knowledge base of attacker techniques. The dashboard automatically maps your scan findings to MITRE techniques.\n\nExample: "847 failed SSH logins" → maps to T1110 (Brute Force).\n\nThis helps you understand how real attackers would exploit your weaknesses.' },
-      { title: 'Playbooks', body: 'Playbooks are step-by-step response procedures for common incidents. The dashboard includes 4 built-in playbooks:\n\n1. SSH Brute Force Response\n2. Exposed Database Response\n3. Malware/Rootkit Detection\n4. Privilege Escalation Response\n\nEach includes exact bash commands to investigate and remediate.' },
+    id:'alerts', icon:'🔔', title:'Alerts & Notifications',
+    desc:'Setting up and managing security alerts',
+    tag:'features',
+    sections:[
+      { title:'Types of alerts',
+        body:'The platform generates alerts for:\n• New critical or high vulnerability found on any device\n• Scan failure (could indicate the server is down or SSH access lost)\n• Brute-force attack detected (multiple failed login attempts)\n• Score drop — device score drops by 10+ points between scans\n• New device discovered on the network\n• Scheduled scan missed' },
+      { title:'Alert severity levels',
+        body:'• 🔴 CRITICAL — Immediate action required. New critical vulnerability or active attack detected.\n• 🟠 HIGH — Action required within 24 hours. Significant new finding.\n• 🟡 MEDIUM — Action required this week. Moderate risk found.\n• 🟢 LOW — Informational. Best practice violation or minor issue.' },
+      { title:'Email alerts setup',
+        body:'Email alerts are sent via SendGrid. To enable:\n1. Go to API Settings in the sidebar\n2. The backend must have SENDGRID_API_KEY set in Railway environment variables\n3. Alerts automatically send to the email used when registering\n\nOn Starter plan and above, you get instant email alerts. Free plan gets daily digest only.' },
+      { title:'Managing alerts',
+        body:'On the Alerts page:\n• See all active alerts sorted by severity\n• Click any alert to see the affected device and full details\n• Mark as Reviewed to acknowledge without fixing\n• Mark as Resolved once you\'ve fixed the underlying issue\n• Filter by severity, device, or date range' },
+      { title:'Reducing alert noise',
+        body:'If you\'re getting too many alerts:\n1. Go to Profile → Alert Preferences\n2. Set minimum severity threshold (e.g. "only alert me for Critical and High")\n3. Set quiet hours (no alerts between 11pm–7am)\n4. Whitelist known accepted risks (e.g. "I know port 8080 is open, don\'t alert")\n5. Configure digest frequency (immediate, hourly, daily)' },
     ]
   },
+
+  /* ══ WEBSITE SCANNER ══════════════════════════════════════════ */
   {
-    id: 'wazuh-splunk', icon: '📊', title: 'Wazuh & Splunk',
-    desc: 'Connect your SIEM tools',
-    tag: 'advanced',
-    sections: [
-      { title: 'Connecting Wazuh', body: 'Wazuh is an open-source SIEM. To connect:\n1. Install Wazuh manager on a Linux server\n2. Add WAZUH_URL, WAZUH_USER, WAZUH_PASSWORD to backend/.env\n3. Restart the backend\n4. Go to Wazuh page → click Refresh\n\nWithout connection, demo data is shown so you can see what the integration looks like.', cmd: '# Install Wazuh (Ubuntu):\ncurl -sO https://packages.wazuh.com/4.7/wazuh-install.sh\nbash ./wazuh-install.sh -a' },
-      { title: 'Connecting Splunk', body: 'Splunk is a commercial log analysis platform (free 500MB/day tier).\n\n1. Set up Splunk (cloud or on-premise)\n2. Create an API token and HTTP Event Collector token\n3. Add SPLUNK_URL, SPLUNK_TOKEN, SPLUNK_HEC_URL, SPLUNK_HEC_TOKEN to .env\n4. Go to Splunk page → enter a search query\n\nThe backend can also send scan results to Splunk automatically.' },
+    id:'website-scanner', icon:'🌐', title:'Website Scanner',
+    desc:'Scanning websites, SSL certificates, and web application security',
+    tag:'features',
+    sections:[
+      { title:'What the website scanner checks',
+        body:'Enter any URL and the scanner checks:\n• SSL/TLS certificate (validity, expiry date, cipher strength)\n• HTTP security headers (CSP, HSTS, X-Frame-Options, etc.)\n• Open redirects\n• Exposed sensitive files (robots.txt, .git, .env)\n• Server version disclosure\n• Mixed content warnings\n• CORS configuration\n• Cookie security flags (Secure, HttpOnly, SameSite)\n• Clickjacking protection' },
+      { title:'Reading the web scan results',
+        body:'Results are organized by category. Each finding shows:\n• Severity badge (Critical/High/Medium/Low/Info)\n• What was found (e.g. "Missing Content-Security-Policy header")\n• Why it matters (what an attacker could do with it)\n• How to fix it (exact header to add to your web server config)\n• Reference links to security standards' },
+      { title:'SSL certificate monitoring',
+        body:'The scanner shows your SSL certificate:\n• Issued by (Certificate Authority)\n• Valid from / Valid to dates\n• Days until expiry (warns at 30 days, critical at 7 days)\n• Cipher suite strength\n• TLS version (1.2 vs 1.3)\n\nExpired SSL certificates kill trust and SEO. Set up the scheduled monitoring to alert you 30 days before expiry.' },
+      { title:'Security headers explained',
+        body:'The most important headers the scanner checks:\n\n• Content-Security-Policy — prevents XSS attacks by controlling what scripts can run\n• Strict-Transport-Security — forces HTTPS, prevents downgrade attacks\n• X-Frame-Options — prevents clickjacking (your site inside an iframe)\n• X-Content-Type-Options — prevents MIME sniffing attacks\n• Referrer-Policy — controls what URL info is sent to other sites\n• Permissions-Policy — controls browser features (camera, microphone, etc.)', cmd:'curl -I https://yoursite.com' },
     ]
   },
+
+  /* ══ OSINT & RECON ════════════════════════════════════════════ */
   {
-    id: 'plans', icon: '💳', title: 'Plans & Features',
-    desc: 'What each plan includes and how to upgrade',
-    tag: 'account',
-    sections: [
-      { title: 'Free plan limits', body: '• 1 device\n• 1 scan per day\n• 7-day history\n• TXT export only\n• No AI features\n• No email alerts\n• No network discovery\n• No scheduled scans' },
-      { title: 'Starter — $19/month', body: '• 5 devices\n• 10 scans per day\n• 30-day history\n• AI analysis + chat + fix assistant\n• Email alerts on critical findings\n• Network discovery\n• TXT + JSON export\n• Email support' },
-      { title: 'Professional — $79/month', body: '• 25 devices\n• 100 scans per day\n• 90-day history\n• Scheduled automatic scans\n• PDF executive reports\n• Priority support\n• Full Wazuh/Splunk basics' },
-      { title: 'Enterprise — $199/month', body: '• Unlimited devices and scans\n• 1-year history\n• 5 team seats\n• Webhook alerts (Slack, Teams)\n• CIS Compliance reports\n• Full SIEM integration\n• Dedicated support' },
-      { title: 'How to upgrade', body: 'Click your plan badge in the top header (shows FREE/STARTER/etc.) or go to Billing in the sidebar. Choose your plan and payment provider (Stripe or Lemon Squeezy). After payment, your plan upgrades immediately.' },
+    id:'osint', icon:'🔎', title:'OSINT & Reconnaissance',
+    desc:'Gathering open-source intelligence about domains, IPs, and organizations',
+    tag:'features',
+    sections:[
+      { title:'What is OSINT?',
+        body:'OSINT (Open Source Intelligence) means gathering information from publicly available sources — without touching the target system. This is legal, non-intrusive reconnaissance that shows you what attackers can find about you before they attack.' },
+      { title:'Domain intelligence',
+        body:'Enter any domain to get:\n• WHOIS data (registrar, registration date, registrant info)\n• DNS records (A, MX, TXT, NS, CNAME)\n• Subdomains discovered via certificate transparency logs\n• Email server configuration (SPF, DKIM, DMARC)\n• IP address and hosting provider\n• Geographic location of servers' },
+      { title:'IP reputation check',
+        body:'Enter any IP address to check:\n• AbuseIPDB score (0–100 abuse confidence score)\n• Whether it\'s on any threat blacklists\n• Historical abuse reports\n• Internet Service Provider and country\n• Whether it\'s a known Tor exit node, VPN, or datacenter IP\n\nUse this when you see a suspicious IP in your server logs.' },
+      { title:'Breach monitoring',
+        body:'Enter any email address to check if it appears in known data breaches (powered by HaveIBeenPwned):\n• Which breaches it appeared in and when\n• What data was exposed (passwords, emails, phone numbers)\n• Severity of each breach\n\nRequires HIBP_API_KEY ($3.50/month) in your Railway environment variables.' },
+      { title:'VirusTotal lookup',
+        body:'Submit any URL, domain, IP, or file hash to check against 70+ security vendors:\n• Malware detection results from all vendors\n• Phishing and fraud categorizations\n• Community votes and comments\n• Historical scan results\n\nRequires free VIRUSTOTAL_API_KEY from virustotal.com.' },
     ]
   },
+
+  /* ══ THREAT INTELLIGENCE ══════════════════════════════════════ */
   {
-    id: 'legal', icon: '⚖️', title: 'Legal & Authorization',
-    desc: 'Understanding the legal requirements for security testing',
-    tag: 'account',
-    sections: [
-      { title: 'Why authorization matters', body: 'Security scanning without permission is illegal under the Computer Fraud and Abuse Act (CFAA, 18 U.S.C. § 1030). Even if you own the IP range, you need to own or have written permission for the systems at those IPs.\n\nAlways scan only systems you own or have explicit written permission to test.' },
-      { title: 'Signing the engagement agreement', body: 'Before scanning client systems, have them sign the engagement agreement at legal/agreement.html. It legally documents:\n\n• Who authorized the testing\n• What systems are in scope\n• What testing methods are permitted\n• Liability and confidentiality terms\n\nThe agreement is legally binding under the ESIGN Act.' },
-      { title: 'CFAA safe harbor', body: 'You are protected from CFAA liability when you have written authorization from the system owner. This is why the engagement agreement is important — it\'s your legal protection.\n\nNever test:\n• Systems not listed in scope\n• Systems owned by third parties\n• Critical infrastructure\n• Government systems' },
+    id:'threat-intel', icon:'🛡️', title:'Threat Intelligence',
+    desc:'Live threat feeds — ransomware groups, exploited CVEs, and breach data',
+    tag:'features',
+    sections:[
+      { title:'Ransomware tracker',
+        body:'The Ransomware feed (powered by Ransomwatch) shows currently active ransomware groups:\n• Group name and activity level\n• Number of known victims\n• Last active date\n• Tactics and typical targets (healthcare, manufacturing, education)\n\nThis is real-time data from the Ransomwatch project. Use it to assess your industry\'s current threat landscape.' },
+      { title:'CISA Known Exploited Vulnerabilities',
+        body:'The CISA KEV feed is a US government list of CVEs confirmed to be actively exploited in the wild right now. Updated daily. If any CVE in this list appears in your scan results — treat it as CRITICAL regardless of its CVSS score.\n\nThis feed is completely free. No API key needed. It\'s published by the US Cybersecurity and Infrastructure Security Agency.' },
+      { title:'IOC (Indicator of Compromise) Database',
+        body:'The IOC Database lets you track specific threats relevant to your environment:\n• Add suspicious IP addresses you\'ve seen in logs\n• Add malicious domain names or URLs\n• Add file hashes from suspicious files\n• Add email addresses from phishing attempts\n\nEach IOC is cross-referenced against VirusTotal and AbuseIPDB automatically.' },
+      { title:'Password breach check',
+        body:'The password checker uses k-Anonymity — you never send your actual password anywhere. It:\n1. Computes the SHA-1 hash of the password locally in your browser\n2. Sends only the first 5 characters of that hash to HaveIBeenPwned\n3. Gets back a list of matching hashes\n4. Checks locally if your full hash is in the list\n\nThis is completely private. HaveIBeenPwned never sees your actual password. This feature is 100% free — no API key required.' },
     ]
   },
+
+  /* ══ SOC PLATFORM ═════════════════════════════════════════════ */
+  {
+    id:'soc', icon:'🏢', title:'SOC Platform',
+    desc:'Incident management, MITRE ATT&CK mapping, and response playbooks',
+    tag:'features',
+    sections:[
+      { title:'What is a SOC?',
+        body:'A Security Operations Center (SOC) is the team and toolset that monitors, detects, and responds to security incidents. This platform gives you a lightweight SOC for small teams — incident tracking, threat mapping, and structured response procedures.' },
+      { title:'Creating an incident',
+        body:'Go to Incidents → Create Incident. Fill in:\n• Title (e.g. "Brute force attempt on web-server-01")\n• Severity (Critical/High/Medium/Low)\n• Source (scanner finding, manual report, external alert)\n• Affected devices (comma-separated IPs)\n• Description (what happened, when, what you\'ve done so far)\n\nIncidents are tracked with full timeline until resolved. Assign to team members on Pro/Enterprise plans.' },
+      { title:'MITRE ATT&CK framework',
+        body:'The MITRE ATT&CK matrix maps attacker tactics and techniques. Each cell in the matrix represents a specific attack method. When the scanner finds something suspicious, it maps to the relevant ATT&CK technique.\n\nFor example:\n• SSH Root Login → TA0001 Initial Access\n• Cron job with unusual command → TA0003 Persistence\n• Failed login spike → TA0006 Credential Access\n\nUse this to understand your defensive gaps and what attackers would try next.' },
+      { title:'Response Playbooks',
+        body:'Playbooks are step-by-step response procedures for common incident types:\n• Ransomware Response — isolate, preserve evidence, restore from backup\n• Brute Force Response — block IPs, audit accounts, reset credentials\n• Data Breach Response — identify scope, notify stakeholders, patch source\n• Malware Detection — isolate host, collect forensics, clean or rebuild\n\nEach playbook has checkboxes so you can track progress during an active incident.' },
+      { title:'IOC Database',
+        body:'The IOC (Indicators of Compromise) database stores threat indicators you\'ve collected:\n• IP addresses of attackers\n• Malicious domains from phishing emails\n• File hashes from malware samples\n• Email addresses from social engineering attempts\n\nIOCs are shared across your team. When a new scan finds an IP matching your IOC database, it automatically creates a HIGH alert.' },
+    ]
+  },
+
+  /* ══ WAZUH ════════════════════════════════════════════════════ */
+  {
+    id:'wazuh', icon:'👁️', title:'Wazuh Integration',
+    desc:'Connecting your Wazuh SIEM for real-time log monitoring',
+    tag:'advanced',
+    sections:[
+      { title:'What is Wazuh?',
+        body:'Wazuh is a free, open-source SIEM (Security Information and Event Management) platform. It collects logs from all your servers in real-time, detects anomalies, and alerts on suspicious activity. This dashboard integrates with your Wazuh deployment to show critical alerts alongside your scan data.' },
+      { title:'Connecting Wazuh',
+        body:'To connect Wazuh:\n1. Install Wazuh Manager on a dedicated server (4GB+ RAM)\n2. Deploy Wazuh Agents on all servers you want to monitor\n3. Get your Wazuh API URL (e.g. https://wazuh.yourdomain.com:55000)\n4. Enter the URL and credentials in Settings → API Settings\n\nWazuh is free to self-host. Documentation at wazuh.com/install', cmd:'curl -so wazuh-install.sh https://packages.wazuh.com/4.7/wazuh-install.sh && bash wazuh-install.sh -a' },
+      { title:'What Wazuh shows in the dashboard',
+        body:'Once connected, the Wazuh panel shows:\n• Real-time security alerts from all agents\n• File integrity monitoring alerts (unexpected file changes)\n• Rootkit detection alerts\n• Log anomalies (unusual process spawning, privilege escalation)\n• Compliance alerts (PCI DSS, HIPAA, GDPR violations)\n• Agent status (online/offline for each server)' },
+      { title:'Wazuh vs the built-in scanner',
+        body:'These two tools complement each other:\n\n• Built-in scanner — point-in-time audit. Runs when you trigger it. Great for initial assessment and periodic reviews.\n• Wazuh — continuous monitoring. Runs 24/7. Great for detecting attacks in progress.\n\nUse the scanner to find and fix vulnerabilities. Use Wazuh to detect when someone tries to exploit them.' },
+    ]
+  },
+
+  /* ══ SPLUNK ═══════════════════════════════════════════════════ */
+  {
+    id:'splunk', icon:'📈', title:'Splunk Integration',
+    desc:'Connecting Splunk for enterprise log analysis and SIEM correlation',
+    tag:'advanced',
+    sections:[
+      { title:'What is Splunk?',
+        body:'Splunk is an enterprise SIEM platform used by Fortune 500 companies. It ingests machine data from every source, lets you search it with SPL (Splunk Processing Language), and build dashboards and alerts. This integration pulls Splunk alerts into your security dashboard.' },
+      { title:'Connecting Splunk',
+        body:'To connect Splunk:\n1. You need a Splunk instance (Cloud, Enterprise, or free developer license)\n2. Create a Splunk API token (Settings → Tokens in your Splunk instance)\n3. Enable the REST API (usually port 8089)\n4. Enter your Splunk URL and token in Settings → API Settings\n\nSplunk Cloud starts at $1,800/year. For smaller teams, Wazuh (free) gives similar capabilities.', cmd:'curl -k https://splunk-host:8089/services/auth/login -d username=admin -d password=changeme' },
+      { title:'What Splunk shows',
+        body:'The Splunk panel shows your top security searches and alerts:\n• Notable events from Splunk Enterprise Security\n• Failed authentication trends\n• Outlier detection (unusual user behavior)\n• Custom SPL queries you\'ve configured\n• Risk score attribution per user/device\n\nSPL (Search Processing Language) lets you query billions of events in seconds.' },
+    ]
+  },
+
+  /* ══ PHYSICAL SECURITY ════════════════════════════════════════ */
+  {
+    id:'physical', icon:'🏧', title:'Physical Security',
+    desc:'ATM security, vending machine audits, cameras, and device fleet',
+    tag:'features',
+    sections:[
+      { title:'ATM Security scanning',
+        body:'The ATM security module audits cash machine and kiosk security:\n• Network isolation check (ATM should be on isolated VLAN)\n• Operating system patch level (many ATMs run Windows XP/7 — serious risk)\n• Physical port lockdown (USB, COM, serial ports)\n• Application whitelisting status\n• Encryption of cardholder data\n• Anti-skimming detection protocols\n• Cash cassette authentication\n• Remote management security\n\nEnter the ATM\'s IP and credentials to scan. Results map to PCI DSS requirements.' },
+      { title:'Vending Machine security',
+        body:'Modern vending machines are network-connected and often run outdated software. This module checks:\n• Network connectivity and isolation\n• Payment terminal encryption\n• Remote management interface security\n• Firmware version and known vulnerabilities\n• Physical tamper detection\n• Transaction log integrity\n\nVending machine compromises are used to capture card data or as pivot points into corporate networks.' },
+      { title:'Camera security audit',
+        body:'IP cameras are among the most commonly compromised devices. The camera security module checks:\n• Default credential use (most cameras are never password-changed)\n• Firmware version and available updates\n• RTSP stream exposure (is the video feed publicly accessible?)\n• UPnP exposure (automatic port forwarding creating internet exposure)\n• Encryption of video streams\n• Access log review\n\nNote: Only scan cameras you own or have written authorization to test.' },
+      { title:'Device Fleet management',
+        body:'The Device Fleet page gives you a bird\'s-eye view of all networked devices in your environment:\n• Servers (physical and virtual)\n• Network devices (switches, routers, firewalls)\n• IoT devices (cameras, printers, sensors)\n• Endpoints (workstations and laptops)\n\nEach device shows its last scan date, risk score, and whether it has any open critical findings. Set up automated scanning to keep all devices assessed on a schedule.' },
+    ]
+  },
+
+  /* ══ COMPLIANCE ═══════════════════════════════════════════════ */
+  {
+    id:'compliance', icon:'📋', title:'Compliance Scoring',
+    desc:'GDPR, SOC 2, PCI DSS, HIPAA, ISO 27001, and NIST CSF assessments',
+    tag:'features',
+    sections:[
+      { title:'What compliance frameworks are covered',
+        body:'The compliance module scores your environment against 6 major frameworks:\n\n• SOC 2 — Trust service criteria for service organizations\n• ISO 27001 — International information security management standard\n• PCI DSS — Payment card industry data security standard (required if you take card payments)\n• HIPAA — US healthcare data protection standard\n• NIST CSF — US National Institute of Standards and Technology framework\n• GDPR — EU General Data Protection Regulation\n\nEach framework shows your current score (0–100%) and which controls are passing/failing.' },
+      { title:'How scores are calculated',
+        body:'Compliance scores are calculated by mapping your scan findings to framework controls:\n\n• A server with SSH root login enabled fails multiple SOC 2 and PCI DSS controls\n• An unpatched system fails ISO 27001 A.12.6 vulnerability management\n• No firewall fails NIST CSF PR.AC (Access Control)\n\nScores are INDICATORS of your compliance posture, not a certified audit. For official certification, you need a qualified third-party auditor.' },
+      { title:'Improving your compliance score',
+        body:'Each failed control has a remediation path:\n1. View the failed control in the compliance grid\n2. See which finding(s) are causing the failure\n3. Click AI FIX on the related finding to get the fix commands\n4. Apply the fix and re-scan\n5. Score updates automatically\n\nMost organizations can get from 40% to 80% compliance by fixing their top 10 critical findings.' },
+      { title:'Who needs which framework',
+        body:'• ALL businesses — GDPR (if you have EU customers)\n• SaaS companies — SOC 2 (required by enterprise customers)\n• Fintech / e-commerce — PCI DSS (required if you store card data)\n• Healthcare — HIPAA (required for US patient data)\n• US government contractors — NIST CSF (often contractually required)\n• Enterprise sales — ISO 27001 (builds trust with large customers)\n\nStart with GDPR and SOC 2 as they cover the most ground.' },
+    ]
+  },
+
+  /* ══ PENTEST REPORT ═══════════════════════════════════════════ */
+  {
+    id:'pentest-report', icon:'📄', title:'Pentest Report Generator',
+    desc:'Generating professional penetration testing reports for clients',
+    tag:'advanced',
+    sections:[
+      { title:'Who this is for',
+        body:'The pentest report generator is for security consultants and freelancers who:\n• Audit client servers and need to deliver a professional report\n• Want to document their findings in a format clients can understand\n• Need to present risk to non-technical executives and management\n• Are building a security consulting practice\n\nThe report is generated from your actual scan data — not a template filled with fake findings.' },
+      { title:'Filling in the report details',
+        body:'On the Pentest Report page:\n• CLIENT NAME — the company or person you scanned for\n• ENGAGEMENT TYPE — External Network Pentest, Internal Audit, Web App Assessment, etc.\n• SCOPE — which IPs, domains, or systems were in scope\n• ASSESSMENT DATES — when the assessment was conducted\n• EXECUTIVE SUMMARY — high-level business impact (the AI can generate this)\n• METHODOLOGY — how you approached the assessment' },
+      { title:'Generating the PDF report',
+        body:'Click GENERATE PDF REPORT. The system:\n1. Pulls all findings from your selected devices\n2. Maps them to CVSS scores and business risk\n3. Generates an executive summary using AI\n4. Creates a professional PDF with your branding\n5. Includes remediation recommendations with effort estimates\n\nRequires ANTHROPIC_API_KEY for AI-generated sections.' },
+      { title:'Legal requirements for pentest reports',
+        body:'⚖️ IMPORTANT: You must have written authorization before scanning any system and before delivering a pentest report.\n\nThe Legal Agreement page has a client authorization template. Have clients sign it before starting any work.\n\nWithout written authorization, security testing — even with good intentions — is a criminal offense under the Computer Fraud and Abuse Act (CFAA) in the US and similar laws worldwide.' },
+    ]
+  },
+
+  /* ══ PHISHING SIMULATION ══════════════════════════════════════ */
+  {
+    id:'phishing', icon:'🎣', title:'Phishing Simulation',
+    desc:'Testing your team\'s ability to spot phishing emails',
+    tag:'advanced',
+    sections:[
+      { title:'What phishing simulation does',
+        body:'Phishing simulation sends fake (but safe) phishing emails to your team members to test whether they would fall for a real attack. Employees who click the fake link see an educational page instead of getting hacked. Results show who is most at risk, letting you target security training effectively.' },
+      { title:'Creating a campaign',
+        body:'Click NEW CAMPAIGN and fill in:\n• Campaign name (e.g. "Q1 2026 Phishing Test")\n• Target email list (upload CSV or enter manually)\n• Template type — credential harvest, package delivery, IT helpdesk, executive request, invoice\n• From name and email (the fake sender identity)\n• Landing page (what people see if they click)\n• Campaign duration (how many days to run)\n\nRequires SENDGRID_API_KEY to send emails.' },
+      { title:'Reading campaign results',
+        body:'After running, the results dashboard shows:\n• Emails sent / Emails opened / Links clicked / Credentials entered\n• Click-through rate (industry average is 3–5%, danger zone is >15%)\n• Individual employee breakdown (kept private by default)\n• Most clicked template type\n• Time-to-click distribution (immediate clickers are highest risk)\n\nUse results to identify employees who need additional security awareness training.' },
+      { title:'Legal and ethical requirements',
+        body:'⚖️ You MUST have written authorization from management/HR before running phishing simulations against employees.\n\nBest practices:\n• Inform HR and legal before running simulations\n• Never use simulation results for disciplinary action — only for training\n• Have a communication plan ready for employees who report the phishing (reward reporters!)\n• Debrief all employees after the campaign regardless of results\n• Run simulations quarterly to track improvement over time' },
+    ]
+  },
+
+  /* ══ DARK WEB MONITORING ══════════════════════════════════════ */
+  {
+    id:'dark-web', icon:'🕵️', title:'Dark Web Monitoring',
+    desc:'Monitoring for leaked credentials, breached data, and mentions on dark web forums',
+    tag:'advanced',
+    sections:[
+      { title:'What dark web monitoring checks',
+        body:'The dark web monitoring module searches for:\n• Employee email addresses in credential dumps\n• Company domains mentioned on ransomware leak sites\n• Corporate passwords in paste sites (Pastebin, etc.)\n• API keys or access tokens exposed in code repositories\n• Internal IP addresses or system names on hacker forums\n• Credit card data associated with your domain\n• Exposed database dumps mentioning your company' },
+      { title:'Setting up HIBP monitoring',
+        body:'The primary data source is HaveIBeenPwned (HIBP), which tracks 12+ billion breached accounts.\n\nTo enable:\n1. Go to haveibeenpwned.com/API/Key\n2. Purchase an API key ($3.50/month)\n3. Add HIBP_API_KEY to your Railway environment variables\n\nOnce configured, you can check any email address against all known breaches.' },
+      { title:'Ransomware leak monitoring',
+        body:'The platform monitors Ransomwatch (free, no key needed) which tracks active ransomware groups and their posted victims. If your company name appears on a ransomware leak site, it means:\n1. You\'ve already been breached\n2. Ransomware group is threatening to publish stolen data\n3. You need to activate your incident response plan immediately\n\nMonitor this dashboard daily if you work with sensitive client data.' },
+      { title:'Responding to a dark web finding',
+        body:'If your data appears on the dark web:\n1. Identify which accounts/systems were exposed\n2. Force password resets for all affected accounts\n3. Enable MFA on all systems immediately\n4. Audit access logs for the compromised accounts (30 days back)\n5. Notify affected customers/employees per your legal obligations\n6. Engage a forensics firm if you suspect an active breach\n7. File a report with FBI IC3 if US-based, or NCSC if UK-based' },
+    ]
+  },
+
+  /* ══ ATTACK SURFACE ═══════════════════════════════════════════ */
+  {
+    id:'attack-surface', icon:'🎯', title:'Attack Surface Discovery',
+    desc:'Mapping everything exposed to the internet that attackers can see',
+    tag:'advanced',
+    sections:[
+      { title:'What is attack surface?',
+        body:'Your attack surface is everything an attacker can see and potentially interact with from the internet:\n• All internet-facing servers and their open ports\n• All your domains and subdomains\n• All your web applications and APIs\n• All your cloud storage buckets\n• All your employee email addresses (targets for phishing)\n• All your software dependencies (supply chain risk)\n\nThe smaller your attack surface, the harder you are to attack.' },
+      { title:'Running attack surface discovery',
+        body:'Enter your company domain (e.g. yourcompany.com). The discovery engine:\n1. Enumerates all subdomains via certificate transparency logs and DNS brute-force\n2. Checks each subdomain for open ports and running services\n3. Identifies technologies in use (WordPress, nginx, Apache, etc.)\n4. Checks for exposed admin panels (wp-admin, phpmyadmin, etc.)\n5. Identifies cloud assets (AWS S3, Azure Blob, Google Cloud Storage)\n6. Maps third-party services connected to your domain' },
+      { title:'Reducing your attack surface',
+        body:'After the discovery run, review each finding:\n\n• Unused subdomains — consider removing them (dead DNS entries can be hijacked)\n• Exposed admin panels — restrict to VPN or specific IP range only\n• Old dev/staging environments — shut them down or firewall them\n• Open ports with no business need — close them (every open port is a potential entry point)\n• Forgotten cloud storage buckets — audit permissions, make private\n• Old SSL certificates — renew or revoke' },
+    ]
+  },
+
+  /* ══ MSP DASHBOARD ════════════════════════════════════════════ */
+  {
+    id:'msp', icon:'🏪', title:'MSP Dashboard',
+    desc:'Managing multiple clients as a Managed Security Service Provider',
+    tag:'advanced',
+    sections:[
+      { title:'What is an MSP?',
+        body:'A Managed Security Service Provider (MSP) is a company that provides security monitoring and management to multiple clients under a service contract. Instead of each small business hiring their own security team, they pay an MSP a monthly fee for professional security monitoring.\n\nThis dashboard lets you run an MSP — managing dozens of clients from one interface.' },
+      { title:'Adding clients to the MSP dashboard',
+        body:'The MSP dashboard automatically shows all registered users as clients. Each client has:\n• Security score trend over time\n• Number of active critical issues\n• Last scan date and next scheduled scan\n• Alert count by severity\n• Plan tier (determines your service level)\n\nYou can filter by risk level to find your most vulnerable clients quickly.' },
+      { title:'Generating client reports',
+        body:'For each client, you can generate:\n• Monthly executive report (high-level risk summary)\n• Technical findings report (all vulnerabilities with details)\n• Remediation progress report (showing improvement over time)\n• Compliance posture report (per framework)\n\nBranded with your company name on Enterprise plan.' },
+      { title:'MSP pricing strategy',
+        body:'Typical MSP pricing for security monitoring:\n\n• Small business (1–5 servers): $299–499/month\n• Medium business (5–20 servers): $799–1,499/month\n• Enterprise (20+ servers): $2,000+/month\n\nYour platform cost at Enterprise tier is $199/month. With 10 small business clients at $399/month each, your monthly revenue is $3,990 against $199 cost — roughly 20× ROI.\n\nThe key differentiator: you respond to findings, not just report them. Clients pay for your expertise, not just the platform.' },
+    ]
+  },
+
+  /* ══ BILLING & PLANS ══════════════════════════════════════════ */
+  {
+    id:'billing', icon:'💳', title:'Billing & Plans',
+    desc:'Understanding plans, upgrading, and managing your subscription',
+    tag:'account',
+    sections:[
+      { title:'Plan comparison',
+        body:'• FREE ($0/7-day trial) — 3 devices, 10 scans/day, basic score, TXT export\n• STARTER ($19/month) — 10 devices, 50 scans/day, AI analysis, email alerts, 30-day history, client portal\n• PROFESSIONAL ($79/month) — 50 devices, 500 scans/day, scheduled scans, PDF reports, 90-day history, compliance scoring\n• ENTERPRISE ($199/month) — Unlimited devices and scans, MSP dashboard, white-label reports, API access, dedicated support' },
+      { title:'Upgrading your plan',
+        body:'Click UPGRADE in the sidebar (look for the orange dot) or go to Billing & Plan. Select your desired plan and click the plan button. You\'ll be redirected to Stripe\'s secure checkout.\n\nPayment is processed by Stripe — we never see your card details. Accepted: all major credit/debit cards, Apple Pay, Google Pay.\n\nUpgrades take effect immediately. You\'re billed monthly and can cancel anytime.' },
+      { title:'7-day free trial',
+        body:'New accounts get a 7-day free trial with Starter plan features. The trial countdown shows in your header. On day 7, the trial wall appears and you need to enter payment to continue.\n\nNo credit card required to start the trial. You only enter payment information when you choose to upgrade.' },
+      { title:'Cancellation and refunds',
+        body:'You can cancel your subscription anytime from the Billing page. Your access continues until the end of your current billing period.\n\nWe offer a 7-day money-back guarantee on your first paid month if the platform doesn\'t work for your use case. Contact support at contact@erprakashmijar.com.' },
+    ]
+  },
+
+  /* ══ SETTINGS ═════════════════════════════════════════════════ */
+  {
+    id:'settings', icon:'⚙️', title:'API Settings & Configuration',
+    desc:'Connecting the backend, configuring alerts, and managing preferences',
+    tag:'account',
+    sections:[
+      { title:'Connecting your Railway backend',
+        body:'The most important setting. Without a connected backend, only demo data is available.\n\n1. Deploy the backend to Railway (see Getting Started)\n2. Copy your Railway app URL (e.g. https://your-app.up.railway.app)\n3. Paste it in the API URL field\n4. Click TEST CONNECTION\n5. Green ✅ API ONLINE = you\'re connected and ready to scan' },
+      { title:'Required Railway environment variables',
+        body:'Set these in your Railway project → Variables:\n\n• DATABASE_URL — auto-set by Railway when you add PostgreSQL\n• JWT_SECRET_KEY — run: openssl rand -hex 32\n• ANTHROPIC_API_KEY — from console.anthropic.com (for AI features)\n• SENDGRID_API_KEY — from sendgrid.com (for email alerts)\n• HIBP_API_KEY — from haveibeenpwned.com ($3.50/mo, for breach checking)\n• VIRUSTOTAL_API_KEY — from virustotal.com (free)\n• STRIPE_SECRET_KEY — from stripe.com (for payments)\n• ALERT_FROM_EMAIL — your email (e.g. security@yourdomain.com)', cmd:'openssl rand -hex 32' },
+      { title:'Alert preferences',
+        body:'Configure which events trigger notifications:\n• Email alerts on new critical findings (recommended: ON)\n• Email digest frequency (immediate/hourly/daily)\n• Minimum severity to alert (Critical only / High+ / Medium+ / All)\n• Quiet hours (no alerts during specific time ranges)\n• Slack webhook for team notifications (paste your Slack webhook URL)' },
+      { title:'Scheduled scanning',
+        body:'Set up automatic re-scanning so you never have an unmonitored device:\n• Daily scan at a specific time (e.g. 3am server time)\n• Weekly scan (less frequent for stable environments)\n• Scan all devices or specific ones\n\nScheduled scans run via the backend\'s scheduler. Requires backend to be online (Railway keeps it up 24/7). Results appear automatically in your dashboard and trigger alerts if new issues are found.' },
+      { title:'Language and display',
+        body:'Click the language button in the header (flag icon) to switch between:\n• 🇺🇸 English\n• 🇳🇵 नेपाली (Nepali)\n• 🇪🇸 Español (Spanish)\n\nYour language preference is saved automatically and applies across all pages. The dark/light theme toggle is next to the language button.' },
+    ]
+  },
+
+  /* ══ PROFILE & 2FA ════════════════════════════════════════════ */
+  {
+    id:'profile', icon:'👤', title:'Profile & Security',
+    desc:'Managing your account, password, and two-factor authentication',
+    tag:'account',
+    sections:[
+      { title:'Updating your profile',
+        body:'Go to Profile in the sidebar to update:\n• Display name (shown in header and reports)\n• Email address (used for alerts and login)\n• Company name (appears on generated reports)\n• Profile avatar (auto-generated from your name initials)\n\nClick SAVE CHANGES after editing. Email changes require re-verification.' },
+      { title:'Setting up Two-Factor Authentication (2FA)',
+        body:'2FA adds a second layer of protection beyond your password. Even if your password is stolen, attackers can\'t log in without your phone.\n\nTo set up:\n1. Go to Profile → Security → SETUP 2FA\n2. Install an authenticator app (Google Authenticator, Authy, or 1Password)\n3. Scan the QR code with the app\n4. Enter the 6-digit code to verify\n5. Save your backup codes somewhere safe\n\nStrongly recommended for admin accounts.' },
+      { title:'Changing your password',
+        body:'Profile → Security → Change Password:\n1. Enter your current password\n2. Enter a new password (min 8 chars, 1 uppercase, 1 number)\n3. Confirm the new password\n4. Click UPDATE PASSWORD\n\nPassword requirements: minimum 8 characters, at least one uppercase letter, at least one number. Passphrases (3–4 random words) are more secure than complex short passwords.' },
+      { title:'GDPR — Your data rights',
+        body:'Under GDPR, you have rights over your personal data:\n\n• RIGHT TO ACCESS — Download all your data as JSON (Profile → GDPR → Export My Data)\n• RIGHT TO ERASURE — Delete all your data permanently (Profile → GDPR → Delete All My Data)\n\nData export includes: profile information (without password hash), all scan history, audit log of all your actions.\n\nData deletion permanently removes everything. The account email is anonymized but the account record is kept for legal/audit purposes.' },
+    ]
+  },
+
+  /* ══ ADMIN PANEL ══════════════════════════════════════════════ */
+  {
+    id:'admin', icon:'🔑', title:'Admin Panel',
+    desc:'Managing users, audit logs, and platform administration',
+    tag:'account',
+    sections:[
+      { title:'Admin account access',
+        body:'The admin panel is only visible to the admin account (admin@erprakashmijar.com by default). Admins can:\n• View and manage all registered users\n• Change user plans\n• Suspend or delete accounts\n• View the platform-wide audit log\n• See overall platform statistics\n• Export user data for legal/compliance purposes' },
+      { title:'User management',
+        body:'The Users section shows all registered accounts with:\n• Registration date\n• Current plan tier\n• Last login date\n• Account status (Active/Suspended)\n• Total scans run\n\nAdmin actions: Change Plan, Suspend Account, Reset Password, View Audit Log, Export Data, Delete Account.' },
+      { title:'Audit log',
+        body:'Every significant action on the platform is logged:\n• Login attempts (success and failure)\n• Scans initiated\n• AI fix requests\n• Billing changes\n• Admin actions\n• GDPR requests (data export/deletion)\n\nLogs include: user ID, action, target resource, IP address, user agent, timestamp, and result (success/failure).\n\nRetention: 90 days on Starter, 1 year on Professional/Enterprise.' },
+      { title:'Demo accounts',
+        body:'The platform ships with 3 demo accounts for testing:\n\n• admin@erprakashmijar.com / Admin@2026 — Full admin access\n• client@demo.com / Client@123 — Client portal access only\n• user@demo.com / User@1234 — Standard dashboard access\n\n⚠️ Change these passwords or disable demo accounts before going to production. Demo accounts are well-known and public.' },
+    ]
+  },
+
+  /* ══ LEGAL & AUTHORIZATION ════════════════════════════════════ */
+  {
+    id:'legal', icon:'⚖️', title:'Legal & Authorization',
+    desc:'Understanding the legal requirements for security testing',
+    tag:'beginner',
+    sections:[
+      { title:'Why legal authorization matters',
+        body:'Security scanning without authorization is a CRIME in most countries:\n\n• USA — Computer Fraud and Abuse Act (CFAA) 18 U.S.C. § 1030 — up to 10 years prison\n• UK — Computer Misuse Act 1990 — up to 5 years prison\n• EU — Directive 2013/40/EU — criminal offense across all member states\n• Nepal — Electronic Transaction Act 2063 — criminal penalties\n\nThis applies even if you meant no harm. "I was just testing" is not a legal defense without a signed authorization document.' },
+      { title:'The Engagement Agreement',
+        body:'Before scanning ANY system that isn\'t yours:\n1. Go to Legal Agreement in the sidebar\n2. Fill in the client/system owner details\n3. Specify exactly which systems are in scope\n4. Get the document signed (DocuSign, HelloSign, or wet signature)\n5. Keep a copy before starting any testing\n\nThe agreement template covers: scope definition, liability limitation, data handling, test windows, and emergency contacts.' },
+      { title:'What you CAN scan without authorization',
+        body:'You can always scan without extra authorization:\n• Your own servers (you own them)\n• Servers your employer owns (if your role covers security)\n• Your home lab / test VMs\n• Cloud instances in accounts you own (AWS, DigitalOcean, etc.)\n• Servers where you\'ve signed a Terms of Service that explicitly permits security testing (e.g. Hack The Box, TryHackMe, HackerOne bug bounties)' },
+      { title:'Responsible disclosure',
+        body:'If you find a vulnerability on a system you weren\'t supposed to scan:\n1. Stop immediately — do not explore further\n2. Document what you found without exploiting it\n3. Contact the organization\'s security team (look for security.txt at /.well-known/security.txt)\n4. Give them 90 days to fix before public disclosure\n5. Do not demand payment or you cross into extortion\n\nHackerOne and Bugcrowd run legitimate bug bounty programs where companies pay for responsible disclosure.' },
+    ]
+  },
+
+  /* ══ CLOUD SCANNER ════════════════════════════════════════════ */
+  {
+    id:'cloud-scan', icon:'☁️', title:'Cloud Security Scanner',
+    desc:'Scanning AWS, Azure, and Google Cloud configurations',
+    tag:'advanced',
+    sections:[
+      { title:'What the cloud scanner checks',
+        body:'Cloud misconfigurations are the #1 cause of data breaches (Capital One, Uber, Twitter). The scanner checks:\n\n• AWS S3 buckets — publicly accessible? Encrypted? Versioning enabled?\n• AWS IAM — overpermissioned users? MFA required? Root account usage?\n• AWS Security Groups — port 0.0.0.0/0 open? SSH/RDP exposed to internet?\n• AWS CloudTrail — logging enabled? Log integrity enabled?\n• Azure Storage — public blob access? Secure transfer required?\n• GCP Firewall rules — overly permissive rules?\n• Cloud database exposure — RDS, CloudSQL publicly accessible?' },
+      { title:'Connecting cloud accounts',
+        body:'The cloud scanner uses read-only API access — it never modifies anything.\n\nFor AWS:\n1. Create an IAM user with SecurityAudit policy (read-only)\n2. Generate an access key and secret\n3. Enter in Settings → Cloud Credentials\n\nFor GCP:\n1. Create a Service Account with Viewer role\n2. Download the JSON key file\n3. Upload in Settings → Cloud Credentials', cmd:'aws iam create-user --user-name pm-offsec-readonly && aws iam attach-user-policy --user-name pm-offsec-readonly --policy-arn arn:aws:iam::aws:policy/SecurityAudit' },
+    ]
+  },
+
+  /* ══ PASSWORD AUDIT ═══════════════════════════════════════════ */
+  {
+    id:'passwords', icon:'🔐', title:'Password Audit',
+    desc:'Checking if your passwords appear in known data breaches',
+    tag:'features',
+    sections:[
+      { title:'How the password checker works',
+        body:'The password audit uses k-Anonymity — the most privacy-preserving method possible:\n\n1. Type your password (it never leaves your browser)\n2. Your browser computes the SHA-1 hash locally\n3. Only the first 5 characters of the hash are sent to HaveIBeenPwned\n4. HIBP returns all matching hash suffixes\n5. Your browser checks if your full hash is in the results\n6. Result: "This password has been seen X times in breaches"\n\nHaveIBeenPwned never sees your actual password. This is completely safe to use.' },
+      { title:'What to do if your password is in a breach',
+        body:'If the checker finds your password in a breach:\n1. Change that password immediately everywhere you use it\n2. Enable 2FA on all accounts that used it\n3. Check if those accounts show any unauthorized activity\n4. Use a password manager (1Password, Bitwarden, or Dashlane) to generate unique passwords for every site\n\nRule: every account should have a unique password. If one site is breached, others stay safe.' },
+      { title:'Strong password guidelines',
+        body:'What makes a strong password:\n✅ 16+ characters\n✅ Random mix of letters, numbers, symbols\n✅ Or a passphrase (4 random words: "correct-horse-battery-staple")\n✅ Unique — never used on any other site\n✅ Stored in a password manager\n\n❌ Never use: names, dates, dictionary words, keyboard patterns (qwerty, 123456)\n❌ Never reuse passwords across sites\n❌ Never write them on sticky notes' },
+    ]
+  },
+
+  /* ══ REPORTS ══════════════════════════════════════════════════ */
+  {
+    id:'reports', icon:'📑', title:'Reports & Exports',
+    desc:'Generating and exporting security reports for clients and management',
+    tag:'features',
+    sections:[
+      { title:'Report types',
+        body:'The Reports page generates:\n\n• SCAN REPORT — All findings from a specific scan, with CVSS scores and remediation steps\n• EXECUTIVE REPORT — High-level risk summary for non-technical stakeholders (one page, plain language)\n• COMPARISON REPORT — How security posture changed between two scan dates\n• COMPLIANCE REPORT — Current status against each compliance framework\n• DEVICE FLEET REPORT — Overview of all devices and their risk scores\n• INCIDENT REPORT — Summary of all incidents in a time period' },
+      { title:'Exporting formats',
+        body:'• TXT — plain text, works everywhere, good for records\n• JSON — structured data, import into other tools or SIEM\n• PDF — professional layout, good for client delivery (requires AI for executive summary, Pro/Enterprise)\n• CSV — spreadsheet-friendly, for tracking findings over time in Excel\n\nTXT and JSON available on all plans. PDF on Pro and Enterprise.' },
+      { title:'Scheduling automatic reports',
+        body:'On Pro and Enterprise plans, you can schedule automatic report generation:\n• Weekly digest every Monday morning\n• Monthly executive summary on the 1st of each month\n• After every scan (immediate)\n\nReports are emailed to your account email and any additional recipients you configure.' },
+    ]
+  },
+
+  /* ══ THREAT HUNTING ═══════════════════════════════════════════ */
+  {
+    id:'threat-hunting', icon:'🏹', title:'Threat Hunting',
+    desc:'Proactively searching for hidden threats that evade automated detection',
+    tag:'advanced',
+    sections:[
+      { title:'What is threat hunting?',
+        body:'Threat hunting is proactive security — actively looking for signs of compromise that automated tools might miss. While scanners and SIEMs respond to known signatures, threat hunters look for anomalous patterns that indicate an attacker is already inside.\n\nEstimates suggest attackers dwell in networks for an average of 197 days before detection. Threat hunting finds them faster.' },
+      { title:'MITRE ATT&CK based hunting',
+        body:'The threat hunting page uses MITRE ATT&CK tactics as hunting hypotheses:\n\n• TA0001 Initial Access — was an unusual login method used recently?\n• TA0002 Execution — any new or unusual processes spawned?\n• TA0003 Persistence — new cron jobs, services, or startup scripts?\n• TA0004 Privilege Escalation — any sudo commands from non-admin accounts?\n• TA0005 Defense Evasion — log clearing, timestamp modification?\n• TA0006 Credential Access — password file access, hash dumping attempts?\n• TA0008 Lateral Movement — SSH connections between internal systems?\n• TA0009 Collection — large file access or archive creation?\n• TA0010 Exfiltration — unusual outbound data volumes?' },
+      { title:'Starting a hunt',
+        body:'Click START THREAT HUNT on the Threat Hunting page. The system analyzes your current scan data and recent activity logs against MITRE ATT&CK patterns.\n\nFor each tactic, it shows:\n• Risk level (Critical/High/Medium/Low)\n• Evidence found (or "no anomalous patterns detected")\n• Recommended investigation steps\n• Relevant MITRE technique ID (e.g. T1078 Valid Accounts)\n\nFor full threat hunting, connect Wazuh or Splunk for 24/7 log data.' },
+    ]
+  },
+
+  /* ══ RISK MATRIX ══════════════════════════════════════════════ */
+  {
+    id:'risk-matrix', icon:'📉', title:'Risk Matrix',
+    desc:'Visualizing and prioritizing your security risks',
+    tag:'features',
+    sections:[
+      { title:'Reading the risk matrix',
+        body:'The risk matrix plots your vulnerabilities on a 5×5 grid:\n• X-axis: Likelihood of exploitation (1=Unlikely, 5=Almost Certain)\n• Y-axis: Impact if exploited (1=Minimal, 5=Catastrophic)\n\nFindings in the top-right quadrant (High Likelihood + High Impact) are your #1 priority. Fix these first, they represent the highest real-world risk.\n\nFindings in the bottom-left quadrant are informational — worth noting but not urgent.' },
+      { title:'Using the matrix to prioritize',
+        body:'CVSS score alone doesn\'t always capture real risk. The matrix adjusts for context:\n\n• A critical CVE in software you don\'t use = lower actual risk\n• A medium-severity misconfiguration on an internet-facing server = higher actual risk\n\nRule of thumb:\n1. Fix everything in the red zone (top-right) immediately\n2. Schedule yellow zone fixes within the week\n3. Plan green zone fixes for next sprint/month\n4. Document accepted risks in the blue zone' },
+    ]
+  },
+
+  /* ══ EXECUTIVE DASHBOARD ══════════════════════════════════════ */
+  {
+    id:'executive', icon:'👔', title:'Executive Dashboard',
+    desc:'Security posture overview for leadership and board reporting',
+    tag:'features',
+    sections:[
+      { title:'Who the executive dashboard is for',
+        body:'The executive dashboard is designed for non-technical stakeholders — CEOs, CFOs, board members, and clients who need to understand security status without technical details.\n\nIt shows:\n• Overall risk rating (LOW/MEDIUM/HIGH/CRITICAL) in plain language\n• Security score trend over 90 days\n• Number of open critical issues\n• Recent incidents and their status\n• Compliance posture across frameworks\n• Comparison to previous month' },
+      { title:'Using it for client reporting',
+        body:'For security consultants, the executive dashboard is perfect for monthly client check-ins:\n1. Share screen or export screenshot\n2. Walk through the risk trend (improving or declining?)\n3. Highlight the 3 most important issues\n4. Show compliance progress\n5. Summarize work done this month and planned for next month\n\nClients understand the dashboard without needing security knowledge.' },
+    ]
+  },
+
 ];
 
 function renderLearnContent(filter) {
@@ -9911,18 +10330,175 @@ var DW_SOURCES = [
 ];
 
 function renderDarkWeb() {
-  var sources = document.getElementById('dwSources');
-  if (sources) {
-    sources.innerHTML = DW_SOURCES.map(function(s) {
-      var statCol = s.status==='active'?'var(--ok)':'var(--warn)';
+  // Populate sources panel
+  var sourcesEl = document.getElementById('dwSources');
+  if (sourcesEl) {
+    sourcesEl.innerHTML = DW_SOURCES.map(function(s) {
+      var statCol = s.status==='active' ? 'var(--ok)' : 'var(--warn)';
       return '<div style="display:flex;align-items:center;gap:.7rem;padding:.45rem 0;border-bottom:1px solid rgba(0,255,136,.05)">'
-        +'<span style="font-size:.9rem">'+s.icon+'</span>'
-        +'<div style="flex:1"><div style="font-family:var(--mono);font-size:.63rem;color:var(--text2)">'+s.name+'</div>'
-        +'<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">'+s.monitored+'</div></div>'
-        +'<span style="font-family:var(--mono);font-size:.55rem;color:'+statCol+'">&#9679; '+s.status.toUpperCase()+'</span>'
-        +'</div>';
+        + '<span style="font-size:.9rem">' + s.icon + '</span>'
+        + '<div style="flex:1">'
+        +   '<div style="font-family:var(--mono);font-size:.63rem;color:var(--text2)">' + s.name + '</div>'
+        +   '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">' + s.monitored + '</div>'
+        + '</div>'
+        + '<span style="font-family:var(--mono);font-size:.55rem;color:' + statCol + '">&#9679; ' + s.status.toUpperCase() + '</span>'
+        + '</div>';
     }).join('');
   }
+
+  // Auto-load threat intel on page open
+  renderDarkWebThreatFeed();
+}
+
+async function renderDarkWebThreatFeed() {
+  var findingsEl = document.getElementById('dwFindings');
+  var credEl     = document.getElementById('dwCredLeaks');
+  var ransomEl   = document.getElementById('dwRansom');
+  var pasteEl    = document.getElementById('dwPastes');
+  var lastEl     = document.getElementById('dwLastCheck');
+  if (!findingsEl) return;
+
+  // Loading state
+  findingsEl.innerHTML = '<div style="text-align:center;padding:2rem">'
+    + '<div style="display:inline-block;width:20px;height:20px;border:2px solid rgba(0,255,136,.2);border-top-color:var(--g);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:.8rem"></div>'
+    + '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted)">Loading threat intelligence...</div>'
+    + '</div>';
+
+  var ransomwareGroups = [];
+  var kevItems = [];
+  var isOnline = typeof API_ONLINE !== 'undefined' && API_ONLINE;
+
+  // Try backend feeds first
+  if (isOnline && typeof SETTINGS !== 'undefined' && SETTINGS.apiUrl) {
+    try {
+      var r = await fetch(SETTINGS.apiUrl + '/api/threat/feed', {headers:{'Content-Type':'application/json'}});
+      if (r.ok) {
+        var data = await r.json();
+        ransomwareGroups = data.ransomware_groups || [];
+        kevItems         = data.exploited_cves    || [];
+      }
+    } catch(e) { console.warn('Dark web feed:', e); }
+  }
+
+  // Build display HTML
+  var html = '';
+
+  // ── Active Ransomware Groups ─────────────────────────────
+  html += '<div class="panel" style="margin-bottom:.9rem">'
+    + '<div class="ph" style="display:flex;align-items:center;gap:.5rem">'
+    +   '<span style="font-size:.9rem">&#127990;</span>'
+    +   '<div class="pt">ACTIVE RANSOMWARE GROUPS</div>'
+    +   '<span style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-left:auto">Live · Ransomwatch</span>'
+    + '</div>'
+    + '<div class="pb">';
+
+  if (ransomwareGroups.length) {
+    html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.5rem;margin-bottom:.5rem">';
+    ransomwareGroups.slice(0, 8).forEach(function(g) {
+      html += '<div style="background:rgba(255,59,92,.04);border:1px solid rgba(255,59,92,.12);border-radius:6px;padding:.55rem .7rem">'
+        + '<div style="font-family:var(--mono);font-size:.63rem;color:var(--white);font-weight:700;margin-bottom:.15rem">' + (g.name||'Unknown') + '</div>'
+        + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">' + (g.posts||0) + ' known victims</div>'
+        + '<div style="font-family:var(--mono);font-size:.52rem;color:var(--danger);margin-top:.2rem">&#9679; ACTIVE</div>'
+        + '</div>';
+    });
+    html += '</div>';
+    if (ransomEl) ransomEl.textContent = ransomwareGroups.length;
+  } else {
+    // Demo data when offline
+    var demoGroups = ['LockBit 3.0','ALPHV/BlackCat','Cl0p','Play','RansomHub','8Base','Medusa','Hunters'];
+    html += '<div style="background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.15);border-radius:6px;padding:.5rem .8rem;margin-bottom:.5rem;font-family:var(--mono);font-size:.58rem;color:var(--warn)">'
+      + '&#9888; DEMO MODE — Connect backend to load live ransomware tracker'
+      + '</div>';
+    html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.4rem">';
+    demoGroups.forEach(function(name) {
+      html += '<div style="background:rgba(255,59,92,.04);border:1px solid rgba(255,59,92,.1);border-radius:5px;padding:.45rem .6rem;font-family:var(--mono);font-size:.6rem">'
+        + '<div style="color:var(--white);font-weight:700">' + name + '</div>'
+        + '<div style="color:var(--danger);font-size:.52rem;margin-top:.1rem">&#9679; ACTIVE</div>'
+        + '</div>';
+    });
+    html += '</div>';
+    if (ransomEl) ransomEl.textContent = '8';
+  }
+  html += '</div></div>';
+
+  // ── CISA Known Exploited CVEs ────────────────────────────
+  html += '<div class="panel" style="margin-bottom:.9rem">'
+    + '<div class="ph" style="display:flex;align-items:center;gap:.5rem">'
+    +   '<span style="font-size:.9rem">&#128683;</span>'
+    +   '<div class="pt">CISA KNOWN EXPLOITED VULNERABILITIES</div>'
+    +   '<span style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-left:auto">Live · cisa.gov</span>'
+    + '</div>'
+    + '<div class="pb">';
+
+  if (kevItems.length) {
+    html += kevItems.slice(0,6).map(function(v) {
+      return '<div style="display:flex;align-items:center;gap:.6rem;padding:.45rem 0;border-bottom:1px solid rgba(255,59,92,.07)">'
+        + '<span style="font-family:var(--mono);font-size:.58rem;color:var(--danger);min-width:120px;flex-shrink:0">' + (v.cve_id||'CVE') + '</span>'
+        + '<div style="flex:1;min-width:0">'
+        +   '<div style="font-family:var(--mono);font-size:.62rem;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + (v.vuln_name||v.description||'') + '</div>'
+        +   '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">' + (v.vendor||'') + ' ' + (v.product||'') + ' · Added: ' + (v.date_added||'') + '</div>'
+        + '</div>'
+        + '<span style="font-family:var(--mono);font-size:.52rem;color:var(--danger);white-space:nowrap;flex-shrink:0">ACTIVELY EXPLOITED</span>'
+        + '</div>';
+    }).join('');
+  } else {
+    // Demo KEV data
+    var demoCVEs = [
+      {id:'CVE-2024-3400',name:'PAN-OS Command Injection',vendor:'Palo Alto Networks',days:'2 days ago'},
+      {id:'CVE-2024-21887',name:'ConnectSecure SQL Injection',vendor:'Ivanti',days:'5 days ago'},
+      {id:'CVE-2023-46805',name:'Authentication Bypass',vendor:'Ivanti',days:'8 days ago'},
+      {id:'CVE-2024-27198',name:'JetBrains TeamCity RCE',vendor:'JetBrains',days:'12 days ago'},
+    ];
+    html += '<div style="background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.15);border-radius:6px;padding:.5rem .8rem;margin-bottom:.5rem;font-family:var(--mono);font-size:.58rem;color:var(--warn)">'
+      + '&#9888; DEMO MODE — Connect backend to load live CISA KEV feed'
+      + '</div>';
+    html += demoCVEs.map(function(v) {
+      return '<div style="display:flex;align-items:center;gap:.6rem;padding:.4rem 0;border-bottom:1px solid rgba(255,59,92,.07)">'
+        + '<span style="font-family:var(--mono);font-size:.58rem;color:var(--danger);min-width:120px">' + v.id + '</span>'
+        + '<div style="flex:1"><div style="font-family:var(--mono);font-size:.62rem;color:var(--white)">' + v.name + '</div>'
+        + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">' + v.vendor + ' · ' + v.days + '</div></div>'
+        + '<span style="font-family:var(--mono);font-size:.52rem;color:var(--danger)">EXPLOITED</span></div>';
+    }).join('');
+  }
+  html += '</div></div>';
+
+  // ── Breach Check Tool ────────────────────────────────────
+  html += '<div class="panel" style="margin-bottom:.9rem">'
+    + '<div class="ph"><div class="pt">&#128268; BREACH CHECK TOOL</div></div>'
+    + '<div class="pb">'
+    +   '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-bottom:.7rem">Check if an email address appears in known data breaches (HaveIBeenPwned)</div>'
+    +   '<div style="display:flex;gap:.6rem">'
+    +     '<input id="dwBreachEmail" class="form-input" type="email" placeholder="email@company.com" style="flex:1"/>'
+    +     '<button onclick="dwDoBreachCheck()" class="btn btn-g btn-sm">CHECK BREACH</button>'
+    +   '</div>'
+    +   '<div id="breachResults" style="margin-top:.6rem"></div>'
+    + '</div>'
+    + '</div>';
+
+  // ── Monitor targets summary ──────────────────────────────
+  html += '<div class="panel">'
+    + '<div class="ph"><div class="pt">&#128269; RUN DOMAIN SCAN</div></div>'
+    + '<div class="pb">'
+    +   '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-bottom:.7rem">Enter your company domain and email pattern to search dark web sources for mentions, leaked credentials, and ransomware targeting</div>'
+    +   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.6rem">'
+    +     '<input id="dwDomain" class="form-input" placeholder="company.com"/>'
+    +     '<input id="dwEmail" class="form-input" placeholder="@company.com"/>'
+    +   '</div>'
+    +   '<button onclick="runDarkWebScan()" class="btn btn-g btn-sm" style="width:100%">&#128565; SCAN DARK WEB SOURCES</button>'
+    + '</div>'
+    + '</div>';
+
+  findingsEl.innerHTML = html;
+  if (lastEl) lastEl.textContent = new Date().toLocaleTimeString();
+  if (credEl)  credEl.textContent = '0';
+  if (pasteEl) pasteEl.textContent = '0';
+}
+
+function dwDoBreachCheck() {
+  var email = (document.getElementById('dwBreachEmail')||{}).value || '';
+  if (!email) { if(typeof showToast==='function') showToast('Enter an email address','warn'); return; }
+  if(typeof checkEmailBreachReal==='function') checkEmailBreachReal(email);
+  else if(typeof showToast==='function') showToast('Connect backend for real breach checking','info');
 }
 
 async function runDarkWebScan() {
