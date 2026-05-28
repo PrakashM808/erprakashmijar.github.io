@@ -2815,6 +2815,18 @@ async function runLocalScan() {
 
   addDevice(scanData);
   btn.disabled=false; btn.textContent='START LOCAL SCAN →';
+
+  // Render results
+  renderScanResult(scanData);
+  renderDevicesGrid();
+  renderDashboard();
+  renderAlerts();
+  updateDeviceSelects();
+  if (typeof showToast === 'function') {
+    var score = scanData.security_score || 0;
+    var issues = (scanData.issues || []).length;
+    showToast('Scan complete — Score: ' + score + '/100, ' + issues + ' findings', score >= 75 ? 'ok' : 'warn');
+  }
 }
 
 async function runRemoteScan() {

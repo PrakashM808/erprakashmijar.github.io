@@ -9,29 +9,28 @@ const AUTH = (() => {
 
   /* ── Default built-in accounts ──────────────────────────── */
   const DEFAULTS = [
+    // ── YOUR REAL ADMIN ACCOUNT ──────────────────────────────────
+    // IMPORTANT: Change the password below to your own strong password
+    // before deploying. This is the only admin account.
     {
       id: 'admin-1', name: 'Prakash Mijar',
-      email: 'admin@erprakashmijar.com', password: 'Admin@2026',  // Demo credential — change for production
-      role: 'admin', avatar: 'PM', created: '2026-01-01',
-      phone: '+1 (555) 000-0001', company: 'PM::OFFSEC',
-      plan: 'enterprise'  /* admin always gets enterprise = unlimited */, status: 'active',
-      lastLogin: null, loginCount: 0, notes: 'System admin account'
+      email: 'admin@erprakashmijar.com',
+      password: 'Admin@2026',  // ⚠️ CHANGE THIS PASSWORD BEFORE GO-LIVE
+      role: 'admin', avatar: 'PM', created: '2026-05-28',
+      phone: '+977', company: 'PM::OFFSEC',
+      plan: 'enterprise', status: 'active',
+      lastLogin: null, loginCount: 0,
+      notes: 'Platform owner — full admin access'
     },
+    // ── DEMO CLIENT (for showing clients how the portal looks) ───
     {
-      id: 'client-1', name: 'Demo Client',
-      email: 'client@demo.com', password: 'Client@123',  // Demo only
-      role: 'client', avatar: 'DC', created: '2026-01-01',
-      phone: '', company: 'Demo Corp',
+      id: 'demo-client-1', name: 'Demo Client',
+      email: 'client@demo.com', password: 'Client@Demo1',
+      role: 'client', avatar: 'DC', created: '2026-05-28',
+      phone: '', company: 'Demo Corporation',
       plan: 'starter', status: 'active',
-      lastLogin: null, loginCount: 0, notes: 'Demo client account'
-    },
-    {
-      id: 'user-1', name: 'Demo User',
-      email: 'user@demo.com', password: 'User@1234',   // Demo only
-      role: 'user', avatar: 'DU', created: '2026-01-01',
-      phone: '', company: 'Demo Business',
-      plan: 'starter', status: 'active',
-      lastLogin: null, loginCount: 0, notes: 'Demo user account'
+      lastLogin: null, loginCount: 0,
+      notes: 'Demo account — safe to share with prospects'
     },
   ];
 
