@@ -291,6 +291,7 @@
   <!-- Tabs -->
   <div class="tabs no-print">
     <button class="tab active" onclick="tab('issues')">Issues &amp; Fixes</button>
+    <button class="tab" onclick="tab('team')">Team &amp; Devices</button>
     <button class="tab" onclick="tab('timeline')">Fix Timeline</button>
     <button class="tab" onclick="tab('summary')">Executive Summary</button>
     <button class="tab" onclick="tab('history')">History</button>
@@ -309,6 +310,40 @@
       </div>
     </div>
     <div id="issueList"><div class="loading"><div class="spinner"></div>Loading your issues...</div></div>
+  </div>
+
+  <!-- Team & Devices tab -->
+  <div class="tab-pane" id="tp-team">
+    <div class="card">
+      <div class="card-hdr"><div><div class="card-title">&#128187; Your Team &amp; Devices</div><div class="card-sub">Add your employees' laptops and devices so we can monitor their security</div></div></div>
+      <div style="padding:1rem 0;display:grid;grid-template-columns:1fr 1fr;gap:.7rem;max-width:680px">
+        <div><label style="font-size:.72rem;color:var(--gray-500);display:block;margin-bottom:.25rem">Employee name</label><input id="td_emp" placeholder="e.g. Jane Smith" style="width:100%;padding:.55rem .7rem;border:1px solid var(--gray-300);border-radius:8px;font-size:.85rem"/></div>
+        <div><label style="font-size:.72rem;color:var(--gray-500);display:block;margin-bottom:.25rem">Employee email</label><input id="td_email" placeholder="jane@company.com" style="width:100%;padding:.55rem .7rem;border:1px solid var(--gray-300);border-radius:8px;font-size:.85rem"/></div>
+        <div><label style="font-size:.72rem;color:var(--gray-500);display:block;margin-bottom:.25rem">Device name *</label><input id="td_dev" placeholder="e.g. Jane-Laptop" style="width:100%;padding:.55rem .7rem;border:1px solid var(--gray-300);border-radius:8px;font-size:.85rem"/></div>
+        <div><label style="font-size:.72rem;color:var(--gray-500);display:block;margin-bottom:.25rem">Operating system</label><input id="td_os" placeholder="e.g. Windows 11" style="width:100%;padding:.55rem .7rem;border:1px solid var(--gray-300);border-radius:8px;font-size:.85rem"/></div>
+      </div>
+      <button onclick="addOrgDevice()" style="background:var(--blue);color:#fff;border:none;padding:.55rem 1.1rem;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer">&#10133; Add Device</button>
+      <span id="td_msg" style="margin-left:.7rem;font-size:.78rem"></span>
+    </div>
+
+    <div class="card" style="margin-top:1rem">
+      <div class="card-hdr"><div><div class="card-title">Registered Devices</div><div class="card-sub" id="td_count">—</div></div></div>
+      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.82rem">
+        <thead><tr style="text-align:left;color:var(--gray-500);font-size:.72rem">
+          <th style="padding:.5rem">DEVICE</th><th style="padding:.5rem">EMPLOYEE</th><th style="padding:.5rem">OS</th><th style="padding:.5rem">ADDED BY</th><th style="padding:.5rem"></th>
+        </tr></thead>
+        <tbody id="td_table"></tbody>
+      </table></div>
+    </div>
+
+    <div class="card" style="margin-top:1rem">
+      <div class="card-hdr"><div><div class="card-title">&#128279; Invite Employees</div><div class="card-sub">Share this code so employees can register and add their own devices</div></div></div>
+      <div style="padding:.8rem 0;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">
+        <code id="td_orgcode" style="background:var(--gray-100);padding:.5rem .9rem;border-radius:8px;font-size:.85rem;color:var(--blue);font-weight:600">—</code>
+        <button onclick="copyOrgCode()" style="background:var(--gray-100);border:1px solid var(--gray-300);padding:.45rem .8rem;border-radius:8px;font-size:.78rem;cursor:pointer">&#128203; Copy code</button>
+        <span style="font-size:.74rem;color:var(--gray-500)">Employees register at <strong>erprakashmijar.com/client/join.html</strong> with this code.</span>
+      </div>
+    </div>
   </div>
 
   <!-- Timeline tab -->
@@ -685,11 +720,75 @@ function renderHistory() {
 
 /* ── INTERACTIONS ── */
 function tab(name) {
-  var names=['issues','timeline','summary','history'];
-  document.querySelectorAll('.tab').forEach(function(t,i){ t.classList.toggle('active',names[i]===name); });
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.classList.toggle('active', (t.getAttribute('onclick')||'').indexOf("'"+name+"'")!==-1);
+  });
   document.querySelectorAll('.tab-pane').forEach(function(p){ p.classList.remove('active'); });
   var tp=document.getElementById('tp-'+name);
   if(tp) tp.classList.add('active');
+  if(name==='team') loadOrgDevices();
+}
+
+/* ── Team & Devices (employees + laptops) ── */
+function teamBackendUrl() {
+  try { var s=JSON.parse(localStorage.getItem('pm_settings_v3')||'null'); if(s&&s.apiUrl) return s.apiUrl.replace(/\/$/,''); } catch(e){}
+  var local=location.hostname==='localhost'||location.hostname==='127.0.0.1';
+  return local?'http://localhost:8000':(localStorage.getItem('pm_railway_url')||'https://pm-offsec-backend-production.up.railway.app');
+}
+async function loadOrgDevices() {
+  var s=AUTH.getSession();
+  var code=document.getElementById('td_orgcode'); if(code) code.textContent=(s&&s.id)||'—';
+  var tbody=document.getElementById('td_table'); var cnt=document.getElementById('td_count');
+  if(!tbody) return;
+  try {
+    var tok=localStorage.getItem('pm_jwt_token')||'';
+    var r=await fetch(teamBackendUrl()+'/api/org/devices',{headers:{'Authorization':'Bearer '+tok}});
+    if(!r.ok) throw new Error(r.status);
+    var d=await r.json();
+    if(cnt) cnt.textContent=d.device_count+' device'+(d.device_count===1?'':'s')+' registered';
+    if(!d.devices.length){ tbody.innerHTML='<tr><td colspan="5" style="padding:1.2rem;text-align:center;color:var(--gray-400)">No devices yet. Add one above, or share your invite code with employees.</td></tr>'; return; }
+    tbody.innerHTML=d.devices.map(function(dv){
+      return '<tr style="border-top:1px solid var(--gray-200)">'
+        +'<td style="padding:.6rem .5rem;font-weight:600">'+esc(dv.device_name)+'</td>'
+        +'<td style="padding:.6rem .5rem">'+esc(dv.employee_name||dv.employee_email||'—')+'</td>'
+        +'<td style="padding:.6rem .5rem;color:var(--gray-500)">'+esc(dv.os||'—')+'</td>'
+        +'<td style="padding:.6rem .5rem"><span style="font-size:.7rem;background:'+(dv.added_by==='employee'?'#eef2ff;color:#4338ca':'#ecfdf5;color:#047857')+';padding:.1rem .45rem;border-radius:4px">'+dv.added_by+'</span></td>'
+        +'<td style="padding:.6rem .5rem;text-align:right"><button onclick="removeOrgDevice(\''+dv.id+'\')" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:.9rem" title="Remove">&#128465;</button></td>'
+        +'</tr>';
+    }).join('');
+  } catch(e) {
+    if(cnt) cnt.textContent='Connect to the server to manage devices';
+    tbody.innerHTML='<tr><td colspan="5" style="padding:1.2rem;text-align:center;color:var(--gray-400)">Could not load devices (offline).</td></tr>';
+  }
+}
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+async function addOrgDevice() {
+  var dev=document.getElementById('td_dev').value.trim();
+  var msg=document.getElementById('td_msg');
+  if(!dev){ msg.textContent='Device name is required.'; msg.style.color='#dc2626'; return; }
+  var body={ employee_name:document.getElementById('td_emp').value.trim(), employee_email:document.getElementById('td_email').value.trim(),
+             device_name:dev, os:document.getElementById('td_os').value.trim() };
+  try {
+    var tok=localStorage.getItem('pm_jwt_token')||'';
+    var r=await fetch(teamBackendUrl()+'/api/org/devices',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify(body)});
+    if(!r.ok) throw new Error(r.status);
+    msg.textContent='\u2713 Device added'; msg.style.color='#16a34a';
+    ['td_emp','td_email','td_dev','td_os'].forEach(function(id){document.getElementById(id).value='';});
+    loadOrgDevices();
+  } catch(e){ msg.textContent='Could not add device (offline or not signed in).'; msg.style.color='#dc2626'; }
+}
+async function removeOrgDevice(id) {
+  if(!confirm('Remove this device?')) return;
+  try {
+    var tok=localStorage.getItem('pm_jwt_token')||'';
+    await fetch(teamBackendUrl()+'/api/org/devices/'+id,{method:'DELETE',headers:{'Authorization':'Bearer '+tok}});
+    loadOrgDevices();
+  } catch(e){}
+}
+function copyOrgCode() {
+  var s=AUTH.getSession(); if(!s) return;
+  navigator.clipboard.writeText(s.id).then(function(){ var m=document.getElementById('td_msg'); }).catch(function(){});
+  alert('Invite code copied: '+s.id+'\n\nShare it with employees so they can register their devices.');
 }
 
 function toggleIss(id) {
@@ -742,7 +841,9 @@ function toast(msg, color) {
 /* ── INIT ── */
 (function(){
   var s=AUTH.getSession();
+  var preview = /[?&]preview=1/.test(location.search);
   if (s && s.id) {
+    if (preview) { showPortal(); return; }   // admin previewing — don't bounce
     // Route mismatched roles to their own surface.
     if (s.role === 'admin') { location.replace('../admin/index.html'); return; }
     if (s.role && s.role !== 'client') { location.replace('../dashboard/index.html?stay=1'); return; }

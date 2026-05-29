@@ -34,6 +34,7 @@ from scheduler import (add_schedule, remove_schedule, pause_schedule,
 import anthropic
 from database import (
     init_db, user_create, user_get, user_get_by_email, user_update, user_delete,
+    org_device_add, org_devices_get, org_device_delete,
     user_record_login, users_get_all, scan_save, scan_get_history,
     scan_get_all_history, scan_get_recent, scan_count_increment,
     scan_count_get_today, incident_create, incident_get_all, incident_update,
@@ -1896,6 +1897,84 @@ def update_my_profile(req: ProfileUpdateReq, user: dict = Depends(get_current_us
         raise HTTPException(404, "User not found")
     updated = user_get(user["user_id"]) or {}
     return {"ok": True, "profile": _safe_user(updated)}
+
+# ── Org / Employee / Device management (client → employees → laptops) ──
+def _org_id_for(user: dict) -> str:
+    """A client's org is their own user id; employees carry org_id in their record."""
+    rec = user_get(user["user_id"]) or {}
+    return rec.get("org_id") or user["user_id"]
+
+class OrgDeviceReq(BaseModel):
+    employee_name: str = ""
+    employee_email: str = ""
+    device_name: str
+    device_type: str = "laptop"
+    os: str = ""
+
+@app.get("/api/org/devices")
+def org_devices_list(user: dict = Depends(get_current_user)):
+    """List devices for the caller's org. Clients see all org devices;
+    employees see the org they belong to."""
+    org = _org_id_for(user)
+    devices = org_devices_get(org)
+    return {"org_id": org, "device_count": len(devices), "devices": devices}
+
+@app.post("/api/org/devices")
+def org_devices_create(req: OrgDeviceReq, user: dict = Depends(get_current_user)):
+    if not req.device_name.strip():
+        raise HTTPException(400, "Device name is required")
+    org = _org_id_for(user)
+    rec = user_get(user["user_id"]) or {}
+    added_by = "client" if rec.get("role") == "client" else "employee"
+    # Employees can only register devices under their own name/email.
+    if added_by == "employee":
+        dev = org_device_add(org, {"employee_name": rec.get("name",""), "employee_email": rec.get("email",""),
+                                   "device_name": req.device_name, "device_type": req.device_type,
+                                   "os": req.os, "added_by": "employee"})
+    else:
+        dev = org_device_add(org, req.dict() | {"added_by": "client"})
+    return {"ok": True, "device": dev}
+
+@app.delete("/api/org/devices/{device_id}")
+def org_devices_remove(device_id: str, user: dict = Depends(get_current_user)):
+    org = _org_id_for(user)
+    if not org_device_delete(device_id, org):
+        raise HTTPException(404, "Device not found in your organization")
+    return {"ok": True, "deleted": device_id}
+
+class EmployeeJoinReq(BaseModel):
+    name: str
+    email: str
+    password: str
+    org_id: str            # the client's org id (their user id), shared by the client
+
+@app.post("/api/org/employee/register")
+def employee_register(req: EmployeeJoinReq):
+    """An employee self-registers into a client's organization. Their account
+    is created with role 'employee' and linked to the client's org_id, so their
+    devices show up on that client's dashboard."""
+    if not req.org_id:
+        raise HTTPException(400, "An organization code is required")
+    org_owner = user_get(req.org_id)
+    if not org_owner:
+        raise HTTPException(404, "Organization not found")
+    existing = user_get_by_email(req.email.lower())
+    if existing:
+        raise HTTPException(400, "An account with this email already exists")
+    import hashlib, uuid as _uuid
+    uid = str(_uuid.uuid4())[:16]
+    if BCRYPT_AVAILABLE:
+        hashed = bcrypt.hashpw(req.password.encode(), bcrypt.gensalt()).decode()
+    else:
+        hashed = hashlib.sha256(req.password.encode()).hexdigest()
+    user_create(user_id=uid, name=req.name.strip(), email=req.email.lower(), password=hashed, role="employee", plan="free")
+    user_update(uid, org_id=req.org_id)
+    token = ""
+    if JWT_AVAILABLE:
+        token = pyjwt.encode({"sub": req.email.lower(), "user_id": uid, "plan": "free", "role": "employee",
+            "exp": datetime.utcnow()+timedelta(hours=JWT_EXPIRY_HOURS)}, JWT_SECRET, algorithm=JWT_ALGORITHM)
+    return {"ok": True, "access_token": token, "user_id": uid, "email": req.email.lower(),
+            "name": req.name.strip(), "role": "employee", "org_id": req.org_id}
 
 # ── PAYMENT & BILLING ENDPOINTS ──────────────────────────────────
 

@@ -227,7 +227,7 @@
         </div>
         <div class="topbar-right">
           <div style="font-size:.75rem;color:var(--ink4)" id="topDate"></div>
-          <a href="../client/index.html" target="_blank" class="btn btn-out btn-sm">&#128064; View Client Portal</a>
+          <a href="../client/index.html?preview=1" target="_blank" class="btn btn-out btn-sm">&#128064; View Client Portal</a>
         </div>
       </div>
 
@@ -343,7 +343,7 @@
                     <option value="pro">Professional ($79/mo)</option>
                     <option value="enterprise">Enterprise ($199/mo)</option>
                   </select></div>
-                <div class="fg"><label class="flbl">Temporary Password *</label><input class="finp" id="nc_pw" type="password" placeholder="Temp password (client must change)"/></div>
+                <div class="fg"><label class="flbl">Temporary Password *</label><div style="position:relative"><input class="finp" id="nc_pw" type="password" placeholder="Temp password (client must change)" style="padding-right:2.4rem"/><span onclick="var p=document.getElementById('nc_pw');p.type=p.type==='password'?'text':'password';this.textContent=p.type==='password'?'\uD83D\uDC41':'\uD83D\uDE48';" style="position:absolute;right:.7rem;top:50%;transform:translateY(-50%);cursor:pointer;font-size:.95rem;user-select:none">&#128065;</span></div></div>
               </div>
               <div class="fg"><label class="flbl">Notes</label><textarea class="finp" id="nc_notes" rows="3" placeholder="Any notes about this client..." style="resize:vertical"></textarea></div>
               <div style="display:flex;gap:.6rem;margin-top:.4rem">
@@ -464,14 +464,16 @@ async function loadBackendClients() {
 function getAllUsers() { return AUTH.getUsers ? AUTH.getUsers() : []; }
 
 function getClientUsers() {
-  // Prefer real backend clients when loaded; fall back to local user store.
+  // Prefer real backend clients when loaded.
   if (_BACKEND_CLIENTS) {
     return _BACKEND_CLIENTS.map(function(c){
       return { id:c.id, name:c.name||c.email, email:c.email, plan:c.plan, status:c.status,
                role:'client', lastLogin:c.last_scan, _backend:c };
     });
   }
-  return getAllUsers().filter(function(u){ return u.role !== 'admin'; });
+  // Offline fallback: only show users explicitly marked as clients (not every local account),
+  // so the count matches what's really there instead of demo/seed noise.
+  return getAllUsers().filter(function(u){ return u.role === 'client'; });
 }
 
 function getDevicesForUser(userId) {
@@ -637,7 +639,7 @@ function filterClients() {
 
 function viewClientReport(userId) {
   // Open client portal in new tab (they see their own data)
-  window.open('../client/index.html','_blank');
+  window.open('../client/index.html?preview=1','_blank');
 }
 
 function sendClientEmail(email, name) {
@@ -885,21 +887,31 @@ function addNewClient() {
   if(!name||!email||!pw) { err.textContent='Name, email, and password are required.'; err.style.display='block'; return; }
   if(pw.length<8) { err.textContent='Password must be at least 8 characters.'; err.style.display='block'; return; }
 
-  var result=AUTH.register(email,pw,name,plan);
-  if(!result.ok) { err.textContent=result.error||'Could not create account.'; err.style.display='block'; return; }
+  (async function(){
+    // Create a REAL client account on the backend (registerBackend takes name, email, password).
+    var result = await AUTH.registerBackend(name, email, pw);
+    if(!result.ok) { err.textContent=result.error||'Could not create account.'; err.style.display='block'; return; }
 
-  // Update user with extra fields
-  var users=AUTH.getUsers();
-  var idx=users.findIndex(function(u){return u.email===email.toLowerCase();});
-  if(idx>=0){ users[idx].company=org; users[idx].phone=phone; AUTH.saveUsers(users); }
+    var users=AUTH.getUsers();
+    var idx=users.findIndex(function(u){return u.email===email.toLowerCase();});
+    if(idx>=0){ users[idx].role='client'; users[idx].company=org; users[idx].phone=phone; users[idx].plan=plan; AUTH.saveUsers(users); }
+    // Promote to client role on the backend too (admin-only endpoint).
+    try {
+      var tok=localStorage.getItem('pm_jwt_token')||'';
+      if(tok && result.session && result.session.id){
+        await fetch(adminBackendUrl()+'/api/admin/users/'+result.session.id+'/role',
+          {method:'PUT',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify({role:'client'})});
+      }
+    } catch(e){}
 
-  // Clear form
-  ['nc_name','nc_org','nc_email','nc_phone','nc_pw'].forEach(function(id){ document.getElementById(id).value=''; });
-  ok.textContent='Client account created successfully for '+name+' ('+email+'). They can log in at erprakashmijar.com/client/index.html';
-  ok.style.display='block';
-  toast(name+'\'s account created!','#16a34a');
-  renderClients();
-  setTimeout(function(){ap('clients');},2000);
+    ['nc_name','nc_org','nc_email','nc_phone','nc_pw'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+    ok.textContent='Client account created for '+name+' ('+email+'). They can log in at erprakashmijar.com/client/index.html';
+    ok.style.display='block';
+    toast(name+'\'s account created!','#16a34a');
+    await loadBackendClients();
+    renderClients();
+    setTimeout(function(){ap('clients');},1500);
+  })();
 }
 
 /* ── UTILS ── */

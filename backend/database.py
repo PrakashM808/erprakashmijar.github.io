@@ -89,6 +89,7 @@ CREATE TABLE IF NOT EXISTS users (
     phone       TEXT,
     address     TEXT,
     notes       TEXT,
+    org_id      TEXT,
     created_at  TIMESTAMPTZ DEFAULT NOW(),
     last_login  TIMESTAMPTZ,
     login_count INTEGER DEFAULT 0,
@@ -112,6 +113,21 @@ CREATE TABLE IF NOT EXISTS scans (
     raw_data    JSONB DEFAULT '{}',
     scan_type   TEXT DEFAULT 'local',
     created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Org devices: employees & their laptops, owned by a client (org_id = client's user id)
+CREATE TABLE IF NOT EXISTS org_devices (
+    id            TEXT PRIMARY KEY DEFAULT gen_random_uuid()::TEXT,
+    org_id        TEXT,
+    employee_name TEXT,
+    employee_email TEXT,
+    device_name   TEXT,
+    device_type   TEXT DEFAULT 'laptop',
+    os            TEXT,
+    last_score    INTEGER,
+    status        TEXT DEFAULT 'active',
+    added_by      TEXT DEFAULT 'client',
+    created_at    TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Scan counts (for rate limiting)
@@ -244,8 +260,9 @@ def init_db():
             # Idempotent migration: ensure newer columns exist on pre-existing tables.
             try:
                 cur.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS address TEXT")
+                cur.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS org_id TEXT")
             except Exception as mig_e:
-                print(f"[DB] address column migration note: {mig_e}")
+                print(f"[DB] column migration note: {mig_e}")
             print("[DB] Schema initialized ✅")
             return True
     except Exception as e:
@@ -312,7 +329,7 @@ def user_get(user_id: str) -> Optional[dict]:
     return _mem["users"].get(user_id)
 
 def user_update(user_id: str, **kwargs) -> bool:
-    allowed = {"name","email","role","plan","status","company","phone","address","notes","last_login","login_count"}
+    allowed = {"name","email","role","plan","status","company","phone","address","notes","org_id","last_login","login_count"}
     kwargs = {k:v for k,v in kwargs.items() if k in allowed}
     if not kwargs:
         return False
@@ -342,6 +359,61 @@ def user_delete(user_id: str) -> bool:
             print(f"[DB] user_delete error: {e}")
     if user_id in _mem["users"]:
         del _mem["users"][user_id]
+        return True
+    return False
+
+# ── Org device operations (client → employees → laptops) ──────────
+def org_device_add(org_id: str, data: dict) -> dict:
+    import uuid as _uuid
+    dev = {
+        "id": _uuid.uuid4().hex[:16], "org_id": org_id,
+        "employee_name": data.get("employee_name",""),
+        "employee_email": (data.get("employee_email","") or "").lower(),
+        "device_name": data.get("device_name",""),
+        "device_type": data.get("device_type","laptop"),
+        "os": data.get("os",""), "last_score": data.get("last_score"),
+        "status": data.get("status","active"), "added_by": data.get("added_by","client"),
+        "created_at": datetime.utcnow().isoformat(),
+    }
+    if POSTGRES_AVAILABLE:
+        try:
+            with get_db() as conn:
+                cur = conn.cursor()
+                cur.execute("""INSERT INTO org_devices
+                    (id, org_id, employee_name, employee_email, device_name, device_type, os, last_score, status, added_by)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                    (dev["id"], org_id, dev["employee_name"], dev["employee_email"], dev["device_name"],
+                     dev["device_type"], dev["os"], dev["last_score"], dev["status"], dev["added_by"]))
+            return dev
+        except Exception as e:
+            print(f"[DB] org_device_add error: {e}")
+    _mem.setdefault("org_devices", {})[dev["id"]] = dev
+    return dev
+
+def org_devices_get(org_id: str) -> list:
+    if POSTGRES_AVAILABLE:
+        try:
+            with get_db() as conn:
+                cur = conn.cursor()
+                cur.execute("SELECT id, org_id, employee_name, employee_email, device_name, device_type, os, last_score, status, added_by, created_at FROM org_devices WHERE org_id=%s ORDER BY created_at DESC", (org_id,))
+                cols = [d[0] for d in cur.description]
+                return [dict(zip(cols, row)) for row in cur.fetchall()]
+        except Exception as e:
+            print(f"[DB] org_devices_get error: {e}")
+    return [d for d in _mem.get("org_devices", {}).values() if d.get("org_id") == org_id]
+
+def org_device_delete(device_id: str, org_id: str) -> bool:
+    if POSTGRES_AVAILABLE:
+        try:
+            with get_db() as conn:
+                cur = conn.cursor()
+                cur.execute("DELETE FROM org_devices WHERE id=%s AND org_id=%s", (device_id, org_id))
+                return True
+        except Exception as e:
+            print(f"[DB] org_device_delete error: {e}")
+    d = _mem.get("org_devices", {}).get(device_id)
+    if d and d.get("org_id") == org_id:
+        del _mem["org_devices"][device_id]
         return True
     return False
 

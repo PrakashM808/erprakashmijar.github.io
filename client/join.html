@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Join Your Team — PM::OFFSEC</title>
+<meta name="robots" content="noindex"/>
+<style>
+  :root{--blue:#2563eb;--gray-100:#f1f5f9;--gray-200:#e2e8f0;--gray-300:#cbd5e1;--gray-500:#64748b;--green:#16a34a;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.2rem;color:#0f172a}
+  .card{background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.3);width:100%;max-width:440px;padding:2rem}
+  .logo{font-family:'Courier New',monospace;font-weight:700;color:var(--blue);letter-spacing:2px;font-size:1.1rem;margin-bottom:.3rem}
+  h1{font-size:1.4rem;margin-bottom:.3rem}
+  .sub{color:var(--gray-500);font-size:.85rem;margin-bottom:1.4rem}
+  label{font-size:.74rem;color:var(--gray-500);display:block;margin:.7rem 0 .25rem;font-weight:600}
+  input{width:100%;padding:.6rem .8rem;border:1px solid var(--gray-300);border-radius:8px;font-size:.9rem}
+  .pw-wrap{position:relative}
+  .pw-eye{position:absolute;right:.7rem;top:50%;transform:translateY(-50%);cursor:pointer;user-select:none}
+  button{width:100%;margin-top:1.2rem;background:var(--blue);color:#fff;border:none;padding:.75rem;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer}
+  button:hover{background:#1d4ed8}
+  .msg{margin-top:.9rem;font-size:.82rem;padding:.6rem .8rem;border-radius:8px;display:none}
+  .msg.err{display:block;background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+  .msg.ok{display:block;background:#f0fdf4;color:var(--green);border:1px solid #bbf7d0}
+  .hint{font-size:.72rem;color:var(--gray-500);margin-top:.3rem}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">PM::OFFSEC</div>
+    <h1>Join your team</h1>
+    <p class="sub">Register your device so your organization can keep it secure.</p>
+
+    <label>Organization code *</label>
+    <input id="j_org" placeholder="Paste the code your employer gave you"/>
+    <div class="hint">Your employer/admin shares this from their client portal.</div>
+
+    <label>Your name *</label>
+    <input id="j_name" placeholder="Jane Smith"/>
+
+    <label>Work email *</label>
+    <input id="j_email" type="email" placeholder="jane@company.com"/>
+
+    <label>Password *</label>
+    <div class="pw-wrap">
+      <input id="j_pw" type="password" placeholder="Min 8 chars, 1 uppercase, 1 number"/>
+      <span class="pw-eye" onclick="var p=document.getElementById('j_pw');p.type=p.type==='password'?'text':'password';this.textContent=p.type==='password'?'\uD83D\uDC41':'\uD83D\uDE48';">&#128065;</span>
+    </div>
+
+    <button onclick="joinOrg()">Create my account &amp; join &#8594;</button>
+    <div class="msg" id="j_msg"></div>
+  </div>
+
+<script>
+function backendUrl() {
+  try { var s=JSON.parse(localStorage.getItem('pm_settings_v3')||'null'); if(s&&s.apiUrl) return s.apiUrl.replace(/\/$/,''); } catch(e){}
+  var local=location.hostname==='localhost'||location.hostname==='127.0.0.1';
+  return local?'http://localhost:8000':(localStorage.getItem('pm_railway_url')||'https://pm-offsec-backend-production.up.railway.app');
+}
+// Prefill org code from ?org= in the URL if present.
+(function(){ var m=location.search.match(/[?&]org=([^&]+)/); if(m) document.getElementById('j_org').value=decodeURIComponent(m[1]); })();
+
+async function joinOrg() {
+  var org=document.getElementById('j_org').value.trim();
+  var name=document.getElementById('j_name').value.trim();
+  var email=document.getElementById('j_email').value.trim();
+  var pw=document.getElementById('j_pw').value;
+  var msg=document.getElementById('j_msg');
+  msg.className='msg';
+  if(!org||!name||!email||!pw){ msg.className='msg err'; msg.textContent='All fields are required.'; return; }
+  if(pw.length<8||!/[A-Z]/.test(pw)||!/[0-9]/.test(pw)){ msg.className='msg err'; msg.textContent='Password needs 8+ chars, an uppercase letter and a number.'; return; }
+  try {
+    var r=await fetch(backendUrl()+'/api/org/employee/register',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name:name,email:email,password:pw,org_id:org})});
+    var d=await r.json();
+    if(!r.ok){ msg.className='msg err'; msg.textContent=d.detail||'Could not register. Check your organization code.'; return; }
+    if(d.access_token) localStorage.setItem('pm_jwt_token', d.access_token);
+    // Store a session so they land in the portal as an employee of this org.
+    var sess={id:d.user_id,email:d.email,name:d.name,role:'employee',org_id:d.org_id,plan:'free',loginAt:Date.now()};
+    sessionStorage.setItem('pm_session_v2', JSON.stringify(sess));
+    msg.className='msg ok'; msg.textContent='Account created! Redirecting to your portal…';
+    setTimeout(function(){ location.href='index.html?preview=1'; }, 1200);
+  } catch(e){ msg.className='msg err'; msg.textContent='Network error — please try again.'; }
+}
+</script>
+</body>
+</html>

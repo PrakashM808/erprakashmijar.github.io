@@ -176,6 +176,46 @@ def test_profile_self_update():
     assert client.put("/api/profile", json={"name": "X"}).status_code in (401, 403)
 
 
+def test_org_devices_and_employee_flow():
+    """Client adds a device, employee self-registers into the org and adds theirs,
+    client sees both, and a different client sees none (tenant isolation)."""
+    import database
+    # client account
+    rc = client.post("/api/auth/register", json={"email": f"biz_{os.urandom(3).hex()}@acme.com", "password": "Passw0rd!", "name": "Biz", "plan": "professional"})
+    cid = rc.json()["user_id"]; cemail = rc.json()["email"]
+    database.user_update(cid, role="client")
+    ctok = client.post("/api/auth/login", json={"email": cemail, "password": "Passw0rd!"}).json()["access_token"]
+    ch = {"Authorization": f"Bearer {ctok}"}
+
+    # client adds a device
+    assert client.post("/api/org/devices", json={"device_name": "Jane-Laptop", "employee_name": "Jane"}, headers=ch).status_code == 200
+
+    # employee self-registers into the org
+    eemail = f"emp_{os.urandom(3).hex()}@acme.com"
+    emp = client.post("/api/org/employee/register", json={"name": "Emp", "email": eemail, "password": "Passw0rd!", "org_id": cid})
+    assert emp.status_code == 200, emp.text
+    assert emp.json()["role"] == "employee"
+    etok = emp.json()["access_token"]
+
+    # employee adds their own device
+    assert client.post("/api/org/devices", json={"device_name": "Emp-Mac"}, headers={"Authorization": f"Bearer {etok}"}).status_code == 200
+
+    # client sees both
+    seen = client.get("/api/org/devices", headers=ch).json()
+    assert seen["device_count"] == 2
+
+    # a different client sees none
+    ro = client.post("/api/auth/register", json={"email": f"other_{os.urandom(3).hex()}@beta.com", "password": "Passw0rd!", "name": "Other"})
+    database.user_update(ro.json()["user_id"], role="client")
+    otok = client.post("/api/auth/login", json={"email": ro.json()["email"], "password": "Passw0rd!"}).json()["access_token"]
+    assert client.get("/api/org/devices", headers={"Authorization": f"Bearer {otok}"}).json()["device_count"] == 0
+
+
+def test_org_devices_requires_auth():
+    assert client.get("/api/org/devices").status_code in (401, 403)
+    assert client.post("/api/org/devices", json={"device_name": "X"}).status_code in (401, 403)
+
+
 # ── Webhook robustness (regression: empty body used to 500) ─────
 def test_lemonsqueezy_webhook_handles_bad_input():
     r = client.post("/api/webhooks/lemonsqueezy", json={})
