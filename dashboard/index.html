@@ -8,51 +8,55 @@
   <link rel="icon" type="image/svg+xml" href="../favicon.svg"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@300;400;500;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Chakra+Petch:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
   <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-    /* Background — slightly lighter, less harsh */
-    --bg:#0a1020;--bg2:#101828;--bg3:#162035;
-    /* Accent */
-    --g:#00ff88;--g2:#00d4ff;--g3:#7b2fff;
-    --border:rgba(0,255,136,.14);
-    /* Text — much brighter for readability */
-    --muted:#6b8da8;--text:#9abdd0;--text2:#d8eaf5;--white:#f2f9ff;
-    --danger:#ff4d6a;--warn:#f5a623;--ok:#00e87a;
-    --mono:'Azeret Mono',monospace;--display:'Bebas Neue',sans-serif;--body:'DM Sans',sans-serif;
+    /* Background — deep cyber-blue, layered depth */
+    --bg:#060b18;--bg2:#0c1426;--bg3:#131f3a;
+    /* Accent — electric cyan primary, sky-blue secondary, violet tertiary */
+    --g:#22e3ff;--g2:#4d8dff;--g3:#8b5cf6;
+    --border:rgba(34,227,255,.16);
+    /* Text — cool, bright, high readability on blue */
+    --muted:#5f7da8;--text:#9fb6d6;--text2:#d4e3f7;--white:#f4f9ff;
+    --danger:#ff4d6a;--warn:#ffb13d;--ok:#2bd9a0;
+    --mono:'JetBrains Mono',monospace;--display:'Chakra Petch',sans-serif;--body:'Sora',sans-serif;
     --sidebar:240px;--header:58px;
   }
+    /* Typographic refinement for geometric sans display + cyber-blue theme */
+    .pg-title,.pt{font-weight:700!important;letter-spacing:.01em!important}
+    body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    .hdr-scan,.btn{letter-spacing:.02em}
   html,body{height:100%;overflow:hidden} @media(max-width:768px){html,body{height:auto;overflow:auto}}
   body{background:var(--bg);color:var(--text2);font-family:var(--body);font-size:15px;line-height:1.6}
-  ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(0,255,136,.15);border-radius:2px}
+  ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(34,227,255,.15);border-radius:2px}
   button,input,select,textarea{font-family:inherit}
   #app{display:flex;flex-direction:column;height:100vh} @media(max-width:768px){#app{height:auto;min-height:100vh}}
   /* HEADER */
-  .hdr{height:var(--header);display:flex;align-items:center;padding:0 1.2rem;background:rgba(3,7,15,.92);border-bottom:1px solid rgba(0,255,136,.08);backdrop-filter:blur(16px);flex-shrink:0;gap:.7rem;z-index:100} @media(max-width:768px){.hdr{padding:0 .9rem;gap:.4rem;position:sticky;top:0}}
+  .hdr{height:var(--header);display:flex;align-items:center;padding:0 1.2rem;background:rgba(3,7,15,.92);border-bottom:1px solid rgba(34,227,255,.08);backdrop-filter:blur(16px);flex-shrink:0;gap:.7rem;z-index:100} @media(max-width:768px){.hdr{padding:0 .9rem;gap:.4rem;position:sticky;top:0}}
   .hdr-logo{font-family:var(--display);font-size:1.2rem;color:var(--white);letter-spacing:.08em;white-space:nowrap}
   .hdr-logo span{color:var(--g)}
   .hdr-search{flex:1;max-width:300px;position:relative;margin-left:.3rem} @media(max-width:768px){.hdr-search{display:none}}
-  .hdr-search input{width:100%;background:rgba(0,255,136,.03);border:1px solid var(--border);border-radius:6px;padding:.4rem .9rem .4rem 2.1rem;font-family:var(--mono);font-size:.62rem;color:var(--text2);outline:none;transition:border-color .2s}
-  .hdr-search input:focus{border-color:rgba(0,255,136,.3)}
+  .hdr-search input{width:100%;background:rgba(34,227,255,.03);border:1px solid var(--border);border-radius:6px;padding:.4rem .9rem .4rem 2.1rem;font-family:var(--mono);font-size:.62rem;color:var(--text2);outline:none;transition:border-color .2s}
+  .hdr-search input:focus{border-color:rgba(34,227,255,.3)}
   .hdr-search::before{content:'⌕';position:absolute;left:.6rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.9rem}
   .hdr-right{margin-left:auto;display:flex;align-items:center;gap:.6rem}
   .role-badge{font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;padding:.2rem .5rem;border-radius:3px} @media(max-width:768px){.role-badge{display:none}}
   .rb-admin{background:rgba(124,58,237,.12);color:#a78bfa;border:1px solid rgba(124,58,237,.2)}
-  .rb-client{background:rgba(0,212,255,.06);color:var(--g2)}
-  .rb-user{background:rgba(0,255,136,.06);color:var(--g)}
+  .rb-client{background:rgba(77,141,255,.06);color:var(--g2)}
+  .rb-user{background:rgba(34,227,255,.06);color:var(--g)}
   .hdr-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--g3),var(--g));display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.58rem;font-weight:700;color:#fff;cursor:pointer;flex-shrink:0}
   .hdr-name{font-family:var(--mono);font-size:.75rem;color:var(--text2)} @media(max-width:768px){.hdr-name{display:none}}
   .hdr-btn{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;padding:.36rem .78rem;border-radius:5px;border:none;cursor:pointer;transition:all .2s}
   .hdr-scan{background:var(--g);color:#040810;font-weight:700}
   .hdr-scan:hover{background:#fff}
-  .hdr-scan:disabled{background:rgba(0,255,136,.15);color:rgba(0,255,136,.3);cursor:not-allowed}
+  .hdr-scan:disabled{background:rgba(34,227,255,.15);color:rgba(34,227,255,.3);cursor:not-allowed}
   .hdr-out{background:rgba(255,59,92,.06);color:var(--danger);border:1px solid rgba(255,59,92,.15)}
   .hdr-out:hover{background:rgba(255,59,92,.12)}
   /* BODY */
   .body{flex:1;display:flex;overflow:hidden} @media(max-width:768px){.body{overflow:visible;flex-direction:column}}
   /* SIDEBAR */
-  .sidebar{width:var(--sidebar);flex-shrink:0;background:rgba(6,13,26,.95);border-right:1px solid rgba(0,255,136,.08);display:flex;flex-direction:column;overflow-y:auto}
+  .sidebar{width:var(--sidebar);flex-shrink:0;background:rgba(6,13,26,.95);border-right:1px solid rgba(34,227,255,.08);display:flex;flex-direction:column;overflow-y:auto}
   @media(max-width:768px){
     .sidebar{
       position:fixed!important;top:0!important;left:0!important;bottom:0!important;
@@ -67,12 +71,12 @@
   .sb-section{padding:.6rem 0}
   .sb-label{font-family:var(--mono);font-size:.62rem;color:var(--muted);letter-spacing:.15em;padding:.3rem .9rem .5rem;text-transform:uppercase}
   .sb-item{display:flex;align-items:center;gap:.55rem;padding:.54rem .9rem;font-family:var(--mono);font-size:.78rem;color:var(--muted);letter-spacing:.03em;cursor:pointer;border-left:2px solid transparent;transition:all .18s;border:none;background:none;width:100%;text-align:left}
-  .sb-item:hover{color:var(--text2);background:rgba(0,255,136,.02)}
-  .sb-item.active{color:var(--g);background:rgba(0,255,136,.05);border-left-color:var(--g)}
+  .sb-item:hover{color:var(--text2);background:rgba(34,227,255,.02)}
+  .sb-item.active{color:var(--g);background:rgba(34,227,255,.05);border-left-color:var(--g)}
   .sb-icon{font-size:.8rem;width:15px;text-align:center;flex-shrink:0}
   .sb-badge{margin-left:auto;font-family:var(--mono);font-size:.46rem;background:rgba(255,59,92,.15);color:var(--danger);border:1px solid rgba(255,59,92,.2);border-radius:3px;padding:.08rem .3rem}
-  .sb-bottom{margin-top:auto;padding:.6rem 0;border-top:1px solid rgba(0,255,136,.06)}
-  .device-mini{margin:.5rem .7rem;background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.08);border-radius:5px;padding:.6rem .8rem}
+  .sb-bottom{margin-top:auto;padding:.6rem 0;border-top:1px solid rgba(34,227,255,.06)}
+  .device-mini{margin:.5rem .7rem;background:rgba(34,227,255,.03);border:1px solid rgba(34,227,255,.08);border-radius:5px;padding:.6rem .8rem}
   .dm-label{font-family:var(--mono);font-size:.64rem;color:var(--muted);letter-spacing:.12em;margin-bottom:.3rem}
   .dm-host{font-family:var(--mono);font-size:.75rem;color:var(--text2)}
   .dm-ip{font-family:var(--mono);font-size:.66rem;color:var(--muted)}
@@ -86,8 +90,8 @@
   .pg-title{font-family:var(--display);font-size:1.9rem;color:var(--white);letter-spacing:.05em;line-height:1}
   .pg-sub{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:.2rem;letter-spacing:.07em}
   /* PANEL */
-  .panel{background:rgba(6,13,26,.72);border:1px solid rgba(0,255,136,.07);border-radius:9px;overflow:hidden;margin-bottom:.9rem}
-  .ph{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.1rem;border-bottom:1px solid rgba(0,255,136,.05)}
+  .panel{background:rgba(6,13,26,.72);border:1px solid rgba(34,227,255,.07);border-radius:9px;overflow:hidden;margin-bottom:.9rem}
+  .ph{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.1rem;border-bottom:1px solid rgba(34,227,255,.05)}
   .pt{font-family:var(--mono);font-size:.58rem;color:var(--g);letter-spacing:.15em;text-transform:uppercase}
   .pa{font-family:var(--mono);font-size:.53rem;color:var(--muted);cursor:pointer;transition:color .2s;border:none;background:none;letter-spacing:.1em}
   .pa:hover{color:var(--g)}
@@ -98,8 +102,8 @@
   .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem} @media(max-width:640px){.g3{grid-template-columns:1fr}}
   @media(max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}} @media(max-width:480px){.g4{grid-template-columns:1fr}}
   /* STAT CARD */
-  .sc{background:rgba(6,13,26,.72);border:1px solid rgba(0,255,136,.07);border-radius:9px;padding:1rem 1.2rem;position:relative;overflow:hidden;transition:border-color .2s}
-  .sc:hover{border-color:rgba(0,255,136,.18)}
+  .sc{background:rgba(6,13,26,.72);border:1px solid rgba(34,227,255,.07);border-radius:9px;padding:1rem 1.2rem;position:relative;overflow:hidden;transition:border-color .2s}
+  .sc:hover{border-color:rgba(34,227,255,.18)}
   .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
   .sc-g::before{background:linear-gradient(90deg,var(--g),transparent)}
   .sc-b::before{background:linear-gradient(90deg,var(--g2),transparent)}
@@ -115,15 +119,15 @@
   .b-high{background:rgba(255,140,66,.1);color:#ff8c42;border:1px solid rgba(255,140,66,.22)}
   .b-medium{background:rgba(245,200,66,.08);color:#f5c842;border:1px solid rgba(245,200,66,.2)}
   .b-low{background:rgba(77,217,172,.07);color:#4dd9ac;border:1px solid rgba(77,217,172,.17)}
-  .b-ok{background:rgba(0,255,136,.06);color:var(--ok);border:1px solid rgba(0,255,136,.15)}
-  .b-online{background:rgba(0,255,136,.07);color:var(--ok);border:1px solid rgba(0,255,136,.18)}
+  .b-ok{background:rgba(34,227,255,.06);color:var(--ok);border:1px solid rgba(34,227,255,.15)}
+  .b-online{background:rgba(34,227,255,.07);color:var(--ok);border:1px solid rgba(34,227,255,.18)}
   .b-offline{background:rgba(255,59,92,.07);color:var(--danger);border:1px solid rgba(255,59,92,.2)}
   /* TABLE */
   .tbl{width:100%;border-collapse:collapse;min-width:400px} .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .tbl th{font-family:var(--mono);font-size:.5rem;color:var(--muted);letter-spacing:.14em;text-align:left;padding:.52rem .75rem;border-bottom:1px solid rgba(0,255,136,.06);text-transform:uppercase}
-  .tbl td{font-family:var(--mono);font-size:.58rem;color:var(--text2);padding:.62rem .75rem;border-bottom:1px solid rgba(0,255,136,.03)}
+  .tbl th{font-family:var(--mono);font-size:.5rem;color:var(--muted);letter-spacing:.14em;text-align:left;padding:.52rem .75rem;border-bottom:1px solid rgba(34,227,255,.06);text-transform:uppercase}
+  .tbl td{font-family:var(--mono);font-size:.58rem;color:var(--text2);padding:.62rem .75rem;border-bottom:1px solid rgba(34,227,255,.03)}
   .tbl tr:last-child td{border-bottom:none}
-  .tbl tr:hover td{background:rgba(0,255,136,.015)}
+  .tbl tr:hover td{background:rgba(34,227,255,.015)}
   /* SKILL BAR */
   .skill-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem}
   .skill-name{font-family:var(--mono);font-size:.56rem;color:var(--text2);width:125px;flex-shrink:0}
@@ -142,20 +146,20 @@
   .msg-bot{align-self:flex-start}
   .msg-user{align-self:flex-end}
   .msg-bubble{padding:.58rem .82rem;font-family:var(--mono);font-size:.61rem;line-height:1.7;white-space:pre-wrap;word-break:break-word}
-  .msg-bot .msg-bubble{background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.1);border-radius:2px 8px 8px 8px;color:var(--text2)}
-  .msg-user .msg-bubble{background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.18);border-radius:8px 2px 8px 8px;color:var(--white)}
+  .msg-bot .msg-bubble{background:rgba(34,227,255,.05);border:1px solid rgba(34,227,255,.1);border-radius:2px 8px 8px 8px;color:var(--text2)}
+  .msg-user .msg-bubble{background:rgba(77,141,255,.08);border:1px solid rgba(77,141,255,.18);border-radius:8px 2px 8px 8px;color:var(--white)}
   .msg-time{font-family:var(--mono);font-size:.46rem;color:var(--muted);margin-top:.18rem;padding:0 .18rem}
   .msg-user .msg-time{text-align:right}
-  .typing{display:flex;gap:4px;padding:.58rem .82rem;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.09);border-radius:2px 8px 8px 8px;width:fit-content;align-self:flex-start}
+  .typing{display:flex;gap:4px;padding:.58rem .82rem;background:rgba(34,227,255,.04);border:1px solid rgba(34,227,255,.09);border-radius:2px 8px 8px 8px;width:fit-content;align-self:flex-start}
   .typing-dot{width:5px;height:5px;border-radius:50%;background:var(--g);animation:td .8s ease infinite}
   .typing-dot:nth-child(2){animation-delay:.12s}.typing-dot:nth-child(3){animation-delay:.24s}
   @keyframes td{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
-  .chat-sug{padding:.45rem;border-top:1px solid rgba(0,255,136,.05);display:flex;gap:.3rem;flex-wrap:wrap;background:rgba(0,0,0,.08)}
-  .sug-btn{font-family:var(--mono);font-size:.5rem;color:var(--text);background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.09);border-radius:4px;padding:.22rem .5rem;cursor:pointer;transition:all .18s;letter-spacing:.05em}
-  .sug-btn:hover{background:rgba(0,255,136,.09);color:var(--g)}
-  .chat-input-row{padding:.6rem;border-top:1px solid rgba(0,255,136,.05);display:flex;gap:.4rem;align-items:flex-end;background:rgba(0,0,0,.12)}
-  .chat-inp{flex:1;background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.09);border-radius:6px;padding:.52rem .75rem;font-family:var(--mono);font-size:.61rem;color:var(--white);outline:none;resize:none;max-height:72px;min-height:32px;line-height:1.5;transition:border-color .2s}
-  .chat-inp:focus{border-color:rgba(0,255,136,.28)}
+  .chat-sug{padding:.45rem;border-top:1px solid rgba(34,227,255,.05);display:flex;gap:.3rem;flex-wrap:wrap;background:rgba(0,0,0,.08)}
+  .sug-btn{font-family:var(--mono);font-size:.5rem;color:var(--text);background:rgba(34,227,255,.04);border:1px solid rgba(34,227,255,.09);border-radius:4px;padding:.22rem .5rem;cursor:pointer;transition:all .18s;letter-spacing:.05em}
+  .sug-btn:hover{background:rgba(34,227,255,.09);color:var(--g)}
+  .chat-input-row{padding:.6rem;border-top:1px solid rgba(34,227,255,.05);display:flex;gap:.4rem;align-items:flex-end;background:rgba(0,0,0,.12)}
+  .chat-inp{flex:1;background:rgba(34,227,255,.03);border:1px solid rgba(34,227,255,.09);border-radius:6px;padding:.52rem .75rem;font-family:var(--mono);font-size:.61rem;color:var(--white);outline:none;resize:none;max-height:72px;min-height:32px;line-height:1.5;transition:border-color .2s}
+  .chat-inp:focus{border-color:rgba(34,227,255,.28)}
   .chat-send{width:32px;height:32px;border-radius:6px;background:linear-gradient(135deg,var(--g3),var(--g));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;transition:all .18s}
   .chat-send:hover{transform:scale(1.08)}
   /* SCAN ANIMATION */
@@ -166,38 +170,38 @@
   .scan-stage{font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-top:.4rem;letter-spacing:.1em}
   /* DEVICE MODAL */
   .modal-overlay{position:fixed;inset:0;background:rgba(3,7,15,.85);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center}
-  .modal{background:var(--bg2);border:1px solid rgba(0,255,136,.15);border-radius:12px;width:100%;max-width:520px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.6)} @media(max-width:600px){.modal{border-radius:8px 8px 0 0;position:fixed;bottom:0;left:0;right:0;max-width:100%;max-height:90vh;overflow-y:auto}.modal-overlay{align-items:flex-end}}
+  .modal{background:var(--bg2);border:1px solid rgba(34,227,255,.15);border-radius:12px;width:100%;max-width:520px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.6)} @media(max-width:600px){.modal{border-radius:8px 8px 0 0;position:fixed;bottom:0;left:0;right:0;max-width:100%;max-height:90vh;overflow-y:auto}.modal-overlay{align-items:flex-end}}
   .modal-bar{height:2px;background:linear-gradient(90deg,var(--g),var(--g2),var(--g3))}
-  .modal-hdr{padding:1.2rem 1.4rem;border-bottom:1px solid rgba(0,255,136,.06);display:flex;align-items:center;justify-content:space-between}
+  .modal-hdr{padding:1.2rem 1.4rem;border-bottom:1px solid rgba(34,227,255,.06);display:flex;align-items:center;justify-content:space-between}
   .modal-title{font-family:var(--display);font-size:1.3rem;color:var(--white);letter-spacing:.05em}
   .modal-close{font-family:var(--mono);font-size:.9rem;color:var(--muted);background:none;border:none;cursor:pointer;transition:color .2s}
   .modal-close:hover{color:var(--danger)}
   .modal-body{padding:1.4rem}
   /* DEVICE TABS */
-  .dtabs{display:flex;gap:0;border-bottom:1px solid rgba(0,255,136,.08);margin-bottom:1.2rem}
+  .dtabs{display:flex;gap:0;border-bottom:1px solid rgba(34,227,255,.08);margin-bottom:1.2rem}
   .dtab{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;color:var(--muted);padding:.55rem 1rem;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s}
   .dtab.active{color:var(--g);border-bottom-color:var(--g)}
   /* FORM */
   .form-group{margin-bottom:.8rem}
   .form-label{font-family:var(--mono);font-size:.54rem;color:var(--g2);letter-spacing:.15em;display:block;margin-bottom:.32rem}
-  .form-input{width:100%;background:rgba(0,0,0,.25);border:1px solid rgba(0,255,136,.09);border-radius:5px;padding:.6rem .85rem;font-family:var(--mono);font-size:.65rem;color:var(--white);outline:none;transition:border-color .2s}
-  .form-input:focus{border-color:rgba(0,255,136,.3)}
+  .form-input{width:100%;background:rgba(0,0,0,.25);border:1px solid rgba(34,227,255,.09);border-radius:5px;padding:.6rem .85rem;font-family:var(--mono);font-size:.65rem;color:var(--white);outline:none;transition:border-color .2s}
+  .form-input:focus{border-color:rgba(34,227,255,.3)}
   .form-hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:.25rem;line-height:1.5}
   .form-grid2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
   /* BUTTONS */
   .btn{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;padding:.62rem 1.3rem;border-radius:5px;border:none;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:.4rem}
   .btn-g{background:var(--g);color:#040810;font-weight:700}
   .btn-g:hover{background:#fff;transform:translateY(-1px)}
-  .btn-o{background:rgba(0,255,136,.06);color:var(--g);border:1px solid rgba(0,255,136,.15)}
-  .btn-o:hover{background:rgba(0,255,136,.12)}
+  .btn-o{background:rgba(34,227,255,.06);color:var(--g);border:1px solid rgba(34,227,255,.15)}
+  .btn-o:hover{background:rgba(34,227,255,.12)}
   .btn-r{background:rgba(255,59,92,.08);color:var(--danger);border:1px solid rgba(255,59,92,.2)}
   .btn-r:hover{background:rgba(255,59,92,.15)}
   .btn-sm{padding:.38rem .75rem;font-size:.55rem}
   /* DEVICE CARDS */
   .devices-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.9rem} @media(max-width:480px){.devices-grid{grid-template-columns:1fr}}
-  .device-card{background:var(--bg2);border:1px solid rgba(0,255,136,.08);border-radius:9px;overflow:hidden;transition:all .25s;cursor:pointer}
-  .device-card:hover{border-color:rgba(0,255,136,.22);transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,0,0,.35)}
-  .device-card.selected{border-color:var(--g);box-shadow:0 0 20px rgba(0,255,136,.1)}
+  .device-card{background:var(--bg2);border:1px solid rgba(34,227,255,.08);border-radius:9px;overflow:hidden;transition:all .25s;cursor:pointer}
+  .device-card:hover{border-color:rgba(34,227,255,.22);transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  .device-card.selected{border-color:var(--g);box-shadow:0 0 20px rgba(34,227,255,.1)}
   .device-card-top{height:3px;background:linear-gradient(90deg,var(--g),var(--g2))}
   .device-card.offline .device-card-top{background:linear-gradient(90deg,var(--danger),transparent)}
   .device-body{padding:1.1rem}
@@ -206,20 +210,20 @@
   .device-meta{font-family:var(--mono);font-size:.57rem;color:var(--muted);line-height:1.7;margin-bottom:.8rem}
   .device-score-row{display:flex;align-items:center;justify-content:space-between}
   .device-score{font-family:var(--display);font-size:2rem;line-height:1}
-  .device-actions{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.7rem;padding-top:.7rem;border-top:1px solid rgba(0,255,136,.05)}
+  .device-actions{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.7rem;padding-top:.7rem;border-top:1px solid rgba(34,227,255,.05)}
   /* NETWORK DISCOVER */
-  .discover-progress{background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:6px;padding:.9rem 1rem;margin-bottom:.8rem}
+  .discover-progress{background:rgba(34,227,255,.04);border:1px solid rgba(34,227,255,.1);border-radius:6px;padding:.9rem 1rem;margin-bottom:.8rem}
   .dp-bar-wrap{height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin:.5rem 0}
   .dp-bar{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--g),var(--g2));transition:width .3s ease;animation:scanBar 2s ease infinite}
   @keyframes scanBar{0%{width:0%}50%{width:100%}100%{width:0%;margin-left:100%}}
   /* PROFILE */
   .profile-layout{display:grid;grid-template-columns:260px 1fr;gap:1rem} @media(max-width:640px){.profile-layout{grid-template-columns:1fr}}
-  .profile-card{background:var(--bg2);border:1px solid rgba(0,255,136,.08);border-radius:9px;padding:1.6rem;text-align:center}
-  .profile-av{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--g3),var(--g));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:1.7rem;color:#fff;margin:0 auto 1rem;box-shadow:0 0 24px rgba(0,255,136,.15)}
+  .profile-card{background:var(--bg2);border:1px solid rgba(34,227,255,.08);border-radius:9px;padding:1.6rem;text-align:center}
+  .profile-av{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--g3),var(--g));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:1.7rem;color:#fff;margin:0 auto 1rem;box-shadow:0 0 24px rgba(34,227,255,.15)}
   .profile-name{font-family:var(--display);font-size:1.4rem;color:var(--white);letter-spacing:.04em}
   .profile-role{font-family:var(--mono);font-size:.56rem;color:var(--muted);letter-spacing:.12em;margin-top:.3rem}
   .profile-email{font-family:var(--mono);font-size:.58rem;color:var(--g);margin-top:.4rem}
-  .pstat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.06);border-radius:6px;overflow:hidden;margin-top:1.2rem}
+  .pstat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(34,227,255,.06);border:1px solid rgba(34,227,255,.06);border-radius:6px;overflow:hidden;margin-top:1.2rem}
   .pstat{background:rgba(6,13,26,.9);padding:.9rem;text-align:center}
   .pstat-n{font-family:var(--display);font-size:1.5rem;color:var(--g)}
   .pstat-l{font-family:var(--mono);font-size:.48rem;color:var(--muted);letter-spacing:.12em}
@@ -227,7 +231,7 @@
   .save-btn:hover{background:#fff;transform:translateY(-1px)}
   /* MISC */
   .flex-between{display:flex;justify-content:space-between;align-items:center}
-  .act-item{display:flex;align-items:flex-start;gap:.65rem;padding:.55rem 0;border-bottom:1px solid rgba(0,255,136,.04)}
+  .act-item{display:flex;align-items:flex-start;gap:.65rem;padding:.55rem 0;border-bottom:1px solid rgba(34,227,255,.04)}
   .act-item:last-child{border-bottom:none}
   .act-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px}
   .dot-ok{background:var(--ok);box-shadow:0 0 5px var(--ok)}
@@ -237,7 +241,7 @@
   .act-text{font-family:var(--mono);font-size:.58rem;color:var(--text2);line-height:1.5;flex:1}
   .act-time{font-family:var(--mono);font-size:.5rem;color:var(--muted);white-space:nowrap}
   .api-status{font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;padding:.25rem .65rem;border-radius:10px;display:inline-flex;align-items:center;gap:.3rem}
-  .api-online{background:rgba(0,255,136,.08);color:var(--ok);border:1px solid rgba(0,255,136,.18)}
+  .api-online{background:rgba(34,227,255,.08);color:var(--ok);border:1px solid rgba(34,227,255,.18)}
   .api-offline{background:rgba(255,59,92,.07);color:var(--danger);border:1px solid rgba(255,59,92,.2)}
   .api-dot{width:5px;height:5px;border-radius:50%;animation:blink2 2s infinite}
   .api-online .api-dot{background:var(--ok)}.api-offline .api-dot{background:var(--danger)}
@@ -247,7 +251,7 @@
   /* ══ MOBILE RESPONSIVE ═══════════════════════════════════════ */
   @media(max-width:768px){
     :root{--header:52px;--sidebar:260px}
-    #mobMenuBtn{display:flex!important;width:38px!important;height:38px!important;background:rgba(0,255,136,.1)!important;border:1px solid rgba(0,255,136,.25)!important;border-radius:6px!important;}
+    #mobMenuBtn{display:flex!important;width:38px!important;height:38px!important;background:rgba(34,227,255,.1)!important;border:1px solid rgba(34,227,255,.25)!important;border-radius:6px!important;}
     .hdr-scan{font-size:.55rem;padding:.32rem .65rem;letter-spacing:.08em}
     .hdr-out{font-size:.55rem;padding:.32rem .6rem}
     .hdr-btn{letter-spacing:.06em}
@@ -283,11 +287,11 @@
   /* ── PLAN BADGES ── */
   .plan-badge{font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;padding:.22rem .6rem;border-radius:3px;font-weight:700}
   .pb-free{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid rgba(255,255,255,.1)}
-  .pb-starter{background:rgba(0,255,136,.1);color:var(--g);border:1px solid rgba(0,255,136,.2)}
-  .pb-professional{background:rgba(0,212,255,.1);color:var(--g2);border:1px solid rgba(0,212,255,.2)}
-  .pb-enterprise{background:rgba(123,47,255,.12);color:#c084fc;border:1px solid rgba(123,47,255,.25)}
+  .pb-starter{background:rgba(34,227,255,.1);color:var(--g);border:1px solid rgba(34,227,255,.2)}
+  .pb-professional{background:rgba(77,141,255,.1);color:var(--g2);border:1px solid rgba(77,141,255,.2)}
+  .pb-enterprise{background:rgba(139,92,246,.12);color:#c084fc;border:1px solid rgba(139,92,246,.25)}
   /* ── USAGE BAR ── */
-  .usage-bar-wrap{background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.08);border-radius:6px;padding:.7rem .9rem;margin:.5rem 0}
+  .usage-bar-wrap{background:rgba(0,0,0,.2);border:1px solid rgba(34,227,255,.08);border-radius:6px;padding:.7rem .9rem;margin:.5rem 0}
   .usage-bar-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:.35rem}
   .usage-bar-label{font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:.08em}
   .usage-bar-val{font-family:var(--mono);font-size:.58rem;color:var(--text2)}
@@ -304,12 +308,12 @@
   .gate-btn{font-family:var(--mono);font-size:.62rem;font-weight:700;letter-spacing:.12em;padding:.6rem 1.4rem;background:var(--g);color:#040810;border:none;border-radius:5px;cursor:pointer;transition:all .2s}
   .gate-btn:hover{background:#fff;transform:translateY(-1px)}
   /* ── UPGRADE MODAL ── */
-  .upgrade-modal{background:var(--bg2);border:1px solid rgba(0,255,136,.15);border-radius:12px;width:100%;max-width:600px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+  .upgrade-modal{background:var(--bg2);border:1px solid rgba(34,227,255,.15);border-radius:12px;width:100%;max-width:600px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.6)}
   .upgrade-plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-top:1rem}
   @media(max-width:500px){.upgrade-plans-grid{grid-template-columns:1fr}}
-  .upgrade-plan-card{background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.08);border-radius:8px;padding:1rem;cursor:pointer;transition:all .2s;text-align:center}
-  .upgrade-plan-card:hover{border-color:rgba(0,255,136,.25);transform:translateY(-2px)}
-  .upgrade-plan-card.recommended{border-color:var(--g);background:rgba(0,255,136,.05)}
+  .upgrade-plan-card{background:rgba(0,0,0,.2);border:1px solid rgba(34,227,255,.08);border-radius:8px;padding:1rem;cursor:pointer;transition:all .2s;text-align:center}
+  .upgrade-plan-card:hover{border-color:rgba(34,227,255,.25);transform:translateY(-2px)}
+  .upgrade-plan-card.recommended{border-color:var(--g);background:rgba(34,227,255,.05)}
   .upc-name{font-family:var(--display);font-size:1.2rem;color:var(--white);letter-spacing:.05em;margin-bottom:.2rem}
   .upc-price{font-family:var(--display);font-size:1.8rem;color:var(--g);line-height:1}
   .upc-period{font-family:var(--mono);font-size:.5rem;color:var(--muted);letter-spacing:.1em;margin-bottom:.6rem}
@@ -318,11 +322,11 @@
   .upc-btn:hover{background:#fff}
   /* ── SCAN QUOTA WIDGET ── */
   .quota-chip{font-family:var(--mono);font-size:.5rem;letter-spacing:.08em;padding:.2rem .55rem;border-radius:10px;display:inline-flex;align-items:center;gap:.3rem;cursor:pointer}
-  .qc-ok{background:rgba(0,255,136,.07);color:var(--g);border:1px solid rgba(0,255,136,.15)}
+  .qc-ok{background:rgba(34,227,255,.07);color:var(--g);border:1px solid rgba(34,227,255,.15)}
   .qc-warn{background:rgba(245,158,11,.08);color:var(--warn);border:1px solid rgba(245,158,11,.18)}
   .qc-full{background:rgba(255,59,92,.08);color:var(--danger);border:1px solid rgba(255,59,92,.2)}
   /* ── BILLING PAGE ── */
-  .billing-current{background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.12);border-radius:10px;padding:1.4rem;margin-bottom:1rem}
+  .billing-current{background:rgba(34,227,255,.04);border:1px solid rgba(34,227,255,.12);border-radius:10px;padding:1.4rem;margin-bottom:1rem}
   .bc-plan-name{font-family:var(--display);font-size:2rem;color:var(--white);letter-spacing:.05em;margin-bottom:.2rem}
   .bc-price{font-family:var(--mono);font-size:.65rem;color:var(--muted);margin-bottom:1rem}
   .bc-features{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
@@ -331,7 +335,7 @@
 
   /* ── PLAN ENFORCEMENT STYLES ─────────────────────────────── */
   .upgrade-overlay{position:fixed;inset:0;background:rgba(3,7,15,.92);backdrop-filter:blur(10px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:1rem}
-  .upgrade-card{background:var(--bg2);border:1px solid rgba(0,255,136,.18);border-radius:14px;width:100%;max-width:500px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.7)}
+  .upgrade-card{background:var(--bg2);border:1px solid rgba(34,227,255,.18);border-radius:14px;width:100%;max-width:500px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.7)}
   .upgrade-card-bar{height:3px;background:linear-gradient(90deg,var(--g),var(--g2),var(--g3))}
   .upgrade-card-body{padding:2rem}
   .upgrade-lock{font-size:2.8rem;margin-bottom:.8rem}
@@ -339,8 +343,8 @@
   .upgrade-desc{font-family:var(--mono);font-size:.63rem;color:var(--muted);line-height:1.85;margin-bottom:1.4rem}
   .upgrade-plans{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1.4rem}
   .upgrade-plan{border-radius:7px;padding:.9rem .7rem;text-align:center;cursor:pointer;transition:all .2s;border:1px solid rgba(255,255,255,.06)}
-  .upgrade-plan:hover{transform:translateY(-2px);border-color:rgba(0,255,136,.25)}
-  .upgrade-plan.highlighted{border-color:var(--g);background:rgba(0,255,136,.05);box-shadow:0 0 20px rgba(0,255,136,.08)}
+  .upgrade-plan:hover{transform:translateY(-2px);border-color:rgba(34,227,255,.25)}
+  .upgrade-plan.highlighted{border-color:var(--g);background:rgba(34,227,255,.05);box-shadow:0 0 20px rgba(34,227,255,.08)}
   .up-name{font-family:var(--display);font-size:1rem;color:var(--white);letter-spacing:.04em}
   .up-price{font-family:var(--mono);font-size:.65rem;color:var(--g);margin:.2rem 0}
   .up-btn{font-family:var(--mono);font-size:.58rem;font-weight:700;letter-spacing:.1em;padding:.5rem;background:var(--g);color:#040810;border:none;border-radius:4px;cursor:pointer;width:100%;margin-top:.5rem;transition:all .2s}
@@ -352,14 +356,14 @@
 
   /* Usage bar in header */
   .usage-chip{display:flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.68rem;color:var(--muted);background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:.22rem .65rem;cursor:pointer}
-  .usage-chip:hover{border-color:rgba(0,255,136,.2);color:var(--text2)}
+  .usage-chip:hover{border-color:rgba(34,227,255,.2);color:var(--text2)}
   .usage-bar-mini{width:40px;height:3px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}
   .usage-bar-fill{height:100%;border-radius:2px;transition:width .4s,background .4s}
   @media(max-width:768px){.usage-chip{display:none}}
 
   /* ── AI REMEDIATION ASSISTANT ─────────────────────────────── */
-  .remediation-panel{background:rgba(6,13,26,.95);border:1px solid rgba(0,255,136,.12);border-radius:10px;overflow:hidden;margin-top:.9rem}
-  .rp-header{padding:.9rem 1.2rem;background:linear-gradient(135deg,rgba(0,255,136,.06),rgba(0,212,255,.04));border-bottom:1px solid rgba(0,255,136,.08);display:flex;align-items:center;gap:.8rem}
+  .remediation-panel{background:rgba(6,13,26,.95);border:1px solid rgba(34,227,255,.12);border-radius:10px;overflow:hidden;margin-top:.9rem}
+  .rp-header{padding:.9rem 1.2rem;background:linear-gradient(135deg,rgba(34,227,255,.06),rgba(77,141,255,.04));border-bottom:1px solid rgba(34,227,255,.08);display:flex;align-items:center;gap:.8rem}
   .rp-ai-badge{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--g3),var(--g));display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
   .rp-title{font-family:var(--display);font-size:1.1rem;color:var(--white);letter-spacing:.04em}
   .rp-sub{font-family:var(--mono);font-size:.56rem;color:var(--muted)}
@@ -368,23 +372,23 @@
   /* Issue fix cards */
   .fix-cards{padding:1rem;display:flex;flex-direction:column;gap:.6rem}
   .fix-card{background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);border-radius:7px;overflow:hidden;transition:border-color .2s}
-  .fix-card:hover{border-color:rgba(0,255,136,.15)}
+  .fix-card:hover{border-color:rgba(34,227,255,.15)}
   .fix-card-hdr{display:flex;align-items:center;gap:.8rem;padding:.7rem .9rem;cursor:pointer}
   .fix-card-sev{width:3px;height:100%;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:16px}
   .fix-card-title{font-family:var(--mono);font-size:.62rem;color:var(--text2);flex:1;line-height:1.4}
   .fix-card-meta{font-family:var(--mono);font-size:.5rem;color:var(--muted)}
   .fix-card-actions{display:flex;gap:.4rem;align-items:center}
   .fix-btn{font-family:var(--mono);font-size:.52rem;letter-spacing:.08em;padding:.25rem .65rem;border-radius:4px;border:none;cursor:pointer;transition:all .2s;white-space:nowrap}
-  .fix-btn-ai{background:linear-gradient(135deg,rgba(123,47,255,.3),rgba(0,255,136,.2));color:var(--g);border:1px solid rgba(0,255,136,.2)}
-  .fix-btn-ai:hover{background:linear-gradient(135deg,rgba(123,47,255,.5),rgba(0,255,136,.35));transform:translateY(-1px)}
+  .fix-btn-ai{background:linear-gradient(135deg,rgba(139,92,246,.3),rgba(34,227,255,.2));color:var(--g);border:1px solid rgba(34,227,255,.2)}
+  .fix-btn-ai:hover{background:linear-gradient(135deg,rgba(139,92,246,.5),rgba(34,227,255,.35));transform:translateY(-1px)}
   .fix-card-body{display:none;border-top:1px solid rgba(255,255,255,.05)}
   .fix-card.expanded .fix-card-body{display:block}
-  .fix-card.expanded .fix-card-hdr{background:rgba(0,255,136,.03)}
+  .fix-card.expanded .fix-card-hdr{background:rgba(34,227,255,.03)}
   .fix-content{padding:.9rem 1rem;font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.85;white-space:pre-wrap}
-  .fix-content code,.fix-cmd{display:block;background:rgba(0,0,0,.4);border:1px solid rgba(0,255,136,.1);border-radius:5px;padding:.6rem .9rem;font-family:var(--mono);font-size:.62rem;color:var(--g);margin:.4rem 0;position:relative;cursor:pointer}
-  .fix-cmd::before{content:'$ ';color:rgba(0,255,136,.4)}
-  .fix-cmd:hover{background:rgba(0,0,0,.6);border-color:rgba(0,255,136,.25)}
-  .copy-toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:rgba(0,255,136,.15);border:1px solid rgba(0,255,136,.3);border-radius:6px;padding:.5rem 1.2rem;font-family:var(--mono);font-size:.62rem;color:var(--g);z-index:9999;pointer-events:none;opacity:0;transition:opacity .2s}
+  .fix-content code,.fix-cmd{display:block;background:rgba(0,0,0,.4);border:1px solid rgba(34,227,255,.1);border-radius:5px;padding:.6rem .9rem;font-family:var(--mono);font-size:.62rem;color:var(--g);margin:.4rem 0;position:relative;cursor:pointer}
+  .fix-cmd::before{content:'$ ';color:rgba(34,227,255,.4)}
+  .fix-cmd:hover{background:rgba(0,0,0,.6);border-color:rgba(34,227,255,.25)}
+  .copy-toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:rgba(34,227,255,.15);border:1px solid rgba(34,227,255,.3);border-radius:6px;padding:.5rem 1.2rem;font-family:var(--mono);font-size:.62rem;color:var(--g);z-index:9999;pointer-events:none;opacity:0;transition:opacity .2s}
   .copy-toast.show{opacity:1}
   .fix-skeleton{height:52px;background:rgba(255,255,255,.02);border-radius:7px;animation:shimmer 1.5s infinite}
   @keyframes shimmer{0%,100%{opacity:.3}50%{opacity:.7}}
@@ -396,9 +400,9 @@
   .fix-step-num{font-family:var(--display);font-size:1rem;color:var(--g2);flex-shrink:0;line-height:1.2}
   .fix-step-text{font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.6}
   /* Billing page plan cards */
-  .billing-plan{background:rgba(6,13,26,.8);border:1px solid rgba(0,255,136,.08);border-radius:9px;padding:1.2rem;transition:all .25s;position:relative}
-  .billing-plan.current-plan{border-color:var(--g);box-shadow:0 0 24px rgba(0,255,136,.08)}
-  .billing-plan:hover{border-color:rgba(0,255,136,.2);transform:translateY(-2px)}
+  .billing-plan{background:rgba(6,13,26,.8);border:1px solid rgba(34,227,255,.08);border-radius:9px;padding:1.2rem;transition:all .25s;position:relative}
+  .billing-plan.current-plan{border-color:var(--g);box-shadow:0 0 24px rgba(34,227,255,.08)}
+  .billing-plan:hover{border-color:rgba(34,227,255,.2);transform:translateY(-2px)}
   .bp-current-badge{position:absolute;top:.7rem;right:.7rem;font-family:var(--mono);font-size:.48rem;background:var(--g);color:#040810;padding:.18rem .5rem;border-radius:3px;font-weight:700;letter-spacing:.08em}
 
 
@@ -458,13 +462,13 @@
       <button class="hdr-btn hdr-scan" id="scanBtn" onclick="openScanModal()">SCAN DEVICE</button>
       <div style="position:relative;display:inline-block">
       <button id="langPickerBtn" onclick="buildLangDropdown()" title="Change language"
-        style="height:30px;padding:0 .7rem;border-radius:6px;border:1px solid rgba(0,255,136,.15);background:rgba(0,255,136,.06);font-family:var(--mono);font-size:.6rem;color:var(--white);cursor:pointer;display:flex;align-items:center;gap:.35rem;white-space:nowrap">
+        style="height:30px;padding:0 .7rem;border-radius:6px;border:1px solid rgba(34,227,255,.15);background:rgba(34,227,255,.06);font-family:var(--mono);font-size:.6rem;color:var(--white);cursor:pointer;display:flex;align-items:center;gap:.35rem;white-space:nowrap">
         🇺🇸 English <span style="font-size:.55rem;opacity:.6">▾</span>
       </button>
     </div>
       <button id="themeToggle" onclick="toggleTheme()" title="Toggle dark/light mode" style="width:30px;height:30px;border-radius:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.9rem;transition:all .2s;flex-shrink:0" onmouseover="this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.background='rgba(255,255,255,.06)'">🌙</button>
       <button class="hdr-btn hdr-out" onclick="AUTH.logout()">LOGOUT</button>
-      <button id="mobMenuBtn" onclick="toggleMobileSidebar()" aria-label="Menu" style="display:none;width:38px;height:38px;border-radius:6px;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.25);align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">
+      <button id="mobMenuBtn" onclick="toggleMobileSidebar()" aria-label="Menu" style="display:none;width:38px;height:38px;border-radius:6px;background:rgba(34,227,255,.1);border:1px solid rgba(34,227,255,.25);align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">
         <span style="display:flex;flex-direction:column;gap:4px">
           <span style="width:18px;height:2px;background:var(--g);display:block;border-radius:1px"></span>
           <span style="width:18px;height:2px;background:var(--g);display:block;border-radius:1px"></span>
@@ -637,7 +641,7 @@
           <div class="ph">
             <div class="pt">AI Security Report</div>
             <div style="display:flex;gap:.5rem;align-items:center">
-              <select id="aiDeviceSelect" style="font-family:var(--mono);font-size:.55rem;background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.1);color:var(--text2);border-radius:4px;padding:.25rem .5rem;outline:none">
+              <select id="aiDeviceSelect" style="font-family:var(--mono);font-size:.55rem;background:rgba(0,0,0,.2);border:1px solid rgba(34,227,255,.1);color:var(--text2);border-radius:4px;padding:.25rem .5rem;outline:none">
                 <option value="">Select device...</option>
               </select>
               <button class="pa" onclick="runAI()">ANALYZE →</button>
@@ -667,7 +671,7 @@
       <div class="page" id="page-reports">
         <div class="pg-hdr flex-between">
           <div><div class="pg-title">REPORTS</div><div class="pg-sub">Export security findings</div></div>
-          <select id="reportDeviceSelect" style="font-family:var(--mono);font-size:.6rem;background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.1);color:var(--text2);border-radius:4px;padding:.3rem .6rem;outline:none">
+          <select id="reportDeviceSelect" style="font-family:var(--mono);font-size:.6rem;background:rgba(0,0,0,.2);border:1px solid rgba(34,227,255,.1);color:var(--text2);border-radius:4px;padding:.3rem .6rem;outline:none">
             <option value="all">All Devices</option>
           </select>
         </div>
@@ -683,7 +687,7 @@
               <div style="font-family:var(--mono);font-size:.5rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.4rem">JSON</div>
               <div style="font-family:var(--display);font-size:1rem;color:var(--white);letter-spacing:.04em;margin-bottom:.35rem">Raw Scan Data</div>
               <div style="font-family:var(--mono);font-size:.56rem;color:var(--muted);line-height:1.6;margin-bottom:.9rem">Machine-readable JSON for SIEM integration.</div>
-              <button onclick="exportJson()" class="btn btn-sm" style="background:rgba(0,212,255,.1);color:var(--g2);border:1px solid rgba(0,212,255,.2)">DOWNLOAD →</button>
+              <button onclick="exportJson()" class="btn btn-sm" style="background:rgba(77,141,255,.1);color:var(--g2);border:1px solid rgba(77,141,255,.2)">DOWNLOAD →</button>
             </div>
             <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:1.2rem;opacity:.5">
               <div style="font-family:var(--mono);font-size:.5rem;color:var(--muted);letter-spacing:.15em;margin-bottom:.4rem">PDF</div>
@@ -777,7 +781,7 @@
             <div class="pt">⚖️ SIGNED ENGAGEMENT AGREEMENTS</div>
             <div style="display:flex;gap:.5rem;align-items:center">
               <input id="agrSearch" type="search" placeholder="Search by name, email, org..." oninput="renderAgreements()"
-                style="font-family:var(--mono);font-size:.58rem;background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.1);color:var(--text2);border-radius:4px;padding:.3rem .6rem;outline:none;width:220px"/>
+                style="font-family:var(--mono);font-size:.58rem;background:rgba(0,0,0,.2);border:1px solid rgba(34,227,255,.1);color:var(--text2);border-radius:4px;padding:.3rem .6rem;outline:none;width:220px"/>
               <span id="agrCount" style="font-family:var(--mono);font-size:.55rem;color:var(--muted)"></span>
             </div>
           </div>
@@ -813,9 +817,9 @@
           <div><div class="pg-title">USER MANAGEMENT</div><div class="pg-sub">View, edit, create and manage all accounts</div></div>
           <div style="display:flex;gap:.5rem;flex-wrap:wrap">
             <input id="userSearchInput" type="search" placeholder="Search users..." oninput="renderUsersPage()"
-              style="font-family:var(--mono);font-size:.58rem;background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.1);color:var(--text2);border-radius:4px;padding:.35rem .7rem;outline:none;width:180px"/>
+              style="font-family:var(--mono);font-size:.58rem;background:rgba(0,0,0,.2);border:1px solid rgba(34,227,255,.1);color:var(--text2);border-radius:4px;padding:.35rem .7rem;outline:none;width:180px"/>
             <select id="userRoleFilter" onchange="renderUsersPage()"
-              style="font-family:var(--mono);font-size:.58rem;background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.1);color:var(--text2);border-radius:4px;padding:.35rem .6rem;outline:none">
+              style="font-family:var(--mono);font-size:.58rem;background:rgba(0,0,0,.2);border:1px solid rgba(34,227,255,.1);color:var(--text2);border-radius:4px;padding:.35rem .6rem;outline:none">
               <option value="">All Roles</option>
               <option value="admin">Admin</option>
               <option value="client">Client</option>
@@ -939,7 +943,7 @@
         <div class="panel" style="margin-top:.9rem">
           <div class="ph"><div class="pt">SECURITY</div></div>
           <div class="pb">
-            <div id="mfaStatusCard" style="background:rgba(0,0,0,.15);border:1px solid rgba(0,255,136,.08);border-radius:8px;padding:.9rem 1rem">
+            <div id="mfaStatusCard" style="background:rgba(0,0,0,.15);border:1px solid rgba(34,227,255,.08);border-radius:8px;padding:.9rem 1rem">
               <div style="display:flex;align-items:center;gap:.7rem">
                 <span style="font-size:1.1rem">&#128274;</span>
                 <div style="flex:1">
@@ -967,12 +971,12 @@
             </div>
             <div style="text-align:right">
               <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-bottom:.4rem">STATUS</div>
-              <span style="font-family:var(--mono);font-size:.6rem;background:rgba(0,255,136,.08);color:var(--ok);border:1px solid rgba(0,255,136,.18);padding:.25rem .65rem;border-radius:3px">ACTIVE</span>
+              <span style="font-family:var(--mono);font-size:.6rem;background:rgba(34,227,255,.08);color:var(--ok);border:1px solid rgba(34,227,255,.18);padding:.25rem .65rem;border-radius:3px">ACTIVE</span>
             </div>
           </div>
           <div class="bc-features" id="billingPlanFeatures"></div>
         </div>
-        <div id="subscriptionDetails" style="margin-bottom:.9rem;background:rgba(0,0,0,.15);border:1px solid rgba(0,255,136,.07);border-radius:8px;padding:.8rem 1rem">
+        <div id="subscriptionDetails" style="margin-bottom:.9rem;background:rgba(0,0,0,.15);border:1px solid rgba(34,227,255,.07);border-radius:8px;padding:.8rem 1rem">
           <div style="font-family:var(--mono);font-size:.62rem;color:var(--muted)">Connect Stripe to see subscription details.</div>
         </div>
         <div class="panel">
@@ -989,7 +993,7 @@
                   <div class="usage-track"><div class="usage-fill" id="usageDevicesBar" style="background:var(--g2);width:0%"></div></div>
                 </div>
               </div>
-              <div id="billingUnlockedFeatures" style="background:rgba(0,0,0,.15);border:1px solid rgba(0,255,136,.07);border-radius:6px;padding:1rem">
+              <div id="billingUnlockedFeatures" style="background:rgba(0,0,0,.15);border:1px solid rgba(34,227,255,.07);border-radius:6px;padding:1rem">
                 <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.6rem">PLAN FEATURES</div>
               </div>
             </div>
@@ -1020,7 +1024,7 @@
           <div style="position:relative">
             <input id="learnSearch" type="search" placeholder="Search topics — how to scan, what is MITRE, fix SSH..."
               oninput="filterLearn(this.value)"
-              style="width:100%;background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.1);border-radius:7px;padding:.7rem 1rem .7rem 2.4rem;font-family:var(--mono);font-size:.68rem;color:var(--white);outline:none;transition:border-color .2s"/>
+              style="width:100%;background:rgba(34,227,255,.03);border:1px solid rgba(34,227,255,.1);border-radius:7px;padding:.7rem 1rem .7rem 2.4rem;font-family:var(--mono);font-size:.68rem;color:var(--white);outline:none;transition:border-color .2s"/>
             <span style="position:absolute;left:.8rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:1rem;pointer-events:none">⌕</span>
           </div>
         </div></div>
@@ -1714,11 +1718,11 @@
           <div class="ph"><div class="pt">PASSWORD POLICY RECOMMENDATIONS</div></div>
           <div class="pb">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">
-              <div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:6px;padding:.8rem">
+              <div style="background:rgba(34,227,255,.04);border:1px solid rgba(34,227,255,.1);border-radius:6px;padding:.8rem">
                 <div style="font-family:var(--mono);font-size:.6rem;color:var(--g);margin-bottom:.5rem">MINIMUM REQUIREMENTS</div>
                 <div style="font-family:var(--mono);font-size:.58rem;color:var(--text2);line-height:1.9">&#9989; Minimum 12 characters<br/>&#9989; Upper + lowercase letters<br/>&#9989; At least one number<br/>&#9989; At least one special character<br/>&#9989; No dictionary words<br/>&#9989; No personal information</div>
               </div>
-              <div style="background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.1);border-radius:6px;padding:.8rem">
+              <div style="background:rgba(77,141,255,.04);border:1px solid rgba(77,141,255,.1);border-radius:6px;padding:.8rem">
                 <div style="font-family:var(--mono);font-size:.6rem;color:var(--g2);margin-bottom:.5rem">ENTERPRISE BEST PRACTICE</div>
                 <div style="font-family:var(--mono);font-size:.58rem;color:var(--text2);line-height:1.9">&#9989; 16+ character passphrases<br/>&#9989; Check against HIBP breach database<br/>&#9989; 90-day rotation policy<br/>&#9989; No password reuse (last 10)<br/>&#9989; MFA required for all accounts<br/>&#9989; Password manager required</div>
               </div>
@@ -2085,6 +2089,7 @@
           <div class="ph"><div class="pt">EXPOSED SERVICES MAP</div></div>
           <div class="pb" id="asServicesMap"><div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:1.5rem">Run a scan to map all exposed services.</div></div>
         </div>
+      </div>
       <!-- DARK WEB PAGE -->
       <div class="page" id="page-darkweb">
         <div class="pg-hdr flex-between">
@@ -2174,7 +2179,7 @@
       </div>
       <!-- LOCAL TAB -->
       <div id="dtab-local">
-        <div style="background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.1);border-radius:6px;padding:.9rem 1rem;margin-bottom:1rem">
+        <div style="background:rgba(34,227,255,.05);border:1px solid rgba(34,227,255,.1);border-radius:6px;padding:.9rem 1rem;margin-bottom:1rem">
           <div style="font-family:var(--mono);font-size:.58rem;color:var(--g);margin-bottom:.3rem">&#9889; LOCAL SCAN — Scans Your Backend Server</div>
           <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.8">
             Scans the server running your FastAPI backend (Railway or localhost).<br/>
@@ -2196,7 +2201,7 @@
           <div style="font-family:var(--mono);font-size:.56rem;color:var(--danger);letter-spacing:.1em;margin-bottom:.3rem">⚖️ LEGAL REQUIREMENT</div>
           <div style="font-family:var(--mono);font-size:.58rem;color:var(--text2);line-height:1.65">Remote scanning requires written authorization under the CFAA (18 U.S.C. § 1030). Unauthorized testing is a federal crime. <a href="../legal/agreement.html" target="_blank" style="color:var(--g2);text-decoration:underline">Sign the Engagement Agreement →</a></div>
         </div>
-        <div style="background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.12);border-radius:6px;padding:.8rem 1rem;margin-bottom:1rem">
+        <div style="background:rgba(77,141,255,.04);border:1px solid rgba(77,141,255,.12);border-radius:6px;padding:.8rem 1rem;margin-bottom:1rem">
           <div style="font-family:var(--mono);font-size:.57rem;color:var(--g2);line-height:1.6">Connects to any Linux machine via SSH and runs a full security audit remotely — from your machine to theirs.</div>
         </div>
         <div class="form-group"><label class="form-label">IP ADDRESS OR HOSTNAME</label><input class="form-input" id="remoteHost" placeholder="192.168.1.100 or server.example.com"/></div>
@@ -2230,7 +2235,7 @@
       <button class="modal-close" onclick="closeDiscoverModal()">✕</button>
     </div>
     <div class="modal-body">
-      <div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:6px;padding:.8rem 1rem;margin-bottom:1rem">
+      <div style="background:rgba(34,227,255,.04);border:1px solid rgba(34,227,255,.1);border-radius:6px;padding:.8rem 1rem;margin-bottom:1rem">
         <div style="font-family:var(--mono);font-size:.58rem;color:var(--g);margin-bottom:.3rem">🔍 NETWORK SWEEP</div>
         <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.7">Pings all hosts on your subnet to find live devices. SSH-capable devices can then be scanned individually.</div>
       </div>
@@ -2264,10 +2269,10 @@
 function showToast(msg, type) {
   // type: 'ok' | 'warn' | 'danger' | 'info' | string color
   var colors = {
-    ok:     {bg:'#00ff88', text:'#040810'},
+    ok:     {bg:'#22e3ff', text:'#040810'},
     warn:   {bg:'#f5a623', text:'#040810'},
     danger: {bg:'#ff4d6a', text:'#fff'},
-    info:   {bg:'#00d4ff', text:'#040810'},
+    info:   {bg:'#4d8dff', text:'#040810'},
     error:  {bg:'#ff4d6a', text:'#fff'},
   };
   var col = colors[type] || colors.ok;
@@ -2310,7 +2315,7 @@ function showToast(msg, type) {
 
 /* ── scoreColor — converts score to color string ──────────── */
 function scoreColor(score) {
-  if (score >= 90) return 'var(--ok, #00ff88)';
+  if (score >= 90) return 'var(--ok, #22e3ff)';
   if (score >= 75) return '#66dd88';
   if (score >= 55) return 'var(--warn, #f5a623)';
   if (score >= 35) return '#ff8c42';
@@ -2524,7 +2529,7 @@ function loadReferralPanel() {
   container.innerHTML = '<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);line-height:1.9">'
     + '<div style="color:var(--white);font-weight:700;margin-bottom:.4rem">Refer a friend — earn 1 month free</div>'
     + '<div style="display:flex;gap:.5rem;align-items:center">'
-    + '<code style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.15);border-radius:4px;padding:.3rem .7rem;color:var(--g);flex:1">' + code + '</code>'
+    + '<code style="background:rgba(34,227,255,.06);border:1px solid rgba(34,227,255,.15);border-radius:4px;padding:.3rem .7rem;color:var(--g);flex:1">' + code + '</code>'
     + '<button onclick="navigator.clipboard.writeText(\'' + code + '\').then(function(){showToast(\'Code copied!\',\'ok\');})" class="btn btn-o btn-sm">COPY</button>'
     + '</div>'
     + '<div style="margin-top:.3rem">Share your code. When they sign up and pay, you both get 1 month free.</div>'
@@ -2759,8 +2764,8 @@ function showScanProgress(container) {
     <div class="scan-anim">
       <div class="scan-ring">
         <svg width="110" height="110" viewBox="0 0 110 110">
-          <circle cx="55" cy="55" r="48" fill="none" stroke="rgba(0,255,136,.07)" stroke-width="2"/>
-          <circle id="scanArc" cx="55" cy="55" r="48" fill="none" stroke="#00ff88" stroke-width="2"
+          <circle cx="55" cy="55" r="48" fill="none" stroke="rgba(34,227,255,.07)" stroke-width="2"/>
+          <circle id="scanArc" cx="55" cy="55" r="48" fill="none" stroke="#22e3ff" stroke-width="2"
             stroke-dasharray="301" stroke-dashoffset="301" stroke-linecap="round" transform="rotate(-90 55 55)" style="transition:stroke-dashoffset .2s"/>
         </svg>
         <div class="scan-pct"><div class="scan-pct-num" id="scanPct">0%</div></div>
@@ -2999,7 +3004,7 @@ function renderDashboard() {
   // Devices preview
   document.getElementById('devicesPreview').innerHTML = DEVICES.length ? DEVICES.slice(-4).map(d=>{
     const score=d.security_score||0; const col=score>=80?'var(--g)':score>=60?'#f5c842':'var(--danger)';
-    return `<div style="display:flex;align-items:center;gap:.8rem;padding:.55rem .7rem;background:rgba(255,255,255,.02);border:1px solid rgba(0,255,136,.05);border-radius:5px;margin-bottom:.3rem;cursor:pointer" onclick="scanDeviceById('${d.ip}')">
+    return `<div style="display:flex;align-items:center;gap:.8rem;padding:.55rem .7rem;background:rgba(255,255,255,.02);border:1px solid rgba(34,227,255,.05);border-radius:5px;margin-bottom:.3rem;cursor:pointer" onclick="scanDeviceById('${d.ip}')">
       <div style="font-family:var(--display);font-size:1.4rem;color:${col};width:36px;text-align:right">${score}</div>
       <div style="flex:1"><div style="font-family:var(--mono);font-size:.6rem;color:var(--text2)">${d.hostname}</div><div style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">${d.ip} · ${d.os||'Linux'}</div></div>
       <div style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">${(d.issues||[]).filter(i=>i.severity==='critical').length}C ${(d.issues||[]).filter(i=>i.severity==='high').length}H</div>
@@ -3164,7 +3169,7 @@ async function runDiscover() {
     document.getElementById('discoverProgress').style.display='none';
     document.getElementById('discoverCount').textContent = `Found ${result.devices_found} live device${result.devices_found!==1?'s':''} on ${result.subnet}`;
     document.getElementById('discoverList').innerHTML = (result.devices||[]).map(d=>
-      `<div style="display:flex;align-items:center;gap:.8rem;padding:.6rem .8rem;background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.09);border-radius:6px">
+      `<div style="display:flex;align-items:center;gap:.8rem;padding:.6rem .8rem;background:rgba(34,227,255,.03);border:1px solid rgba(34,227,255,.09);border-radius:6px">
         <div style="flex:1"><div style="font-family:var(--mono);font-size:.62rem;color:var(--text2)">${d.ip}</div><div style="font-family:var(--mono);font-size:.54rem;color:var(--muted)">${d.hostname!==d.ip?d.hostname:''} · Ports: ${d.open_ports.join(', ')||'none'}</div></div>
         <span class="badge ${d.status==='online'?'b-online':'b-offline'}">${d.status}</span>
         ${d.ssh_available?`<button onclick="quickSshScan('${d.ip}')" class="btn btn-g btn-sm">SSH SCAN</button>`:'<span style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">No SSH</span>'}
@@ -3376,7 +3381,7 @@ function renderAdmin() {
       <td style="color:var(--g2)">${u.email}</td>
       <td><span class="badge b-${u.role==='admin'?'critical':u.role==='client'?'medium':'ok'}">${u.role}</span></td>
       <td style="color:var(--muted);font-size:.55rem">${u.plan||'free'}</td>
-      <td><span style="font-family:var(--mono);font-size:.5rem;padding:.15rem .4rem;border-radius:3px;background:${u.status==='active'?'rgba(0,255,136,.08)':'rgba(255,59,92,.08)'};color:${u.status==='active'?'var(--ok)':'var(--danger)'};border:1px solid ${u.status==='active'?'rgba(0,255,136,.18)':'rgba(255,59,92,.2)'}">${(u.status||'active').toUpperCase()}</span></td>
+      <td><span style="font-family:var(--mono);font-size:.5rem;padding:.15rem .4rem;border-radius:3px;background:${u.status==='active'?'rgba(34,227,255,.08)':'rgba(255,59,92,.08)'};color:${u.status==='active'?'var(--ok)':'var(--danger)'};border:1px solid ${u.status==='active'?'rgba(34,227,255,.18)':'rgba(255,59,92,.2)'}">${(u.status||'active').toUpperCase()}</span></td>
       <td style="color:var(--muted);font-size:.52rem">${u.lastLogin ? new Date(u.lastLogin).toLocaleDateString() : 'Never'}</td>
       <td style="color:var(--muted)">${u.loginCount||0}</td>
     </tr>`).join('')}</tbody></table>`;
@@ -3442,8 +3447,8 @@ function renderAgreements() {
             const start = new Date(a.start);
             const status = end < now ? 'expired' : start > now ? 'upcoming' : 'active';
             const statusStyle = {
-              active:   'background:rgba(0,255,136,.08);color:var(--ok);border:1px solid rgba(0,255,136,.18)',
-              upcoming: 'background:rgba(0,212,255,.06);color:var(--g2);border:1px solid rgba(0,212,255,.15)',
+              active:   'background:rgba(34,227,255,.08);color:var(--ok);border:1px solid rgba(34,227,255,.18)',
+              upcoming: 'background:rgba(77,141,255,.06);color:var(--g2);border:1px solid rgba(77,141,255,.15)',
               expired:  'background:rgba(255,255,255,.04);color:var(--muted);border:1px solid rgba(255,255,255,.08)',
             }[status];
             return `<tr>
@@ -3506,24 +3511,24 @@ function viewAgreement(id) {
       ['Signed At', a.timestamp],
       ['Target Scope', ''],
     ].map(([k, v]) => {
-      if (!v) return `<div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.18em;margin:1rem 0 .4rem;padding-top:.4rem;border-top:1px solid rgba(0,255,136,.06)">${k}</div>`;
+      if (!v) return `<div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.18em;margin:1rem 0 .4rem;padding-top:.4rem;border-top:1px solid rgba(34,227,255,.06)">${k}</div>`;
       return `<div style="display:flex;gap:.8rem;padding:.45rem .6rem;background:rgba(255,255,255,.02);border-radius:4px;margin-bottom:.25rem;flex-wrap:wrap">
         <span style="font-family:var(--mono);font-size:.55rem;color:var(--muted);width:140px;flex-shrink:0">${k}</span>
         <span style="font-family:var(--mono);font-size:.6rem;color:var(--text2);flex:1;word-break:break-all">${v}</span>
       </div>`;
     }).join('')}
 
-    <div style="background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.08);border-radius:5px;padding:.8rem;margin-top:.5rem">
+    <div style="background:rgba(0,0,0,.2);border:1px solid rgba(34,227,255,.08);border-radius:5px;padding:.8rem;margin-top:.5rem">
       <div style="font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-bottom:.4rem;letter-spacing:.12em">SCOPE OF SYSTEMS</div>
       <div style="font-family:var(--mono);font-size:.6rem;color:var(--g2);white-space:pre-wrap;line-height:1.8">${a.scope||'Not specified'}</div>
     </div>
 
-    ${a.notes ? `<div style="background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.1);border-radius:5px;padding:.8rem;margin-top:.6rem">
+    ${a.notes ? `<div style="background:rgba(77,141,255,.04);border:1px solid rgba(77,141,255,.1);border-radius:5px;padding:.8rem;margin-top:.6rem">
       <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);margin-bottom:.4rem">NOTES</div>
       <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.75">${a.notes}</div>
     </div>` : ''}
 
-    <div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:5px;padding:.8rem;margin-top:.6rem">
+    <div style="background:rgba(34,227,255,.04);border:1px solid rgba(34,227,255,.1);border-radius:5px;padding:.8rem;margin-top:.6rem">
       <div style="font-family:var(--mono);font-size:.55rem;color:var(--g);letter-spacing:.12em;margin-bottom:.3rem">⚖️ LEGAL CERTIFICATION</div>
       <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:1.75">
         Signed electronically under ESIGN Act (15 U.S.C. § 7001). All CFAA, ECPA, and applicable law acknowledgments checked and accepted by <strong style="color:var(--text2)">${a.name}</strong> on ${a.timestamp}.
@@ -3669,8 +3674,8 @@ function changePasswordDash() {
   function showAlert(msg, ok) {
     alertEl.textContent = msg;
     alertEl.style.display = 'block';
-    alertEl.style.background = ok ? 'rgba(0,255,136,.08)' : 'rgba(255,59,92,.08)';
-    alertEl.style.border = ok ? '1px solid rgba(0,255,136,.2)' : '1px solid rgba(255,59,92,.2)';
+    alertEl.style.background = ok ? 'rgba(34,227,255,.08)' : 'rgba(255,59,92,.08)';
+    alertEl.style.border = ok ? '1px solid rgba(34,227,255,.2)' : '1px solid rgba(255,59,92,.2)';
     alertEl.style.color  = ok ? 'var(--ok)' : 'var(--danger)';
     if (ok) setTimeout(() => { alertEl.style.display='none'; }, 3000);
   }
@@ -4150,9 +4155,9 @@ function updateMfaStatus() {
     text.textContent = '\u2705 Enabled (' + mfa.type.toUpperCase() + ')';
     text.style.color = 'var(--ok)';
     btn.textContent = 'MANAGE';
-    btn.style.background = 'rgba(0,255,136,.08)';
+    btn.style.background = 'rgba(34,227,255,.08)';
     btn.style.color = 'var(--g)';
-    btn.style.border = '1px solid rgba(0,255,136,.2)';
+    btn.style.border = '1px solid rgba(34,227,255,.2)';
   } else {
     text.textContent = '\u274C Not enabled \u2014 your account is at risk';
     text.style.color = 'var(--danger)';
@@ -4334,7 +4339,7 @@ function renderWebScanResults(data) {
       <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">${h.desc}</div>
       <div style="font-family:var(--mono);font-size:.54rem;color:var(--g2);margin-top:.25rem">${h.recommendation||''}</div>
     </div>`).join('')}
-    ${present.map(h => `<div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:5px;padding:.5rem .8rem;margin-bottom:.3rem;display:flex;align-items:center;gap:.6rem">
+    ${present.map(h => `<div style="background:rgba(34,227,255,.04);border:1px solid rgba(34,227,255,.1);border-radius:5px;padding:.5rem .8rem;margin-bottom:.3rem;display:flex;align-items:center;gap:.6rem">
       <span style="color:var(--ok)">✓</span><span style="font-family:var(--mono);font-size:.6rem;color:var(--text2)">${h.header}</span>
     </div>`).join('')}`;
 
@@ -4400,7 +4405,7 @@ async function runEmailOsint() {
     const bc = data.breach_check || data;
     const breached = bc.breached || bc.breach_count > 0;
     out.innerHTML = `
-      <div style="background:${breached?'rgba(255,59,92,.08)':'rgba(0,255,136,.06)'};border:1px solid ${breached?'rgba(255,59,92,.2)':'rgba(0,255,136,.15)'};border-radius:6px;padding:.9rem 1rem">
+      <div style="background:${breached?'rgba(255,59,92,.08)':'rgba(34,227,255,.06)'};border:1px solid ${breached?'rgba(255,59,92,.2)':'rgba(34,227,255,.15)'};border-radius:6px;padding:.9rem 1rem">
         <div style="font-family:var(--mono);font-size:.75rem;color:${breached?'var(--danger)':'var(--ok)'};margin-bottom:.5rem">
           ${breached ? `⚠ FOUND IN ${bc.breach_count} BREACH${bc.breach_count!==1?'ES':''}` : '✓ NOT FOUND IN ANY BREACHES'}
         </div>
@@ -4429,7 +4434,7 @@ async function runPwCheck() {
       data = { pwned: true, count: 52038 };
     }
     out.innerHTML = `
-      <div style="background:${data.pwned?'rgba(255,59,92,.08)':'rgba(0,255,136,.06)'};border:1px solid ${data.pwned?'rgba(255,59,92,.2)':'rgba(0,255,136,.15)'};border-radius:6px;padding:.9rem 1rem">
+      <div style="background:${data.pwned?'rgba(255,59,92,.08)':'rgba(34,227,255,.06)'};border:1px solid ${data.pwned?'rgba(255,59,92,.2)':'rgba(34,227,255,.15)'};border-radius:6px;padding:.9rem 1rem">
         <div style="font-family:var(--mono);font-size:.72rem;color:${data.pwned?'var(--danger)':'var(--ok)'}">
           ${data.pwned ? `⚠ PWNED — seen ${data.count.toLocaleString()} times in breaches` : '✓ Not found in any breach database'}
         </div>
@@ -4473,7 +4478,7 @@ async function runUsernameLookup() {
     out.innerHTML = `
       <div style="font-family:var(--mono);font-size:.6rem;color:var(--g2);margin-bottom:.8rem">Found on ${found.length}/${results.length} platforms</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.4rem">
-        ${results.map(r=>`<a href="${r.url}" target="_blank" style="display:flex;align-items:center;gap:.5rem;padding:.5rem .7rem;background:${r.found?'rgba(0,255,136,.06)':'rgba(255,255,255,.02)'};border:1px solid ${r.found?'rgba(0,255,136,.18)':'rgba(255,255,255,.05)'};border-radius:5px;text-decoration:none;transition:all .2s">
+        ${results.map(r=>`<a href="${r.url}" target="_blank" style="display:flex;align-items:center;gap:.5rem;padding:.5rem .7rem;background:${r.found?'rgba(34,227,255,.06)':'rgba(255,255,255,.02)'};border:1px solid ${r.found?'rgba(34,227,255,.18)':'rgba(255,255,255,.05)'};border-radius:5px;text-decoration:none;transition:all .2s">
           <span style="font-size:.7rem">${r.found?'✓':'✕'}</span>
           <span style="font-family:var(--mono);font-size:.58rem;color:${r.found?'var(--g)':'var(--muted)'}">${r.platform}</span>
         </a>`).join('')}
@@ -4511,7 +4516,7 @@ async function runThreatLookup() {
     const vtColor = vtMal > 5 ? 'var(--danger)' : vtMal > 0 ? '#f5c842' : 'var(--ok)';
     out.innerHTML = `
       <div class="g3" style="margin-top:.8rem">
-        <div style="background:rgba(255,255,255,.02);border:1px solid rgba(0,255,136,.07);border-radius:8px;padding:1rem">
+        <div style="background:rgba(255,255,255,.02);border:1px solid rgba(34,227,255,.07);border-radius:8px;padding:1rem">
           <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.6rem">ABUSEIPDB${rep?.demo?' (DEMO)':''}</div>
           <div style="font-family:var(--display);font-size:2rem;color:${abuseColor};margin-bottom:.3rem">${rep?.abuse_score||0}%</div>
           <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">Abuse confidence score</div>
@@ -4520,7 +4525,7 @@ async function runThreatLookup() {
             Tor: ${rep?.is_tor?'<span style="color:var(--danger)">YES</span>':'No'} · Proxy: ${rep?.is_proxy?'<span style="color:var(--danger)">YES</span>':'No'}
           </div>
         </div>
-        <div style="background:rgba(255,255,255,.02);border:1px solid rgba(0,255,136,.07);border-radius:8px;padding:1rem">
+        <div style="background:rgba(255,255,255,.02);border:1px solid rgba(34,227,255,.07);border-radius:8px;padding:1rem">
           <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.6rem">VIRUSTOTAL</div>
           <div style="font-family:var(--display);font-size:2rem;color:${vtColor};margin-bottom:.3rem">${vtMal}/${vt?.total||0}</div>
           <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">Malicious detections</div>
@@ -4529,7 +4534,7 @@ async function runThreatLookup() {
             Suspicious: ${vt?.suspicious||0}<br>Harmless: ${vt?.harmless||0}
           </div>
         </div>
-        <div style="background:rgba(255,255,255,.02);border:1px solid rgba(0,255,136,.07);border-radius:8px;padding:1rem">
+        <div style="background:rgba(255,255,255,.02);border:1px solid rgba(34,227,255,.07);border-radius:8px;padding:1rem">
           <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.6rem">SHODAN</div>
           <div style="font-family:var(--display);font-size:2rem;color:var(--g);margin-bottom:.3rem">${(shodan?.ports||[]).length}</div>
           <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">Open ports indexed</div>
@@ -4584,7 +4589,7 @@ function renderIncidents() {
   let list = [...INCIDENTS];
   if (statusFilter) list = list.filter(i => i.status === statusFilter);
   if (sevFilter)    list = list.filter(i => i.severity === sevFilter);
-  const STATUS_COL = { open:'var(--danger)', investigating:'#f5c842', contained:'#00d4ff', resolved:'var(--ok)', closed:'var(--muted)' };
+  const STATUS_COL = { open:'var(--danger)', investigating:'#f5c842', contained:'#4d8dff', resolved:'var(--ok)', closed:'var(--muted)' };
   document.getElementById('incidentList').innerHTML = list.length ? list.map(inc => `
     <div style="padding:.9rem 1rem;background:${SEV_C[inc.severity]};border:1px solid ${SEV_B[inc.severity]};border-radius:7px;margin-bottom:.4rem">
       <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.4rem;flex-wrap:wrap">
@@ -4712,7 +4717,7 @@ const MITRE_DATA = {
   'T1046':{'name':'Network Service Discovery','tactic':'Discovery','color':'#10b981'},
   'T1082':{'name':'System Info Discovery','tactic':'Discovery','color':'#10b981'},
   'T1021':{'name':'Remote Services','tactic':'Lateral Movement','color':'#f59e0b'},
-  'T1048':{'name':'Exfiltration Over Alt Protocol','tactic':'Exfiltration','color':'#7b2fff'},
+  'T1048':{'name':'Exfiltration Over Alt Protocol','tactic':'Exfiltration','color':'#8b5cf6'},
   'T1486':{'name':'Data Encrypted for Impact','tactic':'Impact','color':'#ff3b5c'},
   'T1490':{'name':'Inhibit System Recovery','tactic':'Impact','color':'#ff3b5c'},
 };
@@ -4789,7 +4794,7 @@ function renderPlaybooks() {
           <div class="pt">${pb.name}</div>
         </div>
         <div style="display:flex;gap:.4rem;align-items:center">
-          ${pb.mitre.map(t=>`<span style="font-family:var(--mono);font-size:.5rem;color:var(--g2);background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.1);padding:.15rem .4rem;border-radius:3px">${t}</span>`).join('')}
+          ${pb.mitre.map(t=>`<span style="font-family:var(--mono);font-size:.5rem;color:var(--g2);background:rgba(77,141,255,.06);border:1px solid rgba(77,141,255,.1);padding:.15rem .4rem;border-radius:3px">${t}</span>`).join('')}
         </div>
       </div>
       <div class="pb">
@@ -4804,7 +4809,7 @@ function renderPlaybooks() {
           </div>
           <div>
             <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.5rem">KEY COMMANDS</div>
-            ${pb.commands.map(cmd=>`<div style="background:rgba(0,0,0,.3);border:1px solid rgba(0,255,136,.08);border-radius:4px;padding:.5rem .8rem;margin-bottom:.3rem;font-family:var(--mono);font-size:.58rem;color:var(--g);word-break:break-all">${cmd}</div>`).join('')}
+            ${pb.commands.map(cmd=>`<div style="background:rgba(0,0,0,.3);border:1px solid rgba(34,227,255,.08);border-radius:4px;padding:.5rem .8rem;margin-bottom:.3rem;font-family:var(--mono);font-size:.58rem;color:var(--g);word-break:break-all">${cmd}</div>`).join('')}
           </div>
         </div>
       </div>
@@ -4898,7 +4903,7 @@ async function runSplunkSearch() {
     out.innerHTML = results.length
       ? `<div style="font-family:var(--mono);font-size:.57rem;color:var(--muted);margin-bottom:.6rem">${results.length} result${results.length!==1?'s':''} · ${!API_ONLINE?'DEMO DATA — configure SPLUNK_URL in .env':'Live Splunk data'}</div>
         <div style="display:flex;flex-direction:column;gap:.3rem">
-          ${results.map(r=>`<div style="background:rgba(0,0,0,.25);border:1px solid rgba(0,255,136,.07);border-radius:5px;padding:.6rem .8rem">
+          ${results.map(r=>`<div style="background:rgba(0,0,0,.25);border:1px solid rgba(34,227,255,.07);border-radius:5px;padding:.6rem .8rem">
             <div style="display:flex;gap:.8rem;margin-bottom:.25rem;flex-wrap:wrap">
               <span style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">${new Date(r._time||Date.now()).toLocaleTimeString()}</span>
               <span style="font-family:var(--mono);font-size:.52rem;color:var(--g2)">${r.host||'—'}</span>
@@ -5000,8 +5005,8 @@ function renderUsersPage() {
               <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);line-height:1.6">${u.phone||'—'}<br>${u.company||'—'}</div>
             </td>
             <td><span class="badge b-${u.role==='admin'?'critical':u.role==='client'?'medium':'ok'}">${u.role}</span></td>
-            <td><span style="font-family:var(--mono);font-size:.68rem;color:var(--muted);background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.1);padding:.15rem .4rem;border-radius:3px">${(u.plan||'free').toUpperCase()}</span></td>
-            <td><span style="font-family:var(--mono);font-size:.5rem;padding:.15rem .4rem;border-radius:3px;background:${u.status==='active'?'rgba(0,255,136,.08)':'rgba(255,59,92,.08)'};color:${u.status==='active'?'var(--ok)':'var(--danger)'};border:1px solid ${u.status==='active'?'rgba(0,255,136,.18)':'rgba(255,59,92,.2)'}">${(u.status||'active').toUpperCase()}</span></td>
+            <td><span style="font-family:var(--mono);font-size:.68rem;color:var(--muted);background:rgba(77,141,255,.06);border:1px solid rgba(77,141,255,.1);padding:.15rem .4rem;border-radius:3px">${(u.plan||'free').toUpperCase()}</span></td>
+            <td><span style="font-family:var(--mono);font-size:.5rem;padding:.15rem .4rem;border-radius:3px;background:${u.status==='active'?'rgba(34,227,255,.08)':'rgba(255,59,92,.08)'};color:${u.status==='active'?'var(--ok)':'var(--danger)'};border:1px solid ${u.status==='active'?'rgba(34,227,255,.18)':'rgba(255,59,92,.2)'}">${(u.status||'active').toUpperCase()}</span></td>
             <td style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">${u.created||'—'}</td>
             <td style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">${u.lastLogin ? new Date(u.lastLogin).toLocaleString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : 'Never'}</td>
             <td style="font-family:var(--mono);font-size:.55rem;color:var(--muted);text-align:center">${u.loginCount||0}</td>
@@ -5009,7 +5014,7 @@ function renderUsersPage() {
               <div style="display:flex;gap:.3rem">
                 <button onclick="openUserDetail('${u.id}')" class="btn btn-o btn-sm" style="font-size:.5rem;padding:.2rem .5rem">VIEW</button>
                 <button onclick="openEditUser('${u.id}')" class="btn btn-o btn-sm" style="font-size:.5rem;padding:.2rem .5rem;color:var(--g2)">EDIT</button>
-                ${u.id !== SESSION.id ? `<button onclick="toggleSuspend('${u.id}')" class="btn btn-sm" style="font-size:.5rem;padding:.2rem .5rem;background:${u.status==='active'?'rgba(245,158,11,.1)':'rgba(0,255,136,.08)'};color:${u.status==='active'?'var(--warn)':'var(--ok)'};border:1px solid ${u.status==='active'?'rgba(245,158,11,.2)':'rgba(0,255,136,.18)'}">${u.status==='active'?'SUSPEND':'ACTIVATE'}</button>
+                ${u.id !== SESSION.id ? `<button onclick="toggleSuspend('${u.id}')" class="btn btn-sm" style="font-size:.5rem;padding:.2rem .5rem;background:${u.status==='active'?'rgba(245,158,11,.1)':'rgba(34,227,255,.08)'};color:${u.status==='active'?'var(--warn)':'var(--ok)'};border:1px solid ${u.status==='active'?'rgba(245,158,11,.2)':'rgba(34,227,255,.18)'}">${u.status==='active'?'SUSPEND':'ACTIVATE'}</button>
                 <button onclick="deleteUserAdmin('${u.id}')" class="btn btn-r btn-sm" style="font-size:.5rem;padding:.2rem .5rem">DEL</button>` : '<span style="font-family:var(--mono);font-size:.48rem;color:var(--muted)">(you)</span>'}
               </div>
             </td>
@@ -5028,29 +5033,29 @@ function openUserDetail(userId) {
   const agrs = JSON.parse(localStorage.getItem('pm_agreements')||'[]').filter(a => a.email === u.email);
   document.getElementById('userModalBody').innerHTML = `
     <!-- Avatar + name header -->
-    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;padding:.9rem;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:8px">
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;padding:.9rem;background:rgba(34,227,255,.04);border:1px solid rgba(34,227,255,.1);border-radius:8px">
       <div style="width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--g3),var(--g));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:1.4rem;color:#fff;flex-shrink:0">${u.avatar||u.name[0]}</div>
       <div style="flex:1">
         <div style="font-family:var(--display);font-size:1.3rem;color:var(--white);letter-spacing:.04em">${u.name}</div>
         <div style="font-family:var(--mono);font-size:.58rem;color:var(--g2)">${u.email}</div>
         <div style="display:flex;gap:.4rem;margin-top:.4rem">
           <span class="badge b-${u.role==='admin'?'critical':u.role==='client'?'medium':'ok'}">${u.role}</span>
-          <span style="font-family:var(--mono);font-size:.5rem;padding:.15rem .4rem;border-radius:3px;background:${u.status==='active'?'rgba(0,255,136,.08)':'rgba(255,59,92,.08)'};color:${u.status==='active'?'var(--ok)':'var(--danger)'};border:1px solid ${u.status==='active'?'rgba(0,255,136,.18)':'rgba(255,59,92,.2)'}">${(u.status||'active').toUpperCase()}</span>
-          <span style="font-family:var(--mono);font-size:.5rem;color:var(--muted);background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.1);padding:.15rem .4rem;border-radius:3px">${(u.plan||'free').toUpperCase()}</span>
+          <span style="font-family:var(--mono);font-size:.5rem;padding:.15rem .4rem;border-radius:3px;background:${u.status==='active'?'rgba(34,227,255,.08)':'rgba(255,59,92,.08)'};color:${u.status==='active'?'var(--ok)':'var(--danger)'};border:1px solid ${u.status==='active'?'rgba(34,227,255,.18)':'rgba(255,59,92,.2)'}">${(u.status||'active').toUpperCase()}</span>
+          <span style="font-family:var(--mono);font-size:.5rem;color:var(--muted);background:rgba(77,141,255,.06);border:1px solid rgba(77,141,255,.1);padding:.15rem .4rem;border-radius:3px">${(u.plan||'free').toUpperCase()}</span>
         </div>
       </div>
     </div>
     <!-- Stats row -->
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1.2rem">
-      <div style="background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.07);border-radius:6px;padding:.8rem;text-align:center">
+      <div style="background:rgba(0,0,0,.2);border:1px solid rgba(34,227,255,.07);border-radius:6px;padding:.8rem;text-align:center">
         <div style="font-family:var(--display);font-size:1.6rem;color:var(--g)">${u.loginCount||0}</div>
         <div style="font-family:var(--mono);font-size:.48rem;color:var(--muted)">TOTAL LOGINS</div>
       </div>
-      <div style="background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.07);border-radius:6px;padding:.8rem;text-align:center">
+      <div style="background:rgba(0,0,0,.2);border:1px solid rgba(34,227,255,.07);border-radius:6px;padding:.8rem;text-align:center">
         <div style="font-family:var(--display);font-size:1.6rem;color:var(--g2)">${agrs.length}</div>
         <div style="font-family:var(--mono);font-size:.48rem;color:var(--muted)">AGREEMENTS</div>
       </div>
-      <div style="background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.07);border-radius:6px;padding:.8rem;text-align:center">
+      <div style="background:rgba(0,0,0,.2);border:1px solid rgba(34,227,255,.07);border-radius:6px;padding:.8rem;text-align:center">
         <div style="font-family:var(--display);font-size:.8rem;color:var(--muted);margin-top:.4rem">${u.lastLogin ? new Date(u.lastLogin).toLocaleDateString() : 'Never'}</div>
         <div style="font-family:var(--mono);font-size:.48rem;color:var(--muted)">LAST LOGIN</div>
       </div>
@@ -5073,13 +5078,13 @@ function openUserDetail(userId) {
       <span style="font-family:var(--mono);font-size:.55rem;color:var(--muted);width:110px;flex-shrink:0">${k}</span>
       <span style="font-family:var(--mono);font-size:.6rem;color:var(--text2);flex:1;word-break:break-all">${v}</span>
     </div>`).join('')}
-    ${u.notes ? `<div style="background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.1);border-radius:5px;padding:.7rem .9rem;margin-top:.5rem">
+    ${u.notes ? `<div style="background:rgba(77,141,255,.04);border:1px solid rgba(77,141,255,.1);border-radius:5px;padding:.7rem .9rem;margin-top:.5rem">
       <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);margin-bottom:.3rem">NOTES</div>
       <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">${u.notes}</div>
     </div>` : ''}
     ${agrs.length ? `<div style="margin-top:.8rem">
       <div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.4rem">SIGNED AGREEMENTS (${agrs.length})</div>
-      ${agrs.map(a => `<div style="display:flex;align-items:center;gap:.7rem;padding:.45rem .6rem;background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.08);border-radius:5px;margin-bottom:.3rem">
+      ${agrs.map(a => `<div style="display:flex;align-items:center;gap:.7rem;padding:.45rem .6rem;background:rgba(34,227,255,.03);border:1px solid rgba(34,227,255,.08);border-radius:5px;margin-bottom:.3rem">
         <span style="font-family:var(--mono);font-size:.52rem;color:var(--g2)">${a.id}</span>
         <span style="font-family:var(--mono);font-size:.55rem;color:var(--text2);flex:1">${a.type||'—'}</span>
         <span style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">${(a.timestamp||'').split(',')[0]}</span>
@@ -5090,7 +5095,7 @@ function openUserDetail(userId) {
     <div style="display:flex;gap:.5rem;margin-top:1.1rem;flex-wrap:wrap">
       <button onclick="openEditUser('${u.id}');closeUserModal()" class="btn btn-o btn-sm">✏️ EDIT USER</button>
       ${u.id !== SESSION.id ? `
-      <button onclick="toggleSuspend('${u.id}');closeUserModal()" class="btn btn-sm" style="background:${u.status==='active'?'rgba(245,158,11,.1)':'rgba(0,255,136,.08)'};color:${u.status==='active'?'var(--warn)':'var(--ok)'};border:1px solid ${u.status==='active'?'rgba(245,158,11,.2)':'rgba(0,255,136,.18)'}">
+      <button onclick="toggleSuspend('${u.id}');closeUserModal()" class="btn btn-sm" style="background:${u.status==='active'?'rgba(245,158,11,.1)':'rgba(34,227,255,.08)'};color:${u.status==='active'?'var(--warn)':'var(--ok)'};border:1px solid ${u.status==='active'?'rgba(245,158,11,.2)':'rgba(34,227,255,.18)'}">
         ${u.status==='active'?'🔒 SUSPEND':'✅ ACTIVATE'}
       </button>
       <button onclick="adminResetPw('${u.id}');closeUserModal()" class="btn btn-o btn-sm" style="color:var(--g2)">🔑 RESET PW</button>
@@ -5231,10 +5236,10 @@ const LIGHT_VARS = {
 };
 const DARK_VARS = {
   '--bg':'#03070f','--bg2':'#060d1a','--bg3':'#0a1628',
-  '--g':'#00ff88','--g2':'#00d4ff','--g3':'#7b2fff',
-  '--border':'rgba(0,255,136,.1)',
+  '--g':'#22e3ff','--g2':'#4d8dff','--g3':'#8b5cf6',
+  '--border':'rgba(34,227,255,.1)',
   '--muted':'#2a4a62','--text':'#7aafc8','--text2':'#c0dce8','--white':'#e8f4f8',
-  '--danger':'#ff3b5c','--warn':'#f59e0b','--ok':'#00ff88',
+  '--danger':'#ff3b5c','--warn':'#f59e0b','--ok':'#22e3ff',
 };
 let darkMode = localStorage.getItem('pm_theme') !== 'light';
 
@@ -5350,10 +5355,10 @@ function parseAndRenderRemediation(raw, issue, device) {
     return;
   }
   allRemCommands = (data.steps||[]).filter(function(s){return s.command;}).map(function(s){return s.command;});
-  var sevColor = ({critical:'#ff3b5c',high:'#ff8c42',medium:'#f5c842',low:'#4dd9ac'})[issue.severity] || '#00ff88';
+  var sevColor = ({critical:'#ff3b5c',high:'#ff8c42',medium:'#f5c842',low:'#4dd9ac'})[issue.severity] || '#22e3ff';
   var html = '';
   // Summary
-  html += '<div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:8px;padding:1.1rem 1.3rem;margin-bottom:1.1rem">';
+  html += '<div style="background:rgba(34,227,255,.04);border:1px solid rgba(34,227,255,.1);border-radius:8px;padding:1.1rem 1.3rem;margin-bottom:1.1rem">';
   html += '<div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:.8rem">';
   html += '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">Difficulty: <span style="color:var(--text2)">'+(data.difficulty||'—')+'</span></div>';
   html += '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">Time: <span style="color:var(--text2)">'+(data.time_estimate||'—')+'</span></div>';
@@ -5373,7 +5378,7 @@ function parseAndRenderRemediation(raw, issue, device) {
     html += '<div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);border-radius:7px;overflow:hidden">';
     var hasBorder = step.command ? '1px solid rgba(255,255,255,.05)' : 'none';
     html += '<div style="display:flex;align-items:center;gap:.8rem;padding:.7rem .9rem;border-bottom:'+hasBorder+'">';
-    html += '<div style="width:22px;height:22px;border-radius:50%;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:.8rem;color:var(--g);flex-shrink:0">'+(i+1)+'</div>';
+    html += '<div style="width:22px;height:22px;border-radius:50%;background:rgba(34,227,255,.1);border:1px solid rgba(34,227,255,.2);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:.8rem;color:var(--g);flex-shrink:0">'+(i+1)+'</div>';
     html += '<div style="flex:1"><div style="font-family:var(--mono);font-size:.62rem;color:var(--white);margin-bottom:.2rem">'+step.title+'</div>';
     html += '<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:1.65">'+step.description+'</div></div></div>';
     if (step.command) {
@@ -5381,7 +5386,7 @@ function parseAndRenderRemediation(raw, issue, device) {
       html += '<div id="'+cmdId+'" data-cmd="'+step.command.replace(/"/g,'&quot;')+'" onclick="copyFromId(this)" ';
       html += 'style="display:flex;align-items:center;gap:.6rem;padding:.6rem .9rem;background:rgba(0,0,0,.3);cursor:pointer;transition:background .2s" ';
       html += 'onmouseover="this.style.background=\'rgba(0,0,0,.5)\'" onmouseout="this.style.background=\'rgba(0,0,0,.3)\'" title="Click to copy">';
-      html += '<span style="font-family:var(--mono);font-size:.58rem;color:rgba(0,255,136,.4);flex-shrink:0">$</span>';
+      html += '<span style="font-family:var(--mono);font-size:.58rem;color:rgba(34,227,255,.4);flex-shrink:0">$</span>';
       html += '<code style="font-family:var(--mono);font-size:.62rem;color:var(--g);flex:1;word-break:break-all">'+step.command+'</code>';
       html += '<span style="font-family:var(--mono);font-size:.5rem;color:var(--muted);flex-shrink:0">&#128203; COPY</span></div>';
     }
@@ -5390,13 +5395,13 @@ function parseAndRenderRemediation(raw, issue, device) {
   html += '</div>';
   // Verify
   if (data.verification) {
-    html += '<div style="background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.12);border-radius:7px;padding:.9rem 1.1rem;margin-bottom:.7rem">';
+    html += '<div style="background:rgba(77,141,255,.04);border:1px solid rgba(77,141,255,.12);border-radius:7px;padding:.9rem 1.1rem;margin-bottom:.7rem">';
     html += '<div style="font-family:var(--mono);font-size:.52rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.4rem">&#10003; HOW TO VERIFY</div>';
     html += '<div style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.8">'+data.verification+'</div></div>';
   }
   // Prevention
   if (data.prevention) {
-    html += '<div style="background:rgba(123,47,255,.04);border:1px solid rgba(123,47,255,.15);border-radius:7px;padding:.9rem 1.1rem">';
+    html += '<div style="background:rgba(139,92,246,.04);border:1px solid rgba(139,92,246,.15);border-radius:7px;padding:.9rem 1.1rem">';
     html += '<div style="font-family:var(--mono);font-size:.52rem;color:#c084fc;letter-spacing:.15em;margin-bottom:.4rem">&#128737; PREVENTION</div>';
     html += '<div style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.8">'+data.prevention+'</div></div>';
   }
@@ -5423,8 +5428,8 @@ function renderRemediationText(text, issue) {
       if (cmd) {
         html += '<div data-cmd="'+cmd.replace(/"/g,'&quot;')+'" onclick="copyFromId(this)" ';
         html += 'style="display:flex;align-items:center;gap:.6rem;padding:.55rem .9rem;';
-        html += 'background:rgba(0,0,0,.3);border:1px solid rgba(0,255,136,.1);border-radius:5px;margin:.3rem 0;cursor:pointer">';
-        html += '<span style="color:rgba(0,255,136,.4)">$ </span>';
+        html += 'background:rgba(0,0,0,.3);border:1px solid rgba(34,227,255,.1);border-radius:5px;margin:.3rem 0;cursor:pointer">';
+        html += '<span style="color:rgba(34,227,255,.4)">$ </span>';
         html += '<code style="font-family:var(--mono);font-size:.62rem;color:var(--g);flex:1">'+cmd+'</code>';
         html += '<span style="font-family:var(--mono);font-size:.5rem;color:var(--muted)">&#128203;</span></div>';
       }
@@ -5507,7 +5512,7 @@ function renderReports() {
   }
 
   container.innerHTML = allIssues.map(issue => {
-    const sevColor = { critical:'#ff3b5c', high:'#ff8c42', medium:'#f5c842', low:'#4dd9ac' }[issue.severity] || '#00ff88';
+    const sevColor = { critical:'#ff3b5c', high:'#ff8c42', medium:'#f5c842', low:'#4dd9ac' }[issue.severity] || '#22e3ff';
     const sevBg    = { critical:'rgba(255,59,92,.08)', high:'rgba(255,140,66,.08)', medium:'rgba(245,200,66,.06)', low:'rgba(77,217,172,.05)' }[issue.severity] || 'rgba(255,255,255,.03)';
     const sevBorder= { critical:'rgba(255,59,92,.22)', high:'rgba(255,140,66,.2)', medium:'rgba(245,200,66,.18)', low:'rgba(77,217,172,.15)' }[issue.severity] || 'rgba(255,255,255,.07)';
     return `
@@ -6054,8 +6059,8 @@ function renderLearnContent(filter) {
     container.innerHTML = "<div style=\"font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:3rem\">No topics match your search.</div>";
     return;
   }
-  var tagColors = { beginner:"#00ff88", advanced:"#c084fc", account:"#00d4ff", features:"#f59e0b" };
-  var tagBgs    = { beginner:"rgba(0,255,136,.08)", advanced:"rgba(123,47,255,.08)", account:"rgba(0,212,255,.06)", features:"rgba(245,158,11,.07)" };
+  var tagColors = { beginner:"#22e3ff", advanced:"#c084fc", account:"#4d8dff", features:"#f59e0b" };
+  var tagBgs    = { beginner:"rgba(34,227,255,.08)", advanced:"rgba(139,92,246,.08)", account:"rgba(77,141,255,.06)", features:"rgba(245,158,11,.07)" };
   var out = "";
   items.forEach(function(topic) {
     var color = tagColors[topic.tag] || "#f59e0b";
@@ -6066,14 +6071,14 @@ function renderLearnContent(filter) {
       if (sec.cmd) {
         var safe = sec.cmd.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
         cmdBlock = "<div data-cmd=\"" + safe + "\" onclick=\"copyFromId(this)\" "
-          + "style=\"background:rgba(0,0,0,.3);border:1px solid rgba(0,255,136,.1);border-radius:5px;"
-          + "padding:.65rem .9rem;font-family:var(--mono);font-size:.6rem;color:#00ff88;"
+          + "style=\"background:rgba(0,0,0,.3);border:1px solid rgba(34,227,255,.1);border-radius:5px;"
+          + "padding:.65rem .9rem;font-family:var(--mono);font-size:.6rem;color:#22e3ff;"
           + "cursor:pointer;white-space:pre;overflow-x:auto;margin:.4rem 0\" title=\"Click to copy\">"
           + safe + "</div>"
           + "<div style=\"font-family:var(--mono);font-size:.5rem;color:#2a4a62;text-align:right;margin-bottom:.3rem\">&#128203; Click to copy</div>";
       }
-      secs += "<div style=\"padding:1rem 1.2rem;border-top:1px solid rgba(0,255,136,.05)\">"
-        + "<div style=\"font-family:var(--mono);font-size:.62rem;color:#00d4ff;letter-spacing:.1em;margin-bottom:.5rem\">" + (si+1) + ". " + sec.title + "</div>"
+      secs += "<div style=\"padding:1rem 1.2rem;border-top:1px solid rgba(34,227,255,.05)\">"
+        + "<div style=\"font-family:var(--mono);font-size:.62rem;color:#4d8dff;letter-spacing:.1em;margin-bottom:.5rem\">" + (si+1) + ". " + sec.title + "</div>"
         + "<div style=\"font-family:var(--mono);font-size:.62rem;color:#c0dce8;line-height:1.85;white-space:pre-wrap;margin-bottom:" + (sec.cmd ? ".6rem" : "0") + "\">"
         + sec.body.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;") + "</div>"
         + cmdBlock + "</div>";
@@ -6527,7 +6532,7 @@ function renderSubscriptionCard(sub, planDef) {
     ? new Date(subscription.current_period_end).toLocaleDateString()
     : trial.on_trial ? 'Trial ends ' + new Date(trial.trial_end).toLocaleDateString() : 'N/A';
 
-  return '<div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:8px;padding:1.4rem 1.6rem;margin-bottom:1rem">'
+  return '<div style="background:rgba(34,227,255,.04);border:1px solid rgba(34,227,255,.1);border-radius:8px;padding:1.4rem 1.6rem;margin-bottom:1rem">'
     + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">'
     + '<div>'
     + '<div style="font-family:var(--display);font-size:1.5rem;color:var(--white);letter-spacing:.04em">' + plan.toUpperCase() + '</div>'
@@ -6620,7 +6625,7 @@ function renderOnboardingStep(idx) {
   var total = ONBOARDING_STEPS.length;
   var progress = ((idx + 1) / total * 100).toFixed(0);
   var modal = document.getElementById('onboardingModal');
-  modal.innerHTML = '<div style="background:var(--bg2);border:1px solid rgba(0,255,136,.15);border-radius:14px;max-width:480px;width:100%;overflow:hidden">'
+  modal.innerHTML = '<div style="background:var(--bg2);border:1px solid rgba(34,227,255,.15);border-radius:14px;max-width:480px;width:100%;overflow:hidden">'
     + '<div style="height:3px;background:rgba(0,0,0,.3);position:relative">'
     + '<div style="height:100%;background:linear-gradient(90deg,var(--g),var(--g2));width:' + progress + '%;transition:width .4s"></div></div>'
     + '<div style="padding:2rem">'
@@ -6702,10 +6707,10 @@ function renderReferralPanel() {
   var container = document.getElementById('referralPanel');
   if (!container) return;
   container.innerHTML = '<div class="panel"><div class="ph"><div class="pt">&#127873; REFERRAL PROGRAM</div></div><div class="pb">'
-    + '<div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:8px;padding:1.2rem 1.4rem;margin-bottom:1rem">'
+    + '<div style="background:rgba(34,227,255,.04);border:1px solid rgba(34,227,255,.1);border-radius:8px;padding:1.2rem 1.4rem;margin-bottom:1rem">'
     + '<div style="font-family:var(--mono);font-size:.58rem;color:var(--g2);letter-spacing:.15em;margin-bottom:.6rem">YOUR REFERRAL LINK</div>'
     + '<div style="display:flex;align-items:center;gap:.6rem">'
-    + '<div style="font-family:var(--mono);font-size:.62rem;color:var(--text2);flex:1;word-break:break-all;background:rgba(0,0,0,.2);padding:.5rem .8rem;border-radius:5px;border:1px solid rgba(0,255,136,.08)">' + link + '</div>'
+    + '<div style="font-family:var(--mono);font-size:.62rem;color:var(--text2);flex:1;word-break:break-all;background:rgba(0,0,0,.2);padding:.5rem .8rem;border-radius:5px;border:1px solid rgba(34,227,255,.08)">' + link + '</div>'
     + '<button onclick="copyReferralLink()" style="background:var(--g);color:#040810;border:none;border-radius:5px;padding:.5rem .9rem;font-family:var(--mono);font-size:.6rem;font-weight:700;cursor:pointer;white-space:nowrap">&#128203; COPY</button>'
     + '</div></div>'
     + '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1rem">'
@@ -6719,7 +6724,7 @@ function renderReferralPanel() {
     + '<div style="font-family:var(--display);font-size:1.6rem;color:var(--warn)">$' + stats.credits + '</div>'
     + '<div style="font-family:var(--mono);font-size:.52rem;color:var(--muted);margin-top:.2rem">CREDITS</div></div>'
     + '</div>'
-    + '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.1);border-radius:6px;padding:.9rem 1.1rem;line-height:1.8">'
+    + '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);background:rgba(77,141,255,.04);border:1px solid rgba(77,141,255,.1);border-radius:6px;padding:.9rem 1.1rem;line-height:1.8">'
     + '&#128161; How it works: Share your link. Referred users get <strong style="color:var(--text2)">1 month free</strong>. '
     + 'When they upgrade, you get <strong style="color:var(--text2)">$10 credit</strong> per conversion.'
     + '</div></div></div>';
@@ -6793,7 +6798,7 @@ function renderScoreTrend(deviceIp, containerId) {
     + '<div style="display:flex;align-items:flex-end;gap:2px;height:32px">'
     + hist.slice(-30).map(function(h) {
         var pct = max_s === min_s ? 50 : ((h.score - min_s) / (max_s - min_s) * 100);
-        var col = h.score < 50 ? '#ff4d6a' : h.score < 70 ? '#f5a623' : '#00ff88';
+        var col = h.score < 50 ? '#ff4d6a' : h.score < 70 ? '#f5a623' : '#22e3ff';
         return '<div style="flex:1;background:' + col + ';opacity:.7;border-radius:2px 2px 0 0;height:' + Math.max(4,pct*0.32) + 'px;align-self:flex-end" title="' + h.date + ': ' + h.score + '"></div>';
       }).join('')
     + '</div>';
@@ -6831,7 +6836,7 @@ function showWidgetCustomizer() {
     {id:'aiRemediationSection', label:'AI Remediation'},
   ];
   var prefs = getWidgetPrefs();
-  var html = '<div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:3000;background:var(--bg2);border:1px solid rgba(0,255,136,.15);border-radius:12px;padding:1.5rem;min-width:280px">'
+  var html = '<div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:3000;background:var(--bg2);border:1px solid rgba(34,227,255,.15);border-radius:12px;padding:1.5rem;min-width:280px">'
     + '<div style="font-family:var(--mono);font-size:.7rem;color:var(--white);letter-spacing:.12em;margin-bottom:1rem">&#128295; CUSTOMIZE DASHBOARD</div>'
     + widgets.map(function(w) {
         var vis = prefs[w.id] !== false;
@@ -6920,12 +6925,12 @@ function renderApiKeys() {
     return;
   }
   container.innerHTML = keys.map(function(k) {
-    return '<div style="background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.08);border-radius:7px;padding:.9rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.8rem">'
+    return '<div style="background:rgba(0,0,0,.2);border:1px solid rgba(34,227,255,.08);border-radius:7px;padding:.9rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.8rem">'
       + '<div style="flex:1">'
       + '<div style="font-family:var(--mono);font-size:.65rem;color:var(--text2);margin-bottom:.2rem">' + k.name + '</div>'
       + '<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">pmsk_****' + k.key.slice(-8) + ' &nbsp;&#183;&nbsp; Created ' + k.created.split('T')[0] + '</div>'
       + '</div>'
-      + '<button data-key="' + k.key + '" onclick="copyApiKey(this.dataset.key)" style="background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);border-radius:4px;padding:.3rem .6rem;font-family:var(--mono);font-size:.55rem;color:var(--g);cursor:pointer">&#128203;</button>'
+      + '<button data-key="' + k.key + '" onclick="copyApiKey(this.dataset.key)" style="background:rgba(34,227,255,.08);border:1px solid rgba(34,227,255,.15);border-radius:4px;padding:.3rem .6rem;font-family:var(--mono);font-size:.55rem;color:var(--g);cursor:pointer">&#128203;</button>'
       + '<button data-kid="' + k.id + '" onclick="revokeApiKey(this.dataset.kid)" style="background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.15);border-radius:4px;padding:.3rem .6rem;font-family:var(--mono);font-size:.55rem;color:var(--danger);cursor:pointer">REVOKE</button>'
       + '</div>';
   }).join('');
@@ -7143,14 +7148,14 @@ function renderComplianceReport(device) {
 function renderNetworkTopology(containerId) {
   var container = document.getElementById(containerId);
   if (!container || !DEVICES.length) return;
-  var scoreColor = function(s){ return s<50?'#ff4d6a':s<70?'#f5a623':'#00ff88'; };
+  var scoreColor = function(s){ return s<50?'#ff4d6a':s<70?'#f5a623':'#22e3ff'; };
   // SVG-based simple topology
   var w = container.offsetWidth || 600;
   var h = Math.max(200, DEVICES.length * 80);
   var svg = '<svg width="' + w + '" height="' + h + '" style="background:rgba(0,0,0,.2);border-radius:8px">';
   // Gateway node
-  svg += '<circle cx="' + (w/2) + '" cy="40" r="18" fill="rgba(0,212,255,.2)" stroke="#00d4ff" stroke-width="1.5"/>';
-  svg += '<text x="' + (w/2) + '" y="44" text-anchor="middle" fill="#00d4ff" font-size="12">&#127760;</text>';
+  svg += '<circle cx="' + (w/2) + '" cy="40" r="18" fill="rgba(77,141,255,.2)" stroke="#4d8dff" stroke-width="1.5"/>';
+  svg += '<text x="' + (w/2) + '" y="44" text-anchor="middle" fill="#4d8dff" font-size="12">&#127760;</text>';
   svg += '<text x="' + (w/2) + '" y="68" text-anchor="middle" fill="#5a7a96" font-size="10" font-family="monospace">Gateway</text>';
   // Device nodes
   DEVICES.forEach(function(dev, i) {
@@ -7180,7 +7185,7 @@ function renderScheduledScans() {
     return;
   }
   container.innerHTML = schedules.map(function(s) {
-    return '<div style="display:flex;align-items:center;gap:.8rem;padding:.7rem .9rem;background:rgba(0,0,0,.15);border:1px solid rgba(0,255,136,.06);border-radius:6px;margin-bottom:.4rem">'
+    return '<div style="display:flex;align-items:center;gap:.8rem;padding:.7rem .9rem;background:rgba(0,0,0,.15);border:1px solid rgba(34,227,255,.06);border-radius:6px;margin-bottom:.4rem">'
       + '<div style="flex:1">'
       + '<div style="font-family:var(--mono);font-size:.65rem;color:var(--text2)">' + s.name + '</div>'
       + '<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-top:.15rem">' + s.cron + ' &nbsp;&#183;&nbsp; ' + (s.target||'local') + '</div>'
@@ -7677,7 +7682,7 @@ function renderATMDeviceList() {
     var scoreColor = !atm.score ? 'var(--muted)' : atm.score < 50 ? 'var(--danger)' : atm.score < 75 ? 'var(--warn)' : 'var(--ok)';
     var statusIcon = atm.status === 'unscanned' ? '&#9898;' : atm.threats > 0 ? '&#128683;' : '&#9989;';
     var osRisk = (atm.os.indexOf('XP') >= 0 || atm.os.indexOf('7') >= 0) ? '<span style="color:var(--danger);font-size:.52rem"> &#9888; LEGACY OS</span>' : '';
-    return '<div style="display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;background:rgba(0,0,0,.15);border:1px solid rgba(0,255,136,.06);border-radius:7px;margin-bottom:.4rem;flex-wrap:wrap">'
+    return '<div style="display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;background:rgba(0,0,0,.15);border:1px solid rgba(34,227,255,.06);border-radius:7px;margin-bottom:.4rem;flex-wrap:wrap">'
       + '<div style="font-size:1.2rem">' + statusIcon + '</div>'
       + '<div style="flex:1;min-width:150px">'
       + '<div style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700">' + atm.id + osRisk + '</div>'
@@ -7693,8 +7698,8 @@ function renderATMDeviceList() {
       + '</div>'
       + (atm.threats > 0 ? '<div style="background:rgba(255,59,92,.1);border:1px solid rgba(255,59,92,.2);border-radius:5px;padding:.25rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--danger)">' + atm.threats + ' CRITICAL</div>' : '')
       + '<div style="display:flex;gap:.4rem">'
-      + '<button onclick="runSingleATMScan(\'' + atm.id + '\')" style="background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);border-radius:4px;padding:.3rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--g);cursor:pointer">SCAN</button>'
-      + '<button onclick="renderATMChecklist(\'' + atm.id + '\')" style="background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.15);border-radius:4px;padding:.3rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--g2);cursor:pointer">REPORT</button>'
+      + '<button onclick="runSingleATMScan(\'' + atm.id + '\')" style="background:rgba(34,227,255,.08);border:1px solid rgba(34,227,255,.15);border-radius:4px;padding:.3rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--g);cursor:pointer">SCAN</button>'
+      + '<button onclick="renderATMChecklist(\'' + atm.id + '\')" style="background:rgba(77,141,255,.06);border:1px solid rgba(77,141,255,.15);border-radius:4px;padding:.3rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--g2);cursor:pointer">REPORT</button>'
       + '<button onclick="removeATM(\'' + atm.id + '\')" style="background:rgba(255,59,92,.06);border:1px solid rgba(255,59,92,.12);border-radius:4px;padding:.3rem .5rem;font-family:var(--mono);font-size:.58rem;color:var(--danger);cursor:pointer">&#10005;</button>'
       + '</div></div>';
   }).join('');
@@ -7742,7 +7747,7 @@ function renderATMChecklist(atmId) {
         + '<span class="badge b-' + f.severity + '">' + f.severity + '</span>'
         + '</div>'
         + (f.status !== 'pass' && f.remediation
-            ? '<div style="padding:.5rem .9rem;background:rgba(0,212,255,.04);border-top:1px solid rgba(0,212,255,.08)">'
+            ? '<div style="padding:.5rem .9rem;background:rgba(77,141,255,.04);border-top:1px solid rgba(77,141,255,.08)">'
               + '<div style="font-family:var(--mono);font-size:.57rem;color:var(--g2);letter-spacing:.1em;margin-bottom:.2rem">REMEDIATION</div>'
               + '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.7">' + f.remediation + '</div>'
               + '</div>'
@@ -7912,7 +7917,7 @@ function renderVendingList() {
   container.innerHTML = machines.map(function(vm) {
     var sc = vm.score;
     var scCol = !sc ? 'var(--muted)' : sc<50?'var(--danger)':sc<75?'var(--warn)':'var(--ok)';
-    return '<div style="display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;background:rgba(0,0,0,.15);border:1px solid rgba(0,255,136,.06);border-radius:7px;margin-bottom:.4rem;flex-wrap:wrap">'
+    return '<div style="display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;background:rgba(0,0,0,.15);border:1px solid rgba(34,227,255,.06);border-radius:7px;margin-bottom:.4rem;flex-wrap:wrap">'
       + '<div style="font-size:1.3rem">' + (typeIcons[vm.type]||'&#129384;') + '</div>'
       + '<div style="flex:1;min-width:150px">'
       + '<div style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700">' + vm.id + '</div>'
@@ -7928,8 +7933,8 @@ function renderVendingList() {
       + '</div>'
       + (vm.tamper_alerts > 0 ? '<div style="background:rgba(255,59,92,.1);border:1px solid rgba(255,59,92,.2);border-radius:5px;padding:.25rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--danger)">&#9888; ' + vm.tamper_alerts + ' TAMPER</div>' : '')
       + '<div style="display:flex;gap:.4rem">'
-      + '<button onclick="runSingleVendingScan(\'' + vm.id + '\')" style="background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);border-radius:4px;padding:.3rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--g);cursor:pointer">SCAN</button>'
-      + '<button onclick="renderVendingChecklist(\'' + vm.id + '\')" style="background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.15);border-radius:4px;padding:.3rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--g2);cursor:pointer">REPORT</button>'
+      + '<button onclick="runSingleVendingScan(\'' + vm.id + '\')" style="background:rgba(34,227,255,.08);border:1px solid rgba(34,227,255,.15);border-radius:4px;padding:.3rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--g);cursor:pointer">SCAN</button>'
+      + '<button onclick="renderVendingChecklist(\'' + vm.id + '\')" style="background:rgba(77,141,255,.06);border:1px solid rgba(77,141,255,.15);border-radius:4px;padding:.3rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--g2);cursor:pointer">REPORT</button>'
       + '<button onclick="removeVending(\'' + vm.id + '\')" style="background:rgba(255,59,92,.06);border:1px solid rgba(255,59,92,.12);border-radius:4px;padding:.3rem .5rem;font-family:var(--mono);font-size:.58rem;color:var(--danger);cursor:pointer">&#10005;</button>'
       + '</div></div>';
   }).join('');
@@ -7974,7 +7979,7 @@ function renderVendingChecklist(vmId) {
         + (f.failed && f.failed.length ? '<div style="font-family:var(--mono);font-size:.58rem;color:var(--danger);margin-top:.2rem">Failed: ' + f.failed.slice(0,2).join('; ') + '</div>' : '')
         + '</div><span class="badge b-' + f.severity + '">' + f.severity + '</span></div>'
         + (f.status !== 'pass' && f.remediation
-            ? '<div style="padding:.5rem .9rem;background:rgba(0,212,255,.04);border-top:1px solid rgba(0,212,255,.08)">'
+            ? '<div style="padding:.5rem .9rem;background:rgba(77,141,255,.04);border-top:1px solid rgba(77,141,255,.08)">'
               + '<div style="font-family:var(--mono);font-size:.57rem;color:var(--g2);letter-spacing:.1em;margin-bottom:.2rem">FIX</div>'
               + '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.7">' + f.remediation + '</div>'
               + '</div>'
@@ -8040,11 +8045,11 @@ function placeChatWin() {
 function buildFCW() {
   var w = document.createElement('div');
   w.id = 'fcw';
-  w.style.cssText = 'position:fixed;width:320px;height:440px;background:rgba(4,8,16,.98);border:1px solid rgba(0,255,136,.2);border-radius:12px;flex-direction:column;z-index:8999;box-shadow:0 20px 60px rgba(0,0,0,.7);overflow:hidden;display:none';
+  w.style.cssText = 'position:fixed;width:320px;height:440px;background:rgba(4,8,16,.98);border:1px solid rgba(34,227,255,.2);border-radius:12px;flex-direction:column;z-index:8999;box-shadow:0 20px 60px rgba(0,0,0,.7);overflow:hidden;display:none';
 
   var hdr = document.createElement('div');
-  hdr.style.cssText = 'padding:.8rem 1rem;background:linear-gradient(135deg,rgba(123,47,255,.2),rgba(0,255,136,.1));border-bottom:1px solid rgba(0,255,136,.08);display:flex;align-items:center;gap:.6rem;flex-shrink:0';
-  hdr.innerHTML = '<div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#7b2fff,#00ff88);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0">&#128737;</div>'
+  hdr.style.cssText = 'padding:.8rem 1rem;background:linear-gradient(135deg,rgba(139,92,246,.2),rgba(34,227,255,.1));border-bottom:1px solid rgba(34,227,255,.08);display:flex;align-items:center;gap:.6rem;flex-shrink:0';
+  hdr.innerHTML = '<div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#22e3ff);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0">&#128737;</div>'
     + '<div style="flex:1"><div style="font-family:var(--mono);font-size:.63rem;color:#fff;letter-spacing:.06em">PM::OFFSEC AI</div>'
     + '<div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">&#128994; Online</div></div>'
     + '<button onclick="toggleChat()" style="background:none;border:none;color:var(--muted);font-size:1rem;cursor:pointer;line-height:1">&#10005;</button>';
@@ -8055,21 +8060,21 @@ function buildFCW() {
   var welcome = document.createElement('div');
   welcome.style.cssText = 'align-self:flex-start;max-width:90%';
   var bubble = document.createElement('div');
-  bubble.style.cssText = 'padding:.5rem .75rem;background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.1);border-radius:2px 8px 8px 8px;font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7';
+  bubble.style.cssText = 'padding:.5rem .75rem;background:rgba(34,227,255,.05);border:1px solid rgba(34,227,255,.1);border-radius:2px 8px 8px 8px;font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7';
   bubble.textContent = 'Hi! Ask me about your scan results, security issues, or any cybersecurity questions.';
   welcome.appendChild(bubble);
   msgs.appendChild(welcome);
 
   var foot = document.createElement('div');
-  foot.style.cssText = 'padding:.6rem;border-top:1px solid rgba(0,255,136,.07);display:flex;gap:.4rem;align-items:center;flex-shrink:0';
+  foot.style.cssText = 'padding:.6rem;border-top:1px solid rgba(34,227,255,.07);display:flex;gap:.4rem;align-items:center;flex-shrink:0';
   var inp = document.createElement('input');
   inp.id = 'fcwInp';
   inp.type = 'text';
   inp.placeholder = 'Ask a security question...';
-  inp.style.cssText = 'flex:1;background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.1);border-radius:6px;padding:.42rem .65rem;font-family:var(--mono);font-size:.62rem;color:#fff;outline:none';
+  inp.style.cssText = 'flex:1;background:rgba(34,227,255,.03);border:1px solid rgba(34,227,255,.1);border-radius:6px;padding:.42rem .65rem;font-family:var(--mono);font-size:.62rem;color:#fff;outline:none';
   inp.addEventListener('keydown', function(e){ if(e.key==='Enter') fcwSend(); });
   var sb = document.createElement('button');
-  sb.style.cssText = 'width:30px;height:30px;border-radius:6px;background:linear-gradient(135deg,#7b2fff,#00ff88);border:none;cursor:pointer;font-size:.85rem;flex-shrink:0';
+  sb.style.cssText = 'width:30px;height:30px;border-radius:6px;background:linear-gradient(135deg,#8b5cf6,#22e3ff);border:none;cursor:pointer;font-size:.85rem;flex-shrink:0';
   sb.innerHTML = '&#9658;';
   sb.onclick = fcwSend;
   foot.appendChild(inp);
@@ -8093,7 +8098,7 @@ async function fcwSend() {
   var userMsg = document.createElement('div');
   userMsg.style.cssText = 'align-self:flex-end;max-width:90%';
   var ub = document.createElement('div');
-  ub.style.cssText = 'padding:.5rem .75rem;background:rgba(123,47,255,.15);border:1px solid rgba(123,47,255,.25);border-radius:8px 2px 8px 8px;font-family:var(--mono);font-size:.62rem;color:#fff;line-height:1.7';
+  ub.style.cssText = 'padding:.5rem .75rem;background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.25);border-radius:8px 2px 8px 8px;font-family:var(--mono);font-size:.62rem;color:#fff;line-height:1.7';
   ub.textContent = text;
   userMsg.appendChild(ub);
   msgs.appendChild(userMsg);
@@ -8124,7 +8129,7 @@ async function fcwSend() {
   var botMsg = document.createElement('div');
   botMsg.style.cssText = 'align-self:flex-start;max-width:90%';
   var bb = document.createElement('div');
-  bb.style.cssText = 'padding:.5rem .75rem;background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.1);border-radius:2px 8px 8px 8px;font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7';
+  bb.style.cssText = 'padding:.5rem .75rem;background:rgba(34,227,255,.05);border:1px solid rgba(34,227,255,.1);border-radius:2px 8px 8px 8px;font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7';
   bb.textContent = reply;
   botMsg.appendChild(bb);
   msgs.appendChild(botMsg);
@@ -8185,8 +8190,8 @@ function renderFleet() {
       var typeIco = { server:'&#128268;', atm:'&#127975;', vending:'&#129384;' };
       hm.innerHTML = filtered.map(function(d) {
         var sc = d.score;
-        var col = sc==null?'rgba(255,255,255,.08)':sc>=75?'rgba(0,255,136,.15)':sc>=50?'rgba(245,158,11,.15)':'rgba(255,59,92,.15)';
-        var bdr = sc==null?'rgba(255,255,255,.1)':sc>=75?'rgba(0,255,136,.3)':sc>=50?'rgba(245,158,11,.3)':'rgba(255,59,92,.3)';
+        var col = sc==null?'rgba(255,255,255,.08)':sc>=75?'rgba(34,227,255,.15)':sc>=50?'rgba(245,158,11,.15)':'rgba(255,59,92,.15)';
+        var bdr = sc==null?'rgba(255,255,255,.1)':sc>=75?'rgba(34,227,255,.3)':sc>=50?'rgba(245,158,11,.3)':'rgba(255,59,92,.3)';
         var txt = sc==null?'var(--muted)':sc>=75?'var(--ok)':sc>=50?'var(--warn)':'var(--danger)';
         return '<div style="background:'+col+';border:1px solid '+bdr+';border-radius:8px;padding:.7rem .6rem;text-align:center;cursor:pointer" onclick="nav(\''+d.type+'\')">'
           +'<div style="font-size:1.2rem">'+(typeIco[d.type]||'&#128268;')+'</div>'
@@ -8209,7 +8214,7 @@ function renderFleet() {
         var scCol = sc==null?'var(--muted)':sc>=75?'var(--ok)':sc>=50?'var(--warn)':'var(--danger)';
         var typeLabel = {server:'SERVER',atm:'ATM',vending:'VENDING'}[d.type]||d.type.toUpperCase();
         var typeBadge = {server:'b-blue',atm:'b-warn',vending:'b-ok'}[d.type]||'b-gray';
-        return '<div style="display:flex;align-items:center;gap:.8rem;padding:.7rem .9rem;background:rgba(0,0,0,.1);border:1px solid rgba(0,255,136,.06);border-radius:6px;margin-bottom:.4rem;flex-wrap:wrap">'
+        return '<div style="display:flex;align-items:center;gap:.8rem;padding:.7rem .9rem;background:rgba(0,0,0,.1);border:1px solid rgba(34,227,255,.06);border-radius:6px;margin-bottom:.4rem;flex-wrap:wrap">'
           +'<div style="flex:1;min-width:120px">'
           +'<div style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700">'+d.name+'</div>'
           +'<div style="font-family:var(--mono);font-size:.57rem;color:var(--muted);margin-top:.1rem">'+(d.location||'Unknown location')+(d.manufacturer?' &nbsp;&#183;&nbsp; '+d.manufacturer:'')+'</div>'
@@ -8220,7 +8225,7 @@ function renderFleet() {
           +'<div style="font-family:var(--display);font-size:1.3rem;color:'+scCol+'">'+(sc!=null?sc:'--')+'</div>'
           +'<div style="font-family:var(--mono);font-size:.45rem;color:var(--muted)">SCORE</div>'
           +'</div>'
-          +'<button onclick="nav(\''+d.type+'\')" style="background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);border-radius:4px;padding:.3rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--g);cursor:pointer">VIEW</button>'
+          +'<button onclick="nav(\''+d.type+'\')" style="background:rgba(34,227,255,.08);border:1px solid rgba(34,227,255,.15);border-radius:4px;padding:.3rem .6rem;font-family:var(--mono);font-size:.58rem;color:var(--g);cursor:pointer">VIEW</button>'
           +'</div>';
       }).join('');
     }
@@ -8307,7 +8312,7 @@ function renderThreatFeed() {
       +'</div>'
       +'<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);line-height:1.7;margin-bottom:.4rem">'+t.desc+'</div>'
       +'<div style="display:flex;gap:.5rem;flex-wrap:wrap">'
-      +(t.mitre?'<span style="font-family:var(--mono);font-size:.55rem;background:rgba(123,47,255,.1);border:1px solid rgba(123,47,255,.2);color:#c084fc;padding:.15rem .45rem;border-radius:3px">MITRE: '+t.mitre+'</span>':'')
+      +(t.mitre?'<span style="font-family:var(--mono);font-size:.55rem;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);color:#c084fc;padding:.15rem .45rem;border-radius:3px">MITRE: '+t.mitre+'</span>':'')
       +(t.iocs&&t.iocs.length?'<span style="font-family:var(--mono);font-size:.55rem;background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.15);color:var(--danger);padding:.15rem .45rem;border-radius:3px">'+t.iocs.length+' IOC'+(t.iocs.length>1?'s':'')+'</span>':'')
       +'</div></div></div>';
   }).join('');
@@ -8324,7 +8329,7 @@ function renderThreatFeed() {
     ];
     cvEl.innerHTML = cvData.map(function(cv) {
       var col = cv.score>=9?'var(--danger)':cv.score>=7?'var(--warn)':'var(--g2)';
-      return '<div style="display:flex;align-items:center;gap:.7rem;padding:.5rem 0;border-bottom:1px solid rgba(0,255,136,.05)">'
+      return '<div style="display:flex;align-items:center;gap:.7rem;padding:.5rem 0;border-bottom:1px solid rgba(34,227,255,.05)">'
         +'<div style="font-family:var(--display);font-size:1.1rem;color:'+col+';min-width:36px;text-align:center">'+cv.score+'</div>'
         +'<div style="flex:1">'
         +'<div style="font-family:var(--mono);font-size:.63rem;color:var(--text2)">'+cv.id+'</div>'
@@ -8380,7 +8385,7 @@ function checkBlacklists() {
     var clean = Math.random() > 0.2;
     var col = clean ? 'var(--ok)' : 'var(--danger)';
     var ico = clean ? '&#9989;' : '&#9888;';
-    return '<div style="display:flex;align-items:center;gap:.7rem;padding:.45rem 0;border-bottom:1px solid rgba(0,255,136,.05)">'
+    return '<div style="display:flex;align-items:center;gap:.7rem;padding:.45rem 0;border-bottom:1px solid rgba(34,227,255,.05)">'
       +'<span style="font-size:1rem">'+ico+'</span>'
       +'<span style="font-family:var(--mono);font-size:.65rem;color:var(--text2);flex:1">'+(d.ip||d.hostname||'Unknown')+'</span>'
       +'<span style="font-family:var(--mono);font-size:.6rem;color:'+col+'">'+(clean?'CLEAN — Not blacklisted':'FOUND in 2 blacklists')+'</span>'
@@ -8473,10 +8478,10 @@ function renderSOAR() {
         +'<span style="position:absolute;left:'+(pb.enabled?'18':'2')+'px;top:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:all .2s"></span>'
         +'</label>'
         +'</div>'
-        +'<div style="padding:.5rem 1rem;background:rgba(0,212,255,.03);border-top:1px solid rgba(0,212,255,.06)">'
+        +'<div style="padding:.5rem 1rem;background:rgba(77,141,255,.03);border-top:1px solid rgba(77,141,255,.06)">'
         +'<div style="font-family:var(--mono);font-size:.55rem;color:var(--g2);letter-spacing:.1em;margin-bottom:.3rem">ACTIONS</div>'
         +'<div style="display:flex;flex-wrap:wrap;gap:.3rem">'
-        +pb.actions.map(function(a){return '<span style="font-family:var(--mono);font-size:.57rem;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.1);color:var(--text2);padding:.15rem .45rem;border-radius:3px">&#10003; '+a+'</span>';}).join('')
+        +pb.actions.map(function(a){return '<span style="font-family:var(--mono);font-size:.57rem;background:rgba(34,227,255,.06);border:1px solid rgba(34,227,255,.1);color:var(--text2);padding:.15rem .45rem;border-radius:3px">&#10003; '+a+'</span>';}).join('')
         +'</div></div></div>';
     }).join('');
   }
@@ -8488,7 +8493,7 @@ function renderSOAR() {
       cel.innerHTML = '<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:1.5rem">No custom playbooks yet. Create one to automate your incident response.</div>';
     } else {
       cel.innerHTML = custom.map(function(pb) {
-        return '<div style="background:rgba(0,0,0,.12);border:1px solid rgba(123,47,255,.15);border-radius:7px;padding:.8rem 1rem;margin-bottom:.4rem;display:flex;align-items:center;gap:.8rem">'
+        return '<div style="background:rgba(0,0,0,.12);border:1px solid rgba(139,92,246,.15);border-radius:7px;padding:.8rem 1rem;margin-bottom:.4rem;display:flex;align-items:center;gap:.8rem">'
           +'<span style="font-size:1.1rem">&#9889;</span>'
           +'<div style="flex:1">'
           +'<div style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700">'+pb.name+'</div>'
@@ -8508,7 +8513,7 @@ function renderSOAR() {
       logEl.innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:1.5rem">Automation events will appear here.</div>';
     } else {
       logEl.innerHTML = allLogs.slice(0,20).map(function(entry) {
-        return '<div style="display:flex;align-items:center;gap:.7rem;padding:.4rem 0;border-bottom:1px solid rgba(0,255,136,.05)">'
+        return '<div style="display:flex;align-items:center;gap:.7rem;padding:.4rem 0;border-bottom:1px solid rgba(34,227,255,.05)">'
           +'<span style="font-size:.8rem">'+(entry.ok?'&#9989;':'&#10060;')+'</span>'
           +'<span style="font-family:var(--mono);font-size:.6rem;color:var(--text2);flex:1">'+entry.playbook+'</span>'
           +'<span style="font-family:var(--mono);font-size:.57rem;color:var(--muted)">'+entry.action+'</span>'
@@ -8665,8 +8670,8 @@ function checkDemoModeBanner() {
     var banner = document.createElement('div');
     banner.id = 'demoBanner';
     banner.style.cssText = 'position:fixed;top:var(--header);left:0;right:0;z-index:450;'
-      + 'background:linear-gradient(135deg,rgba(123,47,255,.2),rgba(0,212,255,.15));'
-      + 'border-bottom:1px solid rgba(123,47,255,.3);padding:.5rem 1.2rem;'
+      + 'background:linear-gradient(135deg,rgba(139,92,246,.2),rgba(77,141,255,.15));'
+      + 'border-bottom:1px solid rgba(139,92,246,.3);padding:.5rem 1.2rem;'
       + 'display:flex;align-items:center;justify-content:space-between;gap:1rem;'
       + 'font-family:var(--mono);font-size:.65rem;backdrop-filter:blur(8px)';
     banner.innerHTML = '<div style="display:flex;align-items:center;gap:.7rem">'
@@ -8702,7 +8707,7 @@ if ('serviceWorker' in navigator) {
 
 <!-- PWA Install Banner -->
 <div class="pwa-banner" id="pwaBanner">
-  <div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#7b2fff,#00ff88);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">&#128737;</div>
+  <div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#8b5cf6,#22e3ff);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">&#128737;</div>
   <div style="flex:1;min-width:0">
     <div style="font-family:var(--mono);font-size:.65rem;color:var(--white);font-weight:700;margin-bottom:.1rem">Install PM::OFFSEC App</div>
     <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">Add to home screen for offline access</div>
@@ -8713,7 +8718,7 @@ if ('serviceWorker' in navigator) {
 
 
 <!-- AI FIX MODAL -->
-<div id="remModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeRemModal()"><div class="modal" style="max-width:640px;width:100%"><div class="modal-bar"></div><div class="modal-hdr"><div><div class="modal-title" id="remModalTitle">&#129302; AI FIX</div><div style="font-family:var(--mono);font-size:.58rem;color:var(--muted)" id="remModalSub"></div></div><button class="modal-close" onclick="closeRemModal()">&#10005;</button></div><div class="modal-body" id="remModalBody" style="min-height:180px"><div style="text-align:center;padding:2rem;font-family:var(--mono);font-size:.65rem;color:var(--muted)">Loading...</div></div><div style="display:flex;gap:.5rem;justify-content:flex-end;padding:.9rem 1.2rem;border-top:1px solid rgba(0,255,136,.07)"><button onclick="copyAllCommands()" class="btn btn-o btn-sm">COPY</button><button onclick="closeRemModal()" class="btn btn-g btn-sm">DONE</button></div></div></div>
+<div id="remModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeRemModal()"><div class="modal" style="max-width:640px;width:100%"><div class="modal-bar"></div><div class="modal-hdr"><div><div class="modal-title" id="remModalTitle">&#129302; AI FIX</div><div style="font-family:var(--mono);font-size:.58rem;color:var(--muted)" id="remModalSub"></div></div><button class="modal-close" onclick="closeRemModal()">&#10005;</button></div><div class="modal-body" id="remModalBody" style="min-height:180px"><div style="text-align:center;padding:2rem;font-family:var(--mono);font-size:.65rem;color:var(--muted)">Loading...</div></div><div style="display:flex;gap:.5rem;justify-content:flex-end;padding:.9rem 1.2rem;border-top:1px solid rgba(34,227,255,.07)"><button onclick="copyAllCommands()" class="btn btn-o btn-sm">COPY</button><button onclick="closeRemModal()" class="btn btn-g btn-sm">DONE</button></div></div></div>
 <!-- REVIEWS MODAL --><!-- Chat FAB -->
 <div class="chat-launcher" id="chatLauncher">
   <button class="chat-fab" id="chatFabBtn" onclick="toggleChat()" title="Chat with Prakash">
@@ -8760,7 +8765,7 @@ if ('serviceWorker' in navigator) {
       <div class="form-group"><label class="form-label">DESCRIPTION</label>
         <textarea class="form-input" id="incDesc" rows="3" placeholder="Describe what happened, when, and what systems are affected..." style="resize:vertical"></textarea></div>
     </div>
-    <div style="display:flex;gap:.5rem;justify-content:flex-end;padding:.9rem 1.2rem;border-top:1px solid rgba(0,255,136,.07)">
+    <div style="display:flex;gap:.5rem;justify-content:flex-end;padding:.9rem 1.2rem;border-top:1px solid rgba(34,227,255,.07)">
       <button onclick="closeIncidentModal()" class="btn btn-o btn-sm">CANCEL</button>
       <button onclick="createIncident()" class="btn btn-g btn-sm">&#128680; CREATE INCIDENT</button>
     </div>
@@ -8800,7 +8805,7 @@ if ('serviceWorker' in navigator) {
       <div class="form-group"><label class="form-label">DESCRIPTION</label>
         <textarea class="form-input" id="iocDesc" rows="2" placeholder="Context about this IOC..." style="resize:vertical"></textarea></div>
     </div>
-    <div style="display:flex;gap:.5rem;justify-content:flex-end;padding:.9rem 1.2rem;border-top:1px solid rgba(0,255,136,.07)">
+    <div style="display:flex;gap:.5rem;justify-content:flex-end;padding:.9rem 1.2rem;border-top:1px solid rgba(34,227,255,.07)">
       <button onclick="closeIocModal()" class="btn btn-o btn-sm">CANCEL</button>
       <button onclick="addIocEntry()" class="btn btn-g btn-sm">&#10133; ADD IOC</button>
     </div>
@@ -8821,14 +8826,14 @@ if ('serviceWorker' in navigator) {
     <div class="modal-body" id="upgradePayModalBody">
       <!-- Populated by openUpgradeModal() JS function -->
     </div>
-    <div style="padding:.8rem 1.2rem;border-top:1px solid rgba(0,255,136,.07);font-family:var(--mono);font-size:.57rem;color:var(--muted);text-align:center">
+    <div style="padding:.8rem 1.2rem;border-top:1px solid rgba(34,227,255,.07);font-family:var(--mono);font-size:.57rem;color:var(--muted);text-align:center">
       &#128272; Secure payment via Stripe &nbsp;&#183;&nbsp; Cancel anytime &nbsp;&#183;&nbsp; No contracts
     </div>
   </div>
 </div>
 
 <!-- MFA STATUS CARD (in profile/settings) -->
-<div id="mfaStatusCard" style="display:none;background:rgba(0,0,0,.2);border:1px solid rgba(0,255,136,.08);border-radius:8px;padding:.9rem 1rem;margin-top:.8rem">
+<div id="mfaStatusCard" style="display:none;background:rgba(0,0,0,.2);border:1px solid rgba(34,227,255,.08);border-radius:8px;padding:.9rem 1rem;margin-top:.8rem">
   <div style="display:flex;align-items:center;gap:.7rem">
     <span style="font-size:1.1rem">&#128274;</span>
     <div style="flex:1">
@@ -8854,7 +8859,7 @@ if ('serviceWorker' in navigator) {
 <div id="scanQuotaDisplay" style="font-family:var(--mono);font-size:.58rem;color:var(--muted);display:inline"></div>
 
 <!-- SUBSCRIPTION DETAILS PANEL -->
-<div id="subscriptionDetails" style="display:none;background:rgba(0,0,0,.15);border:1px solid rgba(0,255,136,.07);border-radius:8px;padding:.9rem 1rem;margin-top:.6rem">
+<div id="subscriptionDetails" style="display:none;background:rgba(0,0,0,.15);border:1px solid rgba(34,227,255,.07);border-radius:8px;padding:.9rem 1rem;margin-top:.6rem">
   <div style="font-family:var(--mono);font-size:.62rem;color:var(--muted)">Loading subscription details...</div>
 </div>
 
@@ -8910,7 +8915,7 @@ function copyAllCommands(){var b=document.getElementById('remModalBody');if(!b)r
 function openClientReview(){var s=document.getElementById('crDevice');if(s&&typeof DEVICES!=='undefined')s.innerHTML='<option value="">Select...</option>'+DEVICES.map(function(dv){return '<option value="'+dv.ip+'">'+(dv.hostname||dv.ip)+'</option>';}).join('');var m=document.getElementById('remModal');if(m)m.style.display='flex';}
 function closeClientReview(){var m=document.getElementById('remModal');if(m)m.style.display='none';}
 function sendClientReview(){var n=(document.getElementById('crClientName')||{}).value||'';var e=(document.getElementById('crClientEmail')||{}).value||'';var dv=(document.getElementById('crDevice')||{}).value||'';var mg=(document.getElementById('crMessage')||{}).value||'';if(!n){if(typeof showToast==='function')showToast('Enter client name','warn');return;}if(!e.includes('@')){if(typeof showToast==='function')showToast('Enter valid email','warn');return;}var dd=(typeof DEVICES!=='undefined'?DEVICES:[]).find(function(x){return x.ip===dv;});var sid=(typeof SESSION!=='undefined')?SESSION.id:'guest';var revs=JSON.parse(localStorage.getItem('pm_revs_'+sid)||'[]');revs.unshift({id:'R'+Date.now().toString(36).toUpperCase(),clientName:n,clientEmail:e,deviceHostname:dd?(dd.hostname||dd.ip):dv,score:dd?(dd.score||0):0,status:'sent',sentAt:new Date().toISOString()});localStorage.setItem('pm_revs_'+sid,JSON.stringify(revs));closeClientReview();if(typeof showToast==='function')showToast('Review sent to '+n,'ok');if(typeof addActivity==='function')addActivity('ok','Client review sent to '+n,'Just now');var subj=encodeURIComponent('Your Security Report is Ready');var body=encodeURIComponent('Hi '+n+',\n\n'+(mg?mg+'\n\n':'')+'View at: https://erprakashmijar.com/client/index.html\n\nBest regards');setTimeout(function(){window.open('mailto:'+e+'?subject='+subj+'&body='+body,'_blank');},500);}
-function openReviewsList(){var m=document.getElementById('remModal');var b=document.getElementById('reviewsListBody');if(!m||!b)return;var sid=(typeof SESSION!=='undefined')?SESSION.id:'guest';var revs=JSON.parse(localStorage.getItem('pm_revs_'+sid)||'[]');b.innerHTML=revs.length?revs.map(function(rv){return '<div style="border:1px solid rgba(0,255,136,.07);border-radius:6px;padding:.8rem;margin-bottom:.4rem"><strong style="font-family:var(--mono);font-size:.68rem;color:var(--white)">'+rv.clientName+'</strong><div style="font-family:var(--mono);font-size:.57rem;color:var(--muted);margin-top:.2rem">'+rv.clientEmail+' &#183; '+rv.deviceHostname+'<br/>'+new Date(rv.sentAt).toLocaleDateString()+'</div><a href="https://erprakashmijar.com/client/index.html" target="_blank" style="display:inline-block;margin-top:.4rem;font-family:var(--mono);font-size:.55rem;color:var(--g);border:1px solid rgba(0,255,136,.2);border-radius:3px;padding:.15rem .45rem;text-decoration:none">CLIENT PORTAL</a></div>';}).join(''):'<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">No reviews sent yet.</div>';m.style.display='flex';}
+function openReviewsList(){var m=document.getElementById('remModal');var b=document.getElementById('reviewsListBody');if(!m||!b)return;var sid=(typeof SESSION!=='undefined')?SESSION.id:'guest';var revs=JSON.parse(localStorage.getItem('pm_revs_'+sid)||'[]');b.innerHTML=revs.length?revs.map(function(rv){return '<div style="border:1px solid rgba(34,227,255,.07);border-radius:6px;padding:.8rem;margin-bottom:.4rem"><strong style="font-family:var(--mono);font-size:.68rem;color:var(--white)">'+rv.clientName+'</strong><div style="font-family:var(--mono);font-size:.57rem;color:var(--muted);margin-top:.2rem">'+rv.clientEmail+' &#183; '+rv.deviceHostname+'<br/>'+new Date(rv.sentAt).toLocaleDateString()+'</div><a href="https://erprakashmijar.com/client/index.html" target="_blank" style="display:inline-block;margin-top:.4rem;font-family:var(--mono);font-size:.55rem;color:var(--g);border:1px solid rgba(34,227,255,.2);border-radius:3px;padding:.15rem .45rem;text-decoration:none">CLIENT PORTAL</a></div>';}).join(''):'<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">No reviews sent yet.</div>';m.style.display='flex';}
 </script>
 
 <script type="text/javascript">
@@ -8931,7 +8936,7 @@ function importScanFindings() {
   var order = {critical:0,high:1,medium:2,low:3};
   all.sort(function(a,b){ return (order[a.severity]||4)-(order[b.severity]||4); });
   el.innerHTML = all.slice(0,20).map(function(i,n) {
-    return '<div style="display:flex;align-items:center;gap:.6rem;padding:.45rem .3rem;border-bottom:1px solid rgba(0,255,136,.05)">'
+    return '<div style="display:flex;align-items:center;gap:.6rem;padding:.45rem .3rem;border-bottom:1px solid rgba(34,227,255,.05)">'
       + '<span style="font-family:var(--mono);font-size:.55rem;color:var(--muted);width:16px">' + (n+1) + '</span>'
       + '<span class="badge b-' + i.severity + '">' + i.severity.toUpperCase() + '</span>'
       + '<span style="font-family:var(--mono);font-size:.63rem;color:var(--text2);flex:1">' + i.title + '</span>'
@@ -8969,10 +8974,10 @@ function generatePentestReport() {
     + '<style>body{font-family:Arial,sans-serif;background:#fff;color:#1a1a2e;font-size:13px;line-height:1.6;margin:0;padding:0}'
     + '@page{size:A4;margin:2cm} @media print{.no-print{display:none}}'
     + '.cover{background:linear-gradient(135deg,#040810,#0d1829);color:#fff;padding:60px 40px;text-align:center;min-height:300px;display:flex;flex-direction:column;justify-content:center;align-items:center}'
-    + '.cover h1{font-size:28px;letter-spacing:2px;margin:0 0 8px;color:#00ff88}.cover h2{font-size:16px;color:#00d4ff;margin:0 0 30px}'
+    + '.cover h1{font-size:28px;letter-spacing:2px;margin:0 0 8px;color:#22e3ff}.cover h2{font-size:16px;color:#4d8dff;margin:0 0 30px}'
     + '.cover .meta{font-size:12px;color:rgba(255,255,255,.6);line-height:2}'
     + '.section{padding:30px 40px;border-bottom:1px solid #eee}'
-    + '.section h2{font-size:16px;color:#1a1a2e;letter-spacing:1px;border-bottom:2px solid #00ff88;padding-bottom:8px;margin-bottom:16px}'
+    + '.section h2{font-size:16px;color:#1a1a2e;letter-spacing:1px;border-bottom:2px solid #22e3ff;padding-bottom:8px;margin-bottom:16px}'
     + '.finding{margin-bottom:20px;border:1px solid #e0e0e0;border-radius:6px;overflow:hidden;page-break-inside:avoid}'
     + '.finding-hdr{padding:12px 16px;display:flex;align-items:center;gap:10px}'
     + '.crit{background:#fee2e2;border-left:4px solid #dc2626}.high{background:#ffedd5;border-left:4px solid #ea580c}'
@@ -9045,7 +9050,7 @@ function generatePentestReport() {
 
   var listEl = document.getElementById('ptReportsList');
   if (listEl) listEl.innerHTML = reports.map(function(r) {
-    return '<div style="display:flex;align-items:center;gap:.7rem;padding:.5rem .3rem;border-bottom:1px solid rgba(0,255,136,.05)">'
+    return '<div style="display:flex;align-items:center;gap:.7rem;padding:.5rem .3rem;border-bottom:1px solid rgba(34,227,255,.05)">'
       + '<span style="font-family:var(--mono);font-size:.62rem;color:var(--g2)">' + r.id + '</span>'
       + '<span style="font-family:var(--mono);font-size:.65rem;color:var(--white);font-weight:600">' + r.client + '</span>'
       + '<span class="badge b-' + r.risk.toLowerCase() + '" style="margin-left:auto">' + r.risk + '</span>'
@@ -9079,7 +9084,7 @@ function renderPhishingTemplatePreview() {
     + '<div style="color:var(--text2);margin-bottom:.3rem"><span style="color:var(--muted)">From: </span>' + t.from + '</div>'
     + '<div style="color:var(--white);font-weight:600;margin-bottom:.5rem"><span style="color:var(--muted)">Subject: </span>' + t.subject + '</div>'
     + '<div style="color:var(--text2);font-size:.75rem;line-height:1.7">' + t.preview + '</div>'
-    + '<div style="margin-top:.7rem;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.15);border-radius:4px;padding:.4rem .7rem;font-family:var(--mono);font-size:.55rem;color:var(--g2)">Click here to take action &#8594;</div>'
+    + '<div style="margin-top:.7rem;background:rgba(77,141,255,.08);border:1px solid rgba(77,141,255,.15);border-radius:4px;padding:.4rem .7rem;font-family:var(--mono);font-size:.55rem;color:var(--g2)">Click here to take action &#8594;</div>'
     + '</div>';
 }
 
@@ -9220,7 +9225,7 @@ function auditBulkPasswords() {
   var exportBtn = document.getElementById('pwExportBtn');
   if (el) el.innerHTML = results.map(function(r) {
     var col = r.rating==='strong'?'var(--ok)':r.rating==='moderate'?'var(--warn)':r.rating==='critical'?'var(--danger)':'#ff8c42';
-    return '<div style="display:flex;align-items:center;gap:.7rem;padding:.4rem .3rem;border-bottom:1px solid rgba(0,255,136,.05)">'
+    return '<div style="display:flex;align-items:center;gap:.7rem;padding:.4rem .3rem;border-bottom:1px solid rgba(34,227,255,.05)">'
       + '<span style="font-family:var(--mono);font-size:.65rem;color:var(--text2);flex:1">' + r.pw + '</span>'
       + '<span style="font-family:var(--mono);font-size:.6rem;color:' + col + '">' + r.rating.toUpperCase() + '</span>'
       + '<span style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">' + r.score + '/7</span>'
@@ -9281,10 +9286,10 @@ function renderSurfaceResults(data) {
   if (!el) return;
   el.innerHTML = assets.map(function(a) {
     var col = a.status==='exposed' ? 'var(--danger)' : 'var(--ok)';
-    return '<div style="display:flex;align-items:center;gap:.8rem;padding:.6rem .5rem;border-bottom:1px solid rgba(0,255,136,.05);flex-wrap:wrap">'
+    return '<div style="display:flex;align-items:center;gap:.8rem;padding:.6rem .5rem;border-bottom:1px solid rgba(34,227,255,.05);flex-wrap:wrap">'
       + '<div style="flex:1;min-width:180px"><div style="font-family:var(--mono);font-size:.65rem;color:var(--white)">' + a.subdomain + '</div>'
       + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">' + a.ip + ' &nbsp;&#183;&nbsp; ' + (a.server||'Unknown') + '</div></div>'
-      + '<div style="display:flex;gap:.3rem;flex-wrap:wrap">' + (a.ports||[]).map(function(p){return '<span style="font-family:var(--mono);font-size:.52rem;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.15);color:var(--g2);padding:.1rem .3rem;border-radius:3px">' + p + '</span>';}).join('') + '</div>'
+      + '<div style="display:flex;gap:.3rem;flex-wrap:wrap">' + (a.ports||[]).map(function(p){return '<span style="font-family:var(--mono);font-size:.52rem;background:rgba(77,141,255,.08);border:1px solid rgba(77,141,255,.15);color:var(--g2);padding:.1rem .3rem;border-radius:3px">' + p + '</span>';}).join('') + '</div>'
       + '<span style="font-family:var(--mono);font-size:.6rem;color:' + col + '">' + (a.status==='exposed'?'&#9888; EXPOSED':'&#9989; OK') + '</span>'
       + (a.ssl ? '<span style="font-family:var(--mono);font-size:.52rem;color:var(--ok)">&#128274; SSL</span>' : '<span style="font-family:var(--mono);font-size:.52rem;color:var(--danger)">&#128275; NO SSL</span>')
       + '</div>';
@@ -9342,7 +9347,7 @@ function scanCloud(provider) {
     if (el) el.innerHTML = '<div style="font-family:var(--mono);font-size:.6rem;color:var(--g);letter-spacing:.1em;margin-bottom:.7rem">'
       + provider.toUpperCase() + ' SECURITY ASSESSMENT — ' + failed.length + ' issues found</div>'
       + provChecks.map(function(c) {
-          return '<div style="display:flex;align-items:center;gap:.7rem;padding:.55rem .3rem;border-bottom:1px solid rgba(0,255,136,.05)">'
+          return '<div style="display:flex;align-items:center;gap:.7rem;padding:.55rem .3rem;border-bottom:1px solid rgba(34,227,255,.05)">'
             + (c.pass ? '&#9989;' : '<span style="color:var(--danger)">&#10060;</span>')
             + '<span class="badge b-' + c.severity + '">' + c.severity.toUpperCase() + '</span>'
             + '<span style="font-family:var(--mono);font-size:.63rem;color:var(--text2);flex:1">' + c.name + '</span>'
@@ -9357,13 +9362,13 @@ function scanCloud(provider) {
    COMPLIANCE HUB
 ═══════════════════════════════════════════════════════════════ */
 var COMPLIANCE_FRAMEWORKS = [
-  { id:'soc2', name:'SOC 2 Type II', icon:'&#9878;', controls:64, color:'#7b2fff',
+  { id:'soc2', name:'SOC 2 Type II', icon:'&#9878;', controls:64, color:'#8b5cf6',
     categories:['CC1 Control Environment','CC2 Communication','CC3 Risk Assessment','CC6 Logical Access','CC7 System Operations','CC8 Change Management','CC9 Risk Mitigation'] },
-  { id:'iso27001', name:'ISO 27001:2022', icon:'&#127760;', controls:93, color:'#00d4ff',
+  { id:'iso27001', name:'ISO 27001:2022', icon:'&#127760;', controls:93, color:'#4d8dff',
     categories:['A.5 Organizational Controls','A.6 People Controls','A.7 Physical Controls','A.8 Technological Controls'] },
   { id:'hipaa', name:'HIPAA Security Rule', icon:'&#9877;', controls:42, color:'#f5a623',
     categories:['Administrative Safeguards','Physical Safeguards','Technical Safeguards','Organizational Requirements'] },
-  { id:'nist', name:'NIST CSF 2.0', icon:'&#127963;', controls:108, color:'#00ff88',
+  { id:'nist', name:'NIST CSF 2.0', icon:'&#127963;', controls:108, color:'#22e3ff',
     categories:['GV Govern','ID Identify','PR Protect','DE Detect','RS Respond','RC Recover'] },
   { id:'pci', name:'PCI DSS v4.0', icon:'&#128179;', controls:12, color:'#ff4d6a',
     categories:['Build Secure Network','Protect Cardholder Data','Vulnerability Management','Access Control','Monitor Networks','Information Security Policy'] },
@@ -9413,7 +9418,7 @@ function runComplianceScan() {
 
   var failEl = document.getElementById('compFailedList');
   if (failEl) failEl.innerHTML = failedControls.map(function(fc) {
-    return '<div style="display:flex;align-items:center;gap:.7rem;padding:.5rem .3rem;border-bottom:1px solid rgba(0,255,136,.05)">'
+    return '<div style="display:flex;align-items:center;gap:.7rem;padding:.5rem .3rem;border-bottom:1px solid rgba(34,227,255,.05)">'
       + '<span style="width:10px;height:10px;border-radius:50%;background:' + fc.color + ';display:inline-block;flex-shrink:0"></span>'
       + '<span style="font-family:var(--mono);font-size:.65rem;color:var(--text2);flex:1">' + fc.fw + '</span>'
       + '<span style="font-family:var(--mono);font-size:.6rem;color:var(--danger)">' + fc.count + ' failed controls</span>'
@@ -9451,14 +9456,14 @@ function renderMSPDashboard() {
   el.innerHTML = clients.map(function(c) {
     var col = c.status==='critical'?'var(--danger)':c.status==='warning'?'var(--warn)':'var(--ok)';
     var ico = c.status==='critical'?'&#128683;':c.status==='warning'?'&#9888;':'&#9989;';
-    return '<div style="display:grid;grid-template-columns:1fr auto auto auto auto auto;align-items:center;gap:.8rem;padding:.7rem .5rem;border-bottom:1px solid rgba(0,255,136,.05);flex-wrap:wrap">'
+    return '<div style="display:grid;grid-template-columns:1fr auto auto auto auto auto;align-items:center;gap:.8rem;padding:.7rem .5rem;border-bottom:1px solid rgba(34,227,255,.05);flex-wrap:wrap">'
       + '<div><div style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700">' + c.name + '</div>'
       + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">' + c.domain + ' &nbsp;&#183;&nbsp; ' + c.devices + ' devices</div></div>'
       + '<span style="font-size:.85rem">' + ico + '</span>'
       + '<span style="font-family:var(--mono);font-size:1.1rem;font-weight:700;color:' + col + '">' + c.score + '</span>'
       + '<span class="badge b-' + c.plan + '">' + c.plan.toUpperCase() + '</span>'
       + '<span style="font-family:var(--mono);font-size:.62rem;color:var(--g)">$' + c.mrr + '/mo</span>'
-      + '<button onclick="viewClientReport(\'' + c.id + '\')" style="background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);border-radius:4px;padding:.28rem .55rem;font-family:var(--mono);font-size:.55rem;color:var(--g);cursor:pointer">VIEW</button>'
+      + '<button onclick="viewClientReport(\'' + c.id + '\')" style="background:rgba(34,227,255,.08);border:1px solid rgba(34,227,255,.15);border-radius:4px;padding:.28rem .55rem;font-family:var(--mono);font-size:.55rem;color:var(--g);cursor:pointer">VIEW</button>'
       + '</div>';
   }).join('');
 }
@@ -9507,11 +9512,11 @@ function renderAssets() {
   if (!el) return;
   if (!filtered.length) { el.innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">No assets. Import from scans or add manually.</div>'; return; }
   el.innerHTML = '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse">'
-    + '<tr style="font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:.1em;border-bottom:1px solid rgba(0,255,136,.08)">'
+    + '<tr style="font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:.1em;border-bottom:1px solid rgba(34,227,255,.08)">'
     + '<th style="padding:.5rem .7rem;text-align:left">ASSET</th><th style="padding:.5rem .7rem;text-align:left">TYPE</th><th style="padding:.5rem .7rem;text-align:left">IP</th>'
     + '<th style="padding:.5rem .7rem;text-align:left">OS</th><th style="padding:.5rem .7rem;text-align:left">PATCHED</th><th style="padding:.5rem .7rem;text-align:left">RISK</th></tr>'
     + filtered.map(function(a) {
-        return '<tr style="border-bottom:1px solid rgba(0,255,136,.04)">'
+        return '<tr style="border-bottom:1px solid rgba(34,227,255,.04)">'
           + '<td style="padding:.5rem .7rem;font-family:var(--mono);font-size:.63rem;color:var(--white)">' + a.name + '</td>'
           + '<td style="padding:.5rem .7rem"><span class="badge b-blue">' + (a.type||'server').toUpperCase() + '</span></td>'
           + '<td style="padding:.5rem .7rem;font-family:var(--mono);font-size:.6rem;color:var(--muted)">' + (a.ip||'—') + '</td>'
@@ -9615,7 +9620,7 @@ function generateRiskMatrix() {
     var impact = (i.cvss||5) >= 8 ? 5 : (i.cvss||5) >= 6 ? 4 : 3;
     var riskScore = likelihood * impact;
     var col = riskScore>=20?'var(--danger)':riskScore>=12?'var(--warn)':'var(--g2)';
-    return '<div style="display:flex;align-items:center;gap:.6rem;padding:.45rem .3rem;border-bottom:1px solid rgba(0,255,136,.05)">'
+    return '<div style="display:flex;align-items:center;gap:.6rem;padding:.45rem .3rem;border-bottom:1px solid rgba(34,227,255,.05)">'
       + '<span style="font-family:var(--mono);font-size:.55rem;color:var(--muted);width:16px">' + (n+1) + '</span>'
       + '<span style="font-family:var(--mono);font-size:.63rem;color:var(--text2);flex:1">' + i.title + '</span>'
       + '<span style="font-family:var(--mono);font-size:.65rem;font-weight:700;color:' + col + '">' + riskScore + '</span>'
@@ -9635,12 +9640,12 @@ function renderExecDashboard() {
   var high = all.filter(function(i){return i.severity==='high';}).length;
 
   var kpis = [
-    { label:'Security Score', value:avgScore+'/100', color:avgScore>=80?'#00ff88':avgScore>=60?'#f5a623':'#ff4d6a', icon:'&#128202;' },
+    { label:'Security Score', value:avgScore+'/100', color:avgScore>=80?'#22e3ff':avgScore>=60?'#f5a623':'#ff4d6a', icon:'&#128202;' },
     { label:'Critical Issues', value:crit, color:'#ff4d6a', icon:'&#128683;' },
-    { label:'Devices Monitored', value:devs.length, color:'#00d4ff', icon:'&#128268;' },
-    { label:'Compliance Score', value:'74%', color:'#7b2fff', icon:'&#9878;' },
+    { label:'Devices Monitored', value:devs.length, color:'#4d8dff', icon:'&#128268;' },
+    { label:'Compliance Score', value:'74%', color:'#8b5cf6', icon:'&#9878;' },
     { label:'Avg Patch Rate', value:'68%', color:'#f5a623', icon:'&#9989;' },
-    { label:'Risk Level', value:crit>0?'HIGH':high>0?'MEDIUM':'LOW', color:crit>0?'#ff4d6a':high>0?'#f5a623':'#00ff88', icon:'&#9888;' },
+    { label:'Risk Level', value:crit>0?'HIGH':high>0?'MEDIUM':'LOW', color:crit>0?'#ff4d6a':high>0?'#f5a623':'#22e3ff', icon:'&#9888;' },
   ];
 
   var kpiEl = document.getElementById('execKPIRow');
@@ -9658,12 +9663,12 @@ function renderExecDashboard() {
     var scores = [42,38,55,61,58,67,72,68,75,80,avgScore||78].slice(-8);
     var maxS = Math.max(...scores);
     var svg = '<svg width="100%" height="140" viewBox="0 0 400 140" preserveAspectRatio="none">'
-      + '<defs><linearGradient id="eg" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#00ff88" stop-opacity=".4"/><stop offset="100%" stop-color="#00ff88" stop-opacity="0"/></linearGradient></defs>'
-      + '<polyline fill="none" stroke="#00ff88" stroke-width="2" points="'
+      + '<defs><linearGradient id="eg" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#22e3ff" stop-opacity=".4"/><stop offset="100%" stop-color="#22e3ff" stop-opacity="0"/></linearGradient></defs>'
+      + '<polyline fill="none" stroke="#22e3ff" stroke-width="2" points="'
       + scores.map(function(s,i){return (i/(scores.length-1)*380+10) + ',' + (130 - s/maxS*110);}).join(' ')
       + '"/><text x="10" y="130" font-family="monospace" font-size="10" fill="#2a4a62">LOW</text>'
       + '<text x="10" y="20" font-family="monospace" font-size="10" fill="#2a4a62">HIGH</text>'
-      + scores.map(function(s,i){ return '<circle cx="' + (i/(scores.length-1)*380+10) + '" cy="' + (130-s/maxS*110) + '" r="3" fill="#00ff88"/>'; }).join('')
+      + scores.map(function(s,i){ return '<circle cx="' + (i/(scores.length-1)*380+10) + '" cy="' + (130-s/maxS*110) + '" r="3" fill="#22e3ff"/>'; }).join('')
       + '</svg>';
     trendEl.innerHTML = svg;
   }
@@ -9676,7 +9681,7 @@ function renderExecDashboard() {
     { label:'Data Breach Risk', level:crit>0?'HIGH':'LOW', col:crit>0?'var(--danger)':'var(--ok)' },
     { label:'Compliance Status', level:'PARTIAL', col:'var(--warn)' },
   ].map(function(t) {
-    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid rgba(0,255,136,.05)">'
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid rgba(34,227,255,.05)">'
       + '<span style="font-family:var(--mono);font-size:.63rem;color:var(--text2)">' + t.label + '</span>'
       + '<span style="font-family:var(--mono);font-size:.6rem;color:' + t.col + ';font-weight:700">' + t.level + '</span>'
       + '</div>';
@@ -9693,7 +9698,7 @@ function renderExecDashboard() {
       + '<div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);border-radius:6px;padding:.8rem;text-align:center">'
       + '<div style="font-family:var(--mono);font-size:1.2rem;color:var(--warn)">' + (crit * 24 + 48) + 'h</div>'
       + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">AVG RECOVERY TIME</div></div>'
-      + '<div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:6px;padding:.8rem;text-align:center">'
+      + '<div style="background:rgba(34,227,255,.04);border:1px solid rgba(34,227,255,.1);border-radius:6px;padding:.8rem;text-align:center">'
       + '<div style="font-family:var(--mono);font-size:1.2rem;color:var(--ok)">$' + (19 * 12) + '</div>'
       + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">ANNUAL SECURITY SPEND</div></div>'
       + '</div>';
@@ -9708,7 +9713,7 @@ function renderExecDashboard() {
     { icon:'&#128272;', text:'Conduct quarterly phishing simulation — measurably reduces human error risk', urgent:false },
     { icon:'&#9729;', text:'Enable cloud security posture monitoring — 40% of breaches exploit cloud misconfigurations', urgent:false },
   ].filter(Boolean).map(function(a) {
-    return '<div style="display:flex;align-items:flex-start;gap:.7rem;padding:.5rem 0;border-bottom:1px solid rgba(0,255,136,.05)">'
+    return '<div style="display:flex;align-items:flex-start;gap:.7rem;padding:.5rem 0;border-bottom:1px solid rgba(34,227,255,.05)">'
       + '<span style="font-size:1rem;flex-shrink:0">' + a.icon + '</span>'
       + '<span style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7">' + a.text + '</span>'
       + (a.urgent ? '<span class="badge b-danger" style="flex-shrink:0">URGENT</span>' : '')
@@ -9734,11 +9739,11 @@ function renderHuntingPage() {
   var el = document.getElementById('huntQueryList');
   if (!el) return;
   el.innerHTML = HUNT_QUERIES.map(function(q) {
-    return '<div style="display:flex;align-items:center;gap:.7rem;background:rgba(0,0,0,.12);border:1px solid rgba(0,255,136,.06);border-radius:6px;padding:.7rem .9rem;margin-bottom:.4rem">'
+    return '<div style="display:flex;align-items:center;gap:.7rem;background:rgba(0,0,0,.12);border:1px solid rgba(34,227,255,.06);border-radius:6px;padding:.7rem .9rem;margin-bottom:.4rem">'
       + '<span style="font-size:1rem">' + q.icon + '</span>'
       + '<div style="flex:1"><div style="font-family:var(--mono);font-size:.65rem;color:var(--white);font-weight:600">' + q.name + '</div>'
       + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">MITRE: ' + q.mitre + ' &nbsp;&#183;&nbsp; ' + q.desc + '</div></div>'
-      + '<button onclick="runHunt(\'' + q.id + '\')" style="background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);border-radius:4px;padding:.28rem .6rem;font-family:var(--mono);font-size:.57rem;color:var(--g);cursor:pointer">HUNT &#8594;</button>'
+      + '<button onclick="runHunt(\'' + q.id + '\')" style="background:rgba(34,227,255,.08);border:1px solid rgba(34,227,255,.15);border-radius:4px;padding:.28rem .6rem;font-family:var(--mono);font-size:.57rem;color:var(--g);cursor:pointer">HUNT &#8594;</button>'
       + '</div>';
   }).join('');
   renderKillChain();
@@ -9761,7 +9766,7 @@ function runHunt(queryId) {
     document.getElementById('huntIOCs').textContent  = iocCount;
     document.getElementById('huntTechniques').textContent = huntCount;
 
-    el.innerHTML = '<div style="background:' + (found?'rgba(255,59,92,.06)':'rgba(0,255,136,.04)') + ';border:1px solid ' + (found?'rgba(255,59,92,.15)':'rgba(0,255,136,.1)') + ';border-radius:6px;padding:.9rem 1rem">'
+    el.innerHTML = '<div style="background:' + (found?'rgba(255,59,92,.06)':'rgba(34,227,255,.04)') + ';border:1px solid ' + (found?'rgba(255,59,92,.15)':'rgba(34,227,255,.1)') + ';border-radius:6px;padding:.9rem 1rem">'
       + '<div style="font-family:var(--mono);font-size:.68rem;font-weight:700;color:' + (found?'var(--danger)':'var(--ok)') + ';margin-bottom:.5rem">'
       + (found ? '&#9888; THREAT INDICATORS FOUND — ' + iocs + ' IOCs' : '&#9989; CLEAN — No indicators found') + '</div>'
       + '<div style="font-family:var(--mono);font-size:.63rem;color:var(--text2);line-height:1.9">'
@@ -9793,7 +9798,7 @@ async function runCustomHunt() {
     } else {
       response = 'To enable AI threat hunting with natural language queries, connect your backend API in Settings. The AI will analyze your scan data and hunt for threat patterns based on your query.';
     }
-    el.innerHTML = '<div style="background:rgba(0,0,0,.15);border:1px solid rgba(0,255,136,.1);border-radius:6px;padding:.9rem 1rem;font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.8">' + response + '</div>';
+    el.innerHTML = '<div style="background:rgba(0,0,0,.15);border:1px solid rgba(34,227,255,.1);border-radius:6px;padding:.9rem 1rem;font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.8">' + response + '</div>';
   } catch(e) {
     el.innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:1.5rem">Connect backend API for AI threat hunting.</div>';
   }
@@ -9862,7 +9867,7 @@ function scanCameras() {
         + '<div style="display:flex;gap:.4rem;flex-wrap:wrap">'
         + (c.defaultCreds ? '<span style="font-family:var(--mono);font-size:.55rem;background:rgba(255,59,92,.1);border:1px solid rgba(255,59,92,.2);color:var(--danger);padding:.15rem .45rem;border-radius:3px">&#128683; DEFAULT CREDENTIALS</span>' : '')
         + (c.exposed ? '<span style="font-family:var(--mono);font-size:.55rem;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);color:var(--warn);padding:.15rem .45rem;border-radius:3px">&#9888; STREAM EXPOSED</span>' : '')
-        + (c.rtsp ? '<span style="font-family:var(--mono);font-size:.55rem;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.12);color:var(--g2);padding:.15rem .45rem;border-radius:3px">&#128249; RTSP AVAILABLE</span>' : '')
+        + (c.rtsp ? '<span style="font-family:var(--mono);font-size:.55rem;background:rgba(77,141,255,.06);border:1px solid rgba(77,141,255,.12);color:var(--g2);padding:.15rem .45rem;border-radius:3px">&#128249; RTSP AVAILABLE</span>' : '')
         + c.ports.map(function(p){return '<span style="font-family:var(--mono);font-size:.52rem;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.08);color:var(--muted);padding:.1rem .35rem;border-radius:3px">:' + p + '</span>';}).join('')
         + '</div></div>';
     }).join('');
@@ -9902,7 +9907,7 @@ function scanCameras() {
    COMPLIANCE CENTER
 ═══════════════════════════════════════════════════════════════ */
 var COMP_FRAMEWORKS = [
-  { id:'soc2', name:'SOC 2 Type II', icon:'&#9878;', color:'#00d4ff',
+  { id:'soc2', name:'SOC 2 Type II', icon:'&#9878;', color:'#4d8dff',
     controls:61, categories:['Security','Availability','Confidentiality','Processing Integrity','Privacy'],
     checks:['Access controls enforced','Multi-factor authentication','Encryption at rest and transit','Incident response plan','Vulnerability management program','Audit logging enabled','Vendor risk management','Change management process','Backup and recovery tested'] },
   { id:'iso27001', name:'ISO 27001:2022', icon:'&#127758;', color:'#a855f7',
@@ -9914,10 +9919,10 @@ var COMP_FRAMEWORKS = [
   { id:'hipaa', name:'HIPAA Security Rule', icon:'&#127973;', color:'#ff4d6a',
     controls:18, categories:['Administrative','Physical','Technical'],
     checks:['Security officer assigned','Workforce training','Access management','Audit controls','Integrity controls','Authentication controls','Transmission security','Physical safeguards','Contingency plan'] },
-  { id:'nist', name:'NIST CSF 2.0', icon:'&#128737;', color:'#00ff88',
+  { id:'nist', name:'NIST CSF 2.0', icon:'&#128737;', color:'#22e3ff',
     controls:106, categories:['Govern','Identify','Protect','Detect','Respond','Recover'],
     checks:['Asset inventory','Risk assessment','Supply chain risk','Identity management','Awareness training','Data security','Protective technology','Anomaly detection','Continuous monitoring','Response planning','Communications','Analysis'] },
-  { id:'gdpr', name:'GDPR Compliance', icon:'&#127466;&#127482;', color:'#00d4ff',
+  { id:'gdpr', name:'GDPR Compliance', icon:'&#127466;&#127482;', color:'#4d8dff',
     controls:24, categories:['Lawfulness','Rights','Security','Accountability'],
     checks:['Lawful basis documented','Consent mechanisms','Privacy notices','Data subject rights','Data minimization','Breach notification plan','DPA agreements','Data retention policy','Cross-border transfer safeguards'] },
 ];
@@ -9958,7 +9963,7 @@ function renderCompliance() {
       +'</div>'
       +'<div style="padding:.7rem 1rem">'
       +'<div style="height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;margin-bottom:.7rem">'
-      +'<div style="height:100%;width:'+score+'%;background:linear-gradient(90deg,'+fw.color+',rgba(0,255,136,.5));border-radius:2px"></div></div>'
+      +'<div style="height:100%;width:'+score+'%;background:linear-gradient(90deg,'+fw.color+',rgba(34,227,255,.5));border-radius:2px"></div></div>'
       +checks.slice(0,6).map(function(c,i){
           var isDone = saved[i] || i < passCnt;
           return '<div style="display:flex;align-items:center;gap:.5rem;padding:.25rem 0;border-bottom:1px solid rgba(255,255,255,.04)">'
@@ -9972,7 +9977,7 @@ function renderCompliance() {
 }
 
 function hexToRgb(hex) {
-  if (!hex.startsWith('#')) return '0,255,136';
+  if (!hex.startsWith('#')) return '34,227,255';
   var r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
   return r+','+g+','+b;
 }
@@ -10261,7 +10266,7 @@ async function startSurfaceScan() {
   if(typeof showToast==='function') showToast('Scanning '+domain+' attack surface...','ok');
 
   var el=function(id){return document.getElementById(id);};
-  if(el('asAssets')) el('asAssets').innerHTML='<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem"><div style="display:inline-block;width:20px;height:20px;border:2px solid rgba(0,255,136,.2);border-top-color:var(--g);border-radius:50%;animation:spin .7s linear infinite"></div> Discovering subdomains via certificate transparency...</div>';
+  if(el('asAssets')) el('asAssets').innerHTML='<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem"><div style="display:inline-block;width:20px;height:20px;border:2px solid rgba(34,227,255,.2);border-top-color:var(--g);border-radius:50%;animation:spin .7s linear infinite"></div> Discovering subdomains via certificate transparency...</div>';
 
   // Use backend if available, otherwise simulate
   var assets = [];
@@ -10365,7 +10370,7 @@ function renderDarkWeb() {
   if (sourcesEl) {
     sourcesEl.innerHTML = DW_SOURCES.map(function(s) {
       var statCol = s.status==='active' ? 'var(--ok)' : 'var(--warn)';
-      return '<div style="display:flex;align-items:center;gap:.7rem;padding:.45rem 0;border-bottom:1px solid rgba(0,255,136,.05)">'
+      return '<div style="display:flex;align-items:center;gap:.7rem;padding:.45rem 0;border-bottom:1px solid rgba(34,227,255,.05)">'
         + '<span style="font-size:.9rem">' + s.icon + '</span>'
         + '<div style="flex:1">'
         +   '<div style="font-family:var(--mono);font-size:.63rem;color:var(--text2)">' + s.name + '</div>'
@@ -10392,7 +10397,7 @@ async function renderDarkWebThreatFeed() {
 
   // Loading state
   findingsEl.innerHTML = '<div style="text-align:center;padding:2rem">'
-    + '<div style="display:inline-block;width:20px;height:20px;border:2px solid rgba(0,255,136,.2);border-top-color:var(--g);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:.8rem"></div>'
+    + '<div style="display:inline-block;width:20px;height:20px;border:2px solid rgba(34,227,255,.2);border-top-color:var(--g);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:.8rem"></div>'
     + '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted)">Loading threat intelligence...</div>'
     + '</div>';
 
@@ -10617,7 +10622,7 @@ function renderMSP() {
       var scCol = sc>=75?'var(--ok)':sc>=50?'var(--warn)':'var(--danger)';
       var grade = sc>=90?'A':sc>=80?'B':sc>=70?'C':sc>=55?'D':'F';
       return '<div style="display:flex;align-items:center;gap:.8rem;padding:.7rem .9rem;border:1px solid rgba(255,255,255,.05);border-radius:6px;margin-bottom:.35rem;flex-wrap:wrap">'
-        +'<div style="width:34px;height:34px;border-radius:8px;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.7rem;color:var(--g);font-weight:700;flex-shrink:0">'+c.name.slice(0,2).toUpperCase()+'</div>'
+        +'<div style="width:34px;height:34px;border-radius:8px;background:rgba(34,227,255,.1);border:1px solid rgba(34,227,255,.2);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.7rem;color:var(--g);font-weight:700;flex-shrink:0">'+c.name.slice(0,2).toUpperCase()+'</div>'
         +'<div style="flex:1;min-width:120px">'
         +'<div style="font-family:var(--mono);font-size:.7rem;color:var(--white);font-weight:700">'+c.name+'</div>'
         +'<div style="font-family:var(--mono);font-size:.57rem;color:var(--muted)">'+c.email+' &nbsp;&#183;&nbsp; Plan: '+c.plan+'</div>'
@@ -10631,8 +10636,8 @@ function renderMSP() {
         +'<div style="font-family:var(--mono);font-size:.45rem;color:var(--muted)">'+sc+'/100</div>'
         +'</div>'
         +'<div style="display:flex;gap:.3rem">'
-        +'<button onclick="mspViewClient(\''+c.id+'\')" style="font-family:var(--mono);font-size:.58rem;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);color:var(--g);border-radius:4px;padding:.28rem .6rem;cursor:pointer">SCAN</button>'
-        +'<button onclick="mspEmailClient(\''+c.id+'\')" style="font-family:var(--mono);font-size:.58rem;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.12);color:var(--g2);border-radius:4px;padding:.28rem .6rem;cursor:pointer">EMAIL</button>'
+        +'<button onclick="mspViewClient(\''+c.id+'\')" style="font-family:var(--mono);font-size:.58rem;background:rgba(34,227,255,.08);border:1px solid rgba(34,227,255,.15);color:var(--g);border-radius:4px;padding:.28rem .6rem;cursor:pointer">SCAN</button>'
+        +'<button onclick="mspEmailClient(\''+c.id+'\')" style="font-family:var(--mono);font-size:.58rem;background:rgba(77,141,255,.06);border:1px solid rgba(77,141,255,.12);color:var(--g2);border-radius:4px;padding:.28rem .6rem;cursor:pointer">EMAIL</button>'
         +'</div>'
         +'</div>';
     }).join('') : '<div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">No MSP clients yet. Click Add Client to get started.</div>';
@@ -10900,7 +10905,7 @@ function checkFreeTrial() {
     return;
   } else {
     // Normal trial — subtle indicator
-    banner.style.cssText = 'position:sticky;top:var(--header);background:rgba(0,255,136,.04);border-bottom:1px solid rgba(0,255,136,.07);padding:.35rem 1.2rem;display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:.58rem';
+    banner.style.cssText = 'position:sticky;top:var(--header);background:rgba(34,227,255,.04);border-bottom:1px solid rgba(34,227,255,.07);padding:.35rem 1.2rem;display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:.58rem';
     banner.innerHTML = '<span style="color:var(--muted)">&#9989; Free trial: <strong style="color:var(--g)">' + info.daysLeft + ' days remaining</strong></span>'
       + '<a onclick="openUpgradeModal()" style="color:var(--g2);cursor:pointer">See plans &#8594;</a>';
     var header = document.querySelector('.hdr');
@@ -10915,7 +10920,7 @@ function checkFreeTrial() {
 var PLAN_PRICES = {
   free: {
     name:'Free', price:'$0', period:'month', devices:3, scans:10,
-    badge:'', color:'#00ff88',
+    badge:'', color:'#22e3ff',
     features:[
       '3 devices monitored',
       '10 scans per day',
@@ -10927,7 +10932,7 @@ var PLAN_PRICES = {
   },
   starter: {
     name:'Starter', price:'$19', period:'month', devices:10, scans:50,
-    badge:'POPULAR', color:'#00ff88',
+    badge:'POPULAR', color:'#22e3ff',
     features:[
       '10 devices monitored',
       '50 scans per day',
@@ -10942,7 +10947,7 @@ var PLAN_PRICES = {
   },
   professional: {
     name:'Professional', price:'$79', period:'month', devices:50, scans:500,
-    badge:'BEST VALUE', color:'#7b2fff',
+    badge:'BEST VALUE', color:'#8b5cf6',
     features:[
       '50 devices monitored',
       '500 scans per day',
@@ -10957,7 +10962,7 @@ var PLAN_PRICES = {
   },
   enterprise: {
     name:'Enterprise', price:'$199', period:'month', devices:9999, scans:9999,
-    badge:'', color:'#00d4ff',
+    badge:'', color:'#4d8dff',
     features:[
       'Unlimited devices',
       'Unlimited scans',
@@ -10983,8 +10988,8 @@ function openUpgradeModal() {
   
   var currentPlan = typeof getUserPlan==='function' ? getUserPlan() : 'free';
   
-  modal.innerHTML = '<div style="background:rgba(6,13,26,.98);border:1px solid rgba(0,255,136,.15);border-radius:14px;max-width:700px;width:100%;max-height:90vh;overflow-y:auto">'
-    + '<div style="padding:1.5rem 1.8rem;border-bottom:1px solid rgba(0,255,136,.08);display:flex;align-items:center;justify-content:space-between">'
+  modal.innerHTML = '<div style="background:rgba(6,13,26,.98);border:1px solid rgba(34,227,255,.15);border-radius:14px;max-width:700px;width:100%;max-height:90vh;overflow-y:auto">'
+    + '<div style="padding:1.5rem 1.8rem;border-bottom:1px solid rgba(34,227,255,.08);display:flex;align-items:center;justify-content:space-between">'
     + '<div><div style="font-family:var(--mono);font-size:.85rem;color:var(--white);font-weight:700">&#9889; UPGRADE YOUR PLAN</div>'
     + '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:.2rem">Current: <strong style="color:var(--g)">' + currentPlan.toUpperCase() + '</strong></div>'
     + '</div>'
@@ -10994,8 +10999,8 @@ function openUpgradeModal() {
     + Object.entries(PLAN_PRICES).map(function(entry) {
         var key = entry[0], plan = entry[1];
         var isCurrent = currentPlan === key;
-        var accentCol = key==='pro' ? '#7b2fff' : key==='enterprise' ? '#00d4ff' : '#00ff88';
-        var planColor = plan.color || '#00ff88';
+        var accentCol = key==='pro' ? '#8b5cf6' : key==='enterprise' ? '#4d8dff' : '#22e3ff';
+        var planColor = plan.color || '#22e3ff';
         return '<div style="background:rgba(0,0,0,.2);border:2px solid '+(isCurrent?planColor:'rgba(255,255,255,.07)')+';border-radius:10px;padding:1.2rem;display:flex;flex-direction:column;gap:.4rem;position:relative">'
           + (plan.badge ? '<div style="position:absolute;top:-10px;right:10px;background:'+planColor+';color:#040810;font-family:var(--mono);font-size:.5rem;font-weight:700;padding:.15rem .5rem;border-radius:4px">'+plan.badge+'</div>' : '')
           + '<div style="font-family:var(--mono);font-size:.7rem;color:'+planColor+';letter-spacing:.12em;font-weight:700">'+plan.name.toUpperCase()+'</div>'
@@ -11005,7 +11010,7 @@ function openUpgradeModal() {
           + plan.features.map(function(f){ return '<div style="padding:.2rem 0;border-bottom:1px solid rgba(255,255,255,.04)">&#9989; '+f+'</div>'; }).join('')
           + '</div>'
           + '<button onclick="selectUpgradePlan(\''+key+'\')" '
-          + (isCurrent?'disabled style="background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);color:var(--g);border-radius:5px;padding:.5rem;font-family:var(--mono);font-size:.62rem;cursor:not-allowed">'
+          + (isCurrent?'disabled style="background:rgba(34,227,255,.08);border:1px solid rgba(34,227,255,.15);color:var(--g);border-radius:5px;padding:.5rem;font-family:var(--mono);font-size:.62rem;cursor:not-allowed">'
                       :'style="background:'+planColor+';color:#040810;border:none;border-radius:5px;padding:.5rem;font-family:var(--mono);font-size:.65rem;font-weight:700;cursor:pointer;transition:all .2s">'
           )
           + (isCurrent ? '&#9989; CURRENT PLAN' : 'GET ' + plan.name.toUpperCase() + ' &#8594;')
@@ -11013,7 +11018,7 @@ function openUpgradeModal() {
           + '</div>';
       }).join('')
     + '</div>'
-    + '<div style="padding:1rem 1.8rem;border-top:1px solid rgba(0,255,136,.08);font-family:var(--mono);font-size:.57rem;color:var(--muted);text-align:center">'
+    + '<div style="padding:1rem 1.8rem;border-top:1px solid rgba(34,227,255,.08);font-family:var(--mono);font-size:.57rem;color:var(--muted);text-align:center">'
     + '&#128272; Secure payment via Stripe &nbsp;&#183;&nbsp; Cancel anytime &nbsp;&#183;&nbsp; No long-term contracts'
     + '</div>'
     + '</div>';
@@ -11022,7 +11027,7 @@ function openUpgradeModal() {
 }
 
 function hexToRgb(hex) {
-  if (!hex || !hex.startsWith('#')) return '0,255,136';
+  if (!hex || !hex.startsWith('#')) return '34,227,255';
   var r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
   return r+','+g+','+b;
 }
@@ -11150,13 +11155,13 @@ function renderMSP() {
         var sc    = c.score||0;
         var scCol = sc>=75?'var(--ok)':sc>=50?'var(--warn)':'var(--danger)';
         var grade = sc>=90?'A':sc>=80?'B':sc>=70?'C':sc>=55?'D':sc>0?'F':'--';
-        var planCols = {free:'rgba(255,255,255,.06)',starter:'rgba(0,255,136,.08)',pro:'rgba(0,212,255,.08)',enterprise:'rgba(123,47,255,.1)'};
+        var planCols = {free:'rgba(255,255,255,.06)',starter:'rgba(34,227,255,.08)',pro:'rgba(77,141,255,.08)',enterprise:'rgba(139,92,246,.1)'};
         var planCol  = planCols[c.plan]||planCols.free;
         var trialBadge = c.trial ? (c.trial.expired
           ? '<span style="font-family:var(--mono);font-size:.5rem;background:rgba(255,59,92,.1);border:1px solid rgba(255,59,92,.2);color:var(--danger);padding:.1rem .4rem;border-radius:3px">TRIAL EXPIRED</span>'
           : '<span style="font-family:var(--mono);font-size:.5rem;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);color:var(--warn);padding:.1rem .4rem;border-radius:3px">'+c.trial.daysLeft+'d left</span>') : '';
         return '<div style="display:flex;align-items:center;gap:.7rem;padding:.7rem .9rem;border:1px solid rgba(255,255,255,.05);border-radius:7px;margin-bottom:.35rem;flex-wrap:wrap">'
-          + '<div style="width:34px;height:34px;border-radius:8px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.65rem;font-weight:700;color:var(--g);flex-shrink:0">'
+          + '<div style="width:34px;height:34px;border-radius:8px;background:rgba(34,227,255,.08);border:1px solid rgba(34,227,255,.15);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.65rem;font-weight:700;color:var(--g);flex-shrink:0">'
           + (c.name||'?').slice(0,2).toUpperCase() + '</div>'
           + '<div style="flex:1;min-width:120px">'
           + '<div style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700">' + c.name + '</div>'
@@ -11166,15 +11171,15 @@ function renderMSP() {
           + (c.critIssues>0?'<span style="font-family:var(--mono);font-size:.52rem;background:rgba(255,59,92,.1);border:1px solid rgba(255,59,92,.2);color:var(--danger);padding:.1rem .4rem;border-radius:3px">'+c.critIssues+' critical</span>':'')
           + '<span style="font-family:var(--mono);font-size:.52rem;background:'+planCol+';padding:.1rem .4rem;border-radius:3px;color:var(--text2)">'+(c.plan||'free').toUpperCase()+'</span>'
           + trialBadge
-          + (c.isRegistered?'<span style="font-family:var(--mono);font-size:.5rem;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.12);color:var(--g2);padding:.1rem .4rem;border-radius:3px">REGISTERED</span>':'')
+          + (c.isRegistered?'<span style="font-family:var(--mono);font-size:.5rem;background:rgba(77,141,255,.06);border:1px solid rgba(77,141,255,.12);color:var(--g2);padding:.1rem .4rem;border-radius:3px">REGISTERED</span>':'')
           + '</div>'
           + '<div style="text-align:center;min-width:40px">'
           + '<div style="font-family:var(--display);font-size:1.2rem;color:'+scCol+'">'+grade+'</div>'
           + '<div style="font-family:var(--mono);font-size:.45rem;color:var(--muted)">'+(sc||'--')+'/100</div>'
           + '</div>'
           + '<div style="display:flex;gap:.3rem">'
-          + '<button onclick="window.open(\'../client/index.html\',\'_blank\')" style="font-family:var(--mono);font-size:.56rem;background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.14);color:var(--g);border-radius:4px;padding:.27rem .55rem;cursor:pointer">PORTAL</button>'
-          + '<button onclick="window.open(\'mailto:'+c.email+'\',\'_blank\')" style="font-family:var(--mono);font-size:.56rem;background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.11);color:var(--g2);border-radius:4px;padding:.27rem .55rem;cursor:pointer">EMAIL</button>'
+          + '<button onclick="window.open(\'../client/index.html\',\'_blank\')" style="font-family:var(--mono);font-size:.56rem;background:rgba(34,227,255,.07);border:1px solid rgba(34,227,255,.14);color:var(--g);border-radius:4px;padding:.27rem .55rem;cursor:pointer">PORTAL</button>'
+          + '<button onclick="window.open(\'mailto:'+c.email+'\',\'_blank\')" style="font-family:var(--mono);font-size:.56rem;background:rgba(77,141,255,.05);border:1px solid rgba(77,141,255,.11);color:var(--g2);border-radius:4px;padding:.27rem .55rem;cursor:pointer">EMAIL</button>'
           + '</div>'
           + '</div>';
       }).join('');
@@ -11305,7 +11310,7 @@ function getScanDisclaimer() {
 
 /* ── Patch runRemoteScan to validate IP first ────────────────── */
 var _origRunRemoteScan = typeof runRemoteScan === 'function' ? runRemoteScan : null;
-function runRemoteScan() {
+window.runRemoteScan = function runRemoteScanPatched() {
   var host = (document.getElementById('remoteHost') || {}).value || '';
   var check = validateScanTarget(host);
   if (!check.ok) {
@@ -11319,7 +11324,7 @@ function runRemoteScan() {
 
 /* ── Add disclaimer to scan results ─────────────────────────── */
 var _origRenderScanResult = typeof renderScanResult === 'function' ? renderScanResult : null;
-function renderScanResult(data) {
+window.renderScanResult = function renderScanResultPatched(data) {
   if (_origRenderScanResult) _origRenderScanResult(data);
   // Inject disclaimer after results render
   var panel = document.getElementById('scannerBody');
@@ -11333,13 +11338,13 @@ function renderScanResult(data) {
 
 /* ── Dark web demo label ─────────────────────────────────────── */
 var _origRunDarkWebScan = typeof runDarkWebScan === 'function' ? runDarkWebScan : null;
-async function runDarkWebScan() {
+window.runDarkWebScan = async function runDarkWebScanPatched() {
   var isReal = typeof API_ONLINE !== 'undefined' && API_ONLINE && 
                typeof SETTINGS !== 'undefined' && SETTINGS.apiUrl;
   if (!isReal) {
     var findingsEl = document.getElementById('dwFindings');
     if (findingsEl) {
-      findingsEl.innerHTML = '<div style="background:rgba(123,47,255,.06);border:1px solid rgba(123,47,255,.2);border-radius:6px;padding:.8rem 1rem;margin-bottom:.8rem;font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.7">'
+      findingsEl.innerHTML = '<div style="background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.2);border-radius:6px;padding:.8rem 1rem;margin-bottom:.8rem;font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.7">'
         + '<strong style="color:#c084fc">&#128737; DEMO MODE</strong> — Dark web monitoring requires a connected backend with HIBP API key configured. '
         + 'Results below are simulated for demonstration. Connect your Railway backend and add HIBP_API_KEY to see real breach data.'
         + '</div>';
@@ -11350,13 +11355,13 @@ async function runDarkWebScan() {
 
 /* ── Compliance score disclaimer ─────────────────────────────── */
 var _origRenderCompliance = typeof renderCompliance === 'function' ? renderCompliance : null;
-function renderCompliance() {
+window.renderCompliance = function renderCompliancePatched() {
   if (_origRenderCompliance) _origRenderCompliance();
   var el = document.getElementById('compFrameworks');
   if (el && !el.querySelector('.comp-disclaimer')) {
     var disc = document.createElement('div');
     disc.className = 'comp-disclaimer';
-    disc.style.cssText = 'grid-column:1/-1;background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.12);border-radius:8px;padding:.8rem 1rem;font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.7;margin-bottom:.5rem';
+    disc.style.cssText = 'grid-column:1/-1;background:rgba(77,141,255,.04);border:1px solid rgba(77,141,255,.12);border-radius:8px;padding:.8rem 1rem;font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.7;margin-bottom:.5rem';
     disc.innerHTML = '<strong style="color:var(--g2)">&#128203; COMPLIANCE INDICATOR</strong> — These scores are calculated from scan findings and self-assessed controls. '
       + 'They indicate your compliance posture but do not constitute a certified audit. '
       + 'For official certification (SOC 2, ISO 27001, etc.) you need a qualified third-party auditor.';
@@ -11395,14 +11400,14 @@ function auditLog(action, detail) {
 
 /* ── Hook scan functions for audit logging ───────────────────── */
 var _origRunLocalScan = typeof runLocalScan === 'function' ? runLocalScan : null;
-function runLocalScan() {
+window.runLocalScan = function runLocalScanPatched() {
   auditLog('SCAN_LOCAL', 'Local backend scan initiated');
   if (_origRunLocalScan) _origRunLocalScan();
 }
 
 /* ── Patch openScanModal to show authorization reminder ─────── */
 var _origOpenScanModal = typeof openScanModal === 'function' ? openScanModal : null;
-function openScanModal() {
+window.openScanModal = function openScanModalPatched() {
   if (_origOpenScanModal) _origOpenScanModal();
   // Remind user about authorization on remote tab
   setTimeout(function() {
@@ -11493,7 +11498,7 @@ async function fixIssueWithAI(issue, device) {
   var bodyEl  = document.getElementById('remModalBody');
   if (titleEl) titleEl.textContent = '🤖 AI FIX — ' + (issue.title||'').toUpperCase();
   if (subEl)   subEl.textContent   = (issue.category||'') + ' · CVSS ' + (issue.cvss||0) + ' · ' + (issue.severity||'').toUpperCase();
-  if (bodyEl)  bodyEl.innerHTML    = '<div style="text-align:center;padding:2.5rem"><div style="display:inline-block;width:24px;height:24px;border:2px solid rgba(0,255,136,.2);border-top-color:var(--g);border-radius:50%;animation:spin .7s linear infinite"></div><div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);margin-top:1rem">Claude is analyzing this vulnerability...</div></div>';
+  if (bodyEl)  bodyEl.innerHTML    = '<div style="text-align:center;padding:2.5rem"><div style="display:inline-block;width:24px;height:24px;border:2px solid rgba(34,227,255,.2);border-top-color:var(--g);border-radius:50%;animation:spin .7s linear infinite"></div><div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);margin-top:1rem">Claude is analyzing this vulnerability...</div></div>';
 
   try {
     var result = null;
@@ -11557,7 +11562,7 @@ function renderAIFixResult(result, bodyEl) {
     + (result.commands&&result.commands.length ? '<div style="margin-bottom:.9rem">'
       + '<div style="font-family:var(--mono);font-size:.6rem;color:var(--g);letter-spacing:.1em;margin-bottom:.4rem">FIX COMMANDS</div>'
       + result.commands.map(function(cmd) {
-          return '<div style="background:rgba(0,0,0,.4);border:1px solid rgba(0,255,136,.1);border-radius:5px;padding:.5rem .8rem;margin-bottom:.3rem;font-family:var(--mono);font-size:.65rem;color:var(--g2);display:flex;align-items:center;gap:.6rem">'
+          return '<div style="background:rgba(0,0,0,.4);border:1px solid rgba(34,227,255,.1);border-radius:5px;padding:.5rem .8rem;margin-bottom:.3rem;font-family:var(--mono);font-size:.65rem;color:var(--g2);display:flex;align-items:center;gap:.6rem">'
             + '<code style="flex:1;word-break:break-all">'+cmd+'</code>'
             + '<button onclick="navigator.clipboard.writeText('+JSON.stringify(cmd)+')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:.7rem;flex-shrink:0">&#128203;</button>'
             + '</div>';
@@ -11565,7 +11570,7 @@ function renderAIFixResult(result, bodyEl) {
       + '</div>' : '')
     + (result.verify ? '<div style="margin-bottom:.7rem">'
       + '<div style="font-family:var(--mono);font-size:.6rem;color:var(--g2);letter-spacing:.1em;margin-bottom:.3rem">VERIFY FIX</div>'
-      + '<div style="background:rgba(0,0,0,.3);border:1px solid rgba(0,212,255,.1);border-radius:5px;padding:.4rem .7rem;font-family:var(--mono);font-size:.63rem;color:var(--g2)">' + result.verify + '</div>'
+      + '<div style="background:rgba(0,0,0,.3);border:1px solid rgba(77,141,255,.1);border-radius:5px;padding:.4rem .7rem;font-family:var(--mono);font-size:.63rem;color:var(--g2)">' + result.verify + '</div>'
       + '</div>' : '')
     + '<div style="display:flex;gap:.7rem;flex-wrap:wrap">'
     + '<span style="font-family:var(--mono);font-size:.58rem;color:'+riskCol+'">&#9888; Fix risk: '+result.risk+'</span>'
@@ -11641,7 +11646,7 @@ async function loadScoreTrend() {
 
   // Color gradient by last score
   var lastScore = hist[hist.length-1].score;
-  var lineCol = lastScore>=75?'#00ff88':lastScore>=50?'#f5a623':'#ff4d6a';
+  var lineCol = lastScore>=75?'#22e3ff':lastScore>=50?'#f5a623':'#ff4d6a';
 
   var yLabels = [0,25,50,75,100].map(function(v){
     var y = pad.t + (1-v/100)*innerH;
@@ -11658,7 +11663,7 @@ async function loadScoreTrend() {
   }
 
   var dots = pts.map(function(p){
-    var col = p.score>=75?'#00ff88':p.score>=50?'#f5a623':'#ff4d6a';
+    var col = p.score>=75?'#22e3ff':p.score>=50?'#f5a623':'#ff4d6a';
     return '<circle cx="'+p.x+'" cy="'+p.y+'" r="3" fill="'+col+'" stroke="#040810" stroke-width="1.5">'
       + '<title>'+p.date+' — Score: '+p.score+' ('+p.grade+')</title>'
       + '</circle>';
@@ -11756,7 +11761,7 @@ async function checkEmailBreachReal(email) {
       overlay.onclick = function(e){ if(e.target===overlay) overlay.remove(); };
 
       var box = document.createElement('div');
-      box.style.cssText = 'background:rgba(6,13,26,.98);border:1px solid rgba(0,255,136,.15);border-radius:12px;max-width:560px;width:100%;max-height:80vh;overflow-y:auto;padding:1.5rem';
+      box.style.cssText = 'background:rgba(6,13,26,.98);border:1px solid rgba(34,227,255,.15);border-radius:12px;max-width:560px;width:100%;max-height:80vh;overflow-y:auto;padding:1.5rem';
       box.innerHTML = buildBreachResult(email, data);
       overlay.appendChild(box);
       document.body.appendChild(overlay);
@@ -11814,11 +11819,11 @@ function openGDPRPanel() {
   modal.id = 'gdprPanel';
   modal.style.cssText = 'position:fixed;inset:0;background:rgba(4,8,16,.9);z-index:9000;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(8px)';
   modal.onclick = function(e){ if(e.target===modal) modal.style.display='none'; };
-  modal.innerHTML = '<div style="background:rgba(6,13,26,.98);border:1px solid rgba(0,212,255,.15);border-radius:12px;max-width:520px;width:100%;padding:1.5rem">'
+  modal.innerHTML = '<div style="background:rgba(6,13,26,.98);border:1px solid rgba(77,141,255,.15);border-radius:12px;max-width:520px;width:100%;padding:1.5rem">'
     + '<div style="font-family:var(--mono);font-size:.85rem;color:var(--white);font-weight:700;margin-bottom:.4rem">&#127466;&#127482; YOUR DATA RIGHTS (GDPR)</div>'
     + '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-bottom:1.2rem;line-height:1.7">You have the right to access, export, and delete all your personal data stored by PM::OFFSEC.</div>'
     + '<div style="display:flex;flex-direction:column;gap:.6rem">'
-    + '<button onclick="exportMyData()" style="background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);border-radius:6px;padding:.7rem 1rem;font-family:var(--mono);font-size:.65rem;color:var(--g2);cursor:pointer;text-align:left">&#128229; EXPORT MY DATA (Article 20)<br/><span style="font-size:.55rem;color:var(--muted)">Download all your scan history, audit logs, and account data as JSON</span></button>'
+    + '<button onclick="exportMyData()" style="background:rgba(77,141,255,.08);border:1px solid rgba(77,141,255,.2);border-radius:6px;padding:.7rem 1rem;font-family:var(--mono);font-size:.65rem;color:var(--g2);cursor:pointer;text-align:left">&#128229; EXPORT MY DATA (Article 20)<br/><span style="font-size:.55rem;color:var(--muted)">Download all your scan history, audit logs, and account data as JSON</span></button>'
     + '<button onclick="deleteMyData()" style="background:rgba(255,59,92,.06);border:1px solid rgba(255,59,92,.2);border-radius:6px;padding:.7rem 1rem;font-family:var(--mono);font-size:.65rem;color:var(--danger);cursor:pointer;text-align:left">&#128465; DELETE ALL MY DATA (Article 17)<br/><span style="font-size:.55rem;color:var(--muted)">Permanently erase all your data. This cannot be undone.</span></button>'
     + '</div>'
     + '<button onclick="document.getElementById(\'gdprPanel\').style.display=\'none\'" style="margin-top:1rem;background:none;border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:.4rem 1rem;font-family:var(--mono);font-size:.62rem;color:var(--muted);cursor:pointer;width:100%">CLOSE</button>'
@@ -11939,7 +11944,7 @@ function hexToRgb(hex) {
   var r = parseInt(hex.slice(1,3), 16);
   var g = parseInt(hex.slice(3,5), 16);
   var b = parseInt(hex.slice(5,7), 16);
-  if (isNaN(r)) return '0,255,136';  // fallback green
+  if (isNaN(r)) return '34,227,255';  // fallback green
   return r + ',' + g + ',' + b;
 }
 

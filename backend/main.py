@@ -3,7 +3,7 @@ main.py — PM::OFFSEC Security Dashboard API v3.0
 Full SaaS backend: live scanning + billing + email alerts + scheduled scans
 """
 import os, json, uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional
 from fastapi import FastAPI, HTTPException, Request, BackgroundTasks, Header, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -1538,9 +1538,12 @@ async def stripe_webhook(request: Request, background_tasks: BackgroundTasks,
 async def ls_webhook(request: Request, background_tasks: BackgroundTasks,
                      x_signature: str = Header(None)):
     raw     = await request.body()
-    payload = await request.json()
+    try:
+        payload = json.loads(raw) if raw else {}
+    except (json.JSONDecodeError, ValueError):
+        raise HTTPException(400, "Invalid JSON payload")
     event   = handle_lemonsqueezy_webhook(payload, x_signature or "", raw)
-    etype   = event["type"]
+    etype   = event.get("type", "")
     meta    = event.get("meta", {}).get("custom_data", {})
     uid     = meta.get("user_id")
     plan    = meta.get("plan")
@@ -2177,7 +2180,15 @@ class IOCReq(BaseModel):
 
 @app.post("/api/soc/iocs")
 def add_ioc_route(req: IOCReq):
-    return add_ioc(**req.dict())
+    return add_ioc(
+        ioc_type=req.type,
+        value=req.value,
+        severity=req.severity,
+        description=req.description,
+        source=req.source,
+        added_by=req.added_by,
+        tags=req.tags,
+    )
 
 @app.get("/api/soc/iocs")
 def list_iocs(query: Optional[str] = None, type: Optional[str] = None):
