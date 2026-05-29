@@ -3,9 +3,9 @@
    Handles: caching, offline fallback, push notifications
 ═══════════════════════════════════════════════════════════════ */
 
-const CACHE_NAME    = 'pmoffsec-v2';
+const CACHE_NAME    = 'pmoffsec-v3';
 const OFFLINE_URL   = '/offline.html';
-const RUNTIME_CACHE = 'pmoffsec-runtime-v2';
+const RUNTIME_CACHE = 'pmoffsec-runtime-v3';
 
 /* Files to cache on install (app shell) */
 const PRECACHE_URLS = [
@@ -97,6 +97,23 @@ self.addEventListener('fetch', function(event) {
         return caches.match(event.request).then(function(cached) {
           return cached || caches.match(OFFLINE_URL);
         });
+      })
+    );
+    return;
+  }
+
+  /* CSS & JS — network-first so style/script updates always take effect
+     (cache-first here caused stale layouts to persist after deploys). */
+  if (/\.(css|js)(\?|$)/.test(url.pathname)) {
+    event.respondWith(
+      fetch(event.request).then(function(response) {
+        if (response.status === 200) {
+          var clone = response.clone();
+          caches.open(RUNTIME_CACHE).then(function(cache) { cache.put(event.request, clone); });
+        }
+        return response;
+      }).catch(function() {
+        return caches.match(event.request);
       })
     );
     return;

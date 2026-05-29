@@ -497,6 +497,12 @@ const AUTH = (() => {
       } catch (e) {}
       return { ok: true, session: setSession(sessionFromBackend(resp.data)) };
     }
+    // Backend reachable but rejected the credentials. The account may exist only
+    // locally (e.g. the built-in demo accounts that aren't in the server DB yet),
+    // so try a local login before failing. Real server accounts still win above.
+    var localTry = login(email, password);
+    if (localTry && localTry.ok) return localTry;
+    if (localTry && localTry.requires2FA) return localTry;
     var msg = (resp.data && (resp.data.detail || resp.data.error)) || 'Invalid email or password.';
     return { ok: false, error: typeof msg === 'string' ? msg : 'Invalid email or password.' };
   }
