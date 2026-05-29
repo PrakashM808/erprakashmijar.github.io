@@ -87,6 +87,7 @@ CREATE TABLE IF NOT EXISTS users (
     avatar      TEXT,
     company     TEXT,
     phone       TEXT,
+    address     TEXT,
     notes       TEXT,
     created_at  TIMESTAMPTZ DEFAULT NOW(),
     last_login  TIMESTAMPTZ,
@@ -240,6 +241,11 @@ def init_db():
                 return False
             cur = conn.cursor()
             cur.execute(SCHEMA_SQL)
+            # Idempotent migration: ensure newer columns exist on pre-existing tables.
+            try:
+                cur.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS address TEXT")
+            except Exception as mig_e:
+                print(f"[DB] address column migration note: {mig_e}")
             print("[DB] Schema initialized ✅")
             return True
     except Exception as e:
@@ -306,7 +312,7 @@ def user_get(user_id: str) -> Optional[dict]:
     return _mem["users"].get(user_id)
 
 def user_update(user_id: str, **kwargs) -> bool:
-    allowed = {"name","email","role","plan","status","company","phone","notes","last_login","login_count"}
+    allowed = {"name","email","role","plan","status","company","phone","address","notes","last_login","login_count"}
     kwargs = {k:v for k,v in kwargs.items() if k in allowed}
     if not kwargs:
         return False
@@ -322,6 +328,20 @@ def user_update(user_id: str, **kwargs) -> bool:
             print(f"[DB] user_update error: {e}")
     if user_id in _mem["users"]:
         _mem["users"][user_id].update(kwargs)
+        return True
+    return False
+
+def user_delete(user_id: str) -> bool:
+    if POSTGRES_AVAILABLE:
+        try:
+            with get_db() as conn:
+                cur = conn.cursor()
+                cur.execute("DELETE FROM users WHERE id=%s", (user_id,))
+                return True
+        except Exception as e:
+            print(f"[DB] user_delete error: {e}")
+    if user_id in _mem["users"]:
+        del _mem["users"][user_id]
         return True
     return False
 

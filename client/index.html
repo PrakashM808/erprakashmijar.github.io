@@ -355,10 +355,12 @@ function doLogin() {
   var err   = document.getElementById('loginErr');
   err.classList.remove('show');
   if (!email || !pw) { err.textContent='Please enter your email and password.'; err.classList.add('show'); return; }
-  var r = AUTH.login(email, pw);
-  if (r.requires2FA) { window.location.href='../login.html'; return; }
-  if (!r.ok) { err.textContent=r.error||'Invalid credentials.'; err.classList.add('show'); return; }
-  showPortal();
+  (async function(){
+    var r = await AUTH.loginBackend(email, pw);   // authenticates against backend when online
+    if (r.requires2FA) { window.location.href='../login.html'; return; }
+    if (!r.ok) { err.textContent=r.error||'Invalid credentials.'; err.classList.add('show'); return; }
+    showPortal();
+  })();
 }
 
 function demoLogin() {
@@ -411,34 +413,67 @@ function getDemoData() {
   ];
 }
 
-function loadData() {
+function portalBackendUrl() {
+  try { var s = JSON.parse(localStorage.getItem('pm_settings_v3')||'null'); if (s && s.apiUrl) return s.apiUrl.replace(/\/$/,''); } catch(e){}
+  var local = location.hostname==='localhost'||location.hostname==='127.0.0.1';
+  return local ? 'http://localhost:8000' : (localStorage.getItem('pm_railway_url')||'https://pm-offsec-backend-production.up.railway.app');
+}
+
+async function loadData() {
   var session = AUTH.getSession();
   if (!session) { doLogout(); return; }
   document.getElementById('clientOrg').textContent = session.company || session.name + "'s Organization";
 
-  var devices = JSON.parse(localStorage.getItem('pm_devices_v3')||'[]');
-  var scanned = devices.filter(function(d){ return d.score!=null; });
-  var allIssues = [];
-  var totalScore = 0, passed = 0;
+  // Backend-first: pull this client's REAL scan data when the server is reachable.
+  var fromBackend = null;
+  try {
+    var tok = localStorage.getItem('pm_jwt_token') || '';
+    if (tok) {
+      var ctrl = new AbortController(); var timer = setTimeout(function(){ctrl.abort();}, 6000);
+      var resp = await fetch(portalBackendUrl() + '/api/portal/client', {
+        headers: { 'Authorization': 'Bearer ' + tok }, signal: ctrl.signal
+      });
+      clearTimeout(timer);
+      if (resp.ok) fromBackend = await resp.json();
+    }
+  } catch(e) { /* offline — fall back to local */ }
 
-  scanned.forEach(function(d) {
-    totalScore += (d.score||d.security_score||0);
-    (d.issues||[]).forEach(function(iss) {
-      if (iss.status==='pass') { passed++; return; }
-      allIssues.push({
-        id: (d.ip||d.hostname||'x')+'_'+Math.random().toString(36).substr(2,6),
-        severity: iss.severity||'medium',
-        title: iss.title||'Unknown Issue',
-        device: d.hostname||d.ip||'Server',
-        cvss: iss.cvss||iss.score||0,
-        detail: plainEnglish(iss),
-        fix: getClientFix(iss),
+  var allIssues = [], passed = 0, score, scanned;
+
+  if (fromBackend && fromBackend.device_count > 0) {
+    scanned = (fromBackend.devices || []).map(function(d){ return { hostname:d.hostname, ip:d.ip, score:d.score }; });
+    // The summary gives counts; build issue cards from severity buckets isn't possible without detail,
+    // so request was per-device — use issue_count to show real totals and severity breakdown from summary.
+    var sev = fromBackend.issues_by_severity || {};
+    ['critical','high','medium','low'].forEach(function(level){
+      for (var i=0; i<(sev[level]||0); i++) {
+        allIssues.push({ id:level+'_'+i, severity:level, title:'Security finding ('+level+')',
+          device:(scanned[0]&&scanned[0].hostname)||'Server', cvss:0,
+          detail:'Detected on your last scan. Open the operator report for full detail.', fix:getClientFix({title:level}) });
+      }
+    });
+    score = fromBackend.avg_score != null ? fromBackend.avg_score : 62;
+    document.getElementById('clientOrg').textContent = session.company || (session.email||'').split('@')[0] + "'s Organization";
+  } else {
+    // Local fallback (offline or no server scans yet)
+    var devices = JSON.parse(localStorage.getItem('pm_devices_v3')||'[]');
+    scanned = devices.filter(function(d){ return d.score!=null; });
+    var totalScore = 0;
+    scanned.forEach(function(d) {
+      totalScore += (d.score||d.security_score||0);
+      (d.issues||[]).forEach(function(iss) {
+        if (iss.status==='pass') { passed++; return; }
+        allIssues.push({
+          id: (d.ip||d.hostname||'x')+'_'+Math.random().toString(36).substr(2,6),
+          severity: iss.severity||'medium', title: iss.title||'Unknown Issue',
+          device: d.hostname||d.ip||'Server', cvss: iss.cvss||iss.score||0,
+          detail: plainEnglish(iss), fix: getClientFix(iss),
+        });
       });
     });
-  });
-
-  var score = scanned.length ? Math.round(totalScore/scanned.length) : 62;
-  if (!scanned.length) { allIssues = getDemoData(); passed = 18; scanned = [{hostname:'demo-server',ip:'192.168.1.100',score:62}]; }
+    score = scanned.length ? Math.round(totalScore/scanned.length) : 62;
+    if (!scanned.length) { allIssues = getDemoData(); passed = 18; scanned = [{hostname:'demo-server',ip:'192.168.1.100',score:62}]; }
+  }
 
   try { APPROVALS = JSON.parse(localStorage.getItem('pm_ap_'+session.id)||'{}'); } catch(e){ APPROVALS={}; }
 
@@ -707,7 +742,12 @@ function toast(msg, color) {
 /* ── INIT ── */
 (function(){
   var s=AUTH.getSession();
-  if (s&&s.id) showPortal();
+  if (s && s.id) {
+    // Route mismatched roles to their own surface.
+    if (s.role === 'admin') { location.replace('../admin/index.html'); return; }
+    if (s.role && s.role !== 'client') { location.replace('../dashboard/index.html?stay=1'); return; }
+    showPortal();
+  }
   document.addEventListener('keydown', function(e){ if(e.key==='Enter'&&document.getElementById('loginWrap').style.display!=='none') doLogin(); });
 })();
 </script>

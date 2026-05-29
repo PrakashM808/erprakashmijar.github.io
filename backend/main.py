@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from scanner   import local_scan, remote_scan, discover_network_devices
-from physical_security import scan_atm_network, scan_vending_network, get_atm_compliance_summary
+from physical_security import scan_atm_network, scan_vending_network, get_atm_compliance_summary, scan_camera_network
 from cve       import search_cves_by_keyword, get_cve_by_id, get_recent_cves
 from billing   import (PLANS, init_stripe, create_stripe_checkout,
                        create_lemonsqueezy_checkout, handle_stripe_webhook,
@@ -33,7 +33,7 @@ from scheduler import (add_schedule, remove_schedule, pause_schedule,
                        CRON_PRESETS, start_scheduler, stop_scheduler)
 import anthropic
 from database import (
-    init_db, user_create, user_get, user_get_by_email, user_update,
+    init_db, user_create, user_get, user_get_by_email, user_update, user_delete,
     user_record_login, users_get_all, scan_save, scan_get_history,
     scan_get_all_history, scan_get_recent, scan_count_increment,
     scan_count_get_today, incident_create, incident_get_all, incident_update,
@@ -342,9 +342,18 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(_securi
         if not JWT_AVAILABLE:
             raise HTTPException(500, "JWT not available — run: pip install pyjwt")
         payload = pyjwt.decode(credentials.credentials, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-        return {"user_id": payload.get("user_id"), "email": payload.get("sub"), "plan": payload.get("plan","free")}
+        return {"user_id": payload.get("user_id"), "email": payload.get("sub"), "plan": payload.get("plan","free"), "role": payload.get("role","user")}
     except Exception as e:
         raise HTTPException(401, f"Invalid token: {str(e)}")
+
+
+def require_admin(user: dict = Depends(get_current_user)) -> dict:
+    """Authorization gate: only users whose server-issued JWT carries
+    role='admin' may proceed. The client cannot forge this — the role is
+    set when the backend signs the token, not by anything in the browser."""
+    if user.get("role") != "admin":
+        raise HTTPException(403, "Admin privileges required")
+    return user
 
 class JWTRegisterReq(BaseModel):
     name: str
@@ -379,9 +388,9 @@ async def jwt_register(req: JWTRegisterReq, background_tasks: BackgroundTasks):
         background_tasks.add_task(send_welcome_email, req.email, req.name, req.plan)
     token = ""
     if JWT_AVAILABLE:
-        token = pyjwt.encode({"sub":req.email,"user_id":user_id,"plan":req.plan,
+        token = pyjwt.encode({"sub":req.email,"user_id":user_id,"plan":req.plan,"role":"user",
             "exp":datetime.utcnow()+timedelta(hours=JWT_EXPIRY_HOURS)}, JWT_SECRET, algorithm=JWT_ALGORITHM)
-    return {"ok":True,"access_token":token,"user_id":user_id,"email":req.email,"name":req.name,"plan":req.plan}
+    return {"ok":True,"access_token":token,"user_id":user_id,"email":req.email,"name":req.name,"plan":req.plan,"role":"user"}
 
 @app.post("/api/auth/login")
 async def jwt_login(req: JWTLoginReq):
@@ -403,11 +412,12 @@ async def jwt_login(req: JWTLoginReq):
         raise HTTPException(403, "Account suspended")
     user_record_login(user["id"])
     current_plan = plan_get(user["id"])
+    user_role = user.get("role", "user")
     token = ""
     if JWT_AVAILABLE:
-        token = pyjwt.encode({"sub":user["email"],"user_id":user["id"],"plan":current_plan,
+        token = pyjwt.encode({"sub":user["email"],"user_id":user["id"],"plan":current_plan,"role":user_role,
             "exp":datetime.utcnow()+timedelta(hours=JWT_EXPIRY_HOURS)}, JWT_SECRET, algorithm=JWT_ALGORITHM)
-    return {"ok":True,"access_token":token,"user_id":user["id"],"email":user["email"],"name":user.get("name",""),"plan":current_plan}
+    return {"ok":True,"access_token":token,"user_id":user["id"],"email":user["email"],"name":user.get("name",""),"plan":current_plan,"role":user_role}
 
 @app.get("/api/auth/verify")
 async def jwt_verify(user: dict = Depends(get_current_user)):
@@ -1729,10 +1739,129 @@ def score_history(user_id: str, days: int = 30):
     """Get security score history for trend chart"""
     return {"history": get_score_history(user_id, days)}
 
+def _safe_user(u: dict) -> dict:
+    """Never expose password hashes or secrets to the client."""
+    return {k: v for k, v in u.items() if k not in ("password", "password_hash", "mfa_secret")}
+
 @app.get("/api/users")
-def list_users():
-    """Admin: get all users from database"""
-    return {"users": users_get_all()}
+def list_users(_admin: dict = Depends(require_admin)):
+    """Admin only: list all users (password fields stripped)."""
+    return {"users": [_safe_user(u) for u in users_get_all()]}
+
+# ── Secured Admin endpoints ──────────────────────────────────────
+class AdminRoleReq(BaseModel):
+    role: str   # 'admin' | 'user' | 'client'
+
+class AdminPlanReq(BaseModel):
+    plan: str   # 'free' | 'starter' | 'professional' | 'enterprise'
+
+class AdminStatusReq(BaseModel):
+    status: str  # 'active' | 'suspended'
+
+@app.get("/api/admin/users")
+def admin_list_users(_admin: dict = Depends(require_admin)):
+    return {"users": [_safe_user(u) for u in users_get_all()]}
+
+@app.put("/api/admin/users/{user_id}/role")
+def admin_set_role(user_id: str, req: AdminRoleReq, admin: dict = Depends(require_admin)):
+    if req.role not in ("admin", "user", "client"):
+        raise HTTPException(400, "Invalid role")
+    if user_id == admin.get("user_id") and req.role != "admin":
+        raise HTTPException(400, "You cannot remove your own admin role")
+    if not user_update(user_id, role=req.role):
+        raise HTTPException(404, "User not found")
+    return {"ok": True, "user_id": user_id, "role": req.role}
+
+@app.put("/api/admin/users/{user_id}/plan")
+def admin_set_plan(user_id: str, req: AdminPlanReq, _admin: dict = Depends(require_admin)):
+    if req.plan not in ("free", "starter", "professional", "enterprise"):
+        raise HTTPException(400, "Invalid plan")
+    if not user_update(user_id, plan=req.plan):
+        raise HTTPException(404, "User not found")
+    return {"ok": True, "user_id": user_id, "plan": req.plan}
+
+@app.put("/api/admin/users/{user_id}/status")
+def admin_set_status(user_id: str, req: AdminStatusReq, admin: dict = Depends(require_admin)):
+    if req.status not in ("active", "suspended"):
+        raise HTTPException(400, "Invalid status")
+    if user_id == admin.get("user_id") and req.status != "active":
+        raise HTTPException(400, "You cannot suspend your own account")
+    if not user_update(user_id, status=req.status):
+        raise HTTPException(404, "User not found")
+    return {"ok": True, "user_id": user_id, "status": req.status}
+
+@app.delete("/api/admin/users/{user_id}")
+def admin_delete_user(user_id: str, admin: dict = Depends(require_admin)):
+    if user_id == admin.get("user_id"):
+        raise HTTPException(400, "You cannot delete your own account")
+    if not user_delete(user_id):
+        raise HTTPException(404, "User not found")
+    return {"ok": True, "deleted": user_id}
+
+# ── Portal data endpoints (real backend data for client & admin portals) ──
+def _summarize_scans(scans: list) -> dict:
+    """Aggregate a user's scans into a portal-friendly summary."""
+    sev_count = {"critical": 0, "high": 0, "medium": 0, "low": 0}
+    devices = []
+    scores = []
+    for s in scans:
+        issues = s.get("issues") or []
+        if isinstance(issues, str):
+            try: issues = json.loads(issues)
+            except Exception: issues = []
+        for iss in issues:
+            sev = (iss.get("severity") or "low").lower()
+            if sev in sev_count: sev_count[sev] += 1
+        score = s.get("score", 0) or 0
+        scores.append(score)
+        devices.append({
+            "hostname": s.get("hostname", "") or s.get("ip", "device"),
+            "ip": s.get("ip", ""),
+            "score": score,
+            "issue_count": len(issues),
+            "last_scan": str(s.get("created_at", "")) or "",
+        })
+    avg = round(sum(scores) / len(scores)) if scores else None
+    return {
+        "device_count": len(devices),
+        "devices": devices,
+        "issues_by_severity": sev_count,
+        "critical_count": sev_count["critical"],
+        "avg_score": avg,
+        "total_issues": sum(sev_count.values()),
+    }
+
+@app.get("/api/portal/client")
+def portal_client(user: dict = Depends(get_current_user)):
+    """The signed-in user's own security overview (client portal)."""
+    scans = scan_get_recent(user["user_id"], limit=50)
+    summary = _summarize_scans(scans)
+    summary["user"] = {"email": user.get("email"), "plan": user.get("plan", "free")}
+    return summary
+
+@app.get("/api/portal/admin/clients")
+def portal_admin_clients(_admin: dict = Depends(require_admin)):
+    """Per-client summary across all non-admin accounts (admin/MSP portal)."""
+    clients = []
+    crit_total = 0
+    for u in users_get_all():
+        if u.get("role") == "admin":
+            continue
+        scans = scan_get_recent(u["id"], limit=50)
+        summ = _summarize_scans(scans)
+        crit_total += summ["critical_count"]
+        last = scans[0].get("created_at") if scans else None
+        clients.append({
+            "id": u["id"], "name": u.get("name", ""), "email": u.get("email", ""),
+            "plan": u.get("plan", "free"), "status": u.get("status", "active"),
+            "device_count": summ["device_count"], "avg_score": summ["avg_score"],
+            "critical_count": summ["critical_count"], "last_scan": str(last) if last else None,
+        })
+    return {
+        "total_clients": len(clients),
+        "critical_total": crit_total,
+        "clients": clients,
+    }
 
 @app.post("/api/users/login-record/{user_id}")
 def record_login(user_id: str):
@@ -1740,7 +1869,33 @@ def record_login(user_id: str):
     user_record_login(user_id)
     return {"ok": True}
 
+class ProfileUpdateReq(BaseModel):
+    name: str = None
+    email: str = None
+    phone: str = None
+    address: str = None
+    company: str = None
 
+@app.put("/api/profile")
+def update_my_profile(req: ProfileUpdateReq, user: dict = Depends(get_current_user)):
+    """Update the signed-in user's own profile details (name, email, phone, address, company)."""
+    fields = {}
+    if req.name is not None:    fields["name"] = req.name.strip()
+    if req.phone is not None:   fields["phone"] = req.phone.strip()
+    if req.address is not None: fields["address"] = req.address.strip()
+    if req.company is not None: fields["company"] = req.company.strip()
+    if req.email is not None and req.email.strip():
+        new_email = req.email.strip().lower()
+        existing = user_get_by_email(new_email)
+        if existing and existing.get("id") != user["user_id"]:
+            raise HTTPException(400, "That email is already in use by another account")
+        fields["email"] = new_email
+    if not fields:
+        raise HTTPException(400, "No fields to update")
+    if not user_update(user["user_id"], **fields):
+        raise HTTPException(404, "User not found")
+    updated = user_get(user["user_id"]) or {}
+    return {"ok": True, "profile": _safe_user(updated)}
 
 # ── PAYMENT & BILLING ENDPOINTS ──────────────────────────────────
 
@@ -1887,6 +2042,11 @@ class ATMComplianceReq(BaseModel):
     network_type: str
     manufacturer: str = "Generic"
 
+class CameraScanReq(BaseModel):
+    network: str = "192.168.1.0/24"
+    public_ip: str = ""          # optional: caller's own public IP for exposure check
+    user_id: str = "anonymous"
+
 @app.post("/api/atm/scan")
 async def atm_network_scan(req: ATMScanReq, _auth_user: dict = Depends(get_current_user)):
     """Scan ATM for network-level security vulnerabilities"""
@@ -1899,6 +2059,13 @@ async def atm_network_scan(req: ATMScanReq, _auth_user: dict = Depends(get_curre
         "overall_score": round((result.get("network_score",100) + compliance.get("compliance_score",100)) / 2),
         "scanned_at": datetime.utcnow().isoformat()
     }
+
+@app.post("/api/camera/scan")
+async def camera_network_scan(req: CameraScanReq, _auth_user: dict = Depends(get_current_user)):
+    """Discover and assess IP cameras / NVRs / DVRs on a network.
+    TCP-probe only; never attempts logins. Authorized networks only."""
+    result = await scan_camera_network(req.network, req.public_ip)
+    return result
 
 @app.post("/api/vending/scan")
 async def vending_network_scan(req: VendingScanReq, _auth_user: dict = Depends(get_current_user)):

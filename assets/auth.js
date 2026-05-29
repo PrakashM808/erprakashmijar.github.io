@@ -7,6 +7,56 @@ const AUTH = (() => {
   const SESSION_KEY = 'pm_session_v2';
   const RESET_KEY   = 'pm_reset_tokens';
 
+  /* ── Backend bridge ───────────────────────────────────────────
+     Real accounts live in the backend (Postgres + JWT). These helpers
+     let register/login use the backend as the source of truth when it
+     is reachable, so accounts persist server-side and work across
+     devices. If the backend is offline, we fall back to the local
+     (per-browser) store so the app still works for demos/offline. */
+  function backendUrl() {
+    try {
+      var s = JSON.parse(localStorage.getItem('pm_settings_v3') || 'null');
+      if (s && s.apiUrl) return s.apiUrl.replace(/\/$/, '');
+    } catch (e) {}
+    var local = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+    return local ? 'http://localhost:8000'
+                 : (localStorage.getItem('pm_railway_url') || 'https://pm-offsec-backend-production.up.railway.app');
+  }
+  async function backendCall(path, body) {
+    var ctrl = new AbortController();
+    var timer = setTimeout(function(){ ctrl.abort(); }, 8000);
+    try {
+      var r = await fetch(backendUrl() + path, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+        signal: ctrl.signal
+      });
+      clearTimeout(timer);
+      var data = {};
+      try { data = await r.json(); } catch (e) {}
+      return { status: r.status, ok: r.ok, data: data };
+    } catch (e) {
+      clearTimeout(timer);
+      return { status: 0, ok: false, offline: true, data: {} };
+    }
+  }
+  // Build a UI session object from a backend auth response.
+  function sessionFromBackend(resp, fallbackName) {
+    var u = {
+      id:    resp.user_id || ('user-' + Date.now()),
+      name:  resp.name || fallbackName || (resp.email || '').split('@')[0],
+      email: (resp.email || '').toLowerCase(),
+      role:  resp.role || 'user',
+      plan:  resp.plan || 'free',
+      avatar:(resp.name || fallbackName || 'U').trim().split(' ').map(function(n){return n[0];}).join('').toUpperCase().slice(0,2),
+      status:'active'
+    };
+    if (resp.access_token) localStorage.setItem('pm_jwt_token', resp.access_token);
+    return u;
+  }
+
+
   /* ── Default built-in accounts ──────────────────────────── */
   const DEFAULTS = [
     // ── YOUR REAL ADMIN ACCOUNT ──────────────────────────────────
@@ -66,6 +116,7 @@ const AUTH = (() => {
     sessionStorage.removeItem(SESSION_KEY);
     localStorage.removeItem(SESSION_KEY + '_persist');
     localStorage.removeItem(SESSION_KEY); // clean up old key too
+    localStorage.removeItem('pm_jwt_token'); // clear backend token on logout
   }
 
   /* Init defaults on first visit */
@@ -400,6 +451,56 @@ const AUTH = (() => {
     return { ok: true, session: setSession(newUser) };
   }
 
+  /* ── Backend-first register (real server account when online) ── */
+  async function registerBackend(name, email, password) {
+    if (!name || name.trim().length < 2) return { ok:false, error:'Name must be at least 2 characters.' };
+    if (!email || !email.includes('@')) return { ok:false, error:'Please enter a valid email address.' };
+    if (!password || password.length < 8) return { ok:false, error:'Password must be at least 8 characters.' };
+    if (!/[A-Z]/.test(password)) return { ok:false, error:'Password must contain at least one uppercase letter.' };
+    if (!/[0-9]/.test(password)) return { ok:false, error:'Password must contain at least one number.' };
+
+    var resp = await backendCall('/api/auth/register', { email: email.toLowerCase(), password: password, name: name.trim(), plan: 'free' });
+    if (resp.offline) {
+      var r = register(name, email, password);   // backend down → local fallback
+      if (r.ok) r.local_only = true;
+      return r;
+    }
+    if (resp.ok && resp.data && resp.data.access_token) {
+      try {
+        var users = getUsers();
+        if (!users.find(function(u){ return u.email.toLowerCase() === email.toLowerCase(); })) {
+          register(name, email, password);        // mirror locally for admin/offline
+        }
+      } catch (e) {}
+      return { ok: true, session: setSession(sessionFromBackend(resp.data, name)) };
+    }
+    var msg = (resp.data && (resp.data.detail || resp.data.error)) || 'This email may already be registered — try logging in.';
+    return { ok: false, error: typeof msg === 'string' ? msg : 'Registration failed.' };
+  }
+
+  /* ── Backend-first login (authenticate against server when online) ── */
+  async function loginBackend(email, password) {
+    var resp = await backendCall('/api/auth/login', { email: (email||'').toLowerCase(), password: password });
+    if (resp.offline) return login(email, password);   // backend down → local check
+    if (resp.ok && resp.data && resp.data.access_token) {
+      try {
+        var users = getUsers();
+        var lu = users.find(function(u){ return u.email.toLowerCase() === (email||'').toLowerCase(); });
+        if (lu) {
+          var mfa = getMfaSettings(lu.id);
+          if (mfa.enabled && !isMfaVerified(lu.id)) {
+            localStorage.setItem('pm_2fa_pending', JSON.stringify({ userId: lu.id, email: lu.email, name: lu.name, expires: Date.now() + 5*60*1000 }));
+            localStorage.setItem('pm_jwt_token', resp.data.access_token);
+            return { ok: false, requires2FA: true, mfaType: mfa.type, userId: lu.id };
+          }
+        }
+      } catch (e) {}
+      return { ok: true, session: setSession(sessionFromBackend(resp.data)) };
+    }
+    var msg = (resp.data && (resp.data.detail || resp.data.error)) || 'Invalid email or password.';
+    return { ok: false, error: typeof msg === 'string' ? msg : 'Invalid email or password.' };
+  }
+
   /* ── Logout ──────────────────────────────────────────────── */
   function logout(redirect = '../login.html') {
     clearSession();
@@ -641,6 +742,7 @@ const AUTH = (() => {
 
   return {
     login, register, logout,
+    loginBackend, registerBackend,
     requireAuth, requireGuest, getSession,
 
     forgotPassword, verifyOTP, resetPassword, changePassword,

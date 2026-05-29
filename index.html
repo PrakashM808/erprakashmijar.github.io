@@ -150,6 +150,21 @@
 /* ── NEWS GRID 2 COLUMN ── */
 .news-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:1.2rem!important;max-width:900px!important}
 @media(max-width:620px){.news-grid{grid-template-columns:1fr!important}}
+/* ── CAMERA SECURITY SECTION ── */
+.cam-sec{padding:5rem 0}
+.cam-sub{font-family:'Space Mono',monospace;font-size:.72rem;color:var(--muted);line-height:1.85;max-width:600px;margin:0 0 3rem}
+.cam-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-bottom:2.5rem}
+@media(max-width:900px){.cam-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.cam-grid{grid-template-columns:1fr}}
+.cam-card{background:rgba(6,13,26,.8);border:1px solid rgba(0,255,136,.08);border-radius:9px;padding:1.5rem 1.3rem;transition:all .25s;position:relative;overflow:hidden}
+.cam-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;background:linear-gradient(90deg,var(--g),transparent)}
+.cam-card:hover{transform:translateY(-3px);border-color:rgba(0,255,136,.22)}
+.cam-ico{font-size:1.5rem;margin-bottom:.7rem}
+.cam-title{font-family:'Space Mono',monospace;font-size:.66rem;color:var(--white);letter-spacing:.1em;margin-bottom:.5rem;font-weight:700}
+.cam-desc{font-family:'Space Mono',monospace;font-size:.61rem;color:var(--muted);line-height:1.75}
+.cam-cta{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.14);border-radius:12px;padding:1.6rem 2rem;flex-wrap:wrap}
+.cam-cta-title{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--white);letter-spacing:.05em;margin-bottom:.25rem}
+.cam-cta-sub{font-family:'Space Mono',monospace;font-size:.63rem;color:var(--muted)}
 </style>
   <!-- PWA -->
   <link rel="manifest" href="/manifest.json"/>
@@ -270,164 +285,6 @@
 
 <div class="divider"></div>
 
-<!-- ── PROJECTS ── -->
-<section class="projects-sec" id="projects">
-  <div class="wrap">
-    <div class="s-label">Featured Work</div>
-    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;margin-bottom:2.5rem">
-      <h2 class="s-title" style="margin-bottom:0">PROJECTS &amp;<br><span>CASE STUDIES</span></h2>
-      <a href="projects.html" class="btn btn-o" style="white-space:nowrap">ALL PROJECTS →</a>
-    </div>
-    <div class="proj-grid">
-
-      <article class="proj-card reveal">
-        <div class="proj-card-accent acc-g"></div>
-        <div class="proj-body">
-          <div class="proj-tags">
-            <span class="tag tag-g">MALWARE ANALYSIS</span>
-            <span class="tag tag-g">REVERSE ENG</span>
-          </div>
-          <h3 class="proj-title">WANNACRY ANALYSIS</h3>
-          <p class="proj-desc">Static + dynamic analysis of WannaCry ransomware. Documented EternalBlue propagation chain, AES-RSA encryption routine, and C2 comms in a sandboxed environment.</p>
-          <div class="proj-meta">
-            <span class="proj-impact">↑ Full kill chain documented</span>
-            <a href="projects/wannacry.html" class="proj-link">CASE STUDY →</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="proj-card reveal">
-        <div class="proj-card-accent acc-b"></div>
-        <div class="proj-body">
-          <div class="proj-tags">
-            <span class="tag tag-b">NETWORK SEC</span>
-            <span class="tag tag-b">IDS</span>
-          </div>
-          <h3 class="proj-title">NETWORK MONITORING LAB</h3>
-          <p class="proj-desc">Home lab with live traffic capture. Custom Snort IDS rules detecting port scans, brute-force attempts, and anomalous payloads with full alert correlation.</p>
-          <div class="proj-meta">
-            <span class="proj-impact">↑ 12 custom IDS rules written</span>
-            <a href="projects/network-lab.html" class="proj-link">CASE STUDY →</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="proj-card reveal">
-        <div class="proj-card-accent acc-p"></div>
-        <div class="proj-body">
-          <div class="proj-tags">
-            <span class="tag tag-p">HARDENING</span>
-            <span class="tag tag-p">AUDIT</span>
-          </div>
-          <h3 class="proj-title">LYNIS SECURITY AUDIT</h3>
-          <p class="proj-desc">CIS-benchmark Linux server audit. Identified and remediated SSH misconfigs, kernel parameters, and service exposure with before/after compliance scoring.</p>
-          <div class="proj-meta">
-            <span class="proj-impact">↑ Hardening score +38 pts</span>
-            <a href="projects/lynis-audit.html" class="proj-link">CASE STUDY →</a>
-          </div>
-        </div>
-      </article>
-
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ── SKILLS OVERVIEW ── -->
-<section class="skills-sec" id="skills">
-  <div class="wrap">
-    <div class="s-label">Capabilities</div>
-    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;margin-bottom:2.5rem">
-      <h2 class="s-title" style="margin-bottom:0">SKILLS<br><span>OVERVIEW</span></h2>
-      <a href="skills.html" class="btn btn-o" style="white-space:nowrap">FULL STACK →</a>
-    </div>
-    <div class="skills-layout">
-
-      <div class="skill-domain reveal">
-        <div class="skill-domain-name">OFFENSIVE SECURITY</div>
-        <p class="skill-domain-desc">Web exploitation, network attacks, post-exploitation, and red team operations.</p>
-        <div class="skill-bar-wrap"><span class="skill-bar-label">Web Exploitation</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:85%"></div></div></div>
-        <div class="skill-bar-wrap"><span class="skill-bar-label">Network Attacks</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:75%"></div></div></div>
-        <div class="skill-bar-wrap"><span class="skill-bar-label">Privilege Escalation</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:70%"></div></div></div>
-        <div class="skill-bar-wrap"><span class="skill-bar-label">API Security</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:80%"></div></div></div>
-      </div>
-
-      <div class="skill-domain reveal">
-        <div class="skill-domain-name">RECON & OSINT</div>
-        <p class="skill-domain-desc">Passive and active reconnaissance, subdomain enumeration, and attack surface mapping.</p>
-        <div class="skill-bar-wrap"><span class="skill-bar-label">OSINT</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:80%"></div></div></div>
-        <div class="skill-bar-wrap"><span class="skill-bar-label">Subdomain Enum</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:85%"></div></div></div>
-        <div class="skill-bar-wrap"><span class="skill-bar-label">DNS Analysis</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:75%"></div></div></div>
-        <div class="skill-bar-wrap"><span class="skill-bar-label">Attack Surface Map</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:70%"></div></div></div>
-      </div>
-
-      <div class="skill-domain reveal">
-        <div class="skill-domain-name">TOOLS & AUTOMATION</div>
-        <p class="skill-domain-desc">Framework proficiency, scripting, and custom tooling development.</p>
-        <div class="skill-bar-wrap"><span class="skill-bar-label">Burp Suite</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:90%"></div></div></div>
-        <div class="skill-bar-wrap"><span class="skill-bar-label">Metasploit</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:80%"></div></div></div>
-        <div class="skill-bar-wrap"><span class="skill-bar-label">Python Scripting</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:75%"></div></div></div>
-        <div class="skill-bar-wrap"><span class="skill-bar-label">Bash / CLI</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:85%"></div></div></div>
-      </div>
-
-      <div class="skill-domain reveal">
-        <div class="skill-domain-name">DEFENSIVE AWARENESS</div>
-        <p class="skill-domain-desc">Blue team perspective, log analysis, and detection engineering.</p>
-        <div class="skill-bar-wrap"><span class="skill-bar-label">SIEM / Log Analysis</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:65%"></div></div></div>
-        <div class="skill-bar-wrap"><span class="skill-bar-label">Incident Response</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:70%"></div></div></div>
-        <div class="skill-bar-wrap"><span class="skill-bar-label">MITRE ATT&amp;CK</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:75%"></div></div></div>
-        <div class="skill-bar-wrap"><span class="skill-bar-label">Threat Hunting</span><div class="skill-bar-track"><div class="skill-bar-fill" style="--w:60%"></div></div></div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ── PLATFORMS ── -->
-<section class="platforms-sec">
-  <div class="wrap">
-    <div class="s-label">Active Practice</div>
-    <h2 class="s-title">LABS &amp;<br><span class="b">PLATFORMS</span></h2>
-    <div class="plat-strip">
-      <div class="plat-card reveal">
-        <div class="plat-ico">[THM]</div>
-        <div class="plat-name">TRYHACKME</div>
-        <div class="plat-rank">Add your rank</div>
-        <p class="plat-desc">Guided learning paths — web exploitation, AD, privilege escalation.</p>
-        <a href="https://tryhackme.com/" target="_blank" rel="noopener" class="plat-link">PROFILE →</a>
-      </div>
-      <div class="plat-card reveal">
-        <div class="plat-ico">[HTB]</div>
-        <div class="plat-name">HACK THE BOX</div>
-        <div class="plat-rank">Add your rank</div>
-        <p class="plat-desc">Real-world lab machines simulating enterprise environments.</p>
-        <a href="https://hackthebox.com/" target="_blank" rel="noopener" class="plat-link">PROFILE →</a>
-      </div>
-      <div class="plat-card reveal">
-        <div class="plat-ico">[BB]</div>
-        <div class="plat-name">BUG BOUNTY</div>
-        <div class="plat-rank">HackerOne / Bugcrowd</div>
-        <p class="plat-desc">Responsible disclosure on live programmes with real impact.</p>
-        <a href="https://hackerone.com/" target="_blank" rel="noopener" class="plat-link">PROFILE →</a>
-      </div>
-      <div class="plat-card reveal">
-        <div class="plat-ico">[CTF]</div>
-        <div class="plat-name">CTF COMPETITIONS</div>
-        <div class="plat-rank">CTFtime.org</div>
-        <p class="plat-desc">Forensics, crypto, web, pwn, and reverse engineering challenges.</p>
-        <a href="https://ctftime.org/" target="_blank" rel="noopener" class="plat-link">CTFTIME →</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-
-<div class="divider"></div>
-
 <!-- ── COST OF IGNORING SECURITY ── -->
 <section class="cost-sec">
   <div class="wrap">
@@ -488,36 +345,45 @@
 
 <div class="divider"></div>
 
-<!-- ── CYBERSECURITY NEWS ── -->
-<section class="news-sec">
+<!-- ── CAMERA SECURITY ── -->
+<section class="cam-sec">
   <div class="wrap">
-    <div class="s-label reveal">Live Intelligence</div>
-    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:.8rem;margin-bottom:2rem">
-      <h2 class="s-title reveal" style="margin-bottom:0">CYBERSECURITY<br><span>NEWS FEED</span></h2>
-      <div style="display:flex;gap:.5rem;align-items:center" class="reveal">
-        <div class="news-filter-pill active" onclick="filterNews('all',this)">ALL</div>
-        <div class="news-filter-pill" onclick="filterNews('breach',this)">BREACHES</div>
-        <div class="news-filter-pill" onclick="filterNews('vuln',this)">VULNS</div>
-        <div class="news-filter-pill" onclick="filterNews('threat',this)">THREATS</div>
+    <div class="s-label reveal">Protect What Watches You</div>
+    <h2 class="s-title reveal">HOME &amp; BUSINESS<br><span>CAMERA SECURITY</span></h2>
+    <p class="cam-sub reveal">Internet-connected cameras are one of the most commonly hijacked devices &#8212; default passwords, exposed ports, and outdated firmware let strangers watch your feeds. We continuously monitor your cameras and lock down unauthorised access before it happens.</p>
+
+    <div class="cam-grid reveal">
+      <div class="cam-card">
+        <div class="cam-ico">&#128247;</div>
+        <div class="cam-title">DEVICE DISCOVERY</div>
+        <div class="cam-desc">Automatically finds every IP camera, NVR, and DVR on your network &#8212; including ones you forgot were there.</div>
+      </div>
+      <div class="cam-card">
+        <div class="cam-ico">&#128273;</div>
+        <div class="cam-title">DEFAULT &amp; WEAK CREDS</div>
+        <div class="cam-desc">Flags cameras still using factory passwords or weak logins &#8212; the #1 way attackers gain access.</div>
+      </div>
+      <div class="cam-card">
+        <div class="cam-ico">&#127760;</div>
+        <div class="cam-title">EXPOSURE DETECTION</div>
+        <div class="cam-desc">Detects cameras reachable from the public internet and risky port-forwarding before strangers find them.</div>
+      </div>
+      <div class="cam-card">
+        <div class="cam-ico">&#128680;</div>
+        <div class="cam-title">INTRUSION ALERTS</div>
+        <div class="cam-desc">Baselines your trusted devices and alerts the moment a new or unknown camera appears on the network.</div>
       </div>
     </div>
-    <div class="news-grid" id="newsGrid">
-      <!-- populated by JS -->
-      <div class="news-skeleton"></div>
-      <div class="news-skeleton"></div>
-      <div class="news-skeleton"></div>
-      <div class="news-skeleton"></div>
-      <div class="news-skeleton"></div>
-      <div class="news-skeleton"></div>
-    </div>
-    <div style="text-align:center;margin-top:2rem" class="reveal">
-      <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.1em">
-        Sources: CISA · SANS · Krebs on Security · The Hacker News · BleepingComputer · NIST NVD
+
+    <div class="cam-cta reveal">
+      <div>
+        <div class="cam-cta-title">SECURE YOUR CAMERAS IN MINUTES</div>
+        <div class="cam-cta-sub">Scan your network, find exposed devices, and get step-by-step hardening guidance.</div>
       </div>
+      <a href="register.html" class="btn btn-g" style="flex-shrink:0;font-size:.8rem;padding:.85rem 2rem">START FREE SCAN &#8594;</a>
     </div>
   </div>
 </section>
-
 
 <div class="divider"></div>
 
@@ -606,6 +472,39 @@
 
   </div>
 </section>
+
+<div class="divider"></div>
+
+<!-- ── CYBERSECURITY NEWS ── -->
+<section class="news-sec">
+  <div class="wrap">
+    <div class="s-label reveal">Live Intelligence</div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:.8rem;margin-bottom:2rem">
+      <h2 class="s-title reveal" style="margin-bottom:0">CYBERSECURITY<br><span>NEWS FEED</span></h2>
+      <div style="display:flex;gap:.5rem;align-items:center" class="reveal">
+        <div class="news-filter-pill active" onclick="filterNews('all',this)">ALL</div>
+        <div class="news-filter-pill" onclick="filterNews('breach',this)">BREACHES</div>
+        <div class="news-filter-pill" onclick="filterNews('vuln',this)">VULNS</div>
+        <div class="news-filter-pill" onclick="filterNews('threat',this)">THREATS</div>
+      </div>
+    </div>
+    <div class="news-grid" id="newsGrid">
+      <!-- populated by JS -->
+      <div class="news-skeleton"></div>
+      <div class="news-skeleton"></div>
+      <div class="news-skeleton"></div>
+      <div class="news-skeleton"></div>
+      <div class="news-skeleton"></div>
+      <div class="news-skeleton"></div>
+    </div>
+    <div style="text-align:center;margin-top:2rem" class="reveal">
+      <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.1em">
+        Sources: CISA · SANS · Krebs on Security · The Hacker News · BleepingComputer · NIST NVD
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <div class="divider"></div>
 

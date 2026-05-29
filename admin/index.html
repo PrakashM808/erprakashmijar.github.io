@@ -203,7 +203,7 @@
         <button class="sb-item" onclick="ap('issues')"><span class="sb-item-ico">&#128683;</span>Critical Issues</button>
         <div class="sb-section">Admin</div>
         <button class="sb-item" onclick="ap('addclient')"><span class="sb-item-ico">&#10133;</span>Add Client</button>
-        <button class="sb-item" onclick="window.location.href='../dashboard/index.html'"><span class="sb-item-ico">&#128269;</span>Scanner Dashboard</button>
+        <button class="sb-item" onclick="window.location.href='../dashboard/index.html?stay=1'"><span class="sb-item-ico">&#128269;</span>Scanner Dashboard</button>
       </div>
       <div class="sb-bottom">
         <div class="sb-user">
@@ -377,12 +377,16 @@ function doAdminLogin() {
   var err=document.getElementById('adminLoginErr');
   err.classList.remove('show');
   if (!email||!pw) { err.textContent='Please enter email and password.'; err.classList.add('show'); return; }
-  var r=AUTH.login(email,pw);
-  if (r.requires2FA) { window.location.href='../login.html'; return; }
-  if (!r.ok) { err.textContent=r.error||'Invalid credentials.'; err.classList.add('show'); return; }
-  if (r.session.role !== 'admin') { err.textContent='Access denied. Admin accounts only.'; err.classList.add('show'); AUTH.logout(null); return; }
-  ADMIN_SESSION = r.session;
-  showAdminPortal();
+  (async function(){
+    var r = await AUTH.loginBackend(email, pw);   // server-issued role + JWT when online
+    if (r.requires2FA) { window.location.href='../login.html'; return; }
+    if (!r.ok) { err.textContent=r.error||'Invalid credentials.'; err.classList.add('show'); return; }
+    if (!r.session || r.session.role !== 'admin') {
+      err.textContent='Access denied. Admin accounts only.'; err.classList.add('show'); AUTH.logout(null); return;
+    }
+    ADMIN_SESSION = r.session;
+    showAdminPortal();
+  })();
 }
 
 function demoAdminLogin() {
@@ -399,7 +403,8 @@ function showAdminPortal() {
   document.getElementById('sbAvatar').textContent=ADMIN_SESSION.name[0].toUpperCase();
   document.getElementById('sbName').textContent=ADMIN_SESSION.name;
   document.getElementById('topDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
-  ap('overview');
+  // Pull real client data from the backend, then render (falls back to local if offline).
+  loadBackendClients().then(function(){ ap('overview'); });
 }
 
 /* ── NAVIGATION ── */
@@ -435,9 +440,37 @@ function ap(name) {
 }
 
 /* ── DATA HELPERS ── */
+// Backend cache: real per-client summaries from /api/portal/admin/clients.
+var _BACKEND_CLIENTS = null;
+function adminBackendUrl() {
+  try { var s=JSON.parse(localStorage.getItem('pm_settings_v3')||'null'); if(s&&s.apiUrl) return s.apiUrl.replace(/\/$/,''); } catch(e){}
+  var local=location.hostname==='localhost'||location.hostname==='127.0.0.1';
+  return local?'http://localhost:8000':(localStorage.getItem('pm_railway_url')||'https://pm-offsec-backend-production.up.railway.app');
+}
+async function loadBackendClients() {
+  try {
+    var tok = localStorage.getItem('pm_jwt_token')||'';
+    if (!tok) return false;
+    var ctrl=new AbortController(); var t=setTimeout(function(){ctrl.abort();},6000);
+    var r=await fetch(adminBackendUrl()+'/api/portal/admin/clients',{headers:{'Authorization':'Bearer '+tok},signal:ctrl.signal});
+    clearTimeout(t);
+    if (!r.ok) return false;
+    var d=await r.json();
+    _BACKEND_CLIENTS = d.clients || [];
+    return true;
+  } catch(e) { return false; }
+}
+
 function getAllUsers() { return AUTH.getUsers ? AUTH.getUsers() : []; }
 
 function getClientUsers() {
+  // Prefer real backend clients when loaded; fall back to local user store.
+  if (_BACKEND_CLIENTS) {
+    return _BACKEND_CLIENTS.map(function(c){
+      return { id:c.id, name:c.name||c.email, email:c.email, plan:c.plan, status:c.status,
+               role:'client', lastLogin:c.last_scan, _backend:c };
+    });
+  }
   return getAllUsers().filter(function(u){ return u.role !== 'admin'; });
 }
 
@@ -456,6 +489,11 @@ function getAllAgreements() {
 }
 
 function getUserScoreInfo(userId) {
+  // Use real backend summary when available.
+  if (_BACKEND_CLIENTS) {
+    var c = _BACKEND_CLIENTS.find(function(x){ return x.id === userId; });
+    if (c) return { score:c.avg_score, crit:c.critical_count||0, high:0, total:c.critical_count||0, devices:c.device_count||0 };
+  }
   var devs=getDevicesForUser(userId).filter(function(d){return d.score!=null;});
   if(!devs.length) return {score:null,crit:0,high:0,total:0};
   var avgScore=Math.round(devs.reduce(function(s,d){return s+(d.score||0);},0)/devs.length);
@@ -475,6 +513,12 @@ function renderOverview() {
   var devices=getDevicesForUser();
   var allIssues=devices.flatMap(function(d){return d.issues||[];});
   var critIssues=allIssues.filter(function(i){return i.severity==='critical';});
+  // When real backend client data is loaded, sum the per-client critical counts
+  // (localStorage devices are empty in production, which previously showed 0).
+  var critCount = critIssues.length;
+  if (_BACKEND_CLIENTS) {
+    critCount = _BACKEND_CLIENTS.reduce(function(s,c){ return s + (c.critical_count||0); }, 0);
+  }
   var agreements=getAllAgreements();
 
   // Pending approvals
@@ -496,7 +540,7 @@ function renderOverview() {
 
   document.getElementById('overviewStats').innerHTML=
     statBox('&#128101;','Total Clients',clients.length,'Active accounts','ico-blue')
-    +statBox('&#128683;','Critical Issues',critIssues.length,'Across all clients','ico-red')
+    +statBox('&#128683;','Critical Issues',critCount,'Across all clients','ico-red')
     +statBox('&#9201;','Pending Approvals',pendingCount,'Awaiting client review','ico-orange')
     +statBox('&#9878;','Agreements Signed',agreements.length,'Legal documents','ico-green');
 
@@ -871,7 +915,11 @@ function toast(msg,color){
 /* ── INIT ── */
 (function(){
   var s=AUTH.getSession();
-  if(s&&s.id&&s.role==='admin'){ADMIN_SESSION=s;showAdminPortal();}
+  if(s&&s.id){
+    if(s.role==='admin'){ ADMIN_SESSION=s; showAdminPortal(); }
+    else if(s.role==='client'){ location.replace('../client/index.html'); return; }
+    else { location.replace('../dashboard/index.html?stay=1'); return; }
+  }
   document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.getElementById('adminLogin').style.display!=='none')doAdminLogin();});
   document.getElementById('topDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
 })();

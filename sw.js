@@ -3,9 +3,9 @@
    Handles: caching, offline fallback, push notifications
 ═══════════════════════════════════════════════════════════════ */
 
-const CACHE_NAME    = 'pmoffsec-v1';
+const CACHE_NAME    = 'pmoffsec-v2';
 const OFFLINE_URL   = '/offline.html';
-const RUNTIME_CACHE = 'pmoffsec-runtime-v1';
+const RUNTIME_CACHE = 'pmoffsec-runtime-v2';
 
 /* Files to cache on install (app shell) */
 const PRECACHE_URLS = [

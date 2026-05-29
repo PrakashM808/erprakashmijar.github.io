@@ -648,9 +648,9 @@ function doRegister() {
   if (btn) btn.disabled = true;
   if (txt) txt.textContent = 'CREATING ACCOUNT...';
 
-  setTimeout(function() {
+  setTimeout(async function() {
     var fullName = (fn + ' ' + ln).trim();
-    var result = AUTH.register(fullName, em, pw);
+    var result = await AUTH.registerBackend(fullName, em, pw);
 
     if (!result.ok) {
       showErr(result.error || 'Registration failed. Please try again.');

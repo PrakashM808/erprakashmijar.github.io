@@ -56,6 +56,10 @@ jobs:
           "
           echo "=== auth.js ==="
           node --check assets/auth.js && echo "auth.js OK" || exit 1
+          echo "=== dashboard JS modules ==="
+          for f in dashboard/assets/js/*.js; do
+            node --check "$f" && echo "OK $f" || exit 1
+          done
       - name: Check auth.js exports
         run: |
           node -e "
@@ -99,6 +103,12 @@ jobs:
             }
             console.log('✅ Div balance: ' + opens + ' open = ' + closes + ' close');
           "
+
+      - name: Frontend smoke test (headless)
+        run: |
+          pip install playwright --quiet
+          python3 -m playwright install chromium
+          python3 tests/test_frontend_smoke.py
 
   # ── Validate Backend ───────────────────────────────────────────
   validate-backend:
@@ -151,8 +161,8 @@ jobs:
           with open('main.py') as f:
               src = f.read()
           required = ['/api/scan/local', '/api/scan/website', '/api/ai/chat',
-                      '/api/atm/scan', '/api/vending/scan', '/api/cve/search',
-                      '/api/billing/trial/start', '/api/email/scan-complete']
+                      '/api/atm/scan', '/api/vending/scan', '/api/camera/scan', '/api/cve/search',
+                      '/api/billing/trial/start', '/api/email/scan-complete', '/api/admin/users']
           ok = True
           for ep in required:
               if ep in src:
@@ -180,6 +190,12 @@ jobs:
                   ok = False
           sys.exit(0 if ok else 1)
           "
+
+      - name: Run backend tests (pytest)
+        run: |
+          pip install pytest --quiet
+          export LEMONSQUEEZY_WEBHOOK_SECRET=""
+          python3 -m pytest tests/test_backend.py -q -p no:warnings
 
   # ── Security Checks ────────────────────────────────────────────
   security-check:
