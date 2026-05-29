@@ -2121,39 +2121,6 @@
         </div>
       </div>
 
-<div class="g4" style="margin-bottom:1.2rem">
-          <div class="sc sc-b"><div class="sc-icon">&#128101;</div><div class="sc-label">Total Clients</div><div class="sc-value" id="mspTotal">0</div></div>
-          <div class="sc sc-r"><div class="sc-icon">&#128683;</div><div class="sc-label">Critical Alerts</div><div class="sc-value" id="mspCritical" style="color:var(--danger)">0</div></div>
-          <div class="sc sc-g"><div class="sc-icon">&#9989;</div><div class="sc-label">Healthy Clients</div><div class="sc-value" id="mspHealthy" style="color:var(--ok)">0</div></div>
-          <div class="sc sc-b"><div class="sc-icon">&#128200;</div><div class="sc-label">Avg Score</div><div class="sc-value" id="mspAvgScore">--</div></div>
-        </div>
-        <div class="panel" style="margin-bottom:.9rem">
-          <div class="ph">
-            <div class="pt">CLIENT OVERVIEW</div>
-            <div style="display:flex;gap:.5rem">
-              <input class="form-input" id="mspSearch" placeholder="&#128269; Search clients..." oninput="filterMSPClients()" style="font-size:.62rem;padding:.3rem .7rem;width:160px"/>
-              <select class="form-input" id="mspFilter" onchange="filterMSPClients()" style="font-size:.62rem;padding:.3rem .6rem;width:auto">
-                <option value="all">All Clients</option>
-                <option value="critical">Critical Issues</option>
-                <option value="healthy">Healthy</option>
-                <option value="unscanned">Not Scanned</option>
-              </select>
-            </div>
-          </div>
-          <div class="pb" id="mspClientList"><div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:2rem">No clients added yet. Add your first client above.</div></div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem">
-          <div class="panel">
-            <div class="ph"><div class="pt">&#128200; SCORE DISTRIBUTION</div></div>
-            <div class="pb" id="mspScoreChart"></div>
-          </div>
-          <div class="panel">
-            <div class="ph"><div class="pt">&#128680; RECENT ALERTS (ALL CLIENTS)</div></div>
-            <div class="pb" id="mspAlerts"><div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center;padding:1.5rem">No alerts yet.</div></div>
-          </div>
-        </div>
-      </div>
-
     </main>
   </div>
 </div>
