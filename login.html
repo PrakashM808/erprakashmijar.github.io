@@ -235,13 +235,12 @@ function doLogin() {
 
 // Route each role to its portal: admin → admin portal, client → client portal, else dashboard.
 function portalFor(session) {
+  // Everyone lands on Scan Dashboard first.
+  // The header has a portal button (Admin / Business / My Portal) to navigate to their portal.
   var s = session || AUTH.getSession() || {};
   var role = s.role || 'user';
-  var ctype = s.client_type || 'individual';
-  if (role === 'admin')  return 'admin/index.html';
-  if (role === 'employee') return 'client/index.html?preview=1';
-  if (role === 'client') return ctype === 'business' ? 'dashboard/index.html' : 'client/index.html?preview=1';
-  return ctype === 'business' ? 'dashboard/index.html' : 'client/index.html?preview=1';
+  if (role === 'admin') return 'admin/index.html';
+  return 'dashboard/index.html';
 }
 
 function quickLogin(email, pass) {

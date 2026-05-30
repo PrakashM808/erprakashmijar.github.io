@@ -1703,18 +1703,25 @@ function applyRolePortal() {
       el.style.display = show ? '' : 'none';
     });
   }
-  if (role === 'client') {
-    // Hide power-user / operator tooling for a clean client experience.
-    ['soc','siem','automation','physical','advanced'].forEach(function(s){ showSec(s, false); });
-    showSec('tools', true);                 // keep website scanner / OSINT off? keep scanner-lite
-    showItem('osint', false);
-    showItem('threat', false);
-    showItem('msp', false);                 // MSP is an operator view, not a client one
+  if (role === 'admin') {
+    // Super admin: MSP dashboard visible, full access to everything
+    showItem('msp', true);
+  } else if (role === 'client' || role === 'owner' || role === 'manager' || role === 'employee' || role === 'user') {
+    // Non-admin users: hide MSP (admin-only), hide heavy SOC/SIEM for cleaner UX
+    showItem('msp', false);                 // MSP is super-admin only
+    if (role === 'client' || role === 'user' || role === 'employee') {
+      ['soc','siem','automation','physical','advanced'].forEach(function(s){ showSec(s, false); });
+      showSec('tools', true);
+      showItem('osint', false);
+      showItem('threat', false);
+      showItem('msp', false);
+    }
     var badge = document.getElementById('hdrRole');
-    if (badge) badge.textContent = 'CLIENT';
-    // Surface a friendly portal welcome on the dashboard.
+    if (badge) badge.textContent = role.toUpperCase();
     var w = document.getElementById('dashWelcome');
-    if (w) w.textContent = 'CLIENT PORTAL — ' + (SESSION.name || '').toUpperCase() + ' · YOUR SECURITY OVERVIEW';
+    if (w && (role === 'client' || role === 'user')) {
+      w.textContent = 'SECURITY DASHBOARD — ' + (SESSION.name || '').toUpperCase();
+    }
   }
   // admin & user keep full nav (admin also gets the Admin section shown above)
 }
@@ -1760,6 +1767,25 @@ function init() {
 
   // Render portal nav buttons based on role
   renderPortalNavButtons();
+
+  // Write shared portal session so other portals can read it (no double login)
+  try {
+    var sharedSess = {
+      id:          SESSION.id,
+      name:        SESSION.name,
+      email:       SESSION.email,
+      role:        SESSION.role,
+      plan:        SESSION.plan,
+      client_type: SESSION.client_type || 'individual',
+      org_id:      SESSION.org_id || '',
+      avatar:      SESSION.avatar || (SESSION.name||'U')[0].toUpperCase(),
+      ts:          Date.now()
+    };
+    localStorage.setItem('pm_portal_session', JSON.stringify(sharedSess));
+    // Also write the JWT token so portals can make API calls
+    var jwt = localStorage.getItem('pm_jwt_token') || '';
+    if (jwt) localStorage.setItem('pm_portal_jwt', jwt);
+  } catch(e) {}
 }
 
 /* ── Portal navigation buttons (shown in header based on role) ── */

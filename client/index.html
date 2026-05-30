@@ -234,26 +234,67 @@
 
 <!-- PORTAL HEADER -->
 <div class="hdr no-print" id="portalHdr" style="display:none">
-  <div class="hdr-inner">
-    <div class="hdr-logo">
-      <div class="hdr-logo-ico">&#128737;</div>
-      <div>
-        <div class="hdr-logo-name">Security Report</div>
-        <div class="hdr-logo-sub" id="clientOrg">Your Organization</div>
-      </div>
+  <!-- Sidebar -->
+  <aside style="width:220px;background:#0f172a;border-right:1px solid rgba(148,163,184,.1);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100">
+    <div style="padding:1rem 1rem .6rem;border-bottom:1px solid rgba(148,163,184,.1)">
+      <div style="font-family:'Space Mono',monospace;font-size:.75rem;color:#f1f5f9;font-weight:700;letter-spacing:.08em">PM::OFFSEC</div>
+      <div style="font-family:'Space Mono',monospace;font-size:.55rem;color:#00d4ff;letter-spacing:.1em;margin-top:.15rem">PERSONAL PORTAL</div>
     </div>
-    <div class="hdr-acts">
+    <div style="padding:.6rem 1rem;background:rgba(0,212,255,.07);border-bottom:1px solid rgba(148,163,184,.1)">
+      <div style="font-family:'Space Mono',monospace;font-size:.65rem;color:#f1f5f9;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="sidebarUserName">My Account</div>
+      <div style="font-family:'Space Mono',monospace;font-size:.52rem;color:#00d4ff;margin-top:.1rem">&#9679; PERSONAL SECURITY</div>
+    </div>
+    <nav style="padding:.6rem 0;flex:1">
+      <div style="font-family:'Space Mono',monospace;font-size:.5rem;color:#64748b;letter-spacing:.15em;padding:.5rem 1rem .25rem;text-transform:uppercase">Dashboard</div>
+      <button onclick="tab('dashboard')" id="clTab-dashboard" class="cl-sb-btn cl-sb-active" style="width:100%;background:rgba(0,212,255,.08);border:none;border-left:2px solid #00d4ff;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#00d4ff;cursor:pointer;text-align:left">&#128202; Security Score</button>
+      <button onclick="tab('issues')" id="clTab-issues" class="cl-sb-btn" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-align:left">&#128683; Issues &amp; Fixes</button>
+
+      <div style="font-family:'Space Mono',monospace;font-size:.5rem;color:#64748b;letter-spacing:.15em;padding:.5rem 1rem .25rem;text-transform:uppercase">My Devices</div>
+      <button onclick="tab('team')" id="clTab-team" class="cl-sb-btn" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-align:left">&#128187; Device Manager</button>
+
+      <div style="font-family:'Space Mono',monospace;font-size:.5rem;color:#64748b;letter-spacing:.15em;padding:.5rem 1rem .25rem;text-transform:uppercase">Security Scan</div>
+      <a href="../dashboard/index.html" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-decoration:none">&#128269; Quick Scan</a>
+      <a href="../dashboard/index.html" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-decoration:none">&#127760; Network Scan</a>
+
+      <div style="font-family:'Space Mono',monospace;font-size:.5rem;color:#64748b;letter-spacing:.15em;padding:.5rem 1rem .25rem;text-transform:uppercase">Privacy Center</div>
+      <a href="../dashboard/index.html" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-decoration:none">&#128268; Breach Check</a>
+      <a href="../dashboard/index.html" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-decoration:none">&#128565; Dark Web Monitor</a>
+
+      <div style="font-family:'Space Mono',monospace;font-size:.5rem;color:#64748b;letter-spacing:.15em;padding:.5rem 1rem .25rem;text-transform:uppercase">Reports &amp; History</div>
+      <button onclick="tab('timeline')" id="clTab-timeline" class="cl-sb-btn" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-align:left">&#128200; Fix Timeline</button>
+      <button onclick="tab('summary')" id="clTab-summary" class="cl-sb-btn" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-align:left">&#128196; Executive Summary</button>
+      <button onclick="tab('history')" id="clTab-history" class="cl-sb-btn" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-align:left">&#128337; History</button>
+
+      <div style="font-family:'Space Mono',monospace;font-size:.5rem;color:#64748b;letter-spacing:.15em;padding:.5rem 1rem .25rem;text-transform:uppercase">AI &amp; Support</div>
+      <a href="../dashboard/index.html" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-decoration:none">&#129302; AI Assistant</a>
+
+      <div style="font-family:'Space Mono',monospace;font-size:.5rem;color:#64748b;letter-spacing:.15em;padding:.5rem 1rem .25rem;text-transform:uppercase">Portals</div>
+      <a href="../dashboard/index.html" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-decoration:none">&#128269; Scan Dashboard</a>
+    </nav>
+    <div style="padding:.8rem 1rem;border-top:1px solid rgba(148,163,184,.1)">
+      <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem">
+        <div id="clAvatarSb" style="width:30px;height:30px;border-radius:50%;background:#1e40af;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:.65rem;font-weight:700;color:#fff;flex-shrink:0">U</div>
+        <div><div style="font-family:'Space Mono',monospace;font-size:.6rem;color:#f1f5f9" id="clNameSb">User</div><div style="font-family:'Space Mono',monospace;font-size:.5rem;color:#64748b">PERSONAL</div></div>
+      </div>
+      <button onclick="doLogout()" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:.35rem;font-family:'Space Mono',monospace;font-size:.58rem;color:#94a3b8;cursor:pointer">&#128682; Logout</button>
+    </div>
+  </aside>
+  <!-- Top bar (for mobile / breadcrumb) -->
+  <div style="position:fixed;top:0;left:220px;right:0;height:52px;background:#fff;border-bottom:1px solid var(--gray-200);z-index:99;display:flex;align-items:center;justify-content:space-between;padding:0 1.4rem">
+    <div>
+      <div style="font-size:.85rem;font-weight:700;color:var(--gray-900)" id="clTopTitle">Issues &amp; Fixes</div>
+      <div style="font-size:.7rem;color:var(--gray-500)" id="clientOrg">Your Organization</div>
+    </div>
+    <div style="display:flex;gap:.5rem;align-items:center">
       <button class="btn btn-out btn-sm" onclick="window.print()">&#128424; Print</button>
       <button class="btn btn-blue btn-sm" onclick="window.print()">&#11015; PDF</button>
-      <a href="../dashboard/index.html" class="btn btn-blue btn-sm" style="text-decoration:none">&#128269; Scan Dashboard</a>
-      
-      <button class="btn btn-out btn-sm" onclick="doLogout()" style="color:var(--gray-500)">&#128682; Logout</button>
+      <a href="../dashboard/index.html" class="btn btn-blue btn-sm" style="text-decoration:none;font-size:.75rem">&#128269; Scan Dashboard</a>
     </div>
   </div>
 </div>
 
 <!-- PORTAL BODY -->
-<div id="portalBody" style="display:none;padding-top:1.5rem">
+<div id="portalBody" style="display:none;margin-left:220px;padding-top:72px">
 <div class="wrap">
 
   <!-- Score Hero -->
@@ -411,7 +452,7 @@ function demoLogin() {
   doLogin();
 }
 
-function doLogout() { AUTH.logout('../login.html'); }
+function doLogout() { try { localStorage.removeItem('pm_portal_session'); localStorage.removeItem('pm_portal_jwt'); localStorage.removeItem('pm_biz_jwt'); } catch(e){} AUTH.logout('../login.html'); }
 
 function applyClientTypeUI() {
   var s = AUTH.getSession() || {};
@@ -439,10 +480,22 @@ function applyClientTypeUI() {
 
 function showPortal() {
   document.getElementById('loginWrap').style.display='none';
-  document.getElementById('portalHdr').style.display='block';
+  document.getElementById('portalHdr').style.display='flex';   // flex for sidebar+content layout
   document.getElementById('portalBody').style.display='block';
+
+  // Set sidebar user info
+  var sess = AUTH.getSession() || {};
+  var name = sess.name || sess.email || 'User';
+  var sbName  = document.getElementById('sidebarUserName');
+  var clName  = document.getElementById('clNameSb');
+  var clAv    = document.getElementById('clAvatarSb');
+  if (sbName) sbName.textContent = name;
+  if (clName) clName.textContent = name.split(' ')[0];
+  if (clAv)   clAv.textContent   = (name[0] || 'U').toUpperCase();
+
   applyClientTypeUI();
   loadData();
+  tab('dashboard');
 }
 
 /* ── DATA ── */
@@ -752,6 +805,7 @@ function renderHistory() {
 
 /* ── INTERACTIONS ── */
 function tab(name) {
+  // Update old tab buttons (still present for tablet/mobile)
   document.querySelectorAll('.tab').forEach(function(t){
     t.classList.toggle('active', (t.getAttribute('onclick')||'').indexOf("'"+name+"'")!==-1);
   });
@@ -759,6 +813,18 @@ function tab(name) {
   var tp=document.getElementById('tp-'+name);
   if(tp) tp.classList.add('active');
   if(name==='team') loadOrgDevices();
+
+  // Sync sidebar active state
+  var titles = { dashboard:'Security Dashboard', issues:'Issues & Fixes', team:'Device Manager',
+                 timeline:'Fix Timeline', summary:'Executive Summary', history:'Scan History' };
+  document.querySelectorAll('.cl-sb-btn').forEach(function(b){
+    var isActive = b.id === 'clTab-' + name;
+    b.style.background    = isActive ? 'rgba(0,212,255,.08)' : 'none';
+    b.style.borderLeft    = isActive ? '2px solid #00d4ff' : '2px solid transparent';
+    b.style.color         = isActive ? '#00d4ff' : '#94a3b8';
+  });
+  var titleEl = document.getElementById('clTopTitle');
+  if (titleEl && titles[name]) titleEl.textContent = titles[name];
 }
 
 /* ── Team & Devices (employees + laptops) ── */
@@ -1021,6 +1087,29 @@ async function registerMyDevice() {
 
 // Auto-load on startup
 document.addEventListener('DOMContentLoaded', function() {
+  // Auto-login: check shared session from scan dashboard (SSO)
+  try {
+    var shared = JSON.parse(localStorage.getItem('pm_portal_session') || 'null');
+    if (shared && shared.id && shared.ts && (Date.now() - shared.ts) < 86400000) {
+      // Route business users away from personal portal
+      if (shared.role === 'owner' || shared.role === 'manager' || shared.client_type === 'business') {
+        window.location.href = '../business/index.html'; return;
+      }
+      if (shared.role === 'admin') { window.location.href = '../admin/index.html'; return; }
+      // Personal user — show portal directly, no login screen
+      if (typeof showPortal === 'function') showPortal();
+      return;
+    }
+  } catch(e2) {}
+
+  // Check auth.js session
+  var sess = AUTH && AUTH.getSession ? AUTH.getSession() : null;
+  if (sess && sess.id) {
+    if (sess.role === 'admin') { window.location.href = '../admin/index.html'; return; }
+    if (sess.client_type === 'business' || sess.role === 'owner') { window.location.href = '../business/index.html'; return; }
+    if (typeof showPortal === 'function') showPortal();
+  }
+
   setTimeout(loadOrgData, 1500);
 });
 

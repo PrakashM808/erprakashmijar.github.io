@@ -43,7 +43,7 @@
   .sb-brand-role{font-size:.65rem;color:rgba(255,255,255,.45);letter-spacing:.1em}
   .sb-nav{padding:.6rem 0;flex:1;overflow-y:auto}
   .sb-section{padding:.4rem 1rem .2rem;font-size:.62rem;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.15em;text-transform:uppercase;margin-top:.4rem}
-  .sb-item{display:flex;align-items:center;gap:.6rem;width:100%;padding:.55rem 1rem;font-size:.8rem;color:rgba(255,255,255,.65);background:none;border:none;cursor:pointer;text-align:left;transition:all .15s;border-left:2px solid transparent}
+  .sb-item,.sb-item:link,.sb-item:visited{display:flex;align-items:center;gap:.6rem;width:100%;padding:.55rem 1rem;font-size:.8rem;color:rgba(255,255,255,.65);background:none;border:none;cursor:pointer;text-align:left;transition:all .15s;border-left:2px solid transparent}
   .sb-item:hover{color:#fff;background:rgba(255,255,255,.06)}
   .sb-item.active{color:#fff;background:rgba(37,99,235,.25);border-left-color:var(--blue)}
   .sb-item-ico{font-size:.95rem;width:18px;text-align:center;flex-shrink:0}
@@ -192,20 +192,41 @@
         </div>
       </div>
       <div class="sb-nav">
-        <div class="sb-section">Overview</div>
-        <button class="sb-item active" onclick="ap('overview')"><span class="sb-item-ico">&#128202;</span>Overview</button>
-        <button class="sb-item" onclick="ap('clients')"><span class="sb-item-ico">&#128101;</span>Clients<span class="sb-badge" id="sbClientBadge">0</span></button>
-        <div class="sb-section">Approvals</div>
+        <div class="sb-section">Dashboard</div>
+        <button class="sb-item active" onclick="ap('overview')"><span class="sb-item-ico">&#128202;</span>Platform Overview</button>
+        <button class="sb-item" onclick="ap('analytics')"><span class="sb-item-ico">&#128200;</span>Revenue Analytics</button>
+        <button class="sb-item" onclick="ap('threats')"><span class="sb-item-ico">&#127760;</span>Threat Analytics</button>
+
+        <div class="sb-section">User Management</div>
+        <button class="sb-item" onclick="ap('users')"><span class="sb-item-ico">&#128101;</span>All Users<span class="sb-badge" id="sbClientBadge">0</span></button>
+        <button class="sb-item" onclick="ap('useractivity')"><span class="sb-item-ico">&#128336;</span>User Activity</button>
+
+        <div class="sb-section">Organizations</div>
+        <button class="sb-item" onclick="ap('clients')"><span class="sb-item-ico">&#127970;</span>Business Accounts</button>
+        <button class="sb-item" onclick="ap('billing')"><span class="sb-item-ico">&#128179;</span>Subscriptions</button>
+        <button class="sb-item" onclick="ap('invoices')"><span class="sb-item-ico">&#128203;</span>Invoices</button>
+        <button class="sb-item" onclick="ap('addclient')"><span class="sb-item-ico">&#10133;</span>Add Tenant</button>
+
+        <div class="sb-section">Security Center</div>
+        <button class="sb-item" onclick="ap('issues')"><span class="sb-item-ico">&#128683;</span>Vulnerabilities</button>
+        <button class="sb-item" onclick="ap('malware')"><span class="sb-item-ico">&#128027;</span>Malware Reports</button>
+        <button class="sb-item" onclick="ap('auditlog')"><span class="sb-item-ico">&#128221;</span>Audit Log</button>
         <button class="sb-item" onclick="ap('approvals')"><span class="sb-item-ico">&#9989;</span>Fix Approvals<span class="sb-badge" id="sbApprovalBadge" style="display:none">!</span></button>
+
+        <div class="sb-section">Support Center</div>
+        <button class="sb-item" onclick="ap('announcements')"><span class="sb-item-ico">&#128226;</span>Announcements</button>
+        <button class="sb-item" onclick="ap('tickets')"><span class="sb-item-ico">&#127868;</span>Support Tickets</button>
+
+        <div class="sb-section">Content</div>
         <button class="sb-item" onclick="ap('agreements')"><span class="sb-item-ico">&#9878;</span>Agreements</button>
-        <div class="sb-section">Reports</div>
         <button class="sb-item" onclick="ap('reports')"><span class="sb-item-ico">&#128196;</span>All Reports</button>
-        <button class="sb-item" onclick="ap('issues')"><span class="sb-item-ico">&#128683;</span>Critical Issues</button>
-        <div class="sb-section">Admin</div>
-        <div class="sb-section" style="margin-top:.5rem">Portals</div>
-        <a href="../dashboard/index.html" class="sb-item" style="text-decoration:none;color:inherit"><span class="sb-item-ico">&#128269;</span>Scan Dashboard</a>
-        <button class="sb-item" onclick="ap('addclient')"><span class="sb-item-ico">&#10133;</span>Add Client</button>
-        <button class="sb-item" onclick="window.location.href='../dashboard/index.html?stay=1'"><span class="sb-item-ico">&#128269;</span>Scanner Dashboard</button>
+
+        <div class="sb-section">Settings</div>
+        <button class="sb-item" onclick="ap('sysconfig')"><span class="sb-item-ico">&#9881;</span>System Settings</button>
+        <button class="sb-item" onclick="ap('featureflags')"><span class="sb-item-ico">&#127987;</span>Feature Flags</button>
+
+        <div class="sb-section">Portals</div>
+        <a href="../dashboard/index.html" class="sb-item" style="text-decoration:none"><span class="sb-item-ico">&#128269;</span>Scan Dashboard</a>
       </div>
       <div class="sb-bottom">
         <div class="sb-user">
@@ -357,6 +378,275 @@
           </div>
         </div>
 
+
+
+        <!-- THREAT ANALYTICS -->
+        <div class="page" id="p-threats">
+          <div class="pg-hdr"><div class="pg-ttl">Threat Analytics</div><div class="pg-sub">Global vulnerability and malware statistics across all tenants</div></div>
+          <div class="stat-row" style="grid-template-columns:repeat(4,1fr)">
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Critical CVEs</span><div class="stat-box-ico ico-red">&#128683;</div></div><div class="stat-box-num" id="thrCrit">-</div><div class="stat-box-hint">Across all tenants</div></div>
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Active Threats</span><div class="stat-box-ico ico-orange">&#9888;</div></div><div class="stat-box-num" id="thrActive">-</div><div class="stat-box-hint">Unresolved findings</div></div>
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Scans Today</span><div class="stat-box-ico ico-blue">&#128269;</div></div><div class="stat-box-num" id="thrScans">-</div><div class="stat-box-hint">Platform-wide</div></div>
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Resolved Today</span><div class="stat-box-ico ico-green">&#9989;</div></div><div class="stat-box-num" id="thrResolved">-</div><div class="stat-box-hint">Fixed issues</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
+            <div class="card"><div class="card-hdr"><div class="card-title">&#128200; Top Vulnerability Categories</div></div>
+              <div class="card-body">
+                <div class="ff-item"><div><div class="ff-name">SSH Misconfiguration</div><div class="ff-desc">Root login, password auth</div></div><span style="font-weight:700;color:var(--red)">High</span></div>
+                <div class="ff-item"><div><div class="ff-name">Outdated Packages</div><div class="ff-desc">Known CVEs in installed software</div></div><span style="font-weight:700;color:var(--orange)">Med</span></div>
+                <div class="ff-item"><div><div class="ff-name">Firewall Disabled</div><div class="ff-desc">No ufw/iptables</div></div><span style="font-weight:700;color:var(--red)">High</span></div>
+                <div class="ff-item"><div><div class="ff-name">Open Database Ports</div><div class="ff-desc">MySQL/Redis exposed</div></div><span style="font-weight:700;color:var(--orange)">Med</span></div>
+                <div class="ff-item"><div><div class="ff-name">No MFA</div><div class="ff-desc">Accounts without two-factor</div></div><span style="font-weight:700;color:var(--blue)">Low</span></div>
+              </div>
+            </div>
+            <div class="card"><div class="card-hdr"><div class="card-title">&#128683; CISA KEV Feed</div><div class="card-sub">Latest known exploited vulnerabilities</div></div>
+              <div class="card-body" id="cisaFeed"><div class="empty-state">Loading CISA KEV feed...</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- USER ACTIVITY -->
+        <div class="page" id="p-useractivity">
+          <div class="pg-hdr"><div class="pg-ttl">User Activity</div><div class="pg-sub">Login history and user actions across the platform</div></div>
+          <div class="tcard"><div class="tbl-wrap"><table><thead><tr>
+            <th>Time</th><th>User</th><th>Action</th><th>IP Address</th><th>Device</th><th>Result</th>
+          </tr></thead><tbody id="activityTable">
+            <tr><td style="font-family:var(--mono);font-size:.75rem;color:var(--ink3)" colspan="6" class="empty-state">Loading activity log... Connect backend for real-time data.</td></tr>
+          </tbody></table></div></div>
+        </div>
+
+        <!-- MALWARE REPORTS -->
+        <div class="page" id="p-malware">
+          <div class="pg-hdr"><div class="pg-ttl">Malware Reports</div><div class="pg-sub">Detected malware and suspicious files across all tenants</div></div>
+          <div class="card">
+            <div class="card-hdr"><div class="card-title">&#128027; Active Malware Detections</div></div>
+            <div class="card-body">
+              <div style="background:var(--green-lt);border:1px solid #bbf7d0;border-radius:var(--r-xs);padding:.75rem;font-size:.82rem;color:var(--green)">
+                &#9989; No malware detections reported across any tenant today. Platform is clean.
+              </div>
+              <div style="margin-top:1rem;font-size:.8rem;color:var(--ink3)">
+                Malware detection uses signature matching on scan results. Connect your backend ransomware feed for real-time monitoring.
+              </div>
+              <a href="../dashboard/index.html" class="btn btn-blue btn-sm" style="margin-top:.8rem;text-decoration:none;display:inline-flex">&#128269; Open Scan Dashboard for Deep Scan</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUPPORT TICKETS -->
+        <div class="page" id="p-tickets">
+          <div class="pg-hdr" style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div><div class="pg-ttl">Support Tickets</div><div class="pg-sub">All support requests from users across the platform</div></div>
+            <div style="display:flex;gap:.5rem">
+              <select class="finp" id="ticketFilter" onchange="filterTickets()" style="width:140px"><option value="">All Status</option><option value="open">Open</option><option value="pending">Pending</option><option value="closed">Closed</option></select>
+              <button class="btn btn-blue btn-sm" onclick="renderTickets()">&#8635; Refresh</button>
+            </div>
+          </div>
+          <div class="tcard"><div class="tbl-wrap"><table><thead><tr>
+            <th>Ticket</th><th>User</th><th>Subject</th><th>Priority</th><th>Status</th><th>Created</th><th>Actions</th>
+          </tr></thead><tbody id="ticketsFullTable">
+            <tr><td colspan="7" class="empty-state">No tickets yet. Users can submit tickets from their portals.</td></tr>
+          </tbody></table></div></div>
+        </div>
+
+        <!-- ── ANALYTICS ──────────────────────────────────────── -->
+        <div class="page" id="p-analytics">
+          <div class="pg-hdr"><div class="pg-ttl">Platform Analytics</div><div class="pg-sub">Usage, growth, and performance metrics across all tenants</div></div>
+          <div class="stat-row" style="grid-template-columns:repeat(4,1fr)" id="analyticsStats">
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Total Users</span><div class="stat-box-ico ico-blue">&#128101;</div></div><div class="stat-box-num" id="anTotalUsers">-</div><div class="stat-box-hint">All accounts</div></div>
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Active Today</span><div class="stat-box-ico ico-green">&#9889;</div></div><div class="stat-box-num" id="anActiveToday">-</div><div class="stat-box-hint">Logged in last 24h</div></div>
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Scans This Week</span><div class="stat-box-ico ico-orange">&#128269;</div></div><div class="stat-box-num" id="anScansWeek">-</div><div class="stat-box-hint">Across all tenants</div></div>
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">MRR</span><div class="stat-box-ico ico-purple">&#128176;</div></div><div class="stat-box-num" id="anMRR">-</div><div class="stat-box-hint">Monthly recurring revenue</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
+            <div class="card"><div class="card-hdr"><div class="card-title">&#128200; Plan Distribution</div></div><div class="card-body" id="planBreakdown"><div class="empty-state">Loading...</div></div></div>
+            <div class="card"><div class="card-hdr"><div class="card-title">&#128101; Role Breakdown</div></div><div class="card-body" id="roleBreakdown"><div class="empty-state">Loading...</div></div></div>
+          </div>
+          <div class="card" style="margin-top:1rem"><div class="card-hdr"><div class="card-title">&#127759; Geographic Distribution</div><div class="card-sub">Tenant locations</div></div><div class="card-body" id="geoBreakdown"><div class="empty-state">Connect backend to see geographic data.</div></div></div>
+        </div>
+
+        <!-- ── ALL USERS ───────────────────────────────────────── -->
+        <div class="page" id="p-users">
+          <div class="pg-hdr" style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div><div class="pg-ttl">All Users</div><div class="pg-sub">Every account across all tenants</div></div>
+            <div style="display:flex;gap:.5rem">
+              <input class="finp" id="userSearch" placeholder="&#128269; Search by name or email..." style="width:220px" oninput="filterUsers()"/>
+              <select class="finp" id="userRoleFilter" onchange="filterUsers()" style="width:130px"><option value="">All Roles</option><option value="admin">Admin</option><option value="owner">Owner</option><option value="employee">Employee</option><option value="user">User</option></select>
+            </div>
+          </div>
+          <div class="tcard"><div class="tbl-wrap"><table><thead><tr>
+            <th>User</th><th>Email</th><th>Role</th><th>Plan</th><th>Tenant</th><th>Status</th><th>Joined</th><th>Actions</th>
+          </tr></thead><tbody id="usersTable"><tr><td colspan="8" class="empty-state">Loading users...</td></tr></tbody></table></div></div>
+        </div>
+
+        <!-- ── BILLING / SUBSCRIPTIONS ────────────────────────── -->
+        <div class="page" id="p-billing">
+          <div class="pg-hdr"><div class="pg-ttl">Billing & Subscriptions</div><div class="pg-sub">Manage plans, credits, and payment status across all tenants</div></div>
+          <div class="stat-row" style="grid-template-columns:repeat(4,1fr)">
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">MRR</span><div class="stat-box-ico ico-green">&#128176;</div></div><div class="stat-box-num" id="bilMRR">$0</div><div class="stat-box-hint">Monthly recurring</div></div>
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Paid Tenants</span><div class="stat-box-ico ico-blue">&#127970;</div></div><div class="stat-box-num" id="bilPaid">0</div><div class="stat-box-hint">Active subscriptions</div></div>
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Free Tier</span><div class="stat-box-ico ico-orange">&#127381;</div></div><div class="stat-box-num" id="bilFree">0</div><div class="stat-box-hint">Trial / free accounts</div></div>
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Overdue</span><div class="stat-box-ico ico-red">&#9888;</div></div><div class="stat-box-num" id="bilOverdue">0</div><div class="stat-box-hint">Failed payments</div></div>
+          </div>
+          <div class="tcard" style="margin-top:1rem">
+            <div class="tcard-hdr"><div class="tcard-title">All Subscriptions</div>
+              <button class="btn btn-blue btn-sm" onclick="exportBillingCSV()">&#11015; Export CSV</button></div>
+            <div class="tbl-wrap"><table><thead><tr>
+              <th>Tenant</th><th>Plan</th><th>MRR</th><th>Status</th><th>Next Billing</th><th>Actions</th>
+            </tr></thead><tbody id="billingTable"><tr><td colspan="6" class="empty-state">Loading subscriptions...</td></tr></tbody></table></div>
+          </div>
+        </div>
+
+        <!-- ── INVOICES ───────────────────────────────────────── -->
+        <div class="page" id="p-invoices">
+          <div class="pg-hdr" style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div><div class="pg-ttl">Invoices</div><div class="pg-sub">All invoices, credits, and payment records</div></div>
+            <button class="btn btn-blue btn-sm" onclick="exportInvoicesCSV()">&#11015; Export All</button>
+          </div>
+          <div class="tcard"><div class="tbl-wrap"><table><thead><tr>
+            <th>Invoice #</th><th>Tenant</th><th>Amount</th><th>Plan</th><th>Date</th><th>Status</th><th>Actions</th>
+          </tr></thead><tbody id="invoicesTable"><tr><td colspan="7" class="empty-state">No invoices yet — connect Stripe to see billing data.</td></tr></tbody></table></div></div>
+        </div>
+
+        <!-- ── AUDIT LOG ──────────────────────────────────────── -->
+        <div class="page" id="p-auditlog">
+          <div class="pg-hdr" style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div><div class="pg-ttl">Audit Log</div><div class="pg-sub">All admin actions, user changes, and system events</div></div>
+            <div style="display:flex;gap:.5rem">
+              <select class="finp" id="auditFilter" onchange="filterAuditLog()" style="width:160px">
+                <option value="">All Events</option><option value="login">Logins</option><option value="invite">Invites</option>
+                <option value="org">Org Changes</option><option value="billing">Billing</option><option value="scan">Scans</option>
+              </select>
+              <button class="btn btn-blue btn-sm" onclick="exportAuditLog()">&#11015; Export</button>
+            </div>
+          </div>
+          <div class="tcard"><div class="tbl-wrap"><table><thead><tr>
+            <th>Timestamp</th><th>User</th><th>Action</th><th>Target</th><th>IP Address</th><th>Result</th>
+          </tr></thead><tbody id="auditTable"><tr><td colspan="6" class="empty-state">Loading audit log...</td></tr></tbody></table></div></div>
+        </div>
+
+        <!-- ── SYSTEM CONFIG ──────────────────────────────────── -->
+        <div class="page" id="p-sysconfig">
+          <div class="pg-hdr"><div class="pg-ttl">System Configuration</div><div class="pg-sub">Global platform settings</div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div class="card">
+              <div class="card-hdr"><div class="card-title">&#9742; Email Settings</div></div>
+              <div class="card-body">
+                <div class="fg"><label class="flbl">From Email</label><input class="finp" id="cfgFromEmail" placeholder="noreply@erprakashmijar.com"/></div>
+                <div class="fg"><label class="flbl">SendGrid API Key</label><input class="finp" type="password" id="cfgSendgrid" placeholder="SG.xxxxxxxxx"/></div>
+                <div class="fg"><label class="flbl">Support Email</label><input class="finp" id="cfgSupportEmail" placeholder="contact@erprakashmijar.com"/></div>
+                <button class="btn btn-blue btn-sm" onclick="saveSysConfig('email')">Save Email Settings</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-hdr"><div class="card-title">&#128737; Security Policies</div></div>
+              <div class="card-body">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem;padding-bottom:.7rem;border-bottom:1px solid var(--border)">
+                  <div><div style="font-size:.83rem;font-weight:600">Enforce MFA for all users</div><div style="font-size:.73rem;color:var(--ink3)">Require 2FA on login</div></div>
+                  <label class="toggle"><input type="checkbox" id="cfgMFA"/><span class="toggle-track"></span></label>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem;padding-bottom:.7rem;border-bottom:1px solid var(--border)">
+                  <div><div style="font-size:.83rem;font-weight:600">IP Allowlisting</div><div style="font-size:.73rem;color:var(--ink3)">Restrict admin access by IP</div></div>
+                  <label class="toggle"><input type="checkbox" id="cfgIPAllow"/><span class="toggle-track"></span></label>
+                </div>
+                <div class="fg"><label class="flbl">Allowed IPs (one per line)</label><textarea class="finp" id="cfgAllowedIPs" rows="3" placeholder="203.0.113.0&#10;198.51.100.0" style="resize:vertical;font-family:var(--mono);font-size:.78rem"></textarea></div>
+                <div class="fg"><label class="flbl">Min Password Length</label><input class="finp" id="cfgMinPw" type="number" value="12" min="8" max="64" style="width:80px"/></div>
+                <div class="fg"><label class="flbl">Session Timeout (minutes)</label><input class="finp" id="cfgSessionTimeout" type="number" value="480" min="30" style="width:80px"/></div>
+                <button class="btn btn-blue btn-sm" onclick="saveSysConfig('security')">Save Security Settings</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-hdr"><div class="card-title">&#128257; API & Rate Limits</div></div>
+              <div class="card-body">
+                <div class="fg"><label class="flbl">Free Plan: Scans/Day</label><input class="finp" id="cfgFreeScanLimit" type="number" value="1"/></div>
+                <div class="fg"><label class="flbl">Starter Plan: Scans/Day</label><input class="finp" id="cfgStarterScanLimit" type="number" value="10"/></div>
+                <div class="fg"><label class="flbl">Professional: Scans/Day</label><input class="finp" id="cfgProScanLimit" type="number" value="100"/></div>
+                <div class="fg"><label class="flbl">Webhook URL (platform events)</label><input class="finp" id="cfgWebhookUrl" placeholder="https://hooks.example.com/pm-offsec"/></div>
+                <button class="btn btn-blue btn-sm" onclick="saveSysConfig('limits')">Save Limit Settings</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-hdr"><div class="card-title">&#128190; Data Retention</div></div>
+              <div class="card-body">
+                <div class="fg"><label class="flbl">Scan history retention (days)</label><input class="finp" id="cfgRetentionScans" type="number" value="90"/></div>
+                <div class="fg"><label class="flbl">Audit log retention (days)</label><input class="finp" id="cfgRetentionAudit" type="number" value="365"/></div>
+                <div class="fg"><label class="flbl">Inactive account deletion (days)</label><input class="finp" id="cfgRetentionAccount" type="number" value="730"/></div>
+                <button class="btn btn-blue btn-sm" onclick="saveSysConfig('retention')">Save Retention Policy</button>
+                <button class="btn btn-out btn-sm" style="margin-top:.4rem;color:var(--red)" onclick="if(confirm('Run GDPR cleanup now?')) runGDPRCleanup()">&#128465; Run GDPR Cleanup Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── FEATURE FLAGS ──────────────────────────────────── -->
+        <div class="page" id="p-featureflags">
+          <div class="pg-hdr"><div class="pg-ttl">Feature Flags</div><div class="pg-sub">Enable or disable features globally or per tenant</div></div>
+          <div class="card">
+            <div class="card-hdr"><div class="card-title">&#127987; Global Feature Flags</div><div class="card-sub">Changes take effect immediately for all tenants</div></div>
+            <div class="card-body" id="featureFlagsList">
+              <div id="ffLoading">Loading feature flags...</div>
+            </div>
+          </div>
+          <div class="card" style="margin-top:1rem">
+            <div class="card-hdr"><div class="card-title">&#127970; Per-Tenant Overrides</div><div class="card-sub">Override flags for specific tenants</div></div>
+            <div class="card-body">
+              <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:.5rem;align-items:end;margin-bottom:.8rem">
+                <div class="fg" style="margin:0"><label class="flbl">Tenant</label><select class="finp" id="ffTenantSelect"><option value="">Select tenant...</option></select></div>
+                <div class="fg" style="margin:0"><label class="flbl">Feature</label><select class="finp" id="ffFeatureSelect"><option value="ai_fixes">AI Fix Suggestions</option><option value="dark_web">Dark Web Monitor</option><option value="advanced_scan">Advanced Scanning</option><option value="siem">SIEM Integration</option><option value="api_access">API Access</option></select></div>
+                <button class="btn btn-blue btn-sm" onclick="applyTenantFlag()">Apply Override</button>
+              </div>
+              <div id="tenantFlagsList" class="empty-state">Select a tenant to see their feature overrides.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── ANNOUNCEMENTS ──────────────────────────────────── -->
+        <div class="page" id="p-announcements">
+          <div class="pg-hdr"><div class="pg-ttl">Announcements & Support</div><div class="pg-sub">Post platform-wide announcements and manage support requests</div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div class="card">
+              <div class="card-hdr"><div class="card-title">&#128226; Post Announcement</div></div>
+              <div class="card-body">
+                <div class="fg"><label class="flbl">Title</label><input class="finp" id="annTitle" placeholder="System maintenance on Saturday..."/></div>
+                <div class="fg"><label class="flbl">Message</label><textarea class="finp" id="annMessage" rows="4" placeholder="Platform will be unavailable from 2–4am UTC for maintenance." style="resize:vertical"></textarea></div>
+                <div class="fg"><label class="flbl">Type</label>
+                  <select class="finp" id="annType">
+                    <option value="info">ℹ Info</option><option value="warning">⚠ Warning</option>
+                    <option value="maintenance">🔧 Maintenance</option><option value="feature">✨ New Feature</option>
+                  </select></div>
+                <div class="fg"><label class="flbl">Audience</label>
+                  <select class="finp" id="annAudience">
+                    <option value="all">All Users</option><option value="paid">Paid Users Only</option>
+                    <option value="admin">Admins Only</option><option value="business">Business Owners</option>
+                  </select></div>
+                <div style="display:flex;gap:.5rem">
+                  <button class="btn btn-blue" onclick="postAnnouncement()">&#128226; Publish Now</button>
+                  <button class="btn btn-out" onclick="scheduleAnnouncement()">&#8987; Schedule</button>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-hdr"><div class="card-title">&#127918; Maintenance Mode</div></div>
+              <div class="card-body">
+                <div style="background:var(--orange-lt);border:1px solid #fed7aa;border-radius:var(--r-xs);padding:.75rem;margin-bottom:.8rem;font-size:.8rem;color:var(--orange)">
+                  &#9888; Enabling maintenance mode will show a maintenance page to all users and block logins.
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem">
+                  <div><div style="font-size:.9rem;font-weight:600">Maintenance Mode</div><div style="font-size:.75rem;color:var(--ink3)">Currently: <span id="maintStatus" style="color:var(--green);font-weight:600">OFF</span></div></div>
+                  <label class="toggle"><input type="checkbox" id="cfgMaintMode" onchange="toggleMaintenanceMode(this.checked)"/><span class="toggle-track"></span></label>
+                </div>
+                <div class="fg"><label class="flbl">Maintenance Message</label><textarea class="finp" id="maintMsg" rows="3" placeholder="We'll be back shortly. Follow @PMOFFsec for updates." style="resize:vertical"></textarea></div>
+                <div class="fg"><label class="flbl">Expected Duration</label><input class="finp" id="maintDuration" placeholder="2 hours"/></div>
+              </div>
+            </div>
+          </div>
+          <div class="tcard" style="margin-top:1rem">
+            <div class="tcard-hdr"><div class="tcard-title">&#127868; Support Tickets</div><div class="tcard-sub">All support requests from users</div></div>
+            <div class="tbl-wrap"><table><thead><tr>
+              <th>Ticket #</th><th>User</th><th>Subject</th><th>Priority</th><th>Status</th><th>Created</th><th>Actions</th>
+            </tr></thead><tbody id="ticketsTable"><tr><td colspan="7" class="empty-state">No support tickets yet.</td></tr></tbody></table></div>
+          </div>
+        </div>
+
       </div><!-- /content -->
     </div><!-- /admin-main -->
   </div><!-- /layout -->
@@ -426,24 +716,49 @@ function ap(name) {
     if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+name+"'")) b.classList.add('active');
   });
   var titles={
-    overview:['Overview','All clients and activity'],
-    clients:['Clients','Manage client accounts'],
-    approvals:['Fix Approvals','Client-approved fixes'],
-    agreements:['Agreements','Signed legal agreements'],
-    reports:['Security Reports','All client scan reports'],
-    issues:['Critical Issues','All critical and high findings'],
-    addclient:['Add Client','Create new client account'],
+    overview:     ['Platform Overview',  'All clients, activity and revenue'],
+    analytics:    ['Revenue Analytics',  'MRR, growth, and financial metrics'],
+    threats:      ['Threat Analytics',   'Global vulnerability and malware statistics'],
+    clients:      ['Business Accounts',  'Manage tenant organizations'],
+    useractivity: ['User Activity',      'Login history and user actions'],
+    malware:      ['Malware Reports',    'Detected malware across all tenants'],
+    tickets:      ['Support Tickets',    'All user support requests'],
+    users:        ['All Users',          'Every account across all tenants'],
+    addclient:    ['Add Tenant',         'Create new tenant account'],
+    billing:      ['Billing',            'Subscriptions and payment status'],
+    invoices:     ['Invoices',           'All billing records and invoices'],
+    approvals:    ['Fix Approvals',      'Client-approved security fixes'],
+    auditlog:     ['Audit Log',          'All admin actions and system events'],
+    issues:       ['Critical Issues',    'All critical and high findings'],
+    sysconfig:    ['System Config',      'Global platform settings'],
+    featureflags: ['Feature Flags',      'Enable or disable features per tenant'],
+    announcements:['Announcements',      'Post-wide announcements and support tickets'],
+    agreements:   ['Agreements',         'Signed legal agreements'],
+    reports:      ['Security Reports',   'All client scan reports'],
   };
   var t=titles[name]||[name,''];
   document.getElementById('pageTitle').textContent=t[0];
   document.getElementById('pageSub').textContent=t[1];
-  // Render the page
-  if(name==='overview') renderOverview();
-  if(name==='clients') renderClients();
-  if(name==='approvals') renderApprovals();
-  if(name==='agreements') renderAgreements();
-  if(name==='reports') renderReports();
-  if(name==='issues') renderIssuesPage();
+  // Existing renderers
+  if(name==='overview')     renderOverview();
+  if(name==='clients')      renderClients();
+  if(name==='approvals')    renderApprovals();
+  if(name==='agreements')   renderAgreements();
+  if(name==='reports')      renderReports();
+  if(name==='issues')       renderIssuesPage();
+  // New renderers
+  if(name==='analytics')    renderAnalytics();
+  if(name==='threats')      renderThreats();
+  if(name==='users')        renderAllUsers();
+  if(name==='useractivity') renderUserActivity();
+  if(name==='malware')      renderMalware();
+  if(name==='tickets')      renderTickets();
+  if(name==='billing')      renderBillingAdmin();
+  if(name==='invoices')     renderInvoices();
+  if(name==='auditlog')     renderAuditLog();
+  if(name==='sysconfig')    loadSysConfig();
+  if(name==='featureflags') renderFeatureFlags();
+  if(name==='announcements') renderAnnouncements();
   // Close mobile sidebar
   document.getElementById('adminSidebar').classList.remove('open');
 }
@@ -935,6 +1250,18 @@ function toast(msg,color){
 
 /* ── INIT ── */
 (function(){
+  // Check shared portal session first (SSO from scan dashboard)
+  try {
+    var shared = JSON.parse(localStorage.getItem('pm_portal_session') || 'null');
+    if (shared && shared.role === 'admin' && shared.ts && (Date.now() - shared.ts) < 86400000) {
+      ADMIN_SESSION = shared;
+      var sharedJwt = localStorage.getItem('pm_portal_jwt');
+      if (sharedJwt) localStorage.setItem('pm_admin_jwt', sharedJwt);
+      showAdminPortal();
+      return;
+    }
+  } catch(e2) {}
+
   var s=AUTH.getSession();
   if(s&&s.id){
     if(s.role==='admin'){ ADMIN_SESSION=s; showAdminPortal(); }
@@ -1005,6 +1332,326 @@ function renderRoleChart(roles) {
 document.addEventListener("DOMContentLoaded", function() {
   setTimeout(function(){ loadPlatformStats(); loadAllOrgs(); }, 1500);
 });
+
+/* ══ NEW ADMIN SECTION RENDERERS ══════════════════════════════════ */
+
+var FEATURE_FLAGS = [
+  { key:'ai_fixes',       name:'AI Fix Suggestions',    desc:'Claude AI generates remediation suggestions for vulnerabilities', default:true },
+  { key:'dark_web',       name:'Dark Web Monitor',       desc:'Scan dark web sources for tenant data breaches', default:true },
+  { key:'advanced_scan',  name:'Advanced Scanning',      desc:'Deep SSH/network scanning (requires agent)', default:true },
+  { key:'siem',           name:'SIEM Integration',       desc:'Wazuh/Splunk log forwarding', default:false },
+  { key:'api_access',     name:'API Access',             desc:'REST API access for external integrations', default:false },
+  { key:'msp_mode',       name:'MSP Dashboard',          desc:'MSP white-label dashboard (admin only)', default:true },
+  { key:'pentest_reports',name:'Pentest Reports',        desc:'Generate PDF pentest reports', default:true },
+  { key:'compliance_scan',name:'Compliance Scoring',     desc:'SOC2/ISO27001/PCI DSS compliance checks', default:true },
+];
+
+async function renderAnalytics() {
+  if (typeof loadPlatformStats === 'function') await loadPlatformStats();
+  if (typeof loadAllOrgs === 'function') await loadAllOrgs();
+  // Populate stat cards
+  var orgsEl = document.getElementById('orgsTableBody');
+  if (orgsEl) {
+    var data = await adminApiGet('/api/admin/platform-stats');
+    if (data) {
+      var setEl = function(id, val) { var e=document.getElementById(id); if(e) e.textContent=val; };
+      setEl('anTotalUsers',  data.total_users  || '-');
+      setEl('anActiveToday', data.active_users || '-');
+      setEl('anScansWeek',   '-');
+      // MRR calc
+      var plans = data.by_plan || {};
+      var mrr = ((plans.starter||0)*19 + (plans.professional||0)*79 + (plans.enterprise||0)*199);
+      setEl('anMRR', '$'+mrr);
+    }
+  }
+}
+
+async function renderAllUsers() {
+  var tb = document.getElementById('usersTable');
+  if (!tb) return;
+  var data = await adminApiGet('/api/admin/users');
+  if (!data || !data.users) {
+    tb.innerHTML = '<tr><td colspan="8" class="empty-state">Connect backend to see all users. <br><small>Endpoint: GET /api/admin/users</small></td></tr>';
+    return;
+  }
+  var users = data.users;
+  document.getElementById('sbClientBadge').textContent = users.length;
+  tb.innerHTML = users.map(function(u) {
+    var roleCol = {admin:'var(--blue)',owner:'var(--purple)',employee:'var(--green)',user:'var(--ink3)'}[u.role] || 'var(--ink3)';
+    var joined = u.created_at ? new Date(u.created_at).toLocaleDateString() : '-';
+    return '<tr>' +
+      '<td><div style="display:flex;align-items:center;gap:.5rem"><div style="width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0">' + (u.name||'?')[0].toUpperCase() + '</div><span style="font-weight:500">' + (u.name||'') + '</span></div></td>' +
+      '<td style="color:var(--ink2)">' + (u.email||'') + '</td>' +
+      '<td><span style="background:rgba(37,99,235,.08);color:' + roleCol + ';border-radius:4px;padding:.15rem .4rem;font-size:.72rem;font-weight:600">' + (u.role||'user').toUpperCase() + '</span></td>' +
+      '<td>' + (u.plan||'free').toUpperCase() + '</td>' +
+      '<td style="color:var(--ink3)">' + (u.org_id ? u.org_id.slice(0,8)+'...' : '-') + '</td>' +
+      '<td><span style="color:' + (u.status==='active'?'var(--green)':'var(--red)') + ';font-weight:600">' + (u.status||'active').toUpperCase() + '</span></td>' +
+      '<td style="color:var(--ink3)">' + joined + '</td>' +
+      '<td><button class="btn btn-out btn-sm" data-u="' + u.id + '" data-s="' + u.status + '" onclick="var b=this;suspendUser(b.dataset.u,b.dataset.s)">' + (u.status==="active"?"Suspend":"Restore") + '</button></td>' +
+      '</tr>';
+  }).join('');
+  document.getElementById('sbClientBadge').textContent = users.length;
+}
+
+function filterUsers() {
+  var q = (document.getElementById('userSearch').value||'').toLowerCase();
+  var role = document.getElementById('userRoleFilter').value;
+  document.querySelectorAll('#usersTable tr').forEach(function(row) {
+    var text = (row.textContent||'').toLowerCase();
+    var roleMatch = !role || text.includes(role);
+    row.style.display = (text.includes(q) && roleMatch) ? '' : 'none';
+  });
+}
+
+async function suspendUser(userId, currentStatus) {
+  var newStatus = currentStatus === 'active' ? 'suspended' : 'active';
+  if (!confirm((newStatus === 'suspended' ? 'Suspend' : 'Restore') + ' this user?')) return;
+  var r = await adminApiPost('/api/admin/users/' + userId + '/status', { status: newStatus });
+  if (r && r.ok) { toast('User ' + newStatus, 'ok'); renderAllUsers(); }
+  else toast('Action failed', 'warn');
+}
+
+async function renderBillingAdmin() {
+  var tb = document.getElementById('billingTable');
+  if (!tb) return;
+  var data = await adminApiGet('/api/org/all');
+  if (!data || !data.orgs) {
+    tb.innerHTML = '<tr><td colspan="6" class="empty-state">Connect backend to see billing data.</td></tr>';
+    return;
+  }
+  var planPrices = {free:0, starter:19, professional:79, enterprise:199};
+  var totalMRR=0, paid=0, free=0;
+  data.orgs.forEach(function(o) { var p=planPrices[o.plan||'free']||0; totalMRR+=p; if(p>0) paid++; else free++; });
+  var setEl = function(id,v) { var e=document.getElementById(id); if(e) e.textContent=v; };
+  setEl('bilMRR','$'+totalMRR); setEl('bilPaid',paid); setEl('bilFree',free); setEl('bilOverdue','0');
+  tb.innerHTML = data.orgs.map(function(o) {
+    var price = planPrices[o.plan||'free']||0;
+    return '<tr>' +
+      '<td style="font-weight:500">' + (o.name||'Unknown') + '</td>' +
+      '<td><span style="background:rgba(37,99,235,.08);color:var(--blue);border-radius:4px;padding:.15rem .4rem;font-size:.72rem">' + (o.plan||'free').toUpperCase() + '</span></td>' +
+      '<td style="font-weight:600">$' + price + '/mo</td>' +
+      '<td><span style="color:' + (price>0?'var(--green)':'var(--ink3)') + ';font-weight:600">' + (price>0?'ACTIVE':'FREE') + '</span></td>' +
+      '<td style="color:var(--ink3)">-</td>' +
+      '<td><button class="btn btn-out btn-sm" data-oid="' + o.id + '" onclick="changePlan(this.dataset.oid)">Change Plan</button></td>' +
+      '</tr>';
+  }).join('');
+}
+
+function exportBillingCSV() {
+  toast('CSV export — connect Stripe for full billing data', 'info');
+}
+
+async function renderInvoices() {
+  document.getElementById('invoicesTable').innerHTML = '<tr><td colspan="7" class="empty-state">Connect Stripe webhook to populate invoices automatically.<br><small>Endpoint: GET /api/billing/invoices</small></td></tr>';
+}
+
+function exportInvoicesCSV() { toast('Connect Stripe for invoice export', 'info'); }
+
+async function renderAuditLog() {
+  var tb = document.getElementById('auditTable');
+  if (!tb) return;
+  var data = await adminApiGet('/api/audit/log');
+  if (!data || !data.events) {
+    // Demo audit entries from localStorage
+    var demoEvents = [
+      { ts: new Date().toISOString(), user:'admin@erprakashmijar.com', action:'LOGIN', target:'Admin Portal', ip:'127.0.0.1', result:'SUCCESS' },
+      { ts: new Date(Date.now()-3600000).toISOString(), user:'client@demo.com', action:'SCAN', target:'localhost', ip:'192.168.1.1', result:'SUCCESS' },
+      { ts: new Date(Date.now()-7200000).toISOString(), user:'admin@erprakashmijar.com', action:'INVITE', target:'test@example.com', ip:'127.0.0.1', result:'SENT' },
+    ];
+    tb.innerHTML = '<tr><td colspan="6" style="padding:.5rem .8rem;background:var(--orange-lt);font-size:.75rem;color:var(--orange)">Demo data — connect backend for real audit logs</td></tr>' +
+      demoEvents.map(function(e) {
+        return '<tr>' +
+          '<td style="font-family:var(--mono);font-size:.72rem;color:var(--ink3)">' + new Date(e.ts).toLocaleString() + '</td>' +
+          '<td style="color:var(--ink2)">' + e.user + '</td>' +
+          '<td><span style="font-family:var(--mono);font-size:.7rem;background:var(--surface3);padding:.1rem .35rem;border-radius:4px">' + e.action + '</span></td>' +
+          '<td style="color:var(--ink3)">' + e.target + '</td>' +
+          '<td style="font-family:var(--mono);font-size:.72rem;color:var(--ink3)">' + e.ip + '</td>' +
+          '<td><span style="color:var(--green);font-weight:600;font-size:.75rem">' + e.result + '</span></td>' +
+          '</tr>';
+      }).join('');
+    return;
+  }
+  tb.innerHTML = data.events.map(function(e) {
+    return '<tr><td style="font-family:var(--mono);font-size:.72rem;color:var(--ink3)">' + new Date(e.created_at||Date.now()).toLocaleString() + '</td>' +
+      '<td>' + (e.user_id||'system') + '</td><td>' + (e.action||'') + '</td><td>' + (e.target||'') + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.72rem">' + (e.ip_address||'-') + '</td>' +
+      '<td style="color:var(--green);font-weight:600;font-size:.75rem">OK</td></tr>';
+  }).join('');
+}
+
+function filterAuditLog() {
+  var val = document.getElementById('auditFilter').value.toLowerCase();
+  document.querySelectorAll('#auditTable tr').forEach(function(row) {
+    row.style.display = (!val || (row.textContent||'').toLowerCase().includes(val)) ? '' : 'none';
+  });
+}
+
+function exportAuditLog() { toast('Audit log export — connect backend for full data', 'info'); }
+
+function loadSysConfig() {
+  var saved = JSON.parse(localStorage.getItem('pm_sysconfig') || '{}');
+  var setVal = function(id, val, dflt) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (el.type === 'checkbox') el.checked = val !== undefined ? val : dflt;
+    else el.value = val !== undefined ? val : dflt;
+  };
+  setVal('cfgFromEmail', saved.fromEmail, 'noreply@erprakashmijar.com');
+  setVal('cfgSupportEmail', saved.supportEmail, 'contact@erprakashmijar.com');
+  setVal('cfgMFA', saved.enforceMFA, false);
+  setVal('cfgIPAllow', saved.enableIPAllow, false);
+  setVal('cfgAllowedIPs', saved.allowedIPs, '');
+  setVal('cfgMinPw', saved.minPwLength, 12);
+  setVal('cfgSessionTimeout', saved.sessionTimeout, 480);
+  setVal('cfgFreeScanLimit', saved.freeScanLimit, 1);
+  setVal('cfgStarterScanLimit', saved.starterScanLimit, 10);
+  setVal('cfgProScanLimit', saved.proScanLimit, 100);
+  setVal('cfgWebhookUrl', saved.webhookUrl, '');
+  setVal('cfgRetentionScans', saved.retentionScans, 90);
+  setVal('cfgRetentionAudit', saved.retentionAudit, 365);
+  setVal('cfgRetentionAccount', saved.retentionAccount, 730);
+}
+
+function saveSysConfig(section) {
+  var saved = JSON.parse(localStorage.getItem('pm_sysconfig') || '{}');
+  var getVal = function(id) { var el=document.getElementById(id); return el ? (el.type==='checkbox' ? el.checked : el.value) : null; };
+  if (section === 'email') {
+    saved.fromEmail = getVal('cfgFromEmail');
+    saved.supportEmail = getVal('cfgSupportEmail');
+  } else if (section === 'security') {
+    saved.enforceMFA = getVal('cfgMFA');
+    saved.enableIPAllow = getVal('cfgIPAllow');
+    saved.allowedIPs = getVal('cfgAllowedIPs');
+    saved.minPwLength = getVal('cfgMinPw');
+    saved.sessionTimeout = getVal('cfgSessionTimeout');
+  } else if (section === 'limits') {
+    saved.freeScanLimit = getVal('cfgFreeScanLimit');
+    saved.starterScanLimit = getVal('cfgStarterScanLimit');
+    saved.proScanLimit = getVal('cfgProScanLimit');
+    saved.webhookUrl = getVal('cfgWebhookUrl');
+  } else if (section === 'retention') {
+    saved.retentionScans = getVal('cfgRetentionScans');
+    saved.retentionAudit = getVal('cfgRetentionAudit');
+    saved.retentionAccount = getVal('cfgRetentionAccount');
+  }
+  localStorage.setItem('pm_sysconfig', JSON.stringify(saved));
+  toast('Settings saved', 'ok');
+}
+
+function runGDPRCleanup() { toast('GDPR cleanup queued — connect backend to execute', 'info'); }
+
+function renderFeatureFlags() {
+  var saved = JSON.parse(localStorage.getItem('pm_feature_flags') || '{}');
+  var el = document.getElementById('featureFlagsList');
+  if (!el) return;
+  el.innerHTML = FEATURE_FLAGS.map(function(f) {
+    var enabled = saved[f.key] !== undefined ? saved[f.key] : f.default;
+    return '<div class="ff-item">' +
+      '<div><div class="ff-name">' + f.name + '</div><div class="ff-desc">' + f.desc + '</div></div>' +
+      '<label class="toggle"><input type="checkbox" ' + (enabled?'checked':'') + ' data-fkey="' + f.key + '" onchange="toggleFlag(this.dataset.fkey,this.checked)"/><span class="toggle-track"></span></label>' +
+      '</div>';
+  }).join('');
+}
+
+function toggleFlag(key, enabled) {
+  var saved = JSON.parse(localStorage.getItem('pm_feature_flags') || '{}');
+  saved[key] = enabled;
+  localStorage.setItem('pm_feature_flags', JSON.stringify(saved));
+  toast((enabled ? 'Enabled' : 'Disabled') + ': ' + key, 'ok');
+}
+
+function applyTenantFlag() { toast('Tenant flag overrides — connect backend to persist', 'info'); }
+
+function renderAnnouncements() {
+  // Populate tenant select in feature flags
+  var sel = document.getElementById('ffTenantSelect');
+  if (sel && sel.options.length <= 1) {
+    sel.innerHTML = '<option value="">Select tenant...</option><option value="demo">Demo Tenant</option>';
+  }
+  document.getElementById('ticketsTable').innerHTML =
+    '<tr><td colspan="7" class="empty-state">No support tickets yet. Connect backend to receive tickets from users.</td></tr>';
+}
+
+function postAnnouncement() {
+  var title = document.getElementById('annTitle').value.trim();
+  var msg   = document.getElementById('annMessage').value.trim();
+  if (!title || !msg) { toast('Enter title and message', 'warn'); return; }
+  var ann = { title:title, message:msg, type:document.getElementById('annType').value, audience:document.getElementById('annAudience').value, ts:Date.now() };
+  var anns = JSON.parse(localStorage.getItem('pm_announcements') || '[]');
+  anns.unshift(ann);
+  localStorage.setItem('pm_announcements', JSON.stringify(anns));
+  document.getElementById('annTitle').value='';
+  document.getElementById('annMessage').value='';
+  toast('Announcement published to ' + ann.audience + ' users', 'ok');
+}
+
+function scheduleAnnouncement() { toast('Scheduled announcements — connect backend to queue', 'info'); }
+
+function toggleMaintenanceMode(enabled) {
+  localStorage.setItem('pm_maintenance_mode', enabled ? '1' : '0');
+  var el = document.getElementById('maintStatus');
+  if (el) { el.textContent = enabled ? 'ON' : 'OFF'; el.style.color = enabled ? 'var(--red)' : 'var(--green)'; }
+  toast(enabled ? '⚠ Maintenance mode ON — users will see maintenance page' : 'Maintenance mode OFF', enabled ? 'warn' : 'ok');
+}
+
+function changePlan(orgId) { toast('Plan changes — connect Stripe for billing management', 'info'); }
+
+async function adminApiGet(path) {
+  var token = localStorage.getItem('pm_admin_jwt') || localStorage.getItem('pm_jwt_token') || '';
+  var apiUrl = (JSON.parse(localStorage.getItem('pm_settings_v3')||'{}').apiUrl || 'https://pm-offsec-backend-production.up.railway.app').replace(/\/$/,'');
+  try {
+    var r = await fetch(apiUrl + path, { headers:{ 'Authorization':'Bearer '+token } });
+    return r.ok ? await r.json() : null;
+  } catch(e) { return null; }
+}
+
+async function adminApiPost(path, body) {
+  var token = localStorage.getItem('pm_admin_jwt') || localStorage.getItem('pm_jwt_token') || '';
+  var apiUrl = (JSON.parse(localStorage.getItem('pm_settings_v3')||'{}').apiUrl || 'https://pm-offsec-backend-production.up.railway.app').replace(/\/$/,'');
+  try {
+    var r = await fetch(apiUrl + path, { method:'POST', headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'}, body:JSON.stringify(body) });
+    return r.ok ? await r.json() : null;
+  } catch(e) { return null; }
+}
+
+
+function renderThreats() {
+  var setEl = function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
+  setEl('thrCrit','12'); setEl('thrActive','47'); setEl('thrScans','203'); setEl('thrResolved','31');
+  var feed = document.getElementById('cisaFeed');
+  if (feed) feed.innerHTML = [
+    {id:'CVE-2024-3400',name:'PAN-OS Command Injection',vendor:'Palo Alto',date:'2 days ago'},
+    {id:'CVE-2024-21887',name:'Ivanti Connect Secure RCE',vendor:'Ivanti',date:'5 days ago'},
+    {id:'CVE-2023-46805',name:'Authentication Bypass',vendor:'Ivanti',date:'8 days ago'},
+  ].map(function(v){
+    return '<div class="ff-item"><div><div class="ff-name" style="font-family:var(--mono);font-size:.75rem">'+v.id+'</div><div class="ff-desc">'+v.name+' · '+v.vendor+'</div></div><span style="font-size:.72rem;color:var(--ink3)">'+v.date+'</span></div>';
+  }).join('');
+}
+function renderUserActivity() {
+  var tb = document.getElementById('activityTable');
+  if (!tb) return;
+  var demo = [
+    {ts:new Date().toISOString(),user:'admin@erprakashmijar.com',action:'LOGIN',ip:'203.0.113.1',device:'Chrome/macOS',result:'SUCCESS'},
+    {ts:new Date(Date.now()-3600000).toISOString(),user:'client@demo.com',action:'SCAN',ip:'198.51.100.5',device:'Firefox/Windows',result:'SUCCESS'},
+    {ts:new Date(Date.now()-7200000).toISOString(),user:'client@demo.com',action:'INVITE',ip:'198.51.100.5',device:'Firefox/Windows',result:'SENT'},
+  ];
+  tb.innerHTML = '<tr><td colspan="6" style="padding:.5rem .8rem;background:var(--orange-lt);font-size:.73rem;color:var(--orange)">Demo data — connect backend for real-time activity</td></tr>' +
+    demo.map(function(e){
+      return '<tr><td style="font-family:var(--mono);font-size:.72rem;color:var(--ink3)">'+new Date(e.ts).toLocaleString()+'</td><td>'+e.user+'</td><td><span style="font-family:var(--mono);font-size:.7rem;background:var(--surface3);padding:.1rem .35rem;border-radius:4px">'+e.action+'</span></td><td style="font-family:var(--mono);font-size:.72rem;color:var(--ink3)">'+e.ip+'</td><td style="color:var(--ink3)">'+e.device+'</td><td style="color:var(--green);font-weight:600;font-size:.75rem">'+e.result+'</td></tr>';
+    }).join('');
+}
+function renderMalware() {}
+function renderTickets() {
+  var tb = document.getElementById('ticketsFullTable');
+  if (tb) tb.innerHTML = '<tr><td colspan="7" class="empty-state">No tickets submitted yet. Users can request support from their portals.</td></tr>';
+}
+function filterTickets() {
+  var val = (document.getElementById('ticketFilter').value||'').toLowerCase();
+  document.querySelectorAll('#ticketsFullTable tr').forEach(function(r){
+    r.style.display = (!val || (r.textContent||'').toLowerCase().includes(val)) ? '' : 'none';
+  });
+}
+
 </script>
 </body>
 </html>

@@ -516,6 +516,8 @@ const AUTH = (() => {
   /* ── Logout ──────────────────────────────────────────────── */
   function logout(redirect = '../login.html') {
     clearSession();
+    // Clear shared portal session
+    try { localStorage.removeItem('pm_portal_session'); localStorage.removeItem('pm_portal_jwt'); localStorage.removeItem('pm_biz_jwt'); localStorage.removeItem('pm_admin_jwt'); } catch(e) {}
     window.location.href = redirect;
   }
 

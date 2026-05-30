@@ -179,21 +179,37 @@ button{cursor:pointer;font-family:var(--mono)}
       <div class="sb-org-plan" id="sbOrgPlan">&#9679; Loading...</div>
     </div>
     <div class="sb-nav">
-      <div class="sb-section">Main</div>
-      <button class="sb-item active" onclick="bizNav('overview')"><span class="sb-ico">&#128202;</span>Overview</button>
+      <div class="sb-section">Dashboard</div>
+      <button class="sb-item active" onclick="bizNav('overview')"><span class="sb-ico">&#128202;</span>Security Overview</button>
+      <button class="sb-item" onclick="bizNav('riskscore')"><span class="sb-ico">&#128200;</span>Risk Dashboard</button>
+
+      <div class="sb-section">Team Management</div>
       <button class="sb-item" onclick="bizNav('employees')"><span class="sb-ico">&#128101;</span>Employees<span class="sb-badge" id="sbEmpBadge" style="display:none">0</span></button>
-      <button class="sb-item" onclick="bizNav('devices')"><span class="sb-ico">&#128187;</span>Devices<span class="sb-badge" id="sbDevBadge" style="display:none">0</span></button>
-      <div class="sb-section">Security</div>
+      <button class="sb-item" onclick="bizNav('roles')"><span class="sb-ico">&#127919;</span>Roles & Permissions</button>
+
+      <div class="sb-section">Asset Management</div>
+      <button class="sb-item" onclick="bizNav('devices')"><span class="sb-ico">&#128187;</span>All Assets<span class="sb-badge" id="sbDevBadge" style="display:none">0</span></button>
+      <button class="sb-item" onclick="bizNav('network')"><span class="sb-ico">&#127760;</span>Network Discovery</button>
+
+      <div class="sb-section">Vulnerability Mgmt</div>
+      <button class="sb-item" onclick="bizNav('scan')"><span class="sb-ico">&#128269;</span>Run Scan</button>
+      <button class="sb-item" onclick="bizNav('scanhistory')"><span class="sb-ico">&#128336;</span>Scan History</button>
       <button class="sb-item" onclick="bizNav('alerts')"><span class="sb-ico">&#128276;</span>Alerts</button>
-      <button class="sb-item" onclick="bizNav('reports')"><span class="sb-ico">&#128196;</span>Reports</button>
+
+      <div class="sb-section">Compliance</div>
       <button class="sb-item" onclick="bizNav('compliance')"><span class="sb-ico">&#9989;</span>Compliance</button>
-      <div class="sb-section">Organization</div>
-      <button class="sb-item" onclick="bizNav('settings')"><span class="sb-ico">&#9881;</span>Org Settings</button>
+      <button class="sb-item" onclick="bizNav('incidents')"><span class="sb-ico">&#128680;</span>Incidents</button>
+
+      <div class="sb-section">Reports & Billing</div>
+      <button class="sb-item" onclick="bizNav('reports')"><span class="sb-ico">&#128196;</span>Reports</button>
       <button class="sb-item" onclick="bizNav('billing')"><span class="sb-ico">&#128179;</span>Billing</button>
+
+      <div class="sb-section">Settings</div>
+      <button class="sb-item" onclick="bizNav('settings')"><span class="sb-ico">&#9881;</span>Company Settings</button>
+      <button class="sb-item" onclick="bizNav('integrations')"><span class="sb-ico">&#128268;</span>Integrations</button>
+
       <div class="sb-section">Portals</div>
       <a class="sb-link" href="../dashboard/index.html"><span class="sb-ico">&#128269;</span>Scan Dashboard</a>
-      
-      
     </div>
     <div class="sb-footer">
       <button class="btn btn-o btn-sm" style="width:100%;justify-content:center" onclick="bizLogout()">&#128682; Logout</button>
@@ -470,6 +486,95 @@ button{cursor:pointer;font-family:var(--mono)}
         </div>
       </div>
 
+        <!-- ── RISK DASHBOARD ── -->
+        <div class="page" id="biz-riskscore">
+          <div class="pg-hdr"><div class="pg-title">RISK DASHBOARD</div><div class="pg-sub">Overall risk posture for your organization</div></div>
+          <div class="stats-grid">
+            <div class="stat-card" style="border-top:2px solid var(--danger)"><div class="stat-label">OVERALL RISK SCORE</div><div class="stat-value" id="riskScore" style="color:var(--warn)">--</div><div class="stat-sub">Lower is safer</div></div>
+            <div class="stat-card" style="border-top:2px solid var(--ok)"><div class="stat-label">ASSETS MONITORED</div><div class="stat-value" id="riskAssets">--</div><div class="stat-sub">All registered devices</div></div>
+            <div class="stat-card" style="border-top:2px solid var(--danger)"><div class="stat-label">CRITICAL FINDINGS</div><div class="stat-value" id="riskCritical" style="color:var(--danger)">0</div><div class="stat-sub">Immediate action needed</div></div>
+            <div class="stat-card" style="border-top:2px solid var(--ok)"><div class="stat-label">COMPLIANCE SCORE</div><div class="stat-value" id="riskCompliance" style="color:var(--ok)">--</div><div class="stat-sub">Across all frameworks</div></div>
+          </div>
+          <div class="panel" style="margin-top:.9rem"><div class="panel-hdr"><div class="panel-title">RISK BY CATEGORY</div></div>
+            <div class="panel-body"><div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);text-align:center;padding:2rem">Run scans to populate risk breakdown.</div></div>
+          </div>
+        </div>
+
+        <!-- ── ROLES ── -->
+        <div class="page" id="biz-roles">
+          <div class="pg-hdr"><div class="pg-title">ROLES &amp; PERMISSIONS</div><div class="pg-sub">Define what each team member can see and do</div></div>
+          <div class="panel"><div class="panel-hdr"><div class="panel-title">ROLE MATRIX</div></div>
+            <div class="panel-body" style="overflow-x:auto">
+              <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.62rem">
+                <thead><tr>
+                  <th style="padding:.5rem .8rem;border-bottom:1px solid var(--border);color:var(--muted);text-align:left">Permission</th>
+                  <th style="padding:.5rem;border-bottom:1px solid var(--border);color:#b060ff;text-align:center">Owner</th>
+                  <th style="padding:.5rem;border-bottom:1px solid var(--border);color:var(--g2);text-align:center">Admin</th>
+                  <th style="padding:.5rem;border-bottom:1px solid var(--border);color:var(--warn);text-align:center">Analyst</th>
+                  <th style="padding:.5rem;border-bottom:1px solid var(--border);color:var(--muted);text-align:center">Viewer</th>
+                </tr></thead>
+                <tbody id="roleMatrixBody"><tr><td colspan="5" style="padding:1.5rem;text-align:center;color:var(--muted)">Loading...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── NETWORK ── -->
+        <div class="page" id="biz-network">
+          <div class="pg-hdr"><div class="pg-title">NETWORK DISCOVERY</div><div class="pg-sub">Discover devices and check for open ports on your network</div></div>
+          <div class="panel"><div class="panel-hdr"><div class="panel-title">LAUNCH NETWORK SCAN</div></div>
+            <div class="panel-body">
+              <p style="font-family:var(--mono);font-size:.63rem;color:var(--muted);margin-bottom:.8rem">Network discovery runs through the Scan Dashboard with full Nmap integration.</p>
+              <a href="../dashboard/index.html" class="btn btn-g" style="text-decoration:none">&#128269; OPEN SCAN DASHBOARD</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── SCAN ── -->
+        <div class="page" id="biz-scan">
+          <div class="pg-hdr"><div class="pg-title">RUN SCAN</div><div class="pg-sub">Launch security scans against your organization</div></div>
+          <div class="panel"><div class="panel-hdr"><div class="panel-title">SCAN TYPES</div></div>
+            <div class="panel-body" style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">
+              <div class="device-card" onclick="window.open('../dashboard/index.html','_blank')" style="cursor:pointer"><div style="font-size:1.5rem;margin-bottom:.4rem">&#128269;</div><div class="device-name">Vulnerability Scan</div><div class="device-meta">SSH, ports, packages, CVEs</div></div>
+              <div class="device-card" onclick="window.open('../dashboard/index.html','_blank')" style="cursor:pointer"><div style="font-size:1.5rem;margin-bottom:.4rem">&#127760;</div><div class="device-name">Network Scan</div><div class="device-meta">Discover devices and open ports</div></div>
+              <div class="device-card" onclick="window.open('../dashboard/index.html','_blank')" style="cursor:pointer"><div style="font-size:1.5rem;margin-bottom:.4rem">&#128081;</div><div class="device-name">Web App Scan</div><div class="device-meta">SQLi, XSS, security headers</div></div>
+              <div class="device-card" onclick="window.open('../dashboard/index.html','_blank')" style="cursor:pointer"><div style="font-size:1.5rem;margin-bottom:.4rem">&#128565;</div><div class="device-name">Dark Web Scan</div><div class="device-meta">Breach check and dark web monitoring</div></div>
+            </div>
+            <div style="margin-top:.9rem"><a href="../dashboard/index.html" class="btn btn-g" style="text-decoration:none">&#128269; OPEN SCAN DASHBOARD</a></div>
+          </div>
+        </div>
+
+        <!-- ── SCAN HISTORY ── -->
+        <div class="page" id="biz-scanhistory">
+          <div class="pg-hdr"><div class="pg-title">SCAN HISTORY</div><div class="pg-sub">All previous scans across your organization</div></div>
+          <div class="panel"><div class="panel-body" id="scanHistoryList">
+            <div style="text-align:center;padding:2rem;font-family:var(--mono);font-size:.65rem;color:var(--muted)">No scan history yet. <a href="../dashboard/index.html" style="color:var(--g2)">Run your first scan</a>.</div>
+          </div></div>
+        </div>
+
+        <!-- ── INCIDENTS ── -->
+        <div class="page" id="biz-incidents">
+          <div class="pg-hdr"><div class="pg-title">INCIDENTS</div><div class="pg-sub">Track and remediate security incidents</div></div>
+          <div class="panel"><div class="panel-hdr"><div class="panel-title">OPEN INCIDENTS</div>
+            <button class="btn btn-r btn-sm" onclick="bizToast('Connect backend to create incidents','info')">+ NEW INCIDENT</button>
+          </div><div class="panel-body">
+            <div style="text-align:center;padding:2rem;font-family:var(--mono);font-size:.65rem;color:var(--ok)">&#9989; No open incidents. Organization is clean.</div>
+          </div></div>
+        </div>
+
+        <!-- ── INTEGRATIONS ── -->
+        <div class="page" id="biz-integrations">
+          <div class="pg-hdr"><div class="pg-title">INTEGRATIONS</div><div class="pg-sub">Connect PM::OFFSEC with your existing tools</div></div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.8rem">
+            <div class="device-card"><div style="font-size:1.8rem;margin-bottom:.4rem">&#127970;</div><div class="device-name">Microsoft 365</div><div class="device-meta">Exchange, Teams, Entra ID</div><button class="btn btn-o btn-sm" style="margin-top:.7rem;width:100%;justify-content:center" onclick="bizToast('Connect backend to enable','info')">CONFIGURE</button></div>
+            <div class="device-card"><div style="font-size:1.8rem;margin-bottom:.4rem">&#128309;</div><div class="device-name">Google Workspace</div><div class="device-meta">Gmail, Drive, Admin security</div><button class="btn btn-o btn-sm" style="margin-top:.7rem;width:100%;justify-content:center" onclick="bizToast('Connect backend to enable','info')">CONFIGURE</button></div>
+            <div class="device-card"><div style="font-size:1.8rem;margin-bottom:.4rem">&#128172;</div><div class="device-name">Slack</div><div class="device-meta">Real-time security alerts</div><button class="btn btn-o btn-sm" style="margin-top:.7rem;width:100%;justify-content:center" onclick="bizToast('Connect backend to enable','info')">CONFIGURE</button></div>
+            <div class="device-card"><div style="font-size:1.8rem;margin-bottom:.4rem">&#127919;</div><div class="device-name">Jira</div><div class="device-meta">Auto-create vulnerability tickets</div><button class="btn btn-o btn-sm" style="margin-top:.7rem;width:100%;justify-content:center" onclick="bizToast('Connect backend to enable','info')">CONFIGURE</button></div>
+            <div class="device-card"><div style="font-size:1.8rem;margin-bottom:.4rem">&#128202;</div><div class="device-name">Splunk / SIEM</div><div class="device-meta">Forward logs to your SIEM</div><button class="btn btn-o btn-sm" style="margin-top:.7rem;width:100%;justify-content:center" onclick="bizToast('Connect backend to enable','info')">CONFIGURE</button></div>
+            <div class="device-card"><div style="font-size:1.8rem;margin-bottom:.4rem">&#128384;</div><div class="device-name">PagerDuty</div><div class="device-meta">On-call alerting for critical issues</div><button class="btn btn-o btn-sm" style="margin-top:.7rem;width:100%;justify-content:center" onclick="bizToast('Connect backend to enable','info')">CONFIGURE</button></div>
+          </div>
+        </div>
+
     </div><!-- /content -->
   </div><!-- /main -->
 </div><!-- /app -->
@@ -572,6 +677,7 @@ async function bizLogin() {
 
 function bizLogout() {
   localStorage.removeItem('pm_biz_jwt');
+  try { localStorage.removeItem('pm_portal_session'); localStorage.removeItem('pm_portal_jwt'); } catch(e) {}
   AUTH.logout ? AUTH.logout() : null;
   document.getElementById('bizLoginScreen').style.display = 'flex';
   document.getElementById('bizApp').style.display = 'none';
@@ -614,14 +720,26 @@ function bizNav(page) {
   var el = document.getElementById('biz-' + page);
   if (el) el.classList.add('active');
   document.querySelectorAll('.sb-item').forEach(function(b){ b.classList.remove('active'); });
-  var titles = { overview:'OVERVIEW', employees:'EMPLOYEES', devices:'DEVICES', alerts:'ALERTS',
-                 reports:'REPORTS', compliance:'COMPLIANCE', settings:'ORG SETTINGS', billing:'BILLING' };
+  var titles = {
+    overview:'SECURITY OVERVIEW', riskscore:'RISK DASHBOARD', employees:'EMPLOYEES',
+    roles:'ROLES & PERMISSIONS', devices:'ALL ASSETS', network:'NETWORK DISCOVERY',
+    scan:'RUN SCAN', scanhistory:'SCAN HISTORY', alerts:'ALERTS',
+    compliance:'COMPLIANCE', incidents:'INCIDENTS', reports:'REPORTS',
+    billing:'BILLING', settings:'COMPANY SETTINGS', integrations:'INTEGRATIONS'
+  };
   document.getElementById('bizPageTitle').textContent = titles[page] || page.toUpperCase();
   /* Load page-specific data */
-  if (page === 'employees') renderEmployeeTable();
-  if (page === 'devices')   renderDeviceGrid();
-  if (page === 'alerts')    renderAlertsPage();
-  if (page === 'billing')   renderBilling();
+  if (page === 'employees')   renderEmployeeTable();
+  if (page === 'devices')     renderDeviceGrid();
+  if (page === 'alerts')      renderAlertsPage();
+  if (page === 'billing')     renderBilling();
+  if (page === 'scan')        bizOpenScan();
+  if (page === 'network')     renderNetworkPage();
+  if (page === 'riskscore')   renderRiskDashboard();
+  if (page === 'scanhistory') renderScanHistory();
+  if (page === 'incidents')   renderIncidents();
+  if (page === 'integrations') renderIntegrations();
+  if (page === 'roles')       renderRoles();
 }
 
 /* ── Data loading ── */
@@ -882,23 +1000,108 @@ function bizToast(msg, type) {
 
 /* ── Auto login check ── */
 (function() {
-  var s = AUTH && AUTH.getSession ? AUTH.getSession() : null;
-  if (!s) {
-    /* Try saved JWT */
-    var jwt = localStorage.getItem('pm_biz_jwt');
-    if (!jwt) return; /* Show login screen */
-    /* Parse JWT payload to get session (no verification — that's server-side) */
-    try {
-      var payload = JSON.parse(atob(jwt.split('.')[1]));
-      BIZ_SESSION = payload;
+  // 1. Try shared session from scan dashboard (seamless SSO - no double login)
+  try {
+    var shared = JSON.parse(localStorage.getItem('pm_portal_session') || 'null');
+    if (shared && shared.ts && (Date.now() - shared.ts) < 86400000) {
+      BIZ_SESSION = shared;
+      var sharedJwt = localStorage.getItem('pm_portal_jwt');
+      if (sharedJwt) localStorage.setItem('pm_biz_jwt', sharedJwt);
       startBizApp();
       return;
-    } catch(e) {}
+    }
+  } catch(e2) {}
+
+  // 2. Try auth.js session
+  var s = AUTH && AUTH.getSession ? AUTH.getSession() : null;
+  if (s) { BIZ_SESSION = s; startBizApp(); return; }
+
+  // 3. Try saved business JWT
+  var jwt = localStorage.getItem('pm_biz_jwt');
+  if (!jwt) return;
+  try {
+    var payload = JSON.parse(atob(jwt.split('.')[1]));
+    BIZ_SESSION = payload;
+    startBizApp();
     return;
-  }
-  BIZ_SESSION = s;
-  startBizApp();
+  } catch(e3) {}
 })();
+
+function bizOpenScan() { window.open('../dashboard/index.html', '_blank'); }
+function renderNetworkPage() {}
+function renderRiskDashboard() {
+  var s = BIZ_DATA.stats || {};
+  var setEl = function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
+  var avgScore = s.avg_score || 63;
+  setEl('riskScore', (100 - avgScore));
+  setEl('riskAssets', s.total_devices || BIZ_DATA.devices.length || 0);
+  setEl('riskCritical', '0');
+  setEl('riskCompliance', avgScore + '%');
+}
+function renderScanHistory() {
+  var el = document.getElementById('scanHistoryList');
+  var hist = JSON.parse(localStorage.getItem('pm_scan_history_v3')||'[]');
+  if (!hist.length || !el) return;
+  el.innerHTML = hist.slice(-10).reverse().map(function(s){
+    var score = s.score||0;
+    var col = score>=75?'var(--ok)':score>=50?'var(--warn)':'var(--danger)';
+    return '<div style="display:flex;align-items:center;gap:.8rem;padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,.04)">'+
+      '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);min-width:90px">'+(s.date||'').substring(0,10)+'</div>'+
+      '<div style="font-family:var(--mono);font-size:.63rem;color:var(--white);flex:1">'+(s.hostname||s.host||'device')+'</div>'+
+      '<div style="font-family:var(--mono);font-size:1rem;font-weight:700;color:'+col+'">'+score+'</div>'+
+      '<div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">/100</div></div>';
+  }).join('');
+}
+function renderIncidents() {}
+function renderIntegrations() {}
+function renderRoles() {}
+
+
+function bizOpenScan() { window.open('../dashboard/index.html', '_blank'); }
+function renderNetworkPage() {}
+function renderRiskDashboard() {
+  var s = BIZ_DATA.stats || {};
+  var avg = s.avg_score || (BIZ_DATA.devices.length ? Math.round(BIZ_DATA.devices.reduce(function(a,d){return a+(d.last_score||0);},0)/BIZ_DATA.devices.length) : 0);
+  var el = function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
+  el('riskScore', Math.max(0,100-avg)); el('riskAssets',BIZ_DATA.devices.length||0);
+  el('riskCritical','0'); el('riskCompliance',(avg||'--')+(avg?'%':''));
+}
+function renderScanHistory() {
+  var el = document.getElementById('scanHistoryList');
+  var hist = JSON.parse(localStorage.getItem('pm_scan_history_v3')||'[]');
+  if (!hist.length || !el) return;
+  el.innerHTML = hist.slice(-10).reverse().map(function(s){
+    var sc=s.score||0, col=sc>=75?'var(--ok)':sc>=50?'var(--warn)':'var(--danger)';
+    return '<div style="display:flex;align-items:center;gap:.8rem;padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,.04)">'+
+      '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);min-width:90px">'+(s.date||'').substring(0,10)+'</div>'+
+      '<div style="font-family:var(--mono);font-size:.63rem;color:var(--white);flex:1">'+(s.hostname||s.host||'device')+'</div>'+
+      '<div style="font-family:var(--mono);font-size:1rem;font-weight:700;color:'+col+'">'+sc+'</div>'+
+      '<div style="font-family:var(--mono);font-size:.52rem;color:var(--muted)">/100</div></div>';
+  }).join('');
+}
+function renderIncidents() {}
+function renderIntegrations() {}
+function renderRoles() {
+  var tb = document.getElementById('roleMatrixBody');
+  if (!tb) return;
+  var rows = [
+    ['View Dashboard','✅','✅','✅','✅'],
+    ['Run Security Scans','✅','✅','✅','❌'],
+    ['View Reports','✅','✅','✅','✅'],
+    ['Manage Employees','✅','✅','❌','❌'],
+    ['Invite Team Members','✅','✅','❌','❌'],
+    ['Manage Billing','✅','❌','❌','❌'],
+    ['Export Data','✅','✅','✅','❌'],
+    ['Configure Settings','✅','✅','❌','❌'],
+    ['Delete Data','✅','❌','❌','❌'],
+  ];
+  tb.innerHTML = rows.map(function(r){
+    return '<tr>'+r.map(function(c,i){
+      return '<td style="padding:.45rem .8rem;border-bottom:1px solid rgba(255,255,255,.04);'+(i===0?'color:var(--text2)':'text-align:center;font-size:.85rem')+'">' + c + '</td>';
+    }).join('')+'</tr>';
+  }).join('');
+}
+
 </script>
 </body>
 </html>

@@ -289,6 +289,57 @@
         <div id="mhint" style="font-family:var(--mono);font-size:.52rem;margin-top:.25rem"></div>
       </div>
 
+      <div class="form-group">
+        <label class="form-label">COUNTRY <span style="color:var(--danger)">*</span></label>
+        <select class="form-input" id="country">
+          <option value="NP" selected>&#127475;&#127477; Nepal</option>
+          <option value="US">&#127482;&#127480; United States</option>
+          <option value="GB">&#127468;&#127463; United Kingdom</option>
+          <option value="IN">&#127470;&#127475; India</option>
+          <option value="AU">&#127462;&#127482; Australia</option>
+          <option value="CA">&#127464;&#127462; Canada</option>
+          <option value="DE">&#127465;&#127466; Germany</option>
+          <option value="SG">&#127480;&#127468; Singapore</option>
+          <option value="OTHER">Other</option>
+        </select>
+      </div>
+
+      <!-- Business-specific fields -->
+      <div id="bizFields" style="display:none">
+        <div class="fdiv"><span>COMPANY INFO</span></div>
+        <div class="fg2">
+          <div class="form-group">
+            <label class="form-label">COMPANY NAME <span style="color:var(--danger)">*</span></label>
+            <input class="form-input" id="companyName" placeholder="Acme Security Ltd" autocomplete="organization"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">YOUR JOB TITLE</label>
+            <input class="form-input" id="jobTitle" placeholder="IT Manager / CEO / CTO"/>
+          </div>
+        </div>
+        <div class="fg2">
+          <div class="form-group">
+            <label class="form-label">INDUSTRY</label>
+            <select class="form-input" id="industry">
+              <option value="">Select industry...</option>
+              <option>Technology</option><option>Healthcare</option><option>Finance</option>
+              <option>Education</option><option>Retail</option><option>Manufacturing</option>
+              <option>Legal Services</option><option>Real Estate</option><option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">COMPANY SIZE</label>
+            <select class="form-input" id="companySize">
+              <option value="">Select size...</option>
+              <option value="1-10">1-10 employees</option>
+              <option value="11-50">11-50 employees</option>
+              <option value="51-200">51-200 employees</option>
+              <option value="201-500">201-500 employees</option>
+              <option value="500+">500+ employees</option>
+            </select>
+          </div>
+        </div>
+      </div>
       <div class="fdiv"><span>OPTIONAL</span></div>
       <div class="fg2">
         <div class="form-group">
@@ -638,7 +689,14 @@ function doRegister() {
   var em  = (document.getElementById('em')||{value:''}).value.trim();
   var pw  = (document.getElementById('pw')||{value:''}).value;
   var pw2 = (document.getElementById('pw2')||{value:''}).value;
-  var co  = (document.getElementById('co')||{value:''}).value.trim();
+  var co          = (document.getElementById('co')||{value:''}).value.trim();
+  var countryVal  = (document.getElementById('country')||{value:'NP'}).value;
+  var companyName = (document.getElementById('companyName')||{value:''}).value.trim();
+  var jobTitle    = (document.getElementById('jobTitle')||{value:''}).value.trim();
+  var industry    = (document.getElementById('industry')||{value:''}).value;
+  var companySize = (document.getElementById('companySize')||{value:''}).value;
+  var ctype       = (document.getElementById('clientType')||{value:'individual'}).value;
+  if (ctype === 'business' && !companyName) { showErr('Please enter your company name.'); return; }
   var ph  = (document.getElementById('ph')||{value:''}).value.trim();
   var t1  = (document.getElementById('t1')||{checked:false}).checked;
   var t2  = (document.getElementById('t2')||{checked:false}).checked;
@@ -699,14 +757,16 @@ function doRegister() {
     }
 
     // Route by account type: business → business dashboard, personal → personal portal.
-    var dest = clientType === 'business' ? 'dashboard/index.html' : 'client/index.html?preview=1';
-    showOk('Account created! Taking you to your ' + (clientType === 'business' ? 'business' : 'personal') + ' portal…');
+    var dest = 'dashboard/index.html';  // All users start at Scan Dashboard; portal button in header takes them to their portal
+    showOk('Account created! Taking you to your security dashboard…');
     setTimeout(function(){ window.location.href = dest; }, 1000);
   }, 400);
 }
 
 function selectClientType(t) {
   document.getElementById('clientType').value = t;
+  var bf = document.getElementById('bizFields');
+  if (bf) bf.style.display = (t === 'business') ? 'block' : 'none';
   var ind = document.getElementById('ct-individual'), biz = document.getElementById('ct-business');
   if (t === 'business') {
     biz.style.border = '1.5px solid var(--g)'; biz.style.background = 'rgba(0,255,136,.06)';
