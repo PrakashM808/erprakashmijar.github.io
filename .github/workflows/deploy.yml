@@ -127,6 +127,7 @@ jobs:
         run: |
           cd backend
           pip install -r requirements.txt --quiet
+          pip install pytest --quiet
 
       - name: Check Python syntax
         run: |

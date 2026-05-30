@@ -1769,24 +1769,21 @@ function renderPortalNavButtons() {
 
   var role       = (SESSION.role || 'user').toLowerCase();
   var clientType = (SESSION.client_type || 'individual').toLowerCase();
-  var html       = '';
+  var s = 'height:30px;padding:0 .85rem;border-radius:6px;font-family:var(--mono);font-size:.58rem;font-weight:700;letter-spacing:.05em;cursor:pointer;border:1px solid;display:inline-flex;align-items:center;gap:.35rem;white-space:nowrap;text-decoration:none;transition:all .2s;';
 
-  // Button style helper
-  var btnStyle = 'height:30px;padding:0 .75rem;border-radius:6px;font-family:var(--mono);font-size:.58rem;font-weight:700;letter-spacing:.05em;cursor:pointer;border:1px solid;display:inline-flex;align-items:center;gap:.35rem;white-space:nowrap;text-decoration:none;transition:all .2s;';
+  var html = '';
 
-  // Admin portal button — only for admin role
   if (role === 'admin') {
-    html += '<a href="../admin/index.html" style="' + btnStyle + 'background:rgba(255,59,92,.1);border-color:rgba(255,59,92,.3);color:#ff3b5c;" title="Go to Admin Control Panel">&#128737; ADMIN</a>';
-  }
+    // Super admin → Admin Panel only
+    html = '<a href="../admin/index.html" style="' + s + 'background:rgba(255,59,92,.12);border-color:rgba(255,59,92,.35);color:#ff3b5c;">&#128737; ADMIN PANEL</a>';
 
-  // Business portal button — for owners/managers
-  if (role === 'owner' || role === 'manager' || clientType === 'business') {
-    html += '<a href="../business/index.html" style="' + btnStyle + 'background:rgba(123,47,255,.1);border-color:rgba(123,47,255,.3);color:#b060ff;" title="Go to Business Portal">&#127970; BUSINESS</a>';
-  }
+  } else if (role === 'owner' || role === 'manager' || clientType === 'business') {
+    // Business owner/manager → Business Portal only
+    html = '<a href="../business/index.html" style="' + s + 'background:rgba(123,47,255,.12);border-color:rgba(123,47,255,.35);color:#b060ff;">&#127970; BUSINESS PORTAL</a>';
 
-  // Client/personal portal button — for all users
-  if (role === 'client' || role === 'user' || role === 'employee' || clientType === 'individual') {
-    html += '<a href="../client/index.html" style="' + btnStyle + 'background:rgba(0,212,255,.08);border-color:rgba(0,212,255,.2);color:#00d4ff;" title="Go to Personal Security Portal">&#128100; PORTAL</a>';
+  } else {
+    // Everyone else (user, employee, individual client) → Personal Portal only
+    html = '<a href="../client/index.html" style="' + s + 'background:rgba(0,212,255,.08);border-color:rgba(0,212,255,.25);color:#00d4ff;">&#128100; MY PORTAL</a>';
   }
 
   container.innerHTML = html;
@@ -4019,11 +4016,11 @@ function renderLearnContent(filter, chapterPrefix) {
           + "padding:.65rem .9rem;font-family:var(--mono);font-size:.6rem;color:#22e3ff;"
           + "cursor:pointer;white-space:pre;overflow-x:auto;margin:.4rem 0\" title=\"Click to copy\">"
           + safe + "</div>"
-          + "<div style=\"font-family:var(--mono);font-size:.5rem;color:#2a4a62;text-align:right;margin-bottom:.3rem\">&#128203; Click to copy</div>";
+          + "<div style=\"font-family:var(--mono);font-size:.5rem;color:var(--muted);text-align:right;margin-bottom:.3rem\">&#128203; Click to copy</div>";
       }
       secs += "<div style=\"padding:1rem 1.2rem;border-top:1px solid rgba(34,227,255,.05)\">"
         + "<div style=\"font-family:var(--mono);font-size:.62rem;color:#4d8dff;letter-spacing:.1em;margin-bottom:.5rem\">" + (si+1) + ". " + sec.title + "</div>"
-        + "<div style=\"font-family:var(--mono);font-size:.62rem;color:#c0dce8;line-height:1.85;white-space:pre-wrap;margin-bottom:" + (sec.cmd ? ".6rem" : "0") + "\">"
+        + "<div style=\"font-family:var(--mono);font-size:.62rem;color:var(--white);line-height:1.85;white-space:pre-wrap;margin-bottom:" + (sec.cmd ? ".6rem" : "0") + "\">"
         + sec.body.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;") + "</div>"
         + cmdBlock + "</div>";
     });
@@ -4032,11 +4029,11 @@ function renderLearnContent(filter, chapterPrefix) {
       + "<div style=\"display:flex;align-items:center;gap:.8rem\">"
       + "<span style=\"font-size:1.3rem\">" + topic.icon + "</span>"
       + "<div><div class=\"pt\">" + topic.title + "</div>"
-      + "<div style=\"font-family:var(--mono);font-size:.56rem;color:#2a4a62;margin-top:.15rem\">" + topic.desc + "</div>"
+      + "<div style=\"font-family:var(--mono);font-size:.56rem;color:var(--text);margin-top:.15rem\">" + topic.desc + "</div>"
       + "</div></div>"
       + "<div style=\"display:flex;align-items:center;gap:.6rem\">"
       + "<span style=\"font-family:var(--mono);font-size:.5rem;padding:.18rem .5rem;border-radius:10px;background:" + bg + ";color:" + color + ";border:1px solid " + color + "30\">" + topic.tag.toUpperCase() + "</span>"
-      + "<span id=\"lc-" + topic.id + "\" style=\"font-family:var(--mono);font-size:.65rem;color:#2a4a62;transition:transform .2s\">&#9654;</span>"
+      + "<span id=\"lc-" + topic.id + "\" style=\"font-family:var(--mono);font-size:.65rem;color:var(--muted);transition:transform .2s\">&#9654;</span>"
       + "</div></div>"
       + "<div id=\"ls-" + topic.id + "\" style=\"display:none\">" + secs + "</div></div>";
   });
@@ -5127,7 +5124,7 @@ function renderNetworkTopology(containerId) {
     svg += '<circle cx="' + x + '" cy="' + y + '" r="22" fill="rgba(0,0,0,.3)" stroke="' + col + '" stroke-width="1.5"/>';
     svg += '<text x="' + x + '" y="' + (y+4) + '" text-anchor="middle" fill="' + col + '" font-size="11" font-weight="bold">' + score + '</text>';
     svg += '<text x="' + x + '" y="' + (y+36) + '" text-anchor="middle" fill="#7aafc8" font-size="9" font-family="monospace">' + (dev.hostname||dev.ip||'Device').slice(0,12) + '</text>';
-    svg += '<text x="' + x + '" y="' + (y+47) + '" text-anchor="middle" fill="#2a4a62" font-size="8" font-family="monospace">' + (dev.ip||'') + '</text>';
+    svg += '<text x="' + x + '" y="' + (y+47) + '" text-anchor="middle" fill="#6b8da8" font-size="8" font-family="monospace">' + (dev.ip||'') + '</text>';
   });
   svg += '</svg>';
   container.innerHTML = svg;

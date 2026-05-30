@@ -246,7 +246,7 @@
       <button class="btn btn-out btn-sm" onclick="window.print()">&#128424; Print</button>
       <button class="btn btn-blue btn-sm" onclick="window.print()">&#11015; PDF</button>
       <a href="../dashboard/index.html" class="btn btn-blue btn-sm" style="text-decoration:none">&#128269; Scan Dashboard</a>
-      <a href="../business/index.html" class="btn btn-sm" style="text-decoration:none;background:#7b2fff;color:#fff">&#127970; Business</a>
+      
       <button class="btn btn-out btn-sm" onclick="doLogout()" style="color:var(--gray-500)">&#128682; Logout</button>
     </div>
   </div>
@@ -396,13 +396,18 @@ function doLogin() {
     var r = await AUTH.loginBackend(email, pw);   // authenticates against backend when online
     if (r.requires2FA) { window.location.href='../login.html'; return; }
     if (!r.ok) { err.textContent=r.error||'Invalid credentials.'; err.classList.add('show'); return; }
+    var sess = AUTH.getSession() || {};
+    var role = (sess.role || '').toLowerCase();
+    var ctype = (sess.client_type || 'individual').toLowerCase();
+    if (role === 'admin') { window.location.href = '../admin/index.html'; return; }
+    if (role === 'owner' || role === 'manager' || ctype === 'business') { window.location.href = '../business/index.html'; return; }
     showPortal();
   })();
 }
 
 function demoLogin() {
   document.getElementById('loginEmail').value='client@demo.com';
-  document.getElementById('loginPw').value='Client@123';
+  document.getElementById('loginPw').value='Client@Demo1';
   doLogin();
 }
 

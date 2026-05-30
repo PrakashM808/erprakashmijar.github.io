@@ -204,8 +204,6 @@
         <div class="sb-section">Admin</div>
         <div class="sb-section" style="margin-top:.5rem">Portals</div>
         <a href="../dashboard/index.html" class="sb-item" style="text-decoration:none;color:inherit"><span class="sb-item-ico">&#128269;</span>Scan Dashboard</a>
-        <a href="../client/index.html?preview=1" class="sb-item" style="text-decoration:none;color:inherit"><span class="sb-item-ico">&#128100;</span>Client View</a>
-        <a href="../business/index.html" class="sb-item" style="text-decoration:none;color:inherit"><span class="sb-item-ico">&#127970;</span>Business Portal</a>
         <button class="sb-item" onclick="ap('addclient')"><span class="sb-item-ico">&#10133;</span>Add Client</button>
         <button class="sb-item" onclick="window.location.href='../dashboard/index.html?stay=1'"><span class="sb-item-ico">&#128269;</span>Scanner Dashboard</button>
       </div>
@@ -231,7 +229,6 @@
         </div>
         <div class="topbar-right">
           <div style="font-size:.75rem;color:var(--ink4)" id="topDate"></div>
-          <a href="../client/index.html?preview=1" target="_blank" class="btn btn-out btn-sm">&#128064; View Client Portal</a>
         </div>
       </div>
 
@@ -402,12 +399,20 @@ function demoAdminLogin() {
 function adminLogout() { AUTH.logout('../login.html'); }
 
 function showAdminPortal() {
+  // Strict guard — only admin role can enter this portal
+  var role = (ADMIN_SESSION && ADMIN_SESSION.role || '').toLowerCase();
+  if (role !== 'admin') {
+    document.getElementById('adminLogin').style.display='block';
+    var errEl = document.getElementById('adminLoginErr');
+    if (errEl) { errEl.textContent='Access denied. This portal is for administrators only.'; errEl.style.display='block'; }
+    ADMIN_SESSION = null;
+    return;
+  }
   document.getElementById('adminLogin').style.display='none';
   document.getElementById('adminPortal').style.display='block';
   document.getElementById('sbAvatar').textContent=ADMIN_SESSION.name[0].toUpperCase();
   document.getElementById('sbName').textContent=ADMIN_SESSION.name;
   document.getElementById('topDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
-  // Pull real client data from the backend, then render (falls back to local if offline).
   loadBackendClients().then(function(){ ap('overview'); });
 }
 

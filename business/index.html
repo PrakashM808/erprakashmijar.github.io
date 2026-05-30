@@ -192,8 +192,8 @@ button{cursor:pointer;font-family:var(--mono)}
       <button class="sb-item" onclick="bizNav('billing')"><span class="sb-ico">&#128179;</span>Billing</button>
       <div class="sb-section">Portals</div>
       <a class="sb-link" href="../dashboard/index.html"><span class="sb-ico">&#128269;</span>Scan Dashboard</a>
-      <a class="sb-link" href="../client/index.html"><span class="sb-ico">&#128100;</span>Personal Portal</a>
-      <a class="sb-link" href="../admin/index.html" id="sbAdminLink" style="display:none"><span class="sb-ico">&#128737;</span>Admin Panel</a>
+      
+      
     </div>
     <div class="sb-footer">
       <button class="btn btn-o btn-sm" style="width:100%;justify-content:center" onclick="bizLogout()">&#128682; Logout</button>
@@ -578,16 +578,33 @@ function bizLogout() {
 }
 
 function startBizApp() {
+  var role       = BIZ_SESSION ? (BIZ_SESSION.role || 'user').toLowerCase() : 'user';
+  var clientType = BIZ_SESSION ? (BIZ_SESSION.client_type || 'individual').toLowerCase() : 'individual';
+
+  // Guard: only business accounts, owners, managers allowed
+  // Admin can also enter (they're super admin)
+  var allowed = role === 'admin' || role === 'owner' || role === 'manager'
+             || role === 'client' || clientType === 'business';
+
+  if (!allowed) {
+    // Personal/individual user — redirect to their portal
+    document.getElementById('bizLoginScreen').style.display = 'flex';
+    var errEl = document.getElementById('bizLoginError');
+    if (errEl) {
+      errEl.style.display = 'block';
+      errEl.textContent = 'This portal is for business accounts only. Please use your Personal Security Portal instead.';
+    }
+    BIZ_SESSION = null;
+    localStorage.removeItem('pm_biz_jwt');
+    return;
+  }
+
   document.getElementById('bizLoginScreen').style.display = 'none';
   document.getElementById('bizApp').style.display = 'flex';
-  /* Set user info */
+
   var name = BIZ_SESSION ? (BIZ_SESSION.name || BIZ_SESSION.email || 'User') : 'User';
   document.getElementById('bizUserName').textContent = name.split(' ')[0];
   document.getElementById('bizAvatar').textContent = (name[0] || '?').toUpperCase();
-  /* Show admin link if admin */
-  var role = BIZ_SESSION ? (BIZ_SESSION.role || '').toLowerCase() : '';
-  if (role === 'admin') document.getElementById('sbAdminLink').style.display = 'flex';
-  /* Load org data */
   loadOrgData();
 }
 

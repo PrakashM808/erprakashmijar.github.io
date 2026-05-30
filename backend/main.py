@@ -1534,7 +1534,7 @@ async def register_org_device(body: DeviceRegisterReq,
     )
     return {"ok": True, "device": device, "agent_token": device.get("agent_token")}
 
-@app.get("/api/org/devices")
+@app.get("/api/org/devices/all")
 async def get_org_devices(current_user: dict = Depends(get_current_user)):
     """Get devices for the current user's organization (owner sees all, employee sees own)."""
     user_id = current_user.get("id") or current_user.get("user_id")

@@ -18,3 +18,4 @@ twilio==8.13.0  # Optional — for real SMS OTP
 
 pyjwt>=2.8.0
 bcrypt>=4.0.0
+slowapi==0.1.9
