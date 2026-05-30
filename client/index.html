@@ -406,10 +406,35 @@ function demoLogin() {
 
 function doLogout() { AUTH.logout('../login.html'); }
 
+function applyClientTypeUI() {
+  var s = AUTH.getSession() || {};
+  var isBiz = (s.client_type === 'business') || s.role === 'employee';
+  var teamTab = document.querySelector(".tab[onclick*=\"tab('team')\"]");
+  if (teamTab) teamTab.innerHTML = isBiz ? 'Team &amp; Devices' : 'My Devices';
+  var head = document.getElementById('tp-team');
+  if (head) {
+    var title = head.querySelector('.card-title');
+    var sub = head.querySelector('.card-sub');
+    if (title) title.innerHTML = isBiz ? '&#128187; Your Team &amp; Devices' : '&#128187; My Devices';
+    if (sub) sub.textContent = isBiz ? "Add your employees' laptops and devices so we can monitor their security"
+                                     : "Add your laptops, phones, and other devices so we can keep them secure";
+    var empName = document.getElementById('td_emp'), empEmail = document.getElementById('td_email');
+    if (empName && empName.parentElement) empName.parentElement.style.display = isBiz ? '' : 'none';
+    if (empEmail && empEmail.parentElement) empEmail.parentElement.style.display = isBiz ? '' : 'none';
+    var cards = head.querySelectorAll('.card');
+    if (cards.length >= 3) cards[2].style.display = isBiz ? '' : 'none';
+  }
+  var org = document.getElementById('clientOrg');
+  var logoName = document.querySelector('.hdr-logo-name');
+  if (logoName) logoName.textContent = isBiz ? 'Security Report' : 'My Security';
+  if (org && !isBiz) org.textContent = (s.name || 'My') + "'s Devices";
+}
+
 function showPortal() {
   document.getElementById('loginWrap').style.display='none';
   document.getElementById('portalHdr').style.display='block';
   document.getElementById('portalBody').style.display='block';
+  applyClientTypeUI();
   loadData();
 }
 

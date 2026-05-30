@@ -235,10 +235,13 @@ function doLogin() {
 
 // Route each role to its portal: admin → admin portal, client → client portal, else dashboard.
 function portalFor(session) {
-  var role = (session && session.role) || (AUTH.getSession() && AUTH.getSession().role) || 'user';
+  var s = session || AUTH.getSession() || {};
+  var role = s.role || 'user';
+  var ctype = s.client_type || 'individual';
   if (role === 'admin')  return 'admin/index.html';
-  if (role === 'client') return 'client/index.html';
-  return 'dashboard/index.html';
+  if (role === 'employee') return 'client/index.html?preview=1';
+  if (role === 'client') return ctype === 'business' ? 'dashboard/index.html' : 'client/index.html?preview=1';
+  return ctype === 'business' ? 'dashboard/index.html' : 'client/index.html?preview=1';
 }
 
 function quickLogin(email, pass) {

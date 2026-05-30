@@ -13,9 +13,15 @@ if (!SESSION) throw new Error('Not authenticated');
 (function routeByRole(){
   try {
     var role = SESSION.role;
+    var ctype = SESSION.client_type || 'individual';
     var stay = /[?&]stay=1/.test(location.search);
-    if (role === 'client') { location.replace('../client/index.html'); return; }
+    if (role === 'client' && ctype !== 'business') { location.replace('../client/index.html?preview=1'); return; }
+    if (role === 'employee') { location.replace('../client/index.html?preview=1'); return; }
     if (role === 'admin' && !stay) { location.replace('../admin/index.html'); return; }
+    // Plain individual users belong on the personal portal, not the business dashboard.
+    if (role !== 'admin' && role !== 'client' && role !== 'employee' && ctype !== 'business' && !stay) {
+      location.replace('../client/index.html?preview=1'); return;
+    }
   } catch (e) {}
 })();
 

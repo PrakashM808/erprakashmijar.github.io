@@ -232,6 +232,23 @@
       <div class="alert alert-error" id="regErr"></div>
       <div class="alert alert-ok"    id="regOk"></div>
 
+      <div class="form-group">
+        <label class="form-label">ACCOUNT TYPE <span style="color:var(--danger)">*</span></label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+          <div id="ct-individual" onclick="selectClientType('individual')" style="cursor:pointer;border:1.5px solid var(--g);background:rgba(0,255,136,.06);border-radius:8px;padding:.8rem;text-align:center">
+            <div style="font-size:1.3rem">&#128100;</div>
+            <div style="font-family:var(--mono);font-size:.7rem;color:var(--white);margin-top:.2rem">PERSONAL</div>
+            <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:.15rem">Individuals, families, home users</div>
+          </div>
+          <div id="ct-business" onclick="selectClientType('business')" style="cursor:pointer;border:1.5px solid rgba(255,255,255,.1);border-radius:8px;padding:.8rem;text-align:center">
+            <div style="font-size:1.3rem">&#127970;</div>
+            <div style="font-family:var(--mono);font-size:.7rem;color:var(--white);margin-top:.2rem">BUSINESS</div>
+            <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:.15rem">Companies, shops, teams</div>
+          </div>
+        </div>
+        <input type="hidden" id="clientType" value="individual"/>
+      </div>
+
       <div class="fg2">
         <div class="form-group">
           <label class="form-label">FIRST NAME <span style="color:var(--danger)">*</span></label>
@@ -650,7 +667,8 @@ function doRegister() {
 
   setTimeout(async function() {
     var fullName = (fn + ' ' + ln).trim();
-    var result = await AUTH.registerBackend(fullName, em, pw);
+    var clientType = (document.getElementById('clientType')||{}).value || 'individual';
+    var result = await AUTH.registerBackend(fullName, em, pw, clientType);
 
     if (!result.ok) {
       showErr(result.error || 'Registration failed. Please try again.');
@@ -666,6 +684,7 @@ function doRegister() {
       users[idx].company = co;
       users[idx].phone   = ph;
       users[idx].plan    = selPlan;
+      users[idx].client_type = clientType;
       AUTH.saveUsers(users);
     }
 
@@ -675,12 +694,27 @@ function doRegister() {
       session.plan    = selPlan;
       session.company = co;
       session.phone   = ph;
+      session.client_type = clientType;
       sessionStorage.setItem('pm_session_v2', JSON.stringify(session));
     }
 
-    showOk('Account created successfully! Redirecting to dashboard...');
-    setTimeout(function(){ window.location.href = 'dashboard/index.html'; }, 1000);
+    // Route by account type: business → business dashboard, personal → personal portal.
+    var dest = clientType === 'business' ? 'dashboard/index.html' : 'client/index.html?preview=1';
+    showOk('Account created! Taking you to your ' + (clientType === 'business' ? 'business' : 'personal') + ' portal…');
+    setTimeout(function(){ window.location.href = dest; }, 1000);
   }, 400);
+}
+
+function selectClientType(t) {
+  document.getElementById('clientType').value = t;
+  var ind = document.getElementById('ct-individual'), biz = document.getElementById('ct-business');
+  if (t === 'business') {
+    biz.style.border = '1.5px solid var(--g)'; biz.style.background = 'rgba(0,255,136,.06)';
+    ind.style.border = '1.5px solid rgba(255,255,255,.1)'; ind.style.background = 'transparent';
+  } else {
+    ind.style.border = '1.5px solid var(--g)'; ind.style.background = 'rgba(0,255,136,.06)';
+    biz.style.border = '1.5px solid rgba(255,255,255,.1)'; biz.style.background = 'transparent';
+  }
 }
 
 // Enter key support

@@ -216,6 +216,20 @@ def test_org_devices_requires_auth():
     assert client.post("/api/org/devices", json={"device_name": "X"}).status_code in (401, 403)
 
 
+def test_client_type_individual_and_business():
+    """Registration records client_type and login returns it (drives portal routing)."""
+    ri = client.post("/api/auth/register", json={"email": f"i_{os.urandom(3).hex()}@x.com", "password": "Passw0rd!", "name": "Ind", "client_type": "individual"})
+    assert ri.json().get("client_type") == "individual"
+    rb = client.post("/api/auth/register", json={"email": f"b_{os.urandom(3).hex()}@x.com", "password": "Passw0rd!", "name": "Biz", "client_type": "business", "plan": "professional"})
+    assert rb.json().get("client_type") == "business"
+    # login echoes it back
+    lb = client.post("/api/auth/login", json={"email": rb.json()["email"], "password": "Passw0rd!"})
+    assert lb.json().get("client_type") == "business"
+    # default when omitted
+    rd = client.post("/api/auth/register", json={"email": f"d_{os.urandom(3).hex()}@x.com", "password": "Passw0rd!", "name": "Def"})
+    assert rd.json().get("client_type") == "individual"
+
+
 # ── Webhook robustness (regression: empty body used to 500) ─────
 def test_lemonsqueezy_webhook_handles_bad_input():
     r = client.post("/api/webhooks/lemonsqueezy", json={})

@@ -90,6 +90,7 @@ CREATE TABLE IF NOT EXISTS users (
     address     TEXT,
     notes       TEXT,
     org_id      TEXT,
+    client_type TEXT DEFAULT 'individual',
     created_at  TIMESTAMPTZ DEFAULT NOW(),
     last_login  TIMESTAMPTZ,
     login_count INTEGER DEFAULT 0,
@@ -261,6 +262,7 @@ def init_db():
             try:
                 cur.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS address TEXT")
                 cur.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS org_id TEXT")
+                cur.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS client_type TEXT DEFAULT 'individual'")
             except Exception as mig_e:
                 print(f"[DB] column migration note: {mig_e}")
             print("[DB] Schema initialized ✅")
@@ -275,11 +277,12 @@ def init_db():
 
 def user_create(user_id: str, name: str, email: str, password: str,
                 role: str = "user", plan: str = "free",
-                company: str = "", phone: str = "") -> dict:
+                company: str = "", phone: str = "", client_type: str = "individual") -> dict:
     user = {
         "id": user_id, "name": name, "email": email.lower(),
         "password": password, "role": role, "plan": plan,
         "status": "active", "company": company, "phone": phone,
+        "client_type": client_type, "org_id": user_id,
         "created": datetime.utcnow().isoformat(),
         "loginCount": 0
     }
@@ -288,11 +291,11 @@ def user_create(user_id: str, name: str, email: str, password: str,
             with get_db() as conn:
                 cur = conn.cursor()
                 cur.execute("""
-                    INSERT INTO users (id, name, email, password, role, plan, company, phone)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+                    INSERT INTO users (id, name, email, password, role, plan, company, phone, client_type, org_id)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                     ON CONFLICT (email) DO NOTHING
                     RETURNING id
-                """, (user_id, name, email.lower(), password, role, plan, company, phone))
+                """, (user_id, name, email.lower(), password, role, plan, company, phone, client_type, user_id))
                 return user
         except Exception as e:
             print(f"[DB] user_create error: {e}")
@@ -329,7 +332,7 @@ def user_get(user_id: str) -> Optional[dict]:
     return _mem["users"].get(user_id)
 
 def user_update(user_id: str, **kwargs) -> bool:
-    allowed = {"name","email","role","plan","status","company","phone","address","notes","org_id","last_login","login_count"}
+    allowed = {"name","email","role","plan","status","company","phone","address","notes","org_id","client_type","last_login","login_count"}
     kwargs = {k:v for k,v in kwargs.items() if k in allowed}
     if not kwargs:
         return False

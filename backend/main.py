@@ -343,7 +343,7 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(_securi
         if not JWT_AVAILABLE:
             raise HTTPException(500, "JWT not available — run: pip install pyjwt")
         payload = pyjwt.decode(credentials.credentials, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-        return {"user_id": payload.get("user_id"), "email": payload.get("sub"), "plan": payload.get("plan","free"), "role": payload.get("role","user")}
+        return {"user_id": payload.get("user_id"), "email": payload.get("sub"), "plan": payload.get("plan","free"), "role": payload.get("role","user"), "client_type": payload.get("client_type","individual")}
     except Exception as e:
         raise HTTPException(401, f"Invalid token: {str(e)}")
 
@@ -363,6 +363,7 @@ class JWTRegisterReq(BaseModel):
     company: str = ""
     phone: str = ""
     plan: str = "free"
+    client_type: str = "individual"   # 'individual' | 'business'
 
 class JWTLoginReq(BaseModel):
     email: str
@@ -379,8 +380,9 @@ async def jwt_register(req: JWTRegisterReq, background_tasks: BackgroundTasks):
         hashed = bcrypt.hashpw(req.password.encode(), bcrypt.gensalt()).decode()
     else:
         hashed = hashlib.sha256(req.password.encode()).hexdigest()
+    ctype = req.client_type if req.client_type in ("individual", "business") else "individual"
     user_create(user_id=user_id, name=req.name, email=req.email, password=hashed,
-                role="user", plan=req.plan, company=req.company, phone=req.phone)
+                role="user", plan=req.plan, company=req.company, phone=req.phone, client_type=ctype)
     plan_set(user_id, req.plan)
     if req.plan != "free":
         try: start_trial(user_id, req.plan)
@@ -389,9 +391,9 @@ async def jwt_register(req: JWTRegisterReq, background_tasks: BackgroundTasks):
         background_tasks.add_task(send_welcome_email, req.email, req.name, req.plan)
     token = ""
     if JWT_AVAILABLE:
-        token = pyjwt.encode({"sub":req.email,"user_id":user_id,"plan":req.plan,"role":"user",
+        token = pyjwt.encode({"sub":req.email,"user_id":user_id,"plan":req.plan,"role":"user","client_type":ctype,
             "exp":datetime.utcnow()+timedelta(hours=JWT_EXPIRY_HOURS)}, JWT_SECRET, algorithm=JWT_ALGORITHM)
-    return {"ok":True,"access_token":token,"user_id":user_id,"email":req.email,"name":req.name,"plan":req.plan,"role":"user"}
+    return {"ok":True,"access_token":token,"user_id":user_id,"email":req.email,"name":req.name,"plan":req.plan,"role":"user","client_type":ctype}
 
 @app.post("/api/auth/login")
 async def jwt_login(req: JWTLoginReq):
@@ -414,11 +416,12 @@ async def jwt_login(req: JWTLoginReq):
     user_record_login(user["id"])
     current_plan = plan_get(user["id"])
     user_role = user.get("role", "user")
+    ctype = user.get("client_type", "individual")
     token = ""
     if JWT_AVAILABLE:
-        token = pyjwt.encode({"sub":user["email"],"user_id":user["id"],"plan":current_plan,"role":user_role,
+        token = pyjwt.encode({"sub":user["email"],"user_id":user["id"],"plan":current_plan,"role":user_role,"client_type":ctype,
             "exp":datetime.utcnow()+timedelta(hours=JWT_EXPIRY_HOURS)}, JWT_SECRET, algorithm=JWT_ALGORITHM)
-    return {"ok":True,"access_token":token,"user_id":user["id"],"email":user["email"],"name":user.get("name",""),"plan":current_plan,"role":user_role}
+    return {"ok":True,"access_token":token,"user_id":user["id"],"email":user["email"],"name":user.get("name",""),"plan":current_plan,"role":user_role,"client_type":ctype}
 
 @app.get("/api/auth/verify")
 async def jwt_verify(user: dict = Depends(get_current_user)):
@@ -1967,14 +1970,14 @@ def employee_register(req: EmployeeJoinReq):
         hashed = bcrypt.hashpw(req.password.encode(), bcrypt.gensalt()).decode()
     else:
         hashed = hashlib.sha256(req.password.encode()).hexdigest()
-    user_create(user_id=uid, name=req.name.strip(), email=req.email.lower(), password=hashed, role="employee", plan="free")
+    user_create(user_id=uid, name=req.name.strip(), email=req.email.lower(), password=hashed, role="employee", plan="free", client_type="business")
     user_update(uid, org_id=req.org_id)
     token = ""
     if JWT_AVAILABLE:
-        token = pyjwt.encode({"sub": req.email.lower(), "user_id": uid, "plan": "free", "role": "employee",
+        token = pyjwt.encode({"sub": req.email.lower(), "user_id": uid, "plan": "free", "role": "employee", "client_type": "business",
             "exp": datetime.utcnow()+timedelta(hours=JWT_EXPIRY_HOURS)}, JWT_SECRET, algorithm=JWT_ALGORITHM)
     return {"ok": True, "access_token": token, "user_id": uid, "email": req.email.lower(),
-            "name": req.name.strip(), "role": "employee", "org_id": req.org_id}
+            "name": req.name.strip(), "role": "employee", "org_id": req.org_id, "client_type": "business"}
 
 # ── PAYMENT & BILLING ENDPOINTS ──────────────────────────────────
 

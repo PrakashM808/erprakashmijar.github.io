@@ -49,6 +49,8 @@ const AUTH = (() => {
       email: (resp.email || '').toLowerCase(),
       role:  resp.role || 'user',
       plan:  resp.plan || 'free',
+      client_type: resp.client_type || 'individual',
+      org_id: resp.org_id || resp.user_id,
       avatar:(resp.name || fallbackName || 'U').trim().split(' ').map(function(n){return n[0];}).join('').toUpperCase().slice(0,2),
       status:'active'
     };
@@ -416,7 +418,7 @@ const AUTH = (() => {
   }
 
   /* ── Register ────────────────────────────────────────────── */
-  function register(name, email, password) {
+  function register(name, email, password, clientType) {
     if (!name || name.trim().length < 2)
       return { ok: false, error: 'Name must be at least 2 characters.' };
     if (!email || !email.includes('@'))
@@ -430,12 +432,15 @@ const AUTH = (() => {
     const users = getUsers();
     if (users.find(u => u.email.toLowerCase() === email.toLowerCase()))
       return { ok: false, error: 'An account with this email already exists. Try logging in.' };
+    const uid = 'user-' + Date.now();
     const newUser = {
-      id:         'user-' + Date.now(),
+      id:         uid,
       name:       name.trim(),
       email:      email.toLowerCase(),
       password,
       role:       'user',
+      client_type:(clientType === 'business') ? 'business' : 'individual',
+      org_id:     uid,
       avatar:     name.trim().split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2),
       created:    new Date().toISOString().split('T')[0],
       phone:      '',
@@ -452,16 +457,17 @@ const AUTH = (() => {
   }
 
   /* ── Backend-first register (real server account when online) ── */
-  async function registerBackend(name, email, password) {
+  async function registerBackend(name, email, password, clientType) {
     if (!name || name.trim().length < 2) return { ok:false, error:'Name must be at least 2 characters.' };
     if (!email || !email.includes('@')) return { ok:false, error:'Please enter a valid email address.' };
     if (!password || password.length < 8) return { ok:false, error:'Password must be at least 8 characters.' };
     if (!/[A-Z]/.test(password)) return { ok:false, error:'Password must contain at least one uppercase letter.' };
     if (!/[0-9]/.test(password)) return { ok:false, error:'Password must contain at least one number.' };
 
-    var resp = await backendCall('/api/auth/register', { email: email.toLowerCase(), password: password, name: name.trim(), plan: 'free' });
+    var ctype = (clientType === 'business') ? 'business' : 'individual';
+    var resp = await backendCall('/api/auth/register', { email: email.toLowerCase(), password: password, name: name.trim(), plan: 'free', client_type: ctype });
     if (resp.offline) {
-      var r = register(name, email, password);   // backend down → local fallback
+      var r = register(name, email, password, ctype);   // backend down → local fallback
       if (r.ok) r.local_only = true;
       return r;
     }
