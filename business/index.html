@@ -181,35 +181,45 @@ button{cursor:pointer;font-family:var(--mono)}
     <div class="sb-nav">
       <div class="sb-section">Dashboard</div>
       <button class="sb-item active" onclick="bizNav('overview')"><span class="sb-ico">&#128202;</span>Security Overview</button>
-      <button class="sb-item" onclick="bizNav('riskscore')"><span class="sb-ico">&#128200;</span>Risk Dashboard</button>
 
       <div class="sb-section">Team Management</div>
       <button class="sb-item" onclick="bizNav('employees')"><span class="sb-ico">&#128101;</span>Employees<span class="sb-badge" id="sbEmpBadge" style="display:none">0</span></button>
-      <button class="sb-item" onclick="bizNav('roles')"><span class="sb-ico">&#127919;</span>Roles & Permissions</button>
+      <button class="sb-item" onclick="bizNav('teams')"><span class="sb-ico">&#128101;</span>Teams</button>
+      <button class="sb-item" onclick="bizNav('roles')"><span class="sb-ico">&#127919;</span>Roles</button>
+      <button class="sb-item" onclick="bizNav('permissions')"><span class="sb-ico">&#128275;</span>Permissions</button>
 
       <div class="sb-section">Asset Management</div>
-      <button class="sb-item" onclick="bizNav('devices')"><span class="sb-ico">&#128187;</span>All Assets<span class="sb-badge" id="sbDevBadge" style="display:none">0</span></button>
-      <button class="sb-item" onclick="bizNav('network')"><span class="sb-ico">&#127760;</span>Network Discovery</button>
+      <button class="sb-item" onclick="bizNav('devices')"><span class="sb-ico">&#128421;</span>Servers<span class="sb-badge" id="sbDevBadge" style="display:none">0</span></button>
+      <button class="sb-item" onclick="bizNav('devices')"><span class="sb-ico">&#128187;</span>Workstations</button>
+      <button class="sb-item" onclick="bizNav('devices')"><span class="sb-ico">&#128187;</span>Laptops</button>
+      <button class="sb-item" onclick="bizNav('devices')"><span class="sb-ico">&#127760;</span>Routers</button>
+      <button class="sb-item" onclick="bizNav('devices')"><span class="sb-ico">&#128257;</span>Switches</button>
+      <button class="sb-item" onclick="bizNav('devices')"><span class="sb-ico">&#128737;</span>Firewalls</button>
+      <button class="sb-item" onclick="bizNav('devices')"><span class="sb-ico">&#128247;</span>CCTV Cameras</button>
 
-      <div class="sb-section">Vulnerability Mgmt</div>
-      <button class="sb-item" onclick="bizNav('scan')"><span class="sb-ico">&#128269;</span>Run Scan</button>
-      <button class="sb-item" onclick="bizNav('scanhistory')"><span class="sb-ico">&#128336;</span>Scan History</button>
-      <button class="sb-item" onclick="bizNav('alerts')"><span class="sb-ico">&#128276;</span>Alerts</button>
+      <div class="sb-section">Reports</div>
+      <button class="sb-item" onclick="bizNav('reports')"><span class="sb-ico">&#128196;</span>Executive Reports</button>
+      <button class="sb-item" onclick="bizNav('compliance')"><span class="sb-ico">&#9989;</span>Compliance Reports</button>
+      <button class="sb-item" onclick="bizNav('reports')"><span class="sb-ico">&#128683;</span>Security Reports</button>
 
-      <div class="sb-section">Compliance</div>
-      <button class="sb-item" onclick="bizNav('compliance')"><span class="sb-ico">&#9989;</span>Compliance</button>
-      <button class="sb-item" onclick="bizNav('incidents')"><span class="sb-ico">&#128680;</span>Incidents</button>
+      <div class="sb-section">Integrations</div>
+      <button class="sb-item" onclick="bizNav('integrations')"><span class="sb-ico">&#127970;</span>Microsoft 365</button>
+      <button class="sb-item" onclick="bizNav('integrations')"><span class="sb-ico">&#128309;</span>Google Workspace</button>
+      <button class="sb-item" onclick="bizNav('integrations')"><span class="sb-ico">&#128172;</span>Slack</button>
+      <button class="sb-item" onclick="bizNav('integrations')"><span class="sb-ico">&#127919;</span>Jira</button>
 
-      <div class="sb-section">Reports & Billing</div>
-      <button class="sb-item" onclick="bizNav('reports')"><span class="sb-ico">&#128196;</span>Reports</button>
-      <button class="sb-item" onclick="bizNav('billing')"><span class="sb-ico">&#128179;</span>Billing</button>
+      <div class="sb-section">Billing</div>
+      <button class="sb-item" onclick="bizNav('billing')"><span class="sb-ico">&#128179;</span>Subscription</button>
+      <button class="sb-item" onclick="bizNav('billing')"><span class="sb-ico">&#128200;</span>Usage</button>
+      <button class="sb-item" onclick="bizNav('billing')"><span class="sb-ico">&#128203;</span>Invoices</button>
 
       <div class="sb-section">Settings</div>
-      <button class="sb-item" onclick="bizNav('settings')"><span class="sb-ico">&#9881;</span>Company Settings</button>
-      <button class="sb-item" onclick="bizNav('integrations')"><span class="sb-ico">&#128268;</span>Integrations</button>
+      <button class="sb-item" onclick="bizNav('settings')"><span class="sb-ico">&#127970;</span>Company Profile</button>
+      <button class="sb-item" onclick="bizNav('settings')"><span class="sb-ico">&#128737;</span>Security Policies</button>
+      <button class="sb-item" onclick="bizNav('settings')"><span class="sb-ico">&#128276;</span>Notification Settings</button>
 
-      <div class="sb-section">Portals</div>
-      <a class="sb-link" href="../dashboard/index.html"><span class="sb-ico">&#128269;</span>Scan Dashboard</a>
+      <div class="sb-section">Portal</div>
+      <button class="sb-item" onclick="window.location.href='../dashboard/index.html'"><span class="sb-ico">&#128269;</span>Scanner Dashboard</button>
     </div>
     <div class="sb-footer">
       <button class="btn btn-o btn-sm" style="width:100%;justify-content:center" onclick="bizLogout()">&#128682; Logout</button>
@@ -247,24 +257,24 @@ button{cursor:pointer;font-family:var(--mono)}
 
         <div class="stats-grid">
           <div class="stat-card" style="border-top:2px solid var(--ok)">
-            <div class="stat-label">Total Employees</div>
-            <div class="stat-value" id="statEmployees">--</div>
-            <div class="stat-sub">across your org</div>
+            <div class="stat-label">COMPANY SECURITY SCORE</div>
+            <div class="stat-value" id="statAvgScore" style="color:var(--ok)">--</div>
+            <div class="stat-sub">from Scan Dashboard</div>
           </div>
           <div class="stat-card" style="border-top:2px solid var(--g2)">
-            <div class="stat-label">Devices Monitored</div>
+            <div class="stat-label">DEVICES ONLINE</div>
             <div class="stat-value" id="statDevices">--</div>
-            <div class="stat-sub">registered devices</div>
-          </div>
-          <div class="stat-card" style="border-top:2px solid var(--warn)">
-            <div class="stat-label">Avg Security Score</div>
-            <div class="stat-value" id="statAvgScore" style="color:var(--warn)">--</div>
-            <div class="stat-sub">across all devices</div>
+            <div class="stat-sub">active last 24h</div>
           </div>
           <div class="stat-card" style="border-top:2px solid var(--danger)">
-            <div class="stat-label">Critical Issues</div>
+            <div class="stat-label">ACTIVE THREATS</div>
             <div class="stat-value" id="statCritical" style="color:var(--danger)">--</div>
-            <div class="stat-sub">need attention</div>
+            <div class="stat-sub">critical alerts</div>
+          </div>
+          <div class="stat-card" style="border-top:2px solid var(--warn)">
+            <div class="stat-label">TEAM MEMBERS</div>
+            <div class="stat-value" id="statEmployees">--</div>
+            <div class="stat-sub">in your org</div>
           </div>
         </div>
 
@@ -721,25 +731,42 @@ function bizNav(page) {
   if (el) el.classList.add('active');
   document.querySelectorAll('.sb-item').forEach(function(b){ b.classList.remove('active'); });
   var titles = {
-    overview:'SECURITY OVERVIEW', riskscore:'RISK DASHBOARD', employees:'EMPLOYEES',
-    roles:'ROLES & PERMISSIONS', devices:'ALL ASSETS', network:'NETWORK DISCOVERY',
-    scan:'RUN SCAN', scanhistory:'SCAN HISTORY', alerts:'ALERTS',
-    compliance:'COMPLIANCE', incidents:'INCIDENTS', reports:'REPORTS',
-    billing:'BILLING', settings:'COMPANY SETTINGS', integrations:'INTEGRATIONS'
+    overview:'SECURITY OVERVIEW', employees:'EMPLOYEES', teams:'TEAMS',
+    roles:'ROLES', permissions:'PERMISSIONS',
+    servers:'SERVERS', workstations:'WORKSTATIONS', laptops:'LAPTOPS',
+    routers:'ROUTERS', switches:'SWITCHES', firewalls:'FIREWALLS', cameras:'CCTV CAMERAS',
+    execreports:'EXECUTIVE REPORTS', compreports:'COMPLIANCE REPORTS', secreports:'SECURITY REPORTS',
+    integrations:'INTEGRATIONS',
+    billing:'SUBSCRIPTION', usage:'USAGE', invoicesbiz:'INVOICES',
+    settings:'COMPANY PROFILE', secpolicies:'SECURITY POLICIES', notifications:'NOTIFICATION SETTINGS',
+    alerts:'ALERTS', compliance:'COMPLIANCE', reports:'REPORTS', scan:'RUN SCAN',
+    scanhistory:'SCAN HISTORY', incidents:'INCIDENTS', riskscore:'RISK DASHBOARD',
+    network:'NETWORK', devices:'ALL ASSETS',
   };
   document.getElementById('bizPageTitle').textContent = titles[page] || page.toUpperCase();
   /* Load page-specific data */
-  if (page === 'employees')   renderEmployeeTable();
-  if (page === 'devices')     renderDeviceGrid();
-  if (page === 'alerts')      renderAlertsPage();
-  if (page === 'billing')     renderBilling();
-  if (page === 'scan')        bizOpenScan();
-  if (page === 'network')     renderNetworkPage();
-  if (page === 'riskscore')   renderRiskDashboard();
-  if (page === 'scanhistory') renderScanHistory();
-  if (page === 'incidents')   renderIncidents();
+  if (page === 'employees')    renderEmployeeTable();
+  if (page === 'devices')      renderDeviceGrid();
+  if (page === 'alerts')       renderAlertsPage();
+  if (page === 'billing')      renderBilling();
+  if (page === 'usage')        renderUsage();
+  if (page === 'invoicesbiz')  renderInvoicesBiz();
+  if (page === 'scan')         bizOpenScan();
+  if (page === 'network')      renderNetworkPage();
+  if (page === 'riskscore')    renderRiskDashboard();
+  if (page === 'scanhistory')  renderScanHistory();
+  if (page === 'incidents')    renderIncidents();
   if (page === 'integrations') renderIntegrations();
-  if (page === 'roles')       renderRoles();
+  if (page === 'roles')        renderRoles();
+  if (page === 'teams')        renderTeams();
+  if (page === 'permissions')  renderPermissions();
+  if (page === 'execreports')  renderExecReports();
+  if (page === 'compreports')  renderCompReports();
+  if (page === 'secreports')   renderSecReports();
+  if (page === 'secpolicies')  renderSecPolicies();
+  if (page === 'notifications') renderNotifSettings();
+  var assetPages = ['servers','workstations','laptops','routers','switches','firewalls','cameras'];
+  if (assetPages.indexOf(page) >= 0) renderAssetPage(page);
 }
 
 /* ── Data loading ── */
@@ -794,6 +821,34 @@ function renderDemoData() {
 /* ── Overview ── */
 function renderOverview() {
   var s = BIZ_DATA.stats;
+  // Pull live data from scan dashboard localStorage
+  var devices   = JSON.parse(localStorage.getItem('pm_devices_v3')||'[]');
+  var scanHist  = JSON.parse(localStorage.getItem('pm_scan_history_v3')||'[]');
+  var alerts    = JSON.parse(localStorage.getItem('pm_alerts_v3')||'[]');
+  var avgScore  = devices.length ? Math.round(devices.reduce(function(a,d){return a+(d.security_score||0);},0)/devices.length) : 0;
+  var critAlerts = alerts.filter(function(a){return a.severity==='critical';}).length;
+  // Update stat cards with real data
+  var el = function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
+  el('statEmployees', s.total_employees || BIZ_DATA.employees.length || 0);
+  el('statDevices',   s.total_devices   || BIZ_DATA.devices.length   || devices.length || 0);
+  var scoreEl = document.getElementById('statAvgScore');
+  if (scoreEl) { scoreEl.textContent = avgScore || (s.avg_score||'--'); scoreEl.style.color = avgScore>=75?'var(--ok)':avgScore>=50?'var(--warn)':'var(--danger)'; }
+  el('statCritical',  critAlerts || s.critical || 0);
+  var scanDevices = JSON.parse(localStorage.getItem('pm_devices_v3')||'[]');
+  var activeDevices = scanDevices.filter(function(d){return (Date.now()-new Date(d.last_scan||0).getTime())<86400000;}).length;
+  var criticalAlerts = JSON.parse(localStorage.getItem('pm_alerts_v3')||'[]').filter(function(a){return a.severity==='critical';}).length;
+  var scanHist = JSON.parse(localStorage.getItem('pm_scan_history_v3')||'[]');
+  var recentScans = scanHist.slice(-3).reverse();
+
+  // Update stat cards: Company Security Score, Devices Online, Active Threats, Recent Scans
+  var avgScore = scanDevices.length ? Math.round(scanDevices.reduce(function(a,d){return a+(d.security_score||0);},0)/scanDevices.length) : (s.avg_score||0);
+  var scoreEl = document.getElementById('statAvgScore');
+  if (scoreEl) { scoreEl.textContent = avgScore||'--'; scoreEl.style.color = avgScore>=75?'var(--ok)':avgScore>=50?'var(--warn)':'var(--danger)'; }
+  var el = function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
+  el('statEmployees', s.total_employees || BIZ_DATA.employees.length || 0);
+  el('statDevices',   s.total_devices||BIZ_DATA.devices.length||scanDevices.length||0);
+  el('statCritical',  criticalAlerts||s.critical||0);
+  // Stat labels update
   document.getElementById('statEmployees').textContent = s.total_employees || BIZ_DATA.employees.length || 0;
   document.getElementById('statDevices').textContent   = s.total_devices   || BIZ_DATA.devices.length   || 0;
   var avg = s.avg_score || (BIZ_DATA.devices.length ? Math.round(BIZ_DATA.devices.reduce(function(a,d){return a+(d.last_score||0);},0)/BIZ_DATA.devices.length) : 0);
@@ -1100,6 +1155,52 @@ function renderRoles() {
       return '<td style="padding:.45rem .8rem;border-bottom:1px solid rgba(255,255,255,.04);'+(i===0?'color:var(--text2)':'text-align:center;font-size:.85rem')+'">' + c + '</td>';
     }).join('')+'</tr>';
   }).join('');
+}
+
+
+function renderTeams() {
+  bizToast('Teams management — invite employees first to create teams', 'info');
+}
+function renderPermissions() {
+  bizNav('roles');  // Permissions are part of roles
+}
+function renderAssetPage(type) {
+  // All asset types load from the devices list, filtered by type
+  var page = document.getElementById('biz-devices');
+  if (!page) return;
+  // Re-use the devices page but with a type filter applied
+  renderDeviceGrid();
+  var typeLabel = {servers:'Servers',workstations:'Workstations',laptops:'Laptops',routers:'Routers',switches:'Switches',firewalls:'Firewalls',cameras:'CCTV Cameras'};
+  var title = document.getElementById('bizPageTitle');
+  if (title) title.textContent = typeLabel[type] || type.toUpperCase();
+  // Show the devices page
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  page.classList.add('active');
+}
+function renderExecReports() {
+  var el = document.getElementById('recentReports');
+  if (el) el.innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted)">Executive reports are generated from your latest scan data. <a href="../dashboard/index.html">Run a scan</a> first, then export as PDF.</div>';
+  bizNav('reports');
+}
+function renderCompReports() {
+  bizNav('compliance');
+}
+function renderSecReports() {
+  bizNav('reports');
+}
+function renderSecPolicies() {
+  bizToast('Security policies saved in Company Settings → Security tab', 'info');
+  bizNav('settings');
+}
+function renderNotifSettings() {
+  bizToast('Notification preferences — available in Settings', 'info');
+  bizNav('settings');
+}
+function renderUsage() {
+  bizToast('Usage metrics — connect backend for real usage data', 'info');
+}
+function renderInvoicesBiz() {
+  bizToast('Invoices — connect Stripe for billing history', 'info');
 }
 
 </script>

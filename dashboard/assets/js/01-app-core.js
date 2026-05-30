@@ -1692,38 +1692,178 @@ function updateMfaStatus() {
             compliance, billing — without the heavy SOC/SIEM/MSP tooling
    user   → standard product (default) */
 function applyRolePortal() {
-  var role = (SESSION && SESSION.role) || 'user';
-  function showSec(sec, show) {
-    document.querySelectorAll('.sb-section[data-sec="' + sec + '"]').forEach(function(el){
-      el.style.display = show ? 'block' : 'none';
-    });
-  }
+  var role = ((SESSION && SESSION.role) || 'user').toLowerCase();
+  var plan = ((SESSION && SESSION.plan) || 'free').toLowerCase();
+
+  /* Helper: show/hide a nav item by its nav('xxx') target */
   function showItem(page, show) {
-    document.querySelectorAll('.sb-item[onclick*="nav(\'' + page + '\')"]').forEach(function(el){
+    document.querySelectorAll('.sb-item[onclick*="nav(\'"+page+"\')"]').forEach(function(el){
       el.style.display = show ? '' : 'none';
     });
   }
-  if (role === 'admin') {
-    // Super admin: MSP dashboard visible, full access to everything
-    showItem('msp', true);
-  } else if (role === 'client' || role === 'owner' || role === 'manager' || role === 'employee' || role === 'user') {
-    // Non-admin users: hide MSP (admin-only), hide heavy SOC/SIEM for cleaner UX
-    showItem('msp', false);                 // MSP is super-admin only
-    if (role === 'client' || role === 'user' || role === 'employee') {
-      ['soc','siem','automation','physical','advanced'].forEach(function(s){ showSec(s, false); });
-      showSec('tools', true);
-      showItem('osint', false);
-      showItem('threat', false);
-      showItem('msp', false);
+  /* Helper: show/hide an entire sidebar section by data-sec */
+  function showSec(sec, show) {
+    document.querySelectorAll('.sb-section[data-sec="'+sec+'"]').forEach(function(el){
+      el.style.display = show ? 'block' : 'none';
+    });
+  }
+  /* Helper: show/hide the Admin sidebar section */
+  function showAdminSec(show) {
+    var el = document.getElementById('adminSection');
+    if (el) el.style.display = show ? 'block' : 'none';
+  }
+
+  /* ── First: hide EVERYTHING — then selectively show per role ── */
+  showSec('soc',        false);
+  showSec('siem',       false);
+  showSec('automation', false);
+  showSec('physical',   false);
+  showSec('advanced',   false);
+  showSec('tools',      false);
+  showAdminSec(false);
+  showItem('msp',       false);
+  showItem('osint',     false);
+  showItem('threat',    false);
+  showItem('incidents', false);
+  showItem('iocs',      false);
+  showItem('mitre',     false);
+  showItem('playbooks', false);
+  showItem('wazuh',     false);
+  showItem('splunk',    false);
+  showItem('compliance',false);
+  showItem('pentest',   false);
+  showItem('phishing',  false);
+  showItem('attacksurface',false);
+  showItem('darkweb',   false);
+  showItem('soar',      false);
+  showItem('threatfeed',false);
+  showItem('cameras',   false);
+  showItem('atm',       false);
+  showItem('vending',   false);
+  showItem('fleet',     false);
+  showItem('users',     false);
+  showItem('admin',     false);
+
+  /* ── Role-based nav ─────────────────────────────────────── */
+
+  /* ─── PERSONAL (user / client / employee) ───────────────── */
+  if (role === 'user' || role === 'client' || role === 'employee') {
+    /*  Show: Dashboard · Devices · Scanner · Alerts · AI · Reports
+              Website Scanner · Billing · Profile · Learning Center
+        Hide: all SOC, SIEM, Physical, Advanced, Admin sections  */
+    showSec('tools', true);       // Website Scanner shown
+    showItem('osint',  false);    // OSINT hidden — too advanced
+    showItem('threat', false);    // Threat Intel hidden
+    /* Everything else (physical, soc, siem, automation, advanced) stays hidden */
+
+    var badge = document.getElementById('hdrRole');
+    if (badge) badge.textContent = role === 'employee' ? 'EMPLOYEE' : 'PERSONAL';
+    var w = document.getElementById('dashWelcome');
+    if (w) w.textContent = 'YOUR SECURITY DASHBOARD — ' + ((SESSION && SESSION.name) || '').toUpperCase();
+  }
+
+  /* ─── BUSINESS (owner / manager / business client) ──────── */
+  else if (role === 'owner' || role === 'manager' || (SESSION && SESSION.client_type === 'business')) {
+    /*  Show: everything personal +
+              OSINT · Threat Intel · Incidents · IOC Database
+              MITRE ATT&CK · Playbooks · Compliance · Attack Surface · Dark Web
+              Users (org members)
+        Optionally show Wazuh/Splunk on Professional+ plans */
+    showSec('tools',    true);
+    showSec('soc',      true);    // SOC Platform visible
+    showSec('advanced', true);    // Advanced tools visible
+    showItem('osint',    true);
+    showItem('threat',   true);
+    showItem('incidents',true);
+    showItem('iocs',     true);
+    showItem('mitre',    true);
+    showItem('playbooks',true);
+    showItem('compliance',true);
+    showItem('attacksurface',true);
+    showItem('darkweb',  true);
+    showItem('users',    true);   // Can manage org members
+    showItem('msp',      false);  // MSP dashboard is for MSP tier+
+    showItem('pentest',  false);  // Pentest reports need higher plan
+    showItem('phishing', false);
+    /* SIEM (Wazuh/Splunk) only on professional+ plan */
+    if (plan === 'professional' || plan === 'enterprise') {
+      showSec('siem', true);
+      showItem('wazuh',  true);
+      showItem('splunk', true);
     }
     var badge = document.getElementById('hdrRole');
-    if (badge) badge.textContent = role.toUpperCase();
-    var w = document.getElementById('dashWelcome');
-    if (w && (role === 'client' || role === 'user')) {
-      w.textContent = 'SECURITY DASHBOARD — ' + (SESSION.name || '').toUpperCase();
-    }
+    if (badge) badge.textContent = role === 'owner' ? 'BUSINESS OWNER' : 'BUSINESS';
   }
-  // admin & user keep full nav (admin also gets the Admin section shown above)
+
+  /* ─── MSP ────────────────────────────────────────────────── */
+  else if (role === 'msp') {
+    /*  Show: EVERYTHING except super-admin panels */
+    showSec('tools',      true);
+    showSec('soc',        true);
+    showSec('siem',       true);
+    showSec('automation', true);
+    showSec('physical',   true);
+    showSec('advanced',   true);
+    showItem('osint',     true);
+    showItem('threat',    true);
+    showItem('incidents', true);
+    showItem('iocs',      true);
+    showItem('mitre',     true);
+    showItem('playbooks', true);
+    showItem('wazuh',     true);
+    showItem('splunk',    true);
+    showItem('compliance',true);
+    showItem('pentest',   true);
+    showItem('phishing',  true);
+    showItem('attacksurface',true);
+    showItem('darkweb',   true);
+    showItem('soar',      true);
+    showItem('threatfeed',true);
+    showItem('cameras',   true);
+    showItem('atm',       true);
+    showItem('fleet',     true);
+    showItem('users',     true);
+    showItem('msp',       true);  // MSP Dashboard
+    showItem('admin',     false); // Admin panel hidden (super-admin only)
+    var badge = document.getElementById('hdrRole');
+    if (badge) badge.textContent = 'MSP';
+  }
+
+  /* ─── SUPER ADMIN ────────────────────────────────────────── */
+  else if (role === 'admin') {
+    /* Show EVERYTHING — all sections, all tools, admin panel */
+    showSec('tools',      true);
+    showSec('soc',        true);
+    showSec('siem',       true);
+    showSec('automation', true);
+    showSec('physical',   true);
+    showSec('advanced',   true);
+    showAdminSec(true);           // Admin section (MSP Portal, Admin Panel, Users)
+    showItem('osint',     true);
+    showItem('threat',    true);
+    showItem('incidents', true);
+    showItem('iocs',      true);
+    showItem('mitre',     true);
+    showItem('playbooks', true);
+    showItem('wazuh',     true);
+    showItem('splunk',    true);
+    showItem('compliance',true);
+    showItem('pentest',   true);
+    showItem('phishing',  true);
+    showItem('attacksurface',true);
+    showItem('darkweb',   true);
+    showItem('soar',      true);
+    showItem('threatfeed',true);
+    showItem('cameras',   true);
+    showItem('atm',       true);
+    showItem('vending',   true);
+    showItem('fleet',     true);
+    showItem('users',     true);
+    showItem('admin',     true);
+    showItem('msp',       true);
+    var badge = document.getElementById('hdrRole');
+    if (badge) badge.textContent = 'SUPER ADMIN';
+  }
 }
 
 function init() {
@@ -1792,26 +1932,19 @@ function init() {
 function renderPortalNavButtons() {
   var container = document.getElementById('portalNavBtns');
   if (!container || typeof SESSION === 'undefined') return;
-
   var role       = (SESSION.role || 'user').toLowerCase();
   var clientType = (SESSION.client_type || 'individual').toLowerCase();
   var s = 'height:30px;padding:0 .85rem;border-radius:6px;font-family:var(--mono);font-size:.58rem;font-weight:700;letter-spacing:.05em;cursor:pointer;border:1px solid;display:inline-flex;align-items:center;gap:.35rem;white-space:nowrap;text-decoration:none;transition:all .2s;';
-
   var html = '';
-
   if (role === 'admin') {
-    // Super admin → Admin Panel only
-    html = '<a href="../admin/index.html" style="' + s + 'background:rgba(255,59,92,.12);border-color:rgba(255,59,92,.35);color:#ff3b5c;">&#128737; ADMIN PANEL</a>';
-
+    html = '<a href="../admin/index.html" style="' + s + 'background:rgba(255,59,92,.12);border-color:rgba(255,59,92,.35);color:#ff3b5c;">← ADMIN PORTAL</a>';
+  } else if (role === 'msp') {
+    html = '<a href="../admin/index.html" style="' + s + 'background:rgba(123,47,255,.12);border-color:rgba(123,47,255,.35);color:#b060ff;">← MSP PORTAL</a>';
   } else if (role === 'owner' || role === 'manager' || clientType === 'business') {
-    // Business owner/manager → Business Portal only
-    html = '<a href="../business/index.html" style="' + s + 'background:rgba(123,47,255,.12);border-color:rgba(123,47,255,.35);color:#b060ff;">&#127970; BUSINESS PORTAL</a>';
-
+    html = '<a href="../business/index.html" style="' + s + 'background:rgba(123,47,255,.12);border-color:rgba(123,47,255,.35);color:#b060ff;">← BUSINESS PORTAL</a>';
   } else {
-    // Everyone else (user, employee, individual client) → Personal Portal only
-    html = '<a href="../client/index.html" style="' + s + 'background:rgba(0,212,255,.08);border-color:rgba(0,212,255,.25);color:#00d4ff;">&#128100; MY PORTAL</a>';
+    html = '<a href="../client/index.html" style="' + s + 'background:rgba(0,212,255,.08);border-color:rgba(0,212,255,.25);color:#00d4ff;">← MY PORTAL</a>';
   }
-
   container.innerHTML = html;
 }
 

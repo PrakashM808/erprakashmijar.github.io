@@ -202,7 +202,25 @@
     .card,.issue{box-shadow:none;border:1px solid #ddd;break-inside:avoid}
     .score-hero{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   }
-  </style>
+  
+    /* Personal portal sidebar */
+    .cl-sb-sec {
+      font-family:'Space Mono',monospace;font-size:.48rem;color:#64748b;
+      letter-spacing:.15em;padding:.5rem 1rem .2rem;text-transform:uppercase;
+    }
+    .cl-sb-btn {
+      width:100%;background:none;border:none;border-left:2px solid transparent;
+      padding:.5rem 1rem;display:flex;align-items:center;gap:.55rem;
+      font-family:'Space Mono',monospace;font-size:.6rem;color:#94a3b8;
+      cursor:pointer;text-align:left;transition:all .15s;
+    }
+    .cl-sb-btn:hover { background:rgba(255,255,255,.04); color:#cbd5e1; }
+    .cl-sb-active {
+      background:rgba(0,212,255,.08)!important;
+      border-left:2px solid #00d4ff!important;
+      color:#00d4ff!important;
+    }
+</style>
 </head>
 <body>
 
@@ -240,41 +258,56 @@
       <div style="font-family:'Space Mono',monospace;font-size:.75rem;color:#f1f5f9;font-weight:700;letter-spacing:.08em">PM::OFFSEC</div>
       <div style="font-family:'Space Mono',monospace;font-size:.55rem;color:#00d4ff;letter-spacing:.1em;margin-top:.15rem">PERSONAL PORTAL</div>
     </div>
-    <div style="padding:.6rem 1rem;background:rgba(0,212,255,.07);border-bottom:1px solid rgba(148,163,184,.1)">
-      <div style="font-family:'Space Mono',monospace;font-size:.65rem;color:#f1f5f9;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="sidebarUserName">My Account</div>
-      <div style="font-family:'Space Mono',monospace;font-size:.52rem;color:#00d4ff;margin-top:.1rem">&#9679; PERSONAL SECURITY</div>
+    <div style="padding:.5rem 1rem;background:rgba(0,212,255,.07);border-bottom:1px solid rgba(148,163,184,.1)">
+      <div style="font-family:'Space Mono',monospace;font-size:.62rem;color:#f1f5f9;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="sidebarUserName">My Account</div>
+      <div style="font-family:'Space Mono',monospace;font-size:.5rem;color:#00d4ff;margin-top:.1rem">&#9679; PERSONAL SECURITY</div>
     </div>
-    <nav style="padding:.6rem 0;flex:1">
-      <div style="font-family:'Space Mono',monospace;font-size:.5rem;color:#64748b;letter-spacing:.15em;padding:.5rem 1rem .25rem;text-transform:uppercase">Dashboard</div>
-      <button onclick="tab('dashboard')" id="clTab-dashboard" class="cl-sb-btn cl-sb-active" style="width:100%;background:rgba(0,212,255,.08);border:none;border-left:2px solid #00d4ff;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#00d4ff;cursor:pointer;text-align:left">&#128202; Security Score</button>
-      <button onclick="tab('issues')" id="clTab-issues" class="cl-sb-btn" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-align:left">&#128683; Issues &amp; Fixes</button>
+    <nav style="padding:.4rem 0;flex:1;overflow-y:auto">
 
-      <div style="font-family:'Space Mono',monospace;font-size:.5rem;color:#64748b;letter-spacing:.15em;padding:.5rem 1rem .25rem;text-transform:uppercase">My Devices</div>
-      <button onclick="tab('team')" id="clTab-team" class="cl-sb-btn" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-align:left">&#128187; Device Manager</button>
+      <div class="cl-sb-sec">Dashboard</div>
+      <button onclick="tab('dashboard')" id="clTab-dashboard" class="cl-sb-btn cl-sb-active">&#128202; Security Score</button>
+      <button onclick="tab('dashboard')" class="cl-sb-btn">&#128737; Devices Protected</button>
+      <button onclick="tab('alerts')" id="clTab-alerts" class="cl-sb-btn">&#128276; Latest Alerts</button>
 
-      <div style="font-family:'Space Mono',monospace;font-size:.5rem;color:#64748b;letter-spacing:.15em;padding:.5rem 1rem .25rem;text-transform:uppercase">Security Scan</div>
-      <a href="../dashboard/index.html" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-decoration:none">&#128269; Quick Scan</a>
-      <a href="../dashboard/index.html" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-decoration:none">&#127760; Network Scan</a>
+      <div class="cl-sb-sec">My Devices</div>
+      <button onclick="tab('devices')" id="clTab-devices" class="cl-sb-btn">&#128187; Laptop</button>
+      <button onclick="tab('devices')" class="cl-sb-btn">&#128421; Desktop</button>
+      <button onclick="tab('devices')" class="cl-sb-btn">&#128241; Mobile Phone</button>
+      <button onclick="tab('devices')" class="cl-sb-btn">&#128203; Tablet</button>
+      <button onclick="tab('devices')" class="cl-sb-btn">&#128250; Smart TV</button>
+      <button onclick="tab('devices')" class="cl-sb-btn">&#127760; Router</button>
+      <button onclick="tab('devices')" class="cl-sb-btn">&#128247; Home CCTV</button>
 
-      <div style="font-family:'Space Mono',monospace;font-size:.5rem;color:#64748b;letter-spacing:.15em;padding:.5rem 1rem .25rem;text-transform:uppercase">Privacy Center</div>
-      <a href="../dashboard/index.html" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-decoration:none">&#128268; Breach Check</a>
-      <a href="../dashboard/index.html" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-decoration:none">&#128565; Dark Web Monitor</a>
+      <div class="cl-sb-sec">Reports</div>
+      <button onclick="tab('reports')" id="clTab-reports" class="cl-sb-btn">&#128196; Scan Reports</button>
+      <button onclick="tab('summary')" id="clTab-summary" class="cl-sb-btn">&#128196; Security Reports</button>
+      <button onclick="window.print()" class="cl-sb-btn">&#11015; PDF Export</button>
 
-      <div style="font-family:'Space Mono',monospace;font-size:.5rem;color:#64748b;letter-spacing:.15em;padding:.5rem 1rem .25rem;text-transform:uppercase">Reports &amp; History</div>
-      <button onclick="tab('timeline')" id="clTab-timeline" class="cl-sb-btn" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-align:left">&#128200; Fix Timeline</button>
-      <button onclick="tab('summary')" id="clTab-summary" class="cl-sb-btn" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-align:left">&#128196; Executive Summary</button>
-      <button onclick="tab('history')" id="clTab-history" class="cl-sb-btn" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-align:left">&#128337; History</button>
+      <div class="cl-sb-sec">AI Security Assistant</div>
+      <button onclick="tab('ai')" id="clTab-ai" class="cl-sb-btn">&#129302; Security Questions</button>
+      <button onclick="tab('ai')" class="cl-sb-btn">&#128737; Threat Explanations</button>
+      <button onclick="tab('ai')" class="cl-sb-btn">&#128269; Recommendations</button>
 
-      <div style="font-family:'Space Mono',monospace;font-size:.5rem;color:#64748b;letter-spacing:.15em;padding:.5rem 1rem .25rem;text-transform:uppercase">AI &amp; Support</div>
-      <a href="../dashboard/index.html" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-decoration:none">&#129302; AI Assistant</a>
+      <div class="cl-sb-sec">Billing</div>
+      <button onclick="tab('billing')" id="clTab-billing" class="cl-sb-btn">&#128179; Subscription</button>
+      <button onclick="tab('billing')" class="cl-sb-btn">&#11014; Upgrade Plan</button>
 
-      <div style="font-family:'Space Mono',monospace;font-size:.5rem;color:#64748b;letter-spacing:.15em;padding:.5rem 1rem .25rem;text-transform:uppercase">Portals</div>
-      <a href="../dashboard/index.html" style="width:100%;background:none;border:none;border-left:2px solid transparent;padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.62rem;color:#94a3b8;cursor:pointer;text-decoration:none">&#128269; Scan Dashboard</a>
+      <div class="cl-sb-sec">Settings</div>
+      <button onclick="tab('settings')" id="clTab-settings" class="cl-sb-btn">&#128100; Profile</button>
+      <button onclick="tab('settings')" class="cl-sb-btn">&#128276; Notifications</button>
+      <button onclick="tab('settings')" class="cl-sb-btn">&#128737; Security Preferences</button>
+
+      <div class="cl-sb-sec">Portal</div>
+      <button onclick="window.location.href='../dashboard/index.html'" class="cl-sb-btn">&#128269; Scanner Dashboard</button>
+
     </nav>
     <div style="padding:.8rem 1rem;border-top:1px solid rgba(148,163,184,.1)">
       <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem">
         <div id="clAvatarSb" style="width:30px;height:30px;border-radius:50%;background:#1e40af;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:.65rem;font-weight:700;color:#fff;flex-shrink:0">U</div>
-        <div><div style="font-family:'Space Mono',monospace;font-size:.6rem;color:#f1f5f9" id="clNameSb">User</div><div style="font-family:'Space Mono',monospace;font-size:.5rem;color:#64748b">PERSONAL</div></div>
+        <div>
+          <div style="font-family:'Space Mono',monospace;font-size:.6rem;color:#f1f5f9" id="clNameSb">User</div>
+          <div style="font-family:'Space Mono',monospace;font-size:.5rem;color:#64748b">PERSONAL</div>
+        </div>
       </div>
       <button onclick="doLogout()" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:.35rem;font-family:'Space Mono',monospace;font-size:.58rem;color:#94a3b8;cursor:pointer">&#128682; Logout</button>
     </div>
@@ -412,6 +445,197 @@
     <div class="card"><div class="card-hdr"><div class="card-title">Security Score by Device</div></div>
     <div class="card-body" id="histContent"><div class="loading"><div class="spinner"></div></div></div></div>
   </div>
+<!-- ── DASHBOARD TAB ── -->
+<div class="tab-pane" id="tp-dashboard">
+  <div id="clDashHero" style="background:linear-gradient(135deg,#1e3a5f,#0f2a4a);border-radius:12px;padding:1.4rem;margin-bottom:1rem;color:#fff">
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:.8rem">
+      <div id="clScoreCircle" style="width:70px;height:70px;border-radius:50%;border:3px solid #22e3ff;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <div style="text-align:center"><div id="clScoreNum" style="font-size:1.4rem;font-weight:700;font-family:var(--mono)">--</div><div style="font-size:.45rem;color:rgba(255,255,255,.6)">SCORE</div></div>
+      </div>
+      <div>
+        <div id="clScoreLabel" style="font-size:1rem;font-weight:700">Loading your security status...</div>
+        <div id="clScoreSub" style="font-size:.75rem;color:rgba(255,255,255,.7);margin-top:.25rem">Run a scan in the Scanner Dashboard to update your score</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem">
+      <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:.6rem;text-align:center">
+        <div id="clDevCount" style="font-size:1.2rem;font-weight:700;font-family:var(--mono)">0</div>
+        <div style="font-size:.6rem;color:rgba(255,255,255,.6)">DEVICES PROTECTED</div>
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:.6rem;text-align:center">
+        <div id="clAlertCount" style="font-size:1.2rem;font-weight:700;font-family:var(--mono);color:#f59e0b">0</div>
+        <div style="font-size:.6rem;color:rgba(255,255,255,.6)">LATEST ALERTS</div>
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:.6rem;text-align:center">
+        <div id="clScanCount" style="font-size:1.2rem;font-weight:700;font-family:var(--mono)">0</div>
+        <div style="font-size:.6rem;color:rgba(255,255,255,.6)">TOTAL SCANS</div>
+      </div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">
+    <div style="background:#fff;border-radius:10px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:.78rem;font-weight:700;color:#1e293b;margin-bottom:.6rem">&#128683; Recent Issues</div>
+      <div id="clRecentIssues" style="font-size:.75rem;color:#64748b">Run a scan to see issues.</div>
+    </div>
+    <div style="background:#fff;border-radius:10px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:.78rem;font-weight:700;color:#1e293b;margin-bottom:.6rem">&#9989; Quick Actions</div>
+      <div style="display:flex;flex-direction:column;gap:.4rem">
+        <a href="../dashboard/index.html" style="display:block;padding:.45rem .7rem;background:#eff6ff;color:#1d4ed8;border-radius:6px;font-size:.72rem;font-weight:600;text-decoration:none">&#128269; Run Security Scan</a>
+        <button onclick="tab('devices')" style="display:block;padding:.45rem .7rem;background:#f0fdf4;color:#15803d;border-radius:6px;font-size:.72rem;font-weight:600;text-align:left;border:none;cursor:pointer;width:100%">&#128187; Manage My Devices</button>
+        <button onclick="tab('ai')" style="display:block;padding:.45rem .7rem;background:#fdf4ff;color:#7c3aed;border-radius:6px;font-size:.72rem;font-weight:600;text-align:left;border:none;cursor:pointer;width:100%">&#129302; Ask AI Assistant</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ALERTS TAB ── -->
+<div class="tab-pane" id="tp-alerts">
+  <h3 style="font-size:.9rem;font-weight:700;margin-bottom:.8rem;color:#1e293b">&#128276; Latest Alerts</h3>
+  <div id="clAlertsList" style="font-size:.8rem;color:#64748b">Loading alerts from scan dashboard...</div>
+</div>
+
+<!-- ── DEVICES TAB ── -->
+<div class="tab-pane" id="tp-devices">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem">
+    <h3 style="font-size:.9rem;font-weight:700;color:#1e293b">&#128187; My Devices</h3>
+    <a href="../dashboard/index.html" style="font-size:.72rem;padding:.35rem .7rem;background:#1d4ed8;color:#fff;border-radius:6px;text-decoration:none;font-weight:600">+ Add Device (Scanner)</a>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.6rem" id="clDeviceGrid">
+    <div style="background:#fff;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:1.8rem;margin-bottom:.4rem">&#128187;</div>
+      <div style="font-size:.72rem;font-weight:600;color:#1e293b">Laptop</div>
+      <div style="font-size:.62rem;color:#94a3b8;margin-top:.2rem">Not scanned</div>
+    </div>
+    <div style="background:#fff;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:1.8rem;margin-bottom:.4rem">&#128421;</div>
+      <div style="font-size:.72rem;font-weight:600;color:#1e293b">Desktop</div>
+      <div style="font-size:.62rem;color:#94a3b8;margin-top:.2rem">Not scanned</div>
+    </div>
+    <div style="background:#fff;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:1.8rem;margin-bottom:.4rem">&#128241;</div>
+      <div style="font-size:.72rem;font-weight:600;color:#1e293b">Mobile Phone</div>
+      <div style="font-size:.62rem;color:#94a3b8;margin-top:.2rem">Not scanned</div>
+    </div>
+    <div style="background:#fff;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:1.8rem;margin-bottom:.4rem">&#127760;</div>
+      <div style="font-size:.72rem;font-weight:600;color:#1e293b">Router</div>
+      <div style="font-size:.62rem;color:#94a3b8;margin-top:.2rem">Not scanned</div>
+    </div>
+    <div style="background:#fff;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:1.8rem;margin-bottom:.4rem">&#128250;</div>
+      <div style="font-size:.72rem;font-weight:600;color:#1e293b">Smart TV</div>
+      <div style="font-size:.62rem;color:#94a3b8;margin-top:.2rem">Not scanned</div>
+    </div>
+    <div style="background:#fff;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:1.8rem;margin-bottom:.4rem">&#128247;</div>
+      <div style="font-size:.72rem;font-weight:600;color:#1e293b">Home CCTV</div>
+      <div style="font-size:.62rem;color:#94a3b8;margin-top:.2rem">Not scanned</div>
+    </div>
+  </div>
+  <div style="margin-top:1rem;padding:.8rem;background:#eff6ff;border-radius:8px;font-size:.75rem;color:#1d4ed8">
+    &#128269; Use the <a href="../dashboard/index.html" style="font-weight:700">Scanner Dashboard</a> to scan and register each device. Results appear here automatically.
+  </div>
+</div>
+
+<!-- ── REPORTS TAB ── -->
+<div class="tab-pane" id="tp-reports">
+  <h3 style="font-size:.9rem;font-weight:700;margin-bottom:.8rem;color:#1e293b">&#128196; Reports</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">
+    <div style="background:#fff;border-radius:10px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:.78rem;font-weight:700;color:#1e293b;margin-bottom:.6rem">&#128269; Scan Reports</div>
+      <div id="clScanReports" style="font-size:.75rem;color:#64748b">No scan reports yet. <a href="../dashboard/index.html">Run a scan</a> to generate reports.</div>
+    </div>
+    <div style="background:#fff;border-radius:10px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:.78rem;font-weight:700;color:#1e293b;margin-bottom:.6rem">&#11015; Export</div>
+      <button onclick="window.print()" style="width:100%;padding:.5rem;background:#1d4ed8;color:#fff;border:none;border-radius:6px;font-size:.72rem;font-weight:600;cursor:pointer;margin-bottom:.4rem">&#11015; PDF Export</button>
+      <a href="../dashboard/index.html" style="display:block;text-align:center;padding:.5rem;background:#f1f5f9;color:#475569;border-radius:6px;font-size:.72rem;font-weight:600;text-decoration:none">&#128196; Full Report (Scanner)</a>
+    </div>
+  </div>
+</div>
+
+<!-- ── AI SECURITY ASSISTANT TAB ── -->
+<div class="tab-pane" id="tp-ai">
+  <h3 style="font-size:.9rem;font-weight:700;margin-bottom:.8rem;color:#1e293b">&#129302; AI Security Assistant</h3>
+  <div style="background:#f8faff;border-radius:10px;padding:1rem;margin-bottom:.8rem">
+    <div style="font-size:.75rem;color:#475569;margin-bottom:.6rem">Ask anything about your security, get threat explanations, or request recommendations.</div>
+    <div style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:.7rem" id="clAiChat">
+      <div style="background:#fff;border-radius:8px;padding:.6rem .8rem;font-size:.75rem;color:#1e293b;border-left:3px solid #7c3aed">
+        <strong>&#129302; PM::OFFSEC AI:</strong> Hello! I can help you understand your security risks, explain vulnerabilities, and suggest improvements. What would you like to know?
+      </div>
+    </div>
+    <div style="display:flex;gap:.5rem">
+      <input id="clAiInput" type="text" placeholder="Ask a security question..." style="flex:1;padding:.5rem .7rem;border:1px solid #e2e8f0;border-radius:6px;font-size:.78rem"/>
+      <button onclick="clAiSend()" style="padding:.5rem .8rem;background:#7c3aed;color:#fff;border:none;border-radius:6px;font-size:.78rem;font-weight:600;cursor:pointer">Send</button>
+    </div>
+    <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.5rem">
+      <button onclick="clAiAsk('What are my biggest security risks?')" style="padding:.25rem .5rem;background:#ede9fe;color:#7c3aed;border:none;border-radius:4px;font-size:.68rem;cursor:pointer">My biggest risks?</button>
+      <button onclick="clAiAsk('How do I enable 2FA?')" style="padding:.25rem .5rem;background:#ede9fe;color:#7c3aed;border:none;border-radius:4px;font-size:.68rem;cursor:pointer">How to enable 2FA?</button>
+      <button onclick="clAiAsk('Explain SSH vulnerabilities')" style="padding:.25rem .5rem;background:#ede9fe;color:#7c3aed;border:none;border-radius:4px;font-size:.68rem;cursor:pointer">Explain SSH vulnerabilities</button>
+      <button onclick="clAiAsk('What should I do first to improve security?')" style="padding:.25rem .5rem;background:#ede9fe;color:#7c3aed;border:none;border-radius:4px;font-size:.68rem;cursor:pointer">Quick recommendations</button>
+    </div>
+  </div>
+  <a href="../dashboard/index.html" style="display:block;text-align:center;padding:.6rem;background:#f1f5f9;color:#475569;border-radius:8px;font-size:.75rem;font-weight:600;text-decoration:none">&#128269; Full AI Analysis in Scanner Dashboard</a>
+</div>
+
+<!-- ── BILLING TAB ── -->
+<div class="tab-pane" id="tp-billing">
+  <h3 style="font-size:.9rem;font-weight:700;margin-bottom:.8rem;color:#1e293b">&#128179; Billing & Plan</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">
+    <div style="background:#fff;border-radius:10px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:.78rem;font-weight:700;color:#1e293b;margin-bottom:.5rem">Current Plan</div>
+      <div id="clCurrentPlan" style="font-size:1.2rem;font-weight:700;color:#1d4ed8;text-transform:uppercase">Free</div>
+      <div style="font-size:.72rem;color:#64748b;margin-top:.3rem">1 device · Basic scanning</div>
+      <div style="margin-top:.8rem;padding:.6rem;background:#eff6ff;border-radius:6px;font-size:.72rem;color:#1d4ed8">
+        &#11014; Upgrade to Pro for unlimited devices, dark web monitoring, and AI analysis.
+      </div>
+    </div>
+    <div style="background:#fff;border-radius:10px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:.78rem;font-weight:700;color:#1e293b;margin-bottom:.5rem">Upgrade Plan</div>
+      <div style="display:flex;flex-direction:column;gap:.4rem">
+        <div style="padding:.6rem;border:2px solid #e2e8f0;border-radius:8px">
+          <div style="font-size:.75rem;font-weight:700;color:#1e293b">Pro — $9/mo</div>
+          <div style="font-size:.65rem;color:#64748b">5 devices · Dark web · AI reports</div>
+          <button onclick="alert('Connect Stripe to enable billing')" style="width:100%;margin-top:.4rem;padding:.35rem;background:#1d4ed8;color:#fff;border:none;border-radius:5px;font-size:.68rem;cursor:pointer">Upgrade to Pro</button>
+        </div>
+        <div style="padding:.6rem;border:2px solid #e2e8f0;border-radius:8px">
+          <div style="font-size:.75rem;font-weight:700;color:#1e293b">Family — $19/mo</div>
+          <div style="font-size:.65rem;color:#64748b">10 devices · Full suite</div>
+          <button onclick="alert('Connect Stripe to enable billing')" style="width:100%;margin-top:.4rem;padding:.35rem;background:#7c3aed;color:#fff;border:none;border-radius:5px;font-size:.68rem;cursor:pointer">Upgrade to Family</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SETTINGS TAB ── -->
+<div class="tab-pane" id="tp-settings">
+  <h3 style="font-size:.9rem;font-weight:700;margin-bottom:.8rem;color:#1e293b">&#9881; Settings</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">
+    <div style="background:#fff;border-radius:10px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:.78rem;font-weight:700;color:#1e293b;margin-bottom:.6rem">&#128100; Profile</div>
+      <div style="display:flex;flex-direction:column;gap:.4rem">
+        <div><label style="font-size:.68rem;color:#64748b;display:block;margin-bottom:.15rem">Name</label><input style="width:100%;padding:.4rem .5rem;border:1px solid #e2e8f0;border-radius:5px;font-size:.75rem" id="clProfileName" placeholder="Your name"/></div>
+        <div><label style="font-size:.68rem;color:#64748b;display:block;margin-bottom:.15rem">Email</label><input style="width:100%;padding:.4rem .5rem;border:1px solid #e2e8f0;border-radius:5px;font-size:.75rem;background:#f8fafc" id="clProfileEmail" readonly/></div>
+        <button onclick="saveClProfile()" style="padding:.4rem;background:#1d4ed8;color:#fff;border:none;border-radius:5px;font-size:.7rem;cursor:pointer;margin-top:.3rem">Save Profile</button>
+      </div>
+    </div>
+    <div style="background:#fff;border-radius:10px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:.78rem;font-weight:700;color:#1e293b;margin-bottom:.6rem">&#128276; Notifications & Security</div>
+      <div style="display:flex;flex-direction:column;gap:.5rem">
+        <label style="display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:#475569"><input type="checkbox" checked/> Email alerts for critical issues</label>
+        <label style="display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:#475569"><input type="checkbox" checked/> Weekly security digest</label>
+        <label style="display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:#475569"><input type="checkbox"/> SMS alerts (Pro)</label>
+        <div style="border-top:1px solid #f1f5f9;padding-top:.5rem;margin-top:.2rem">
+          <div style="font-size:.7rem;font-weight:600;color:#1e293b;margin-bottom:.3rem">Security Preferences</div>
+          <label style="display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:#475569"><input type="checkbox" checked/> Two-factor authentication</label>
+          <label style="display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:#475569"><input type="checkbox" checked/> Login notifications</label>
+        </div>
+        <button onclick="alert('Settings saved')" style="padding:.4rem;background:#1d4ed8;color:#fff;border:none;border-radius:5px;font-size:.7rem;cursor:pointer">Save Settings</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 </div>
 </div>
@@ -496,6 +720,7 @@ function showPortal() {
   applyClientTypeUI();
   loadData();
   tab('dashboard');
+  setTimeout(loadClDashboard, 300);
 }
 
 /* ── DATA ── */
@@ -814,9 +1039,14 @@ function tab(name) {
   if(tp) tp.classList.add('active');
   if(name==='team') loadOrgDevices();
 
+  if (name === 'dashboard') setTimeout(loadClDashboard, 100);
   // Sync sidebar active state
-  var titles = { dashboard:'Security Dashboard', issues:'Issues & Fixes', team:'Device Manager',
-                 timeline:'Fix Timeline', summary:'Executive Summary', history:'Scan History' };
+  var titles = {
+    dashboard:'Security Dashboard', issues:'Issues & Fixes', team:'My Devices',
+    devices:'My Devices',          alerts:'Latest Alerts',   reports:'Scan Reports',
+    summary:'Security Reports',    history:'Scan History',   ai:'AI Security Assistant',
+    billing:'Billing & Plan',      settings:'Settings',      timeline:'Fix Timeline'
+  };
   document.querySelectorAll('.cl-sb-btn').forEach(function(b){
     var isActive = b.id === 'clTab-' + name;
     b.style.background    = isActive ? 'rgba(0,212,255,.08)' : 'none';
@@ -1112,6 +1342,137 @@ document.addEventListener('DOMContentLoaded', function() {
 
   setTimeout(loadOrgData, 1500);
 });
+
+
+function loadClDashboard() {
+  // Pull data from scan dashboard localStorage
+  var devices  = JSON.parse(localStorage.getItem('pm_devices_v3')||'[]');
+  var alerts   = JSON.parse(localStorage.getItem('pm_alerts_v3')||'[]');
+  var scanHist = JSON.parse(localStorage.getItem('pm_scan_history_v3')||'[]');
+  var avgScore = devices.length ? Math.round(devices.reduce(function(a,d){return a+(d.security_score||0);},0)/devices.length) : 0;
+  var critAlerts = alerts.filter(function(a){return (a.severity||'').toLowerCase()==='critical';}).length;
+
+  var el = function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
+  el('clScoreNum',   avgScore||'--');
+  el('clDevCount',   devices.length);
+  el('clAlertCount', critAlerts);
+  el('clScanCount',  scanHist.length);
+
+  var scoreEl = document.getElementById('clScoreNum');
+  if (scoreEl && avgScore) { scoreEl.style.color = avgScore>=75?'#22e3ff':avgScore>=50?'#f59e0b':'#ff3b5c'; }
+
+  var label = document.getElementById('clScoreLabel');
+  if (label && avgScore) {
+    label.textContent = avgScore>=75 ? 'Good — Keep it up!' : avgScore>=50 ? 'Some Issues Need Attention' : 'Security Needs Improvement';
+  }
+
+  // Recent issues
+  var issueEl = document.getElementById('clRecentIssues');
+  if (issueEl && devices.length) {
+    var findings = [];
+    devices.forEach(function(d){
+      (d.findings||[]).slice(0,2).forEach(function(f){ findings.push(f.title||f); });
+    });
+    issueEl.innerHTML = findings.length ? findings.slice(0,4).map(function(f){
+      return '<div style="padding:.3rem 0;border-bottom:1px solid #f1f5f9;font-size:.75rem;color:#475569">&#9888; '+f+'</div>';
+    }).join('') : '<div style="color:#22c55e;font-size:.75rem">&#9989; No critical issues found!</div>';
+  }
+
+  // Alerts tab
+  var alertsEl = document.getElementById('clAlertsList');
+  if (alertsEl) {
+    alertsEl.innerHTML = alerts.length ? alerts.slice(0,8).map(function(a){
+      var col = a.severity==='critical'?'#ff3b5c':a.severity==='high'?'#f59e0b':'#3b82f6';
+      return '<div style="display:flex;align-items:center;gap:.6rem;padding:.5rem 0;border-bottom:1px solid #f1f5f9">'+
+        '<span style="font-size:.62rem;font-weight:700;color:'+col+';background:'+col+'20;padding:.1rem .4rem;border-radius:4px;text-transform:uppercase">'+(a.severity||'info')+'</span>'+
+        '<span style="font-size:.75rem;color:#1e293b">'+(a.message||a.title||'Alert')+'</span></div>';
+    }).join('') : '<div style="color:#22c55e;font-size:.8rem">&#9989; No active alerts. Your system looks clean.</div>';
+  }
+
+  // Scan reports tab
+  var reportEl = document.getElementById('clScanReports');
+  if (reportEl) {
+    reportEl.innerHTML = scanHist.length ? scanHist.slice(-5).reverse().map(function(s){
+      return '<div style="padding:.4rem 0;border-bottom:1px solid #f1f5f9;font-size:.75rem;display:flex;justify-content:space-between">'+
+        '<span style="color:#1e293b">'+(s.hostname||s.host||'Device')+'</span>'+
+        '<span style="color:#64748b">'+(s.date||'').substring(0,10)+' · Score: '+(s.score||'--')+'</span></div>';
+    }).join('') : '<div style="color:#64748b;font-size:.75rem">No scan reports yet. <a href="../dashboard/index.html">Run a scan.</a></div>';
+  }
+
+  // Current plan
+  var sess = AUTH && AUTH.getSession ? AUTH.getSession() : null;
+  if (sess) {
+    el('clCurrentPlan', sess.plan || 'Free');
+    var nameEl = document.getElementById('clProfileName');
+    var emailEl = document.getElementById('clProfileEmail');
+    if (nameEl && !nameEl.value) nameEl.value = sess.name || '';
+    if (emailEl) emailEl.value = sess.email || '';
+  }
+}
+
+function clAiAsk(question) {
+  var input = document.getElementById('clAiInput');
+  if (input) { input.value = question; clAiSend(); }
+}
+
+async function clAiSend() {
+  var input  = document.getElementById('clAiInput');
+  var chat   = document.getElementById('clAiChat');
+  if (!input || !chat || !input.value.trim()) return;
+  var q = input.value.trim();
+  input.value = '';
+
+  // Add user message
+  chat.innerHTML += '<div style="background:#ede9fe;border-radius:8px;padding:.6rem .8rem;font-size:.75rem;color:#4c1d95;margin-bottom:.4rem;text-align:right">&#128100; '+q+'</div>';
+
+  // Add loading
+  var loadId = 'cl-ai-loading-'+Date.now();
+  chat.innerHTML += '<div id="'+loadId+'" style="background:#fff;border-radius:8px;padding:.6rem .8rem;font-size:.75rem;color:#64748b;border-left:3px solid #7c3aed;margin-bottom:.4rem">&#129302; Thinking...</div>';
+  chat.scrollTop = chat.scrollHeight;
+
+  // Get device context
+  var devices = JSON.parse(localStorage.getItem('pm_devices_v3')||'[]');
+  var alerts  = JSON.parse(localStorage.getItem('pm_alerts_v3')||'[]');
+  var ctx = devices.length ? 'User has '+devices.length+' device(s). Recent alerts: '+alerts.slice(0,3).map(function(a){return a.message||a.title;}).join(', ') : 'No devices scanned yet.';
+
+  try {
+    var apiUrl = (JSON.parse(localStorage.getItem('pm_settings_v3')||'{}').apiUrl || 'https://pm-offsec-backend-production.up.railway.app').replace(/\/$/,'');
+    var sess = AUTH && AUTH.getSession ? AUTH.getSession() : {};
+    var token = localStorage.getItem('pm_jwt_token') || localStorage.getItem('pm_portal_jwt') || '';
+    var r = await fetch(apiUrl+'/api/ai/chat', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token },
+      body: JSON.stringify({ message: q, context: ctx, role: 'personal' })
+    });
+    var answer = r.ok ? (await r.json()).response : null;
+    if (!answer) throw new Error('no response');
+    var loadEl = document.getElementById(loadId);
+    if (loadEl) loadEl.innerHTML = '&#129302; <strong>PM::OFFSEC AI:</strong> '+answer;
+  } catch(e) {
+    var fallbacks = {
+      '2fa': 'To enable 2FA: go to Settings → Security → Enable Two-Factor Authentication. Use an app like Google Authenticator.',
+      'ssh': 'SSH vulnerabilities include root login enabled, password authentication, and old protocol versions. Disable root login in /etc/ssh/sshd_config.',
+      'firewall': 'Enable your firewall with: sudo ufw enable && sudo ufw allow ssh. Block unnecessary ports.',
+      'password': 'Use a password manager (Bitwarden, 1Password), ensure 12+ characters with mixed case and symbols.',
+      'default': 'I can help with security questions about your devices, vulnerabilities, and best practices. For full AI analysis, open the Scanner Dashboard.'
+    };
+    var q_lower = q.toLowerCase();
+    var ans = fallbacks.default;
+    for (var k in fallbacks) { if (q_lower.includes(k)) { ans = fallbacks[k]; break; } }
+    var loadEl = document.getElementById(loadId);
+    if (loadEl) loadEl.innerHTML = '&#129302; <strong>PM::OFFSEC AI:</strong> '+ans;
+  }
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function saveClProfile() {
+  var name = (document.getElementById('clProfileName').value||'').trim();
+  if (!name) return;
+  var sess = AUTH && AUTH.getSession ? AUTH.getSession() : {};
+  sess.name = name;
+  try { localStorage.setItem('pm_session_v2', JSON.stringify(sess)); } catch(e){}
+  alert('Profile saved');
+}
 
 </script>
 </body>

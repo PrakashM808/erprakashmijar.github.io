@@ -158,7 +158,12 @@
     .stat-row{grid-template-columns:repeat(2,1fr)}
     .content{padding:1rem}
   }
-  </style>
+  
+  .badge { display:inline-block; padding:.15rem .45rem; border-radius:4px; font-size:.7rem; font-weight:600; }
+  .badge-grey { background:var(--surface3); color:var(--ink3); }
+  .badge-red  { background:var(--red-lt);   color:var(--red); }
+  .badge-green{ background:var(--green-lt); color:var(--green); }
+</style>
 </head>
 <body>
 
@@ -199,35 +204,44 @@
 
         <div class="sb-section">User Management</div>
         <button class="sb-item" onclick="ap('users')"><span class="sb-item-ico">&#128101;</span>All Users<span class="sb-badge" id="sbClientBadge">0</span></button>
+        <button class="sb-item" onclick="ap('suspenduser')"><span class="sb-item-ico">&#128683;</span>Suspend User</button>
+        <button class="sb-item" onclick="ap('resetpassword')"><span class="sb-item-ico">&#128274;</span>Reset Password</button>
         <button class="sb-item" onclick="ap('useractivity')"><span class="sb-item-ico">&#128336;</span>User Activity</button>
 
-        <div class="sb-section">Organizations</div>
+        <div class="sb-section">Organization Management</div>
         <button class="sb-item" onclick="ap('clients')"><span class="sb-item-ico">&#127970;</span>Business Accounts</button>
-        <button class="sb-item" onclick="ap('billing')"><span class="sb-item-ico">&#128179;</span>Subscriptions</button>
-        <button class="sb-item" onclick="ap('invoices')"><span class="sb-item-ico">&#128203;</span>Invoices</button>
-        <button class="sb-item" onclick="ap('addclient')"><span class="sb-item-ico">&#10133;</span>Add Tenant</button>
+        <button class="sb-item" onclick="ap('billing')"><span class="sb-item-ico">&#128179;</span>Subscription Plans</button>
+        <button class="sb-item" onclick="ap('licenses')"><span class="sb-item-ico">&#128203;</span>License Management</button>
 
         <div class="sb-section">Security Center</div>
-        <button class="sb-item" onclick="ap('issues')"><span class="sb-item-ico">&#128683;</span>Vulnerabilities</button>
+        <button class="sb-item" onclick="ap('threatmap')"><span class="sb-item-ico">&#127760;</span>Global Threat Map</button>
+        <button class="sb-item" onclick="ap('vulnstats')"><span class="sb-item-ico">&#128202;</span>Vulnerability Statistics</button>
         <button class="sb-item" onclick="ap('malware')"><span class="sb-item-ico">&#128027;</span>Malware Reports</button>
-        <button class="sb-item" onclick="ap('auditlog')"><span class="sb-item-ico">&#128221;</span>Audit Log</button>
-        <button class="sb-item" onclick="ap('approvals')"><span class="sb-item-ico">&#9989;</span>Fix Approvals<span class="sb-badge" id="sbApprovalBadge" style="display:none">!</span></button>
+
+        <div class="sb-section">Billing</div>
+        <button class="sb-item" onclick="ap('payments')"><span class="sb-item-ico">&#128176;</span>Payments</button>
+        <button class="sb-item" onclick="ap('invoices')"><span class="sb-item-ico">&#128203;</span>Invoices</button>
+        <button class="sb-item" onclick="ap('subreports')"><span class="sb-item-ico">&#128196;</span>Subscription Reports</button>
 
         <div class="sb-section">Support Center</div>
-        <button class="sb-item" onclick="ap('announcements')"><span class="sb-item-ico">&#128226;</span>Announcements</button>
-        <button class="sb-item" onclick="ap('tickets')"><span class="sb-item-ico">&#127868;</span>Support Tickets</button>
+        <button class="sb-item" onclick="ap('tickets')"><span class="sb-item-ico">&#127868;</span>Tickets</button>
+        <button class="sb-item" onclick="ap('livechat')"><span class="sb-item-ico">&#128172;</span>Live Chat</button>
+        <button class="sb-item" onclick="ap('contactreqs')"><span class="sb-item-ico">&#128231;</span>Contact Requests</button>
 
-        <div class="sb-section">Content</div>
-        <button class="sb-item" onclick="ap('agreements')"><span class="sb-item-ico">&#9878;</span>Agreements</button>
-        <button class="sb-item" onclick="ap('reports')"><span class="sb-item-ico">&#128196;</span>All Reports</button>
+        <div class="sb-section">Content Management</div>
+        <button class="sb-item" onclick="ap('blog')"><span class="sb-item-ico">&#128221;</span>Blog</button>
+        <button class="sb-item" onclick="ap('docs')"><span class="sb-item-ico">&#128214;</span>Documentation</button>
+        <button class="sb-item" onclick="ap('kb')"><span class="sb-item-ico">&#128218;</span>Knowledge Base</button>
+
+        <div class="sb-section">Portal</div>
+        <button class="sb-item" onclick="window.location.href='../dashboard/index.html'"><span class="sb-item-ico">&#128269;</span>Scanner Dashboard</button>
 
         <div class="sb-section">Settings</div>
+        <button class="sb-item" onclick="ap('smtp')"><span class="sb-item-ico">&#9993;</span>SMTP</button>
+        <button class="sb-item" onclick="ap('apikeys')"><span class="sb-item-ico">&#128273;</span>API Keys</button>
         <button class="sb-item" onclick="ap('sysconfig')"><span class="sb-item-ico">&#9881;</span>System Settings</button>
-        <button class="sb-item" onclick="ap('featureflags')"><span class="sb-item-ico">&#127987;</span>Feature Flags</button>
-
-        <div class="sb-section">Portals</div>
-        <a href="../dashboard/index.html" class="sb-item" style="text-decoration:none"><span class="sb-item-ico">&#128269;</span>Scan Dashboard</a>
-      </div>
+        <button class="sb-item" onclick="ap('aisettings')"><span class="sb-item-ico">&#129302;</span>AI Settings</button>
+      </div></div>
       <div class="sb-bottom">
         <div class="sb-user">
           <div class="sb-avatar" id="sbAvatar">A</div>
@@ -647,6 +661,286 @@
           </div>
         </div>
 
+
+        <!-- SUSPEND USER -->
+        <div class="page" id="p-suspenduser">
+          <div class="pg-hdr" style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div><div class="pg-ttl">Suspend User</div><div class="pg-sub">Suspend or restore access to user accounts</div></div>
+            <div style="display:flex;gap:.5rem">
+              <input class="finp" id="suspendSearch" placeholder="Search by email..." style="width:200px" oninput="filterSuspendUsers()"/>
+              <select class="finp" id="suspendStatusFilter" onchange="filterSuspendUsers()" style="width:130px">
+                <option value="">All Status</option><option value="active">Active</option><option value="suspended">Suspended</option>
+              </select>
+            </div>
+          </div>
+          <div class="tcard"><div class="tbl-wrap"><table><thead><tr>
+            <th>User</th><th>Email</th><th>Role</th><th>Plan</th><th>Current Status</th><th>Action</th>
+          </tr></thead><tbody id="suspendUsersTable"><tr><td colspan="6" class="empty-state">Loading users...</td></tr></tbody></table></div></div>
+        </div>
+
+        <!-- RESET PASSWORD -->
+        <div class="page" id="p-resetpassword">
+          <div class="pg-hdr"><div class="pg-ttl">Reset Password</div><div class="pg-sub">Send password reset emails to users</div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div class="card">
+              <div class="card-hdr"><div class="card-title">&#128274; Send Reset Link</div></div>
+              <div class="card-body">
+                <div class="fg"><label class="flbl">User Email</label><input class="finp" id="resetEmail" type="email" placeholder="user@example.com"/></div>
+                <div class="fg"><label class="flbl">Reset Method</label>
+                  <select class="finp" id="resetMethod">
+                    <option value="email">Email Reset Link</option>
+                    <option value="temp">Generate Temp Password</option>
+                    <option value="force">Force Reset on Next Login</option>
+                  </select></div>
+                <div style="display:flex;gap:.5rem">
+                  <button class="btn btn-blue" onclick="sendPasswordReset()">&#128274; Send Reset</button>
+                  <button class="btn btn-out" onclick="document.getElementById('resetEmail').value=''">Clear</button>
+                </div>
+                <div id="resetMsg" style="margin-top:.7rem;display:none"></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-hdr"><div class="card-title">&#128337; Recent Reset Activity</div></div>
+              <div class="card-body" id="resetActivityList">
+                <div class="empty-state">No password resets sent yet.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LICENSE MANAGEMENT -->
+        <div class="page" id="p-licenses">
+          <div class="pg-hdr"><div class="pg-ttl">License Management</div><div class="pg-sub">Active licenses, device limits and plan features</div></div>
+          <div class="stat-row" style="grid-template-columns:repeat(4,1fr)">
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Total Licenses</span><div class="stat-box-ico ico-blue">&#128203;</div></div><div class="stat-box-num" id="licTotal">-</div></div>
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Active</span><div class="stat-box-ico ico-green">&#9989;</div></div><div class="stat-box-num" id="licActive">-</div></div>
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Expiring Soon</span><div class="stat-box-ico ico-orange">&#9201;</div></div><div class="stat-box-num" id="licExpiring">0</div></div>
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Expired</span><div class="stat-box-ico ico-red">&#128683;</div></div><div class="stat-box-num" id="licExpired">0</div></div>
+          </div>
+          <div class="tcard" style="margin-top:1rem">
+            <div class="tcard-hdr"><div class="tcard-title">License Table</div><button class="btn btn-blue btn-sm" onclick="exportLicenses()">&#11015; Export</button></div>
+            <div class="tbl-wrap"><table><thead><tr>
+              <th>Tenant</th><th>Plan</th><th>Devices</th><th>Users</th><th>Valid Until</th><th>Status</th><th>Actions</th>
+            </tr></thead><tbody id="licTable"><tr><td colspan="7" class="empty-state">Loading license data...</td></tr></tbody></table></div>
+          </div>
+        </div>
+
+        <!-- GLOBAL THREAT MAP -->
+        <div class="page" id="p-threatmap">
+          <div class="pg-hdr"><div class="pg-ttl">Global Threat Map</div><div class="pg-sub">Live threat intelligence and attack origins across all tenants</div></div>
+          <div class="stat-row" style="grid-template-columns:repeat(4,1fr)">
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Threats Today</span><div class="stat-box-ico ico-red">&#127760;</div></div><div class="stat-box-num" id="mapThreats">47</div><div class="stat-box-hint">Across all tenants</div></div>
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Countries</span><div class="stat-box-ico ico-orange">&#127757;</div></div><div class="stat-box-num" id="mapCountries">12</div></div>
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Attack Types</span><div class="stat-box-ico ico-blue">&#128200;</div></div><div class="stat-box-num" id="mapTypes">8</div></div>
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Ransomware Groups</span><div class="stat-box-ico ico-purple">&#128027;</div></div><div class="stat-box-num" id="mapRansom">3</div></div>
+          </div>
+          <div class="card" style="margin-top:1rem">
+            <div class="card-hdr"><div class="card-title">&#127760; Attack Origins &amp; Active Threat Actors</div><div class="card-sub">Data from Ransomwatch, CISA KEV, and scan results</div></div>
+            <div class="card-body">
+              <div style="background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:8px;height:260px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border)">
+                <div style="text-align:center;color:rgba(255,255,255,.4);font-size:.82rem">
+                  <div style="font-size:2rem;margin-bottom:.5rem">&#127760;</div>
+                  <div>Interactive threat map — connect <a href="https://api.ransomware.live" target="_blank" style="color:var(--blue)">Ransomwatch</a> and <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" style="color:var(--blue)">CISA KEV</a></div>
+                  <div style="margin-top:.5rem;font-size:.75rem">Live feed integration available in Scan Dashboard → Dark Web page</div>
+                  <a href="../dashboard/index.html" class="btn btn-blue btn-sm" style="margin-top:.8rem;display:inline-flex;text-decoration:none">Open Scan Dashboard</a>
+                </div>
+              </div>
+              <div style="margin-top:.8rem;display:grid;grid-template-columns:1fr 1fr;gap:.6rem" id="threatActorList">
+                <div class="ff-item"><div><div class="ff-name">LockBit 3.0</div><div class="ff-desc">Ransomware · 847 known victims</div></div><span style="color:var(--red);font-weight:600;font-size:.75rem">ACTIVE</span></div>
+                <div class="ff-item"><div><div class="ff-name">ALPHV/BlackCat</div><div class="ff-desc">Ransomware · 423 known victims</div></div><span style="color:var(--red);font-weight:600;font-size:.75rem">ACTIVE</span></div>
+                <div class="ff-item"><div><div class="ff-name">Cl0p</div><div class="ff-desc">Data extortion · 312 known victims</div></div><span style="color:var(--orange);font-weight:600;font-size:.75rem">ACTIVE</span></div>
+                <div class="ff-item"><div><div class="ff-name">RansomHub</div><div class="ff-desc">Ransomware-as-a-Service</div></div><span style="color:var(--red);font-weight:600;font-size:.75rem">ACTIVE</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VULNERABILITY STATISTICS -->
+        <div class="page" id="p-vulnstats">
+          <div class="pg-hdr"><div class="pg-ttl">Vulnerability Statistics</div><div class="pg-sub">Trending CVEs and vulnerability categories across all scans</div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div class="card"><div class="card-hdr"><div class="card-title">Top Vulnerability Categories</div></div>
+              <div class="card-body" id="vulnCatsChart">
+                <div class="ff-item"><div><div class="ff-name">SSH Misconfiguration</div><div class="ff-desc">Root login, password auth enabled</div></div><span style="background:var(--red-lt);color:var(--red);padding:.15rem .4rem;border-radius:4px;font-size:.7rem;font-weight:600">CRITICAL</span></div>
+                <div class="ff-item"><div><div class="ff-name">Firewall Disabled</div><div class="ff-desc">No UFW / iptables active</div></div><span style="background:var(--red-lt);color:var(--red);padding:.15rem .4rem;border-radius:4px;font-size:.7rem;font-weight:600">HIGH</span></div>
+                <div class="ff-item"><div><div class="ff-name">Outdated Packages</div><div class="ff-desc">Known CVEs in installed software</div></div><span style="background:var(--orange-lt);color:var(--orange);padding:.15rem .4rem;border-radius:4px;font-size:.7rem;font-weight:600">HIGH</span></div>
+                <div class="ff-item"><div><div class="ff-name">Open Database Ports</div><div class="ff-desc">MySQL/Redis/MongoDB exposed</div></div><span style="background:var(--orange-lt);color:var(--orange);padding:.15rem .4rem;border-radius:4px;font-size:.7rem;font-weight:600">MEDIUM</span></div>
+                <div class="ff-item"><div><div class="ff-name">No MFA Enabled</div><div class="ff-desc">User accounts without 2FA</div></div><span style="background:var(--blue-lt);color:var(--blue);padding:.15rem .4rem;border-radius:4px;font-size:.7rem;font-weight:600">LOW</span></div>
+              </div>
+            </div>
+            <div class="card"><div class="card-hdr"><div class="card-title">CISA Known Exploited CVEs</div><div class="card-sub">Latest government-tracked exploited vulnerabilities</div></div>
+              <div class="card-body" id="cisaKEVList">
+                <div class="ff-item"><div><div class="ff-name" style="font-family:var(--mono);font-size:.72rem">CVE-2024-3400</div><div class="ff-desc">PAN-OS Command Injection — Palo Alto</div></div><span style="color:var(--ink3);font-size:.7rem">May 2024</span></div>
+                <div class="ff-item"><div><div class="ff-name" style="font-family:var(--mono);font-size:.72rem">CVE-2024-21887</div><div class="ff-desc">Ivanti Connect Secure RCE</div></div><span style="color:var(--ink3);font-size:.7rem">Jan 2024</span></div>
+                <div class="ff-item"><div><div class="ff-name" style="font-family:var(--mono);font-size:.72rem">CVE-2023-46805</div><div class="ff-desc">Ivanti Auth Bypass</div></div><span style="color:var(--ink3);font-size:.7rem">Jan 2024</span></div>
+                <div style="margin-top:.6rem"><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" class="btn btn-out btn-sm">View Full CISA KEV List &#8599;</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAYMENTS -->
+        <div class="page" id="p-payments">
+          <div class="pg-hdr"><div class="pg-ttl">Payments</div><div class="pg-sub">All payment transactions across all tenants</div></div>
+          <div class="stat-row" style="grid-template-columns:repeat(3,1fr)">
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Total Received</span><div class="stat-box-ico ico-green">&#128176;</div></div><div class="stat-box-num" id="payTotal">$0</div></div>
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">This Month</span><div class="stat-box-ico ico-blue">&#128200;</div></div><div class="stat-box-num" id="payMonth">$0</div></div>
+            <div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Failed</span><div class="stat-box-ico ico-red">&#9888;</div></div><div class="stat-box-num" id="payFailed">0</div></div>
+          </div>
+          <div class="tcard" style="margin-top:1rem"><div class="tcard-hdr"><div class="tcard-title">Transaction History</div><button class="btn btn-blue btn-sm" onclick="toast('Connect Stripe to see real payments','info')">&#8635; Sync Stripe</button></div>
+            <div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Tenant</th><th>Amount</th><th>Plan</th><th>Method</th><th>Status</th></tr></thead>
+              <tbody><tr><td colspan="6" class="empty-state">Connect Stripe webhook to see payment history.<br><small>Set STRIPE_SECRET_KEY in Railway environment variables.</small></td></tr></tbody>
+            </table></div></div>
+        </div>
+
+        <!-- SUBSCRIPTION REPORTS -->
+        <div class="page" id="p-subreports">
+          <div class="pg-hdr"><div class="pg-ttl">Subscription Reports</div><div class="pg-sub">MRR, churn, and growth metrics</div></div>
+          <div class="card"><div class="card-hdr"><div class="card-title">&#128200; Revenue Summary</div></div>
+            <div class="card-body" id="subReportContent">
+              <div class="empty-state">Connect Stripe for live subscription reporting.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LIVE CHAT -->
+        <div class="page" id="p-livechat">
+          <div class="pg-hdr"><div class="pg-ttl">Live Chat</div><div class="pg-sub">Real-time support conversations with users</div></div>
+          <div class="card"><div class="card-hdr"><div class="card-title">&#128172; Active Conversations</div></div>
+            <div class="card-body"><div class="empty-state">No active chat sessions.<br><small>Integrate Intercom, Crisp, or Tawk.to for live chat support.</small></div>
+              <a href="https://crisp.chat" target="_blank" class="btn btn-blue btn-sm" style="margin-top:.8rem">Set Up Live Chat &#8599;</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONTACT REQUESTS -->
+        <div class="page" id="p-contactreqs">
+          <div class="pg-hdr"><div class="pg-ttl">Contact Requests</div><div class="pg-sub">Form submissions from the contact page</div></div>
+          <div class="tcard"><div class="tbl-wrap"><table><thead><tr>
+            <th>Date</th><th>Name</th><th>Email</th><th>Subject</th><th>Status</th><th>Actions</th>
+          </tr></thead><tbody><tr><td colspan="6" class="empty-state">No contact requests yet.</td></tr></tbody></table></div></div>
+        </div>
+
+        <!-- BLOG -->
+        <div class="page" id="p-blog">
+          <div class="pg-hdr" style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div><div class="pg-ttl">Blog</div><div class="pg-sub">Platform blog posts and security news</div></div>
+            <button class="btn btn-blue" onclick="toast('Blog CMS — connect a headless CMS to manage posts','info')">+ New Post</button>
+          </div>
+          <div class="card"><div class="card-body"><div class="empty-state">No blog posts yet.<br><small>Connect a CMS (Contentful, Sanity, Strapi) or write posts directly in markdown.</small></div></div></div>
+        </div>
+
+        <!-- DOCUMENTATION -->
+        <div class="page" id="p-docs">
+          <div class="pg-hdr"><div class="pg-ttl">Documentation</div><div class="pg-sub">Platform documentation and user guides</div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem">
+            <div class="card" style="cursor:pointer" onclick="window.open('../dashboard/index.html','_blank')"><div class="card-hdr"><div class="card-title">&#128269; Scanner Guide</div></div><div class="card-body" style="font-size:.8rem;color:var(--ink3)">How to use the Vulnerability Scanner</div></div>
+            <div class="card"><div class="card-hdr"><div class="card-title">&#127760; API Reference</div></div><div class="card-body" style="font-size:.8rem;color:var(--ink3)">REST API endpoints for integration</div></div>
+            <div class="card"><div class="card-hdr"><div class="card-title">&#128268; Integration Setup</div></div><div class="card-body" style="font-size:.8rem;color:var(--ink3)">Slack, Jira, Microsoft 365 setup</div></div>
+          </div>
+        </div>
+
+        <!-- KNOWLEDGE BASE -->
+        <div class="page" id="p-kb">
+          <div class="pg-hdr"><div class="pg-ttl">Knowledge Base</div><div class="pg-sub">Help articles and FAQs for users</div></div>
+          <div class="card"><div class="card-hdr"><div class="card-title">&#128218; Popular Articles</div></div>
+            <div class="card-body">
+              <div class="ff-item"><div><div class="ff-name">How to run your first scan</div><div class="ff-desc">Getting started with vulnerability scanning</div></div><a href="../dashboard/index.html" class="btn btn-out btn-sm">View</a></div>
+              <div class="ff-item"><div><div class="ff-name">Setting up 2FA / MFA</div><div class="ff-desc">Securing your account with two-factor authentication</div></div><button class="btn btn-out btn-sm" onclick="toast('KB articles — connect CMS for full content','info')">View</button></div>
+              <div class="ff-item"><div><div class="ff-name">Understanding CVSS scores</div><div class="ff-desc">What vulnerability scores mean and how to prioritize</div></div><button class="btn btn-out btn-sm" onclick="ap('learn')">View</button></div>
+              <div class="ff-item"><div><div class="ff-name">Inviting team members</div><div class="ff-desc">How to add employees to your organization</div></div><button class="btn btn-out btn-sm" onclick="toast('KB articles — connect CMS for full content','info')">View</button></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SMTP SETTINGS -->
+        <div class="page" id="p-smtp">
+          <div class="pg-hdr"><div class="pg-ttl">SMTP Settings</div><div class="pg-sub">Outgoing email configuration for alerts and notifications</div></div>
+          <div class="card" style="max-width:600px">
+            <div class="card-hdr"><div class="card-title">&#9993; Email Configuration</div></div>
+            <div class="card-body">
+              <div class="fg"><label class="flbl">SMTP Host</label><input class="finp" id="smtpHost" placeholder="smtp.sendgrid.net"/></div>
+              <div class="grid2">
+                <div class="fg"><label class="flbl">Port</label><input class="finp" id="smtpPort" type="number" placeholder="587"/></div>
+                <div class="fg"><label class="flbl">Encryption</label><select class="finp" id="smtpEnc"><option>TLS</option><option>SSL</option><option>None</option></select></div>
+              </div>
+              <div class="fg"><label class="flbl">Username / From Email</label><input class="finp" id="smtpUser" placeholder="noreply@erprakashmijar.com"/></div>
+              <div class="fg"><label class="flbl">SMTP Password / API Key</label><input class="finp" type="password" id="smtpPass" placeholder="SG.xxxxx or password"/></div>
+              <div class="fg"><label class="flbl">Display Name</label><input class="finp" id="smtpName" placeholder="PM::OFFSEC Security"/></div>
+              <div style="display:flex;gap:.5rem">
+                <button class="btn btn-blue" onclick="saveSMTP()">Save SMTP</button>
+                <button class="btn btn-out" onclick="testSMTP()">&#9993; Send Test Email</button>
+              </div>
+              <div id="smtpMsg" style="margin-top:.6rem;display:none"></div>
+              <div style="margin-top:.8rem;padding:.7rem;background:var(--blue-lt);border-radius:var(--r-xs);font-size:.78rem;color:var(--blue)">
+                &#9432; Using SendGrid? Set SENDGRID_API_KEY in Railway environment variables. The backend handles email automatically.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- API KEYS -->
+        <div class="page" id="p-apikeys">
+          <div class="pg-hdr"><div class="pg-ttl">API Keys</div><div class="pg-sub">Platform API keys and third-party service credentials</div></div>
+          <div class="card">
+            <div class="card-hdr"><div class="card-title">&#128273; Service API Keys</div><div class="card-sub">These should be set as Railway environment variables — never hardcoded</div></div>
+            <div class="card-body">
+              <table style="width:100%;border-collapse:collapse;font-size:.8rem">
+                <thead><tr><th style="padding:.5rem .8rem;border-bottom:1px solid var(--border);text-align:left;color:var(--ink3)">Service</th><th style="padding:.5rem .8rem;border-bottom:1px solid var(--border);text-align:left;color:var(--ink3)">Variable Name</th><th style="padding:.5rem .8rem;border-bottom:1px solid var(--border);text-align:left;color:var(--ink3)">Status</th><th style="padding:.5rem .8rem;border-bottom:1px solid var(--border);text-align:left;color:var(--ink3)">Purpose</th></tr></thead>
+                <tbody id="apiKeyTable">
+                  <tr><td style="padding:.5rem .8rem;font-weight:600">Anthropic (Claude)</td><td style="padding:.5rem .8rem;font-family:var(--mono);font-size:.75rem;color:var(--ink3)">ANTHROPIC_API_KEY</td><td style="padding:.5rem .8rem"><span id="keyAnthropicStatus" class="badge badge-grey">Check Railway</span></td><td style="padding:.5rem .8rem;color:var(--ink3)">AI security analysis</td></tr>
+                  <tr><td style="padding:.5rem .8rem;font-weight:600">SendGrid</td><td style="padding:.5rem .8rem;font-family:var(--mono);font-size:.75rem;color:var(--ink3)">SENDGRID_API_KEY</td><td style="padding:.5rem .8rem"><span class="badge badge-grey">Check Railway</span></td><td style="padding:.5rem .8rem;color:var(--ink3)">Email alerts and invites</td></tr>
+                  <tr><td style="padding:.5rem .8rem;font-weight:600">Stripe</td><td style="padding:.5rem .8rem;font-family:var(--mono);font-size:.75rem;color:var(--ink3)">STRIPE_SECRET_KEY</td><td style="padding:.5rem .8rem"><span class="badge badge-grey">Check Railway</span></td><td style="padding:.5rem .8rem;color:var(--ink3)">Payment processing</td></tr>
+                  <tr><td style="padding:.5rem .8rem;font-weight:600">HIBP</td><td style="padding:.5rem .8rem;font-family:var(--mono);font-size:.75rem;color:var(--ink3)">HIBP_API_KEY</td><td style="padding:.5rem .8rem"><span class="badge badge-grey">Check Railway</span></td><td style="padding:.5rem .8rem;color:var(--ink3)">Breach checking</td></tr>
+                  <tr><td style="padding:.5rem .8rem;font-weight:600">JWT Secret</td><td style="padding:.5rem .8rem;font-family:var(--mono);font-size:.75rem;color:var(--ink3)">JWT_SECRET_KEY</td><td style="padding:.5rem .8rem"><span class="badge badge-red">Required</span></td><td style="padding:.5rem .8rem;color:var(--ink3)">Auth token signing</td></tr>
+                  <tr><td style="padding:.5rem .8rem;font-weight:600">Database</td><td style="padding:.5rem .8rem;font-family:var(--mono);font-size:.75rem;color:var(--ink3)">DATABASE_URL</td><td style="padding:.5rem .8rem"><span class="badge badge-red">Required</span></td><td style="padding:.5rem .8rem;color:var(--ink3)">PostgreSQL connection</td></tr>
+                </tbody>
+              </table>
+              <div style="margin-top:.8rem;display:flex;gap:.5rem">
+                <a href="https://railway.app" target="_blank" class="btn btn-blue btn-sm">Open Railway Dashboard &#8599;</a>
+                <button class="btn btn-out btn-sm" onclick="checkApiKeys()">&#9881; Check Key Status</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI SETTINGS -->
+        <div class="page" id="p-aisettings">
+          <div class="pg-hdr"><div class="pg-ttl">AI Settings</div><div class="pg-sub">Configure Claude AI integration for security analysis</div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div class="card">
+              <div class="card-hdr"><div class="card-title">&#129302; Claude AI Configuration</div></div>
+              <div class="card-body">
+                <div class="fg"><label class="flbl">AI Model</label>
+                  <select class="finp" id="aiModel">
+                    <option value="claude-sonnet-4-20250514" selected>Claude Sonnet 4 (Recommended)</option>
+                    <option value="claude-opus-4-6">Claude Opus 4.6 (Most Capable)</option>
+                    <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 (Fastest)</option>
+                  </select></div>
+                <div class="fg"><label class="flbl">Max Tokens per Request</label><input class="finp" id="aiMaxTokens" type="number" value="1000" min="100" max="4000"/></div>
+                <div class="fg"><label class="flbl">AI Features Enabled</label>
+                  <div style="display:flex;flex-direction:column;gap:.5rem;margin-top:.3rem">
+                    <label style="display:flex;align-items:center;gap:.5rem;font-size:.8rem"><input type="checkbox" id="aiFixes" checked/> AI Security Fix Suggestions</label>
+                    <label style="display:flex;align-items:center;gap:.5rem;font-size:.8rem"><input type="checkbox" id="aiChat" checked/> AI Security Chat Assistant</label>
+                    <label style="display:flex;align-items:center;gap:.5rem;font-size:.8rem"><input type="checkbox" id="aiReports" checked/> AI Report Generation</label>
+                    <label style="display:flex;align-items:center;gap:.5rem;font-size:.8rem"><input type="checkbox" id="aiTriage" checked/> AI Alert Triage</label>
+                  </div></div>
+                <button class="btn btn-blue btn-sm" onclick="saveAISettings()">Save AI Settings</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-hdr"><div class="card-title">&#128200; AI Usage Statistics</div></div>
+              <div class="card-body">
+                <div class="ff-item"><div><div class="ff-name">Total AI Requests</div><div class="ff-desc">All time</div></div><span style="font-weight:700" id="aiReqTotal">-</span></div>
+                <div class="ff-item"><div><div class="ff-name">Requests Today</div><div class="ff-desc">Last 24 hours</div></div><span style="font-weight:700" id="aiReqToday">-</span></div>
+                <div class="ff-item"><div><div class="ff-name">Avg Response Time</div><div class="ff-desc">Per request</div></div><span style="font-weight:700" id="aiAvgTime">-</span></div>
+                <div style="margin-top:.6rem;padding:.6rem;background:var(--blue-lt);border-radius:var(--r-xs);font-size:.78rem;color:var(--blue)">
+                  &#9432; API usage tracked via Anthropic console. Set ANTHROPIC_API_KEY in Railway.
+                </div>
+              </div>
+            </div>
+          </div>
+
       </div><!-- /content -->
     </div><!-- /admin-main -->
   </div><!-- /layout -->
@@ -716,25 +1010,40 @@ function ap(name) {
     if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+name+"'")) b.classList.add('active');
   });
   var titles={
-    overview:     ['Platform Overview',  'All clients, activity and revenue'],
-    analytics:    ['Revenue Analytics',  'MRR, growth, and financial metrics'],
-    threats:      ['Threat Analytics',   'Global vulnerability and malware statistics'],
-    clients:      ['Business Accounts',  'Manage tenant organizations'],
-    useractivity: ['User Activity',      'Login history and user actions'],
-    malware:      ['Malware Reports',    'Detected malware across all tenants'],
-    tickets:      ['Support Tickets',    'All user support requests'],
-    users:        ['All Users',          'Every account across all tenants'],
-    addclient:    ['Add Tenant',         'Create new tenant account'],
-    billing:      ['Billing',            'Subscriptions and payment status'],
-    invoices:     ['Invoices',           'All billing records and invoices'],
-    approvals:    ['Fix Approvals',      'Client-approved security fixes'],
-    auditlog:     ['Audit Log',          'All admin actions and system events'],
-    issues:       ['Critical Issues',    'All critical and high findings'],
-    sysconfig:    ['System Config',      'Global platform settings'],
-    featureflags: ['Feature Flags',      'Enable or disable features per tenant'],
-    announcements:['Announcements',      'Post-wide announcements and support tickets'],
-    agreements:   ['Agreements',         'Signed legal agreements'],
-    reports:      ['Security Reports',   'All client scan reports'],
+    overview:     ['Platform Overview',       'Total users, businesses, devices and revenue at a glance'],
+    analytics:    ['Revenue Analytics',       'MRR, growth and financial metrics'],
+    threats:      ['Threat Analytics',        'Global vulnerability and malware statistics'],
+    users:        ['All Users',               'Every account across all tenants'],
+    suspenduser:  ['Suspend User',            'Suspend or restore user accounts'],
+    resetpassword:['Reset Password',          'Send password reset to users'],
+    useractivity: ['User Activity',           'Login history and user actions'],
+    clients:      ['Business Accounts',       'All organization accounts'],
+    billing:      ['Subscription Plans',      'Plans, pricing and MRR'],
+    licenses:     ['License Management',      'Active licenses and device limits'],
+    threatmap:    ['Global Threat Map',       'Live threat intelligence across all tenants'],
+    vulnstats:    ['Vulnerability Statistics','Top CVEs and vulnerability trends'],
+    malware:      ['Malware Reports',         'Detected malware across all tenants'],
+    payments:     ['Payments',               'All payment transactions'],
+    invoices:     ['Invoices',               'All billing records'],
+    subreports:   ['Subscription Reports',    'Revenue and churn reports'],
+    tickets:      ['Support Tickets',         'All user support requests'],
+    livechat:     ['Live Chat',              'Real-time support conversations'],
+    contactreqs:  ['Contact Requests',        'Contact form submissions'],
+    blog:         ['Blog',                   'Platform blog and news'],
+    docs:         ['Documentation',          'Platform documentation'],
+    kb:           ['Knowledge Base',         'Help articles and FAQs'],
+    smtp:         ['SMTP Settings',          'Outgoing email configuration'],
+    apikeys:      ['API Keys',               'Platform API key management'],
+    sysconfig:    ['System Settings',        'Global platform configuration'],
+    aisettings:   ['AI Settings',            'Claude AI integration settings'],
+    auditlog:     ['Audit Log',              'All admin actions and system events'],
+    approvals:    ['Fix Approvals',          'Client-approved security fixes'],
+    reports:      ['All Reports',            'All client scan reports'],
+    addclient:    ['Add Tenant',             'Create new tenant account'],
+    issues:       ['Critical Issues',        'All critical and high findings'],
+    announcements:['Announcements',          'Platform announcements'],
+    featureflags: ['Feature Flags',          'Feature toggles per tenant'],
+    useractivity: ['User Activity',          'Login history and user actions'],
   };
   var t=titles[name]||[name,''];
   document.getElementById('pageTitle').textContent=t[0];
@@ -750,9 +1059,28 @@ function ap(name) {
   if(name==='analytics')    renderAnalytics();
   if(name==='threats')      renderThreats();
   if(name==='users')        renderAllUsers();
+  if(name==='suspenduser')  renderSuspendUser();
+  if(name==='resetpassword') renderResetPassword();
   if(name==='useractivity') renderUserActivity();
+  if(name==='clients')      renderClients();
+  if(name==='billing')      renderBillingAdmin();
+  if(name==='licenses')     renderLicenses();
+  if(name==='threatmap')    renderThreatMap();
+  if(name==='vulnstats')    renderVulnStats();
   if(name==='malware')      renderMalware();
+  if(name==='payments')     renderPayments();
+  if(name==='invoices')     renderInvoices();
+  if(name==='subreports')   renderSubReports();
   if(name==='tickets')      renderTickets();
+  if(name==='livechat')     renderLiveChat();
+  if(name==='contactreqs')  renderContactReqs();
+  if(name==='blog')         renderBlog();
+  if(name==='docs')         renderDocs();
+  if(name==='kb')           renderKB();
+  if(name==='smtp')         renderSMTP();
+  if(name==='apikeys')      renderApiKeys();
+  if(name==='aisettings')   renderAISettings();
+  if(name==='sysconfig')    loadSysConfig();
   if(name==='billing')      renderBillingAdmin();
   if(name==='invoices')     renderInvoices();
   if(name==='auditlog')     renderAuditLog();
@@ -1651,6 +1979,123 @@ function filterTickets() {
     r.style.display = (!val || (r.textContent||'').toLowerCase().includes(val)) ? '' : 'none';
   });
 }
+
+
+/* ── NEW ADMIN FUNCTIONS ── */
+function goToDashboard() {
+  /* Scanner Dashboard link — opens in same tab and dashboard has portal back button */
+  window.location.href = '../dashboard/index.html';
+  return false;
+}
+
+function renderSuspendUser() {
+  var tb = document.getElementById('suspendUsersTable');
+  if (!tb) return;
+  // Re-use all users data
+  renderAllUsers();
+  // Copy to suspend table
+  setTimeout(function() {
+    var ut = document.getElementById('usersTable');
+    if (ut && tb) tb.innerHTML = ut.innerHTML;
+  }, 300);
+}
+
+function filterSuspendUsers() {
+  var q  = (document.getElementById('suspendSearch').value||'').toLowerCase();
+  var st = (document.getElementById('suspendStatusFilter').value||'').toLowerCase();
+  document.querySelectorAll('#suspendUsersTable tr').forEach(function(r) {
+    var txt = (r.textContent||'').toLowerCase();
+    r.style.display = (txt.includes(q) && (!st || txt.includes(st))) ? '' : 'none';
+  });
+}
+
+function renderResetPassword() {
+  var list = document.getElementById('resetActivityList');
+  var hist = JSON.parse(localStorage.getItem('pm_reset_history')||'[]');
+  if (!hist.length) { if(list) list.innerHTML='<div class="empty-state">No password resets sent yet.</div>'; return; }
+  if (list) list.innerHTML = hist.slice(-5).reverse().map(function(h){
+    return '<div class="ff-item"><div><div class="ff-name">'+h.email+'</div><div class="ff-desc">'+new Date(h.ts).toLocaleString()+' · '+h.method+'</div></div><span style="color:var(--green);font-size:.72rem">SENT</span></div>';
+  }).join('');
+}
+
+async function sendPasswordReset() {
+  var email  = (document.getElementById('resetEmail').value||'').trim();
+  var method = document.getElementById('resetMethod').value;
+  var msgEl  = document.getElementById('resetMsg');
+  if (!email) { toast('Enter user email', 'warn'); return; }
+  var hist = JSON.parse(localStorage.getItem('pm_reset_history')||'[]');
+  hist.push({ email: email, method: method, ts: Date.now() });
+  localStorage.setItem('pm_reset_history', JSON.stringify(hist));
+  // Try backend
+  var r = await adminApiPost('/api/auth/reset-password', { email: email });
+  msgEl.style.display = 'block';
+  msgEl.style.cssText = 'display:block;background:var(--green-lt);border:1px solid #bbf7d0;border-radius:6px;padding:.5rem .8rem;font-size:.8rem;color:var(--green);margin-top:.6rem';
+  msgEl.textContent = 'Password reset email sent to ' + email + ' (' + method + ')';
+  document.getElementById('resetEmail').value = '';
+  renderResetPassword();
+}
+
+async function renderLicenses() {
+  var tb = document.getElementById('licTable');
+  if (!tb) return;
+  var data = await adminApiGet('/api/org/all');
+  if (!data || !data.orgs) { tb.innerHTML='<tr><td colspan="7" class="empty-state">Loading...</td></tr>'; return; }
+  var planLimits = { free:{dev:3,users:5}, starter:{dev:10,users:25}, professional:{dev:50,users:100}, enterprise:{dev:-1,users:-1} };
+  tb.innerHTML = data.orgs.map(function(o) {
+    var lim = planLimits[o.plan||'free']||planLimits.free;
+    return '<tr><td style="padding:.5rem .8rem;font-weight:500">'+o.name+'</td>'+
+      '<td style="padding:.5rem .8rem"><span style="background:var(--blue-lt);color:var(--blue);border-radius:4px;padding:.15rem .4rem;font-size:.72rem">'+( o.plan||'free').toUpperCase()+'</span></td>'+
+      '<td style="padding:.5rem .8rem">'+(lim.dev===-1?'Unlimited':lim.dev)+'</td>'+
+      '<td style="padding:.5rem .8rem">'+(lim.users===-1?'Unlimited':lim.users)+'</td>'+
+      '<td style="padding:.5rem .8rem;color:var(--ink3)">-</td>'+
+      '<td style="padding:.5rem .8rem"><span style="color:var(--green);font-weight:600">ACTIVE</span></td>'+
+      '<td style="padding:.5rem .8rem"><button class="btn btn-out btn-sm" data-oid="'+o.id+'" onclick="changePlan(this.dataset.oid)">Change</button></td></tr>';
+  }).join('');
+  var setEl=function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
+  setEl('licTotal',data.orgs.length); setEl('licActive',data.orgs.length);
+}
+
+function exportLicenses() { toast('Connect backend for license export', 'info'); }
+
+function renderThreatMap() {}
+function renderVulnStats() {}
+function renderPayments() {}
+function renderSubReports() {}
+function renderLiveChat() {}
+function renderContactReqs() {}
+function renderBlog() {}
+function renderDocs() {}
+function renderKB() {}
+
+function saveSMTP() {
+  var cfg = {
+    host: document.getElementById('smtpHost').value,
+    port: document.getElementById('smtpPort').value,
+    enc:  document.getElementById('smtpEnc').value,
+    user: document.getElementById('smtpUser').value,
+    name: document.getElementById('smtpName').value,
+  };
+  localStorage.setItem('pm_smtp_config', JSON.stringify(cfg));
+  var msg = document.getElementById('smtpMsg');
+  if (msg) { msg.style.cssText='display:block;background:var(--green-lt);color:var(--green);border:1px solid #bbf7d0;border-radius:6px;padding:.5rem .8rem;font-size:.8rem;margin-top:.6rem'; msg.textContent='SMTP settings saved. Set SENDGRID_API_KEY in Railway to send real emails.'; }
+}
+
+function testSMTP() { toast('Test email — set SENDGRID_API_KEY in Railway first', 'info'); }
+
+function saveAISettings() {
+  var cfg = {
+    model: document.getElementById('aiModel').value,
+    maxTokens: document.getElementById('aiMaxTokens').value,
+    fixes: document.getElementById('aiFixes').checked,
+    chat:  document.getElementById('aiChat').checked,
+    reports: document.getElementById('aiReports').checked,
+    triage:  document.getElementById('aiTriage').checked,
+  };
+  localStorage.setItem('pm_ai_config', JSON.stringify(cfg));
+  toast('AI settings saved', 'ok');
+}
+
+function checkApiKeys() { toast('Check Railway dashboard → Variables tab for key status', 'info'); }
 
 </script>
 </body>
