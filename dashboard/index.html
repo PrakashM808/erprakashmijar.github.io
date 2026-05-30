@@ -36,6 +36,8 @@
       <span class="quota-chip qc-ok" id="scanQuotaChip" onclick="nav('billing')" title="Daily scan usage">0/1</span>
       <div class="hdr-avatar" id="hdrAvatar" onclick="nav('profile')">PM</div>
       <span class="hdr-name" id="hdrName">Prakash</span>
+      <!-- Portal navigation buttons — shown based on role -->
+      <div id="portalNavBtns" style="display:flex;gap:.4rem;align-items:center"></div>
       <button class="hdr-btn hdr-scan" id="scanBtn" onclick="openScanModal()">SCAN DEVICE</button>
       <div style="position:relative;display:inline-block">
       <button id="langPickerBtn" onclick="buildLangDropdown()" title="Change language"
@@ -598,15 +600,74 @@
 
       <!-- ══ LEARNING CENTER PAGE ══ -->
       <div class="page" id="page-learn">
-        <div class="pg-hdr"><div><div class="pg-title">LEARNING CENTER</div><div class="pg-sub">How to use every feature of this platform</div></div></div>
+        <div class="pg-hdr">
+          <div><div class="pg-title">LEARNING CENTER</div>
+          <div class="pg-sub">Platform guide + Cybersecurity Master Tree — 52 topics</div></div>
+        </div>
+
+        <!-- Search bar -->
         <div class="panel" style="margin-bottom:.9rem"><div class="pb">
           <div style="position:relative">
-            <input id="learnSearch" type="search" placeholder="Search topics — how to scan, what is MITRE, fix SSH..."
+            <input id="learnSearch" type="search"
+              placeholder="Search — SQL injection, SSH hardening, SIEM, privilege escalation..."
               oninput="filterLearn(this.value)"
               style="width:100%;background:rgba(34,227,255,.03);border:1px solid rgba(34,227,255,.1);border-radius:7px;padding:.7rem 1rem .7rem 2.4rem;font-family:var(--mono);font-size:.68rem;color:var(--white);outline:none;transition:border-color .2s"/>
             <span style="position:absolute;left:.8rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:1rem;pointer-events:none">⌕</span>
           </div>
         </div></div>
+
+        <!-- Chapter filter buttons -->
+        <div style="display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.9rem">
+          <button onclick="filterLearnChapter('')" id="lchap-all" class="lchap-btn lchap-active"
+            style="font-family:var(--mono);font-size:.55rem;padding:.28rem .7rem;border-radius:20px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:var(--white);cursor:pointer">
+            ALL (52)
+          </button>
+          <button onclick="filterLearnChapter('platform')" id="lchap-platform" class="lchap-btn"
+            style="font-family:var(--mono);font-size:.55rem;padding:.28rem .7rem;border-radius:20px;border:1px solid rgba(0,255,136,.2);background:rgba(0,255,136,.05);color:var(--ok);cursor:pointer">
+            📖 PLATFORM GUIDE (29)
+          </button>
+          <button onclick="filterLearnChapter('net-')" id="lchap-net" class="lchap-btn"
+            style="font-family:var(--mono);font-size:.55rem;padding:.28rem .7rem;border-radius:20px;border:1px solid rgba(34,227,255,.2);background:rgba(34,227,255,.05);color:#22e3ff;cursor:pointer">
+            🌐 01. NETWORKING
+          </button>
+          <button onclick="filterLearnChapter('linux-')" id="lchap-linux" class="lchap-btn"
+            style="font-family:var(--mono);font-size:.55rem;padding:.28rem .7rem;border-radius:20px;border:1px solid rgba(245,158,11,.2);background:rgba(245,158,11,.05);color:var(--warn);cursor:pointer">
+            🐧 02. LINUX
+          </button>
+          <button onclick="filterLearnChapter('web-')" id="lchap-web" class="lchap-btn"
+            style="font-family:var(--mono);font-size:.55rem;padding:.28rem .7rem;border-radius:20px;border:1px solid rgba(255,59,92,.2);background:rgba(255,59,92,.05);color:var(--danger);cursor:pointer">
+            💉 03. WEB SECURITY
+          </button>
+          <button onclick="filterLearnChapter('hack-')" id="lchap-hack" class="lchap-btn"
+            style="font-family:var(--mono);font-size:.55rem;padding:.28rem .7rem;border-radius:20px;border:1px solid rgba(123,47,255,.2);background:rgba(123,47,255,.05);color:#b060ff;cursor:pointer">
+            🎯 04. ETHICAL HACKING
+          </button>
+          <button onclick="filterLearnChapter('tools-')" id="lchap-tools" class="lchap-btn"
+            style="font-family:var(--mono);font-size:.55rem;padding:.28rem .7rem;border-radius:20px;border:1px solid rgba(0,212,255,.2);background:rgba(0,212,255,.05);color:var(--g2);cursor:pointer">
+            🔧 05. TOOLS
+          </button>
+          <button onclick="filterLearnChapter('cloud-')" id="lchap-cloud" class="lchap-btn"
+            style="font-family:var(--mono);font-size:.55rem;padding:.28rem .7rem;border-radius:20px;border:1px solid rgba(0,255,136,.15);background:rgba(0,255,136,.04);color:var(--ok);cursor:pointer">
+            ☁️ 06. CLOUD
+          </button>
+          <button onclick="filterLearnChapter('detect-')" id="lchap-detect" class="lchap-btn"
+            style="font-family:var(--mono);font-size:.55rem;padding:.28rem .7rem;border-radius:20px;border:1px solid rgba(245,158,11,.2);background:rgba(245,158,11,.04);color:var(--warn);cursor:pointer">
+            👁️ 07. DETECTION
+          </button>
+          <button onclick="filterLearnChapter('crypto-')" id="lchap-crypto" class="lchap-btn"
+            style="font-family:var(--mono);font-size:.55rem;padding:.28rem .7rem;border-radius:20px;border:1px solid rgba(34,227,255,.2);background:rgba(34,227,255,.04);color:#22e3ff;cursor:pointer">
+            🔐 08. CRYPTO
+          </button>
+          <button onclick="filterLearnChapter('secops-')" id="lchap-secops" class="lchap-btn"
+            style="font-family:var(--mono);font-size:.55rem;padding:.28rem .7rem;border-radius:20px;border:1px solid rgba(123,47,255,.2);background:rgba(123,47,255,.04);color:#b060ff;cursor:pointer">
+            🛡️ 09. SEC OPS
+          </button>
+          <button onclick="filterLearnChapter('future-')" id="lchap-future" class="lchap-btn"
+            style="font-family:var(--mono);font-size:.55rem;padding:.28rem .7rem;border-radius:20px;border:1px solid rgba(255,59,92,.2);background:rgba(255,59,92,.04);color:var(--danger);cursor:pointer">
+            ⚛️ 10. FUTURE
+          </button>
+        </div>
+
         <div id="learnContent"></div>
       </div>
 

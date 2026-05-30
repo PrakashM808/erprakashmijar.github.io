@@ -202,6 +202,10 @@
         <button class="sb-item" onclick="ap('reports')"><span class="sb-item-ico">&#128196;</span>All Reports</button>
         <button class="sb-item" onclick="ap('issues')"><span class="sb-item-ico">&#128683;</span>Critical Issues</button>
         <div class="sb-section">Admin</div>
+        <div class="sb-section" style="margin-top:.5rem">Portals</div>
+        <a href="../dashboard/index.html" class="sb-item" style="text-decoration:none;color:inherit"><span class="sb-item-ico">&#128269;</span>Scan Dashboard</a>
+        <a href="../client/index.html?preview=1" class="sb-item" style="text-decoration:none;color:inherit"><span class="sb-item-ico">&#128100;</span>Client View</a>
+        <a href="../business/index.html" class="sb-item" style="text-decoration:none;color:inherit"><span class="sb-item-ico">&#127970;</span>Business Portal</a>
         <button class="sb-item" onclick="ap('addclient')"><span class="sb-item-ico">&#10133;</span>Add Client</button>
         <button class="sb-item" onclick="window.location.href='../dashboard/index.html?stay=1'"><span class="sb-item-ico">&#128269;</span>Scanner Dashboard</button>
       </div>
@@ -935,6 +939,67 @@ function toast(msg,color){
   document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.getElementById('adminLogin').style.display!=='none')doAdminLogin();});
   document.getElementById('topDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
 })();
+
+
+/* ═══ SUPER ADMIN: PLATFORM OVERVIEW ═══ */
+async function loadPlatformStats() {
+  if (typeof API_ONLINE === "undefined" || !API_ONLINE) return;
+  try {
+    var stats = await apiGet("/api/admin/platform-stats");
+    if (!stats) return;
+    var els = { adminTotalUsers: stats.total_users, adminTotalOrgs: stats.total_orgs, adminActiveUsers: stats.active_users };
+    Object.keys(els).forEach(function(id){ var el=document.getElementById(id); if(el) el.textContent=els[id]; });
+    if (stats.by_plan) renderPlanChart(stats.by_plan);
+    if (stats.by_role) renderRoleChart(stats.by_role);
+  } catch(e) { console.warn("platform-stats:", e); }
+}
+
+async function loadAllOrgs() {
+  if (typeof API_ONLINE === "undefined" || !API_ONLINE) return;
+  try {
+    var r = await apiGet("/api/org/all");
+    if (!r || !r.orgs) return;
+    var el = document.getElementById("orgsTableBody");
+    if (!el) return;
+    var html = "";
+    for (var i=0; i<r.orgs.length; i++) {
+      var o = r.orgs[i];
+      html += "<tr><td style='padding:.55rem .8rem;font-family:var(--mono);font-size:.63rem'>" + (o.name||"") + "</td>"
+        + "<td style='padding:.55rem .8rem;font-family:var(--mono);font-size:.62rem;color:var(--muted)'>" + (o.employee_count||0) + "</td>"
+        + "<td style='padding:.55rem .8rem;font-family:var(--mono);font-size:.62rem;color:var(--muted)'>" + (o.device_count||0) + "</td>"
+        + "<td style='padding:.55rem .8rem;font-family:var(--mono);font-size:.62rem'><span style='background:rgba(0,255,136,.1);color:var(--g);border-radius:4px;padding:.15rem .4rem'>" + (o.plan||"free").toUpperCase() + "</span></td>"
+        + "<td style='padding:.55rem .8rem;font-family:var(--mono);font-size:.62rem;color:var(--muted)'>" + new Date(o.created_at||Date.now()).toLocaleDateString() + "</td></tr>";
+    }
+    el.innerHTML = html;
+  } catch(e) { console.warn("loadAllOrgs:", e); }
+}
+
+function renderPlanChart(plans) {
+  var el = document.getElementById("planBreakdown"); if (!el) return;
+  var total = Object.values(plans).reduce(function(a,b){return a+b;},0)||1;
+  var colors = {free:"var(--muted)",starter:"var(--g)",professional:"var(--g2)",enterprise:"var(--g3)"};
+  var html = "";
+  Object.keys(plans).forEach(function(p) {
+    var pct = Math.round(plans[p]/total*100);
+    html += "<div style='margin-bottom:.5rem'><div style='display:flex;justify-content:space-between;font-family:var(--mono);font-size:.6rem;margin-bottom:.2rem'><span style='color:"+(colors[p]||"var(--muted)")+"'>" + p.toUpperCase() + "</span><span style='color:var(--muted)'>" + plans[p] + " ("+pct+"%)</span></div>"
+      + "<div style='height:4px;background:rgba(255,255,255,.05);border-radius:2px'><div style='width:"+pct+"%;height:100%;background:"+(colors[p]||"var(--muted)")+";border-radius:2px'></div></div></div>";
+  });
+  el.innerHTML = html;
+}
+
+function renderRoleChart(roles) {
+  var el = document.getElementById("roleBreakdown"); if (!el) return;
+  var html = "";
+  Object.keys(roles).forEach(function(r) {
+    if (!roles[r]) return;
+    html += "<div style='display:flex;justify-content:space-between;font-family:var(--mono);font-size:.62rem;padding:.3rem 0;border-bottom:1px solid rgba(255,255,255,.05)'><span style='color:var(--text)'>" + r.toUpperCase() + "</span><span style='color:var(--muted)'>" + roles[r] + "</span></div>";
+  });
+  el.innerHTML = html;
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  setTimeout(function(){ loadPlatformStats(); loadAllOrgs(); }, 1500);
+});
 </script>
 </body>
 </html>

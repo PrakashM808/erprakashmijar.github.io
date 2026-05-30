@@ -41,6 +41,11 @@ from database import (
     agreement_save, agreements_get_all, alert_prefs_set, alert_prefs_get,
     plan_set, plan_get, subscription_save, subscription_get,
     ioc_add, iocs_get_all, get_dashboard_stats, get_score_history,
+    org_create, org_get, org_get_by_owner, org_get_all,
+    org_get_employees, org_get_devices,
+    invite_create, invite_get, invite_accept,
+    refresh_token_create, refresh_token_verify,
+    org_device_register, org_device_heartbeat,
     POSTGRES_AVAILABLE, get_db
 )
 
@@ -1321,6 +1326,276 @@ def root():
     return {"status": "online", "version": "3.0.0",
             "service": "PM::OFFSEC Security Dashboard API",
             "docs": "/docs"}
+
+
+# ═══════════════════════════════════════════════════════════════
+# MULTI-TENANT ORGANIZATION ENDPOINTS
+# ═══════════════════════════════════════════════════════════════
+
+class OrgCreateReq(BaseModel):
+    name: str
+    industry: str = ""
+    country: str = "NP"
+
+class InviteEmployeeReq(BaseModel):
+    email: str
+    name: str
+    role: str = "employee"
+
+class AcceptInviteReq(BaseModel):
+    token: str
+    name: str
+    password: str
+
+class DeviceRegisterReq(BaseModel):
+    hostname: str
+    device_name: str
+    device_type: str = "laptop"
+    os: str = ""
+    os_version: str = ""
+    ip_address: str = ""
+    mac_address: str = ""
+
+class DeviceHeartbeatReq(BaseModel):
+    agent_token: str
+    score: int = None
+    ip_address: str = None
+
+class RefreshTokenReq(BaseModel):
+    refresh_token: str
+
+# ── Organization management ──────────────────────────────────
+
+@app.get("/api/org/me")
+async def get_my_org(current_user: dict = Depends(get_current_user)):
+    """Get the organization the current user belongs to or owns."""
+    user_id = current_user.get("id") or current_user.get("user_id")
+    org_id  = current_user.get("org_id")
+
+    if current_user.get("role") == "admin":
+        return {"org": None, "role": "super_admin", "all_orgs": org_get_all()}
+
+    # Owner: look up their org
+    org = org_get_by_owner(user_id) or (org_get(org_id) if org_id else None)
+    if not org:
+        return {"org": None, "role": current_user.get("role")}
+
+    employees = org_get_employees(org["id"])
+    devices   = org_get_devices(org["id"])
+    return {
+        "org":       org,
+        "role":      current_user.get("role"),
+        "employees": employees,
+        "devices":   devices,
+        "stats": {
+            "total_employees": len(employees),
+            "total_devices":   len(devices),
+            "active_devices":  sum(1 for d in devices if d.get("status") == "active"),
+            "avg_score":       int(sum(d.get("last_score", 0) for d in devices) / max(len(devices), 1)),
+        }
+    }
+
+@app.post("/api/org/create")
+async def create_org(body: OrgCreateReq, current_user: dict = Depends(get_current_user)):
+    """Create an organization (business owner registers their company)."""
+    user_id = current_user.get("id") or current_user.get("user_id")
+    existing = org_get_by_owner(user_id)
+    if existing:
+        raise HTTPException(400, "You already have an organization.")
+    org = org_create(body.name, user_id)
+    # Update user's org_id and role
+    users = user_get(user_id)
+    user_update(user_id, {"org_id": org["id"], "role": "owner"})
+    audit_action("org_create", org["id"], user_id)
+    return {"ok": True, "org": org}
+
+@app.get("/api/org/all")
+async def list_all_orgs(current_user: dict = Depends(get_current_user)):
+    """Super admin: list all organizations."""
+    if current_user.get("role") != "admin":
+        raise HTTPException(403, "Super admin only.")
+    orgs = org_get_all()
+    result = []
+    for org in orgs:
+        emps = org_get_employees(org["id"])
+        devs = org_get_devices(org["id"])
+        result.append({**org, "employee_count": len(emps), "device_count": len(devs)})
+    return {"orgs": result, "total": len(result)}
+
+# ── Employee invite system ───────────────────────────────────
+
+@app.post("/api/org/invite")
+async def invite_employee(body: InviteEmployeeReq, request: Request,
+                           current_user: dict = Depends(get_current_user)):
+    """Business owner invites an employee by email."""
+    user_id = current_user.get("id") or current_user.get("user_id")
+    if current_user.get("role") not in ("owner", "admin", "manager"):
+        raise HTTPException(403, "Only org owners can invite employees.")
+    org = org_get_by_owner(user_id)
+    if not org:
+        raise HTTPException(400, "Create an organization first.")
+    inv = invite_create(org["id"], user_id, body.email, body.name, body.role)
+    invite_url = f"{os.getenv('APP_URL', 'https://erprakashmijar.com')}/register.html?invite={inv['token']}"
+
+    # Send invite email
+    try:
+        import httpx
+        sg_key = os.getenv("SENDGRID_API_KEY", "")
+        from_email = os.getenv("ALERT_FROM_EMAIL", "noreply@erprakashmijar.com")
+        if sg_key:
+            async with httpx.AsyncClient() as client:
+                await client.post("https://api.sendgrid.com/v3/mail/send",
+                    headers={"Authorization": f"Bearer {sg_key}", "Content-Type": "application/json"},
+                    json={"personalizations": [{"to": [{"email": body.email, "name": body.name}]}],
+                          "from": {"email": from_email, "name": "PM::OFFSEC"},
+                          "subject": f"You've been invited to {org['name']} on PM::OFFSEC",
+                          "content": [{"type": "text/plain",
+                            "value": f"Hello {body.name},\n\n{org['name']} has invited you to PM::OFFSEC Security Platform.\n\nClick to join: {invite_url}\n\nThis link expires in 7 days."}]})
+    except Exception as e:
+        print(f"Invite email failed: {e}")
+
+    audit_action("invite_employee", body.email, user_id, request)
+    return {"ok": True, "invite_url": invite_url, "token": inv["token"]}
+
+@app.post("/api/org/accept-invite")
+async def accept_invite(body: AcceptInviteReq):
+    """Employee accepts invite and creates their account."""
+    inv = invite_get(body.token)
+    if not inv:
+        raise HTTPException(400, "Invalid or expired invite link.")
+    # Register user in the org
+    import hashlib, secrets
+    users = [u for u in (user_get_by_email(inv["email"]) or []) if u]
+    if not users:
+        new_user = user_create(
+            name=body.name or inv.get("name", "Employee"),
+            email=inv["email"],
+            password=body.password,
+            role=inv.get("role", "employee"),
+            plan="starter",
+            org_id=inv["org_id"]
+        )
+        if not new_user.get("ok"):
+            raise HTTPException(400, new_user.get("error", "Registration failed."))
+    else:
+        # Existing user joining org
+        user_update(users[0]["id"], {"org_id": inv["org_id"], "role": inv.get("role", "employee")})
+    invite_accept(body.token)
+    return {"ok": True, "message": "Welcome! You can now log in."}
+
+@app.get("/api/org/invite/{token}")
+async def check_invite(token: str):
+    """Check if an invite token is valid (for the register page to pre-fill)."""
+    inv = invite_get(token)
+    if not inv:
+        raise HTTPException(404, "Invite not found or expired.")
+    org = org_get(inv["org_id"])
+    return {"ok": True, "email": inv["email"], "name": inv.get("name"),
+            "role": inv.get("role"), "org_name": org["name"] if org else ""}
+
+@app.get("/api/org/employees")
+async def get_org_employees(current_user: dict = Depends(get_current_user)):
+    """Get all employees in the current user's organization."""
+    user_id = current_user.get("id") or current_user.get("user_id")
+    org = org_get_by_owner(user_id) or org_get(current_user.get("org_id", ""))
+    if not org:
+        raise HTTPException(404, "No organization found.")
+    employees = org_get_employees(org["id"])
+    return {"employees": employees, "total": len(employees)}
+
+@app.delete("/api/org/employees/{employee_id}")
+async def remove_employee(employee_id: str, current_user: dict = Depends(get_current_user)):
+    """Remove an employee from the organization."""
+    user_id = current_user.get("id") or current_user.get("user_id")
+    if current_user.get("role") not in ("owner", "admin"):
+        raise HTTPException(403, "Only org owners can remove employees.")
+    user_update(employee_id, {"org_id": None, "role": "user", "status": "active"})
+    audit_action("remove_employee", employee_id, user_id)
+    return {"ok": True}
+
+# ── Organization device management ───────────────────────────
+
+@app.post("/api/org/devices/register")
+async def register_org_device(body: DeviceRegisterReq,
+                               current_user: dict = Depends(get_current_user)):
+    """Register a device for the current employee/user in their org."""
+    user_id = current_user.get("id") or current_user.get("user_id")
+    org_id  = current_user.get("org_id") or ""
+    if not org_id:
+        org = org_get_by_owner(user_id)
+        org_id = org["id"] if org else None
+    if not org_id:
+        raise HTTPException(400, "You must belong to an organization to register a device.")
+    device = org_device_register(
+        org_id=org_id, user_id=user_id,
+        hostname=body.hostname, device_name=body.device_name,
+        device_type=body.device_type, os_name=body.os,
+        ip=body.ip_address, mac=body.mac_address
+    )
+    return {"ok": True, "device": device, "agent_token": device.get("agent_token")}
+
+@app.get("/api/org/devices")
+async def get_org_devices(current_user: dict = Depends(get_current_user)):
+    """Get devices for the current user's organization (owner sees all, employee sees own)."""
+    user_id = current_user.get("id") or current_user.get("user_id")
+    role    = current_user.get("role", "user")
+
+    if role in ("owner", "admin", "manager"):
+        org = org_get_by_owner(user_id) or org_get(current_user.get("org_id", ""))
+        devices = org_get_devices(org["id"]) if org else []
+    else:
+        # Employee: only their own device
+        org_id = current_user.get("org_id")
+        if not org_id:
+            return {"devices": [], "total": 0}
+        all_devs = org_get_devices(org_id)
+        devices = [d for d in all_devs if d.get("user_id") == user_id]
+
+    return {"devices": devices, "total": len(devices)}
+
+@app.post("/api/org/devices/heartbeat")
+async def device_heartbeat(body: DeviceHeartbeatReq):
+    """Agent calls this to report it's online. No auth required — uses agent_token."""
+    ok = org_device_heartbeat(body.agent_token, body.score, body.ip_address)
+    if not ok:
+        raise HTTPException(404, "Device not found.")
+    return {"ok": True}
+
+# ── Refresh token ────────────────────────────────────────────
+
+@app.post("/api/auth/refresh")
+async def refresh_access_token(body: RefreshTokenReq):
+    """Exchange a refresh token for a new JWT access token."""
+    user_id = refresh_token_verify(body.refresh_token)
+    if not user_id:
+        raise HTTPException(401, "Refresh token expired or invalid. Please log in again.")
+    user = user_get(user_id)
+    if not user or user.get("status") == "suspended":
+        raise HTTPException(401, "Account not found or suspended.")
+    token = create_jwt(user)
+    return {"ok": True, "token": token, "user": {k: v for k, v in user.items() if k != "password"}}
+
+# ── Super admin: platform overview ───────────────────────────
+
+@app.get("/api/admin/platform-stats")
+async def platform_stats(current_user: dict = Depends(get_current_user)):
+    """Super admin: get platform-wide statistics."""
+    if current_user.get("role") != "admin":
+        raise HTTPException(403, "Super admin only.")
+    all_users = users_get_all()
+    all_orgs  = org_get_all()
+    return {
+        "total_users":    len(all_users),
+        "total_orgs":     len(all_orgs),
+        "active_users":   sum(1 for u in all_users if u.get("status") == "active"),
+        "by_plan":        {p: sum(1 for u in all_users if u.get("plan") == p)
+                           for p in ("free","starter","professional","enterprise")},
+        "by_role":        {r: sum(1 for u in all_users if u.get("role") == r)
+                           for r in ("admin","owner","manager","employee","user","client")},
+        "orgs_by_plan":   {p: sum(1 for o in all_orgs if o.get("plan") == p)
+                           for p in ("free","starter","professional","enterprise")},
+    }
+
 
 @app.get("/api/health")
 def health():

@@ -159,6 +159,80 @@ CREATE TABLE IF NOT EXISTS incidents (
     resolved_at     TIMESTAMPTZ
 );
 
+-- Organizations table (multi-tenant)
+CREATE TABLE IF NOT EXISTS organizations (
+    id           TEXT PRIMARY KEY DEFAULT gen_random_uuid()::TEXT,
+    name         TEXT NOT NULL,
+    owner_id     TEXT,
+    plan         TEXT DEFAULT 'starter',
+    status       TEXT DEFAULT 'active',
+    max_devices  INTEGER DEFAULT 10,
+    max_employees INTEGER DEFAULT 25,
+    industry     TEXT,
+    country      TEXT DEFAULT 'NP',
+    logo_url     TEXT,
+    settings     JSONB DEFAULT '{}',
+    created_at   TIMESTAMPTZ DEFAULT NOW(),
+    updated_at   TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Employee invites
+CREATE TABLE IF NOT EXISTS invites (
+    id           TEXT PRIMARY KEY DEFAULT gen_random_uuid()::TEXT,
+    org_id       TEXT REFERENCES organizations(id) ON DELETE CASCADE,
+    invited_by   TEXT REFERENCES users(id) ON DELETE SET NULL,
+    email        TEXT NOT NULL,
+    name         TEXT,
+    role         TEXT DEFAULT 'employee',
+    token        TEXT UNIQUE NOT NULL,
+    status       TEXT DEFAULT 'pending',
+    expires_at   TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '7 days'),
+    created_at   TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Org devices v2 with full tracking
+CREATE TABLE IF NOT EXISTS org_devices_v2 (
+    id              TEXT PRIMARY KEY DEFAULT gen_random_uuid()::TEXT,
+    org_id          TEXT REFERENCES organizations(id) ON DELETE CASCADE,
+    user_id         TEXT REFERENCES users(id) ON DELETE SET NULL,
+    hostname        TEXT,
+    device_name     TEXT,
+    device_type     TEXT DEFAULT 'laptop',
+    os              TEXT,
+    os_version      TEXT,
+    ip_address      TEXT,
+    mac_address     TEXT,
+    agent_token     TEXT UNIQUE DEFAULT gen_random_uuid()::TEXT,
+    agent_version   TEXT,
+    last_score      INTEGER DEFAULT 0,
+    last_seen       TIMESTAMPTZ,
+    status          TEXT DEFAULT 'active',
+    tags            JSONB DEFAULT '[]',
+    meta            JSONB DEFAULT '{}',
+    created_at      TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Refresh tokens for JWT refresh
+CREATE TABLE IF NOT EXISTS refresh_tokens (
+    id           TEXT PRIMARY KEY DEFAULT gen_random_uuid()::TEXT,
+    user_id      TEXT REFERENCES users(id) ON DELETE CASCADE,
+    token        TEXT UNIQUE NOT NULL,
+    expires_at   TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '30 days'),
+    created_at   TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Activity/audit per org
+CREATE TABLE IF NOT EXISTS org_activity (
+    id           TEXT PRIMARY KEY DEFAULT gen_random_uuid()::TEXT,
+    org_id       TEXT,
+    user_id      TEXT,
+    action       TEXT NOT NULL,
+    target       TEXT,
+    detail       TEXT,
+    ip_address   TEXT,
+    created_at   TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Agreements table
 CREATE TABLE IF NOT EXISTS agreements (
     id              TEXT PRIMARY KEY,
@@ -1022,3 +1096,176 @@ def get_score_history(user_id: str, days: int = 30) -> List[dict]:
             PRIMARY KEY  (key, window_start)
         )
     """)
+
+
+# ── Organization helpers ─────────────────────────────────────────────────────
+
+def org_create(name: str, owner_id: str, plan: str = 'starter') -> dict:
+    with get_db() as conn:
+        if not conn:
+            oid = 'org-' + owner_id[:8]
+            _mem.setdefault('orgs', {})[oid] = {
+                'id': oid, 'name': name, 'owner_id': owner_id, 'plan': plan,
+                'status': 'active', 'max_devices': 10, 'max_employees': 25
+            }
+            return _mem['orgs'][oid]
+        cur = conn.cursor()
+        cur.execute("""
+            INSERT INTO organizations (name, owner_id, plan)
+            VALUES (%s, %s, %s) RETURNING *
+        """, (name, owner_id, plan))
+        return dict(zip([d[0] for d in cur.description], cur.fetchone()))
+
+def org_get(org_id: str) -> dict:
+    with get_db() as conn:
+        if not conn:
+            return _mem.get('orgs', {}).get(org_id)
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM organizations WHERE id = %s", (org_id,))
+        row = cur.fetchone()
+        return dict(zip([d[0] for d in cur.description], row)) if row else None
+
+def org_get_by_owner(owner_id: str) -> dict:
+    with get_db() as conn:
+        if not conn:
+            for o in _mem.get('orgs', {}).values():
+                if o.get('owner_id') == owner_id:
+                    return o
+            return None
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM organizations WHERE owner_id = %s", (owner_id,))
+        row = cur.fetchone()
+        return dict(zip([d[0] for d in cur.description], row)) if row else None
+
+def org_get_all() -> list:
+    with get_db() as conn:
+        if not conn:
+            return list(_mem.get('orgs', {}).values())
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM organizations ORDER BY created_at DESC")
+        cols = [d[0] for d in cur.description]
+        return [dict(zip(cols, row)) for row in cur.fetchall()]
+
+def org_get_employees(org_id: str) -> list:
+    with get_db() as conn:
+        if not conn:
+            return [u for u in _mem.get('users', {}).values() if u.get('org_id') == org_id]
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT id, name, email, role, status, last_login, created_at, avatar
+            FROM users WHERE org_id = %s ORDER BY created_at DESC
+        """, (org_id,))
+        cols = [d[0] for d in cur.description]
+        return [dict(zip(cols, row)) for row in cur.fetchall()]
+
+def org_get_devices(org_id: str) -> list:
+    with get_db() as conn:
+        if not conn:
+            return [d for d in _mem.get('org_devices_v2', {}).values() if d.get('org_id') == org_id]
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT d.*, u.name as user_name, u.email as user_email
+            FROM org_devices_v2 d
+            LEFT JOIN users u ON d.user_id = u.id
+            WHERE d.org_id = %s ORDER BY d.last_seen DESC NULLS LAST
+        """, (org_id,))
+        cols = [d[0] for d in cur.description]
+        return [dict(zip(cols, row)) for row in cur.fetchall()]
+
+def invite_create(org_id: str, invited_by: str, email: str, name: str, role: str = 'employee') -> dict:
+    import secrets
+    token = secrets.token_urlsafe(32)
+    with get_db() as conn:
+        if not conn:
+            inv = {'id': token[:8], 'org_id': org_id, 'email': email,
+                   'name': name, 'role': role, 'token': token, 'status': 'pending'}
+            _mem.setdefault('invites', {})[token] = inv
+            return inv
+        cur = conn.cursor()
+        cur.execute("""
+            INSERT INTO invites (org_id, invited_by, email, name, role, token)
+            VALUES (%s, %s, %s, %s, %s, %s) RETURNING *
+        """, (org_id, invited_by, email, name, role, token))
+        return dict(zip([d[0] for d in cur.description], cur.fetchone()))
+
+def invite_get(token: str) -> dict:
+    with get_db() as conn:
+        if not conn:
+            return _mem.get('invites', {}).get(token)
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM invites WHERE token = %s AND status = 'pending' AND expires_at > NOW()", (token,))
+        row = cur.fetchone()
+        return dict(zip([d[0] for d in cur.description], row)) if row else None
+
+def invite_accept(token: str) -> bool:
+    with get_db() as conn:
+        if not conn:
+            if token in _mem.get('invites', {}):
+                _mem['invites'][token]['status'] = 'accepted'
+                return True
+            return False
+        cur = conn.cursor()
+        cur.execute("UPDATE invites SET status = 'accepted' WHERE token = %s", (token,))
+        return cur.rowcount > 0
+
+def refresh_token_create(user_id: str) -> str:
+    import secrets
+    token = secrets.token_urlsafe(48)
+    with get_db() as conn:
+        if not conn:
+            _mem.setdefault('refresh_tokens', {})[token] = {'user_id': user_id, 'token': token}
+            return token
+        cur = conn.cursor()
+        cur.execute("INSERT INTO refresh_tokens (user_id, token) VALUES (%s, %s)", (user_id, token))
+        return token
+
+def refresh_token_verify(token: str) -> str:
+    """Returns user_id if valid, None if expired/invalid"""
+    with get_db() as conn:
+        if not conn:
+            rt = _mem.get('refresh_tokens', {}).get(token)
+            return rt['user_id'] if rt else None
+        cur = conn.cursor()
+        cur.execute("SELECT user_id FROM refresh_tokens WHERE token = %s AND expires_at > NOW()", (token,))
+        row = cur.fetchone()
+        return row[0] if row else None
+
+def org_device_register(org_id: str, user_id: str, hostname: str,
+                         device_name: str, device_type: str, os_name: str,
+                         ip: str = None, mac: str = None) -> dict:
+    with get_db() as conn:
+        if not conn:
+            dev = {
+                'id': 'dev-' + user_id[:8], 'org_id': org_id, 'user_id': user_id,
+                'hostname': hostname, 'device_name': device_name,
+                'device_type': device_type, 'os': os_name, 'ip_address': ip,
+                'mac_address': mac, 'agent_token': 'at-' + user_id[:16],
+                'last_score': 0, 'status': 'active', 'last_seen': None
+            }
+            _mem.setdefault('org_devices_v2', {})[dev['id']] = dev
+            return dev
+        cur = conn.cursor()
+        cur.execute("""
+            INSERT INTO org_devices_v2 (org_id, user_id, hostname, device_name, device_type, os, ip_address, mac_address)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING *
+        """, (org_id, user_id, hostname, device_name, device_type, os_name, ip, mac))
+        return dict(zip([d[0] for d in cur.description], cur.fetchone()))
+
+def org_device_heartbeat(agent_token: str, score: int = None, ip: str = None) -> bool:
+    with get_db() as conn:
+        if not conn:
+            for dev in _mem.get('org_devices_v2', {}).values():
+                if dev.get('agent_token') == agent_token:
+                    dev['last_seen'] = 'now'
+                    if score is not None: dev['last_score'] = score
+                    return True
+            return False
+        cur = conn.cursor()
+        cur.execute("""
+            UPDATE org_devices_v2
+            SET last_seen = NOW(),
+                last_score = COALESCE(%s, last_score),
+                ip_address  = COALESCE(%s, ip_address)
+            WHERE agent_token = %s
+        """, (score, ip, agent_token))
+        return cur.rowcount > 0

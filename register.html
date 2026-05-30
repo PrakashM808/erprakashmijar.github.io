@@ -839,6 +839,30 @@ document.addEventListener('DOMContentLoaded', function() {
   _regLang = localStorage.getItem('pm_lang') || 'en';
   setTimeout(regApplyLanguage, 100);
 });
+
+// Handle invite token in URL
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var inviteToken = params.get('invite');
+  if (!inviteToken) return;
+  // Pre-fetch invite details
+  fetch(window._SETTINGS_INIT ? (window._SETTINGS_INIT.apiUrl + '/api/org/invite/' + inviteToken) : '/api/org/invite/' + inviteToken)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data.ok) return;
+      // Pre-fill form
+      var emailEl = document.getElementById('email');
+      var nameEl  = document.getElementById('firstName');
+      var orgBadge = document.getElementById('orgInviteBadge');
+      if (emailEl) { emailEl.value = data.email || ''; emailEl.readOnly = true; }
+      if (nameEl && data.name) nameEl.value = data.name.split(' ')[0] || '';
+      if (orgBadge) { orgBadge.textContent = 'Joining: ' + data.org_name; orgBadge.style.display = 'block'; }
+      // Store token for registration
+      window._inviteToken = inviteToken;
+    })
+    .catch(function(){});
+})();
+
 </script>
 </body>
 </html>

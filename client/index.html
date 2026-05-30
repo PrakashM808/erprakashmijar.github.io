@@ -245,6 +245,8 @@
     <div class="hdr-acts">
       <button class="btn btn-out btn-sm" onclick="window.print()">&#128424; Print</button>
       <button class="btn btn-blue btn-sm" onclick="window.print()">&#11015; PDF</button>
+      <a href="../dashboard/index.html" class="btn btn-blue btn-sm" style="text-decoration:none">&#128269; Scan Dashboard</a>
+      <a href="../business/index.html" class="btn btn-sm" style="text-decoration:none;background:#7b2fff;color:#fff">&#127970; Business</a>
       <button class="btn btn-out btn-sm" onclick="doLogout()" style="color:var(--gray-500)">&#128682; Logout</button>
     </div>
   </div>
@@ -876,6 +878,147 @@ function toast(msg, color) {
   }
   document.addEventListener('keydown', function(e){ if(e.key==='Enter'&&document.getElementById('loginWrap').style.display!=='none') doLogin(); });
 })();
+
+
+/* ═══════════════════════════════════════════════════════════
+   MULTI-TENANT EMPLOYEE PORTAL ENHANCEMENTS
+═══════════════════════════════════════════════════════════ */
+
+// Load org data for employee/owner
+async function loadOrgData() {
+  if (!API_ONLINE || typeof SESSION === 'undefined') return;
+  try {
+    var data = await apiGet('/api/org/me');
+    if (!data) return;
+    // Update org info display
+    var orgNameEl = document.getElementById('orgName');
+    if (orgNameEl && data.org) orgNameEl.textContent = data.org.name;
+    var roleEl = document.getElementById('orgRole');
+    if (roleEl) roleEl.textContent = (data.role || 'member').toUpperCase();
+    // Show employee table if owner
+    if (data.role === 'owner' || data.role === 'admin') {
+      renderEmployeeTable(data.employees || []);
+      renderOrgDevices(data.devices || []);
+      renderOrgStats(data.stats || {});
+    } else {
+      // Employee — show only their device
+      renderEmployeeDevices(data.devices || []);
+    }
+  } catch(e) { console.warn('Org data:', e); }
+}
+
+function renderOrgStats(stats) {
+  var els = {
+    'orgTotalEmployees': stats.total_employees || 0,
+    'orgTotalDevices':   stats.total_devices   || 0,
+    'orgActiveDevices':  stats.active_devices  || 0,
+    'orgAvgScore':       stats.avg_score       || 0,
+  };
+  Object.entries(els).forEach(function([id, val]) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = val;
+  });
+}
+
+function renderEmployeeTable(employees) {
+  var el = document.getElementById('employeeTableBody');
+  if (!el) return;
+  if (!employees.length) {
+    el.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem;font-family:var(--mono);font-size:.65rem">No employees yet. Invite your first employee below.</td></tr>';
+    return;
+  }
+  el.innerHTML = employees.map(function(emp) {
+    var statusColor = emp.status === 'active' ? 'var(--ok)' : 'var(--warn)';
+    var lastLogin   = emp.last_login ? new Date(emp.last_login).toLocaleDateString() : 'Never';
+    return '<tr>' +
+      '<td style="padding:.6rem .8rem;font-family:var(--mono);font-size:.63rem"><span style="width:28px;height:28px;border-radius:50%;background:var(--g3);color:var(--white);display:inline-flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;margin-right:.5rem">' + (emp.name||'?')[0].toUpperCase() + '</span>' + (emp.name||'') + '</td>' +
+      '<td style="padding:.6rem .8rem;font-family:var(--mono);font-size:.62rem;color:var(--muted)">' + (emp.email||'') + '</td>' +
+      '<td style="padding:.6rem .8rem;font-family:var(--mono);font-size:.6rem"><span style="background:rgba(0,255,136,.1);color:var(--g);border-radius:4px;padding:.2rem .5rem">' + (emp.role||'employee').toUpperCase() + '</span></td>' +
+      '<td style="padding:.6rem .8rem;font-family:var(--mono);font-size:.62rem;color:' + statusColor + '">' + (emp.status||'').toUpperCase() + '</td>' +
+      '<td style="padding:.6rem .8rem;font-family:var(--mono);font-size:.62rem;color:var(--muted)">' + lastLogin + '</td>' +
+      '</tr>';
+  }).join('');
+}
+
+function renderOrgDevices(devices) {
+  var el = document.getElementById('orgDevicesGrid');
+  if (!el || !devices.length) return;
+  el.innerHTML = devices.map(function(dev) {
+    var score     = dev.last_score || 0;
+    var scoreCol  = score >= 75 ? 'var(--ok)' : score >= 50 ? 'var(--warn)' : 'var(--danger)';
+    var lastSeen  = dev.last_seen ? new Date(dev.last_seen).toLocaleString() : 'Never';
+    var isOnline  = dev.last_seen && (Date.now() - new Date(dev.last_seen).getTime()) < 600000;
+    return '<div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">' +
+        '<div style="font-family:var(--mono);font-size:.68rem;color:var(--white);font-weight:700">' + (dev.device_name || dev.hostname || 'Device') + '</div>' +
+        '<span style="font-size:.5rem;color:' + (isOnline?'var(--ok)':'var(--muted)') + '">&#9679; ' + (isOnline?'ONLINE':'OFFLINE') + '</span>' +
+      '</div>' +
+      '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-bottom:.3rem">' + (dev.user_name||'Unassigned') + ' · ' + (dev.os||'Unknown OS') + '</div>' +
+      '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-bottom:.6rem">Last seen: ' + lastSeen + '</div>' +
+      '<div style="display:flex;align-items:center;gap:.5rem">' +
+        '<div style="font-family:var(--mono);font-size:1.4rem;color:' + scoreCol + ';font-weight:700">' + score + '</div>' +
+        '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">/100<br>SCORE</div>' +
+      '</div>' +
+      '</div>';
+  }).join('');
+}
+
+function renderEmployeeDevices(devices) {
+  // Employee: show only their own device(s)
+  var el = document.getElementById('myDevicePanel');
+  if (!el) return;
+  if (!devices.length) {
+    el.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--mono);font-size:.65rem;color:var(--muted)">No device registered yet.<br><br><button onclick="registerMyDevice()" class="btn btn-g btn-sm">+ REGISTER MY DEVICE</button></div>';
+    return;
+  }
+  var dev = devices[0];
+  var score = dev.last_score || 0;
+  var scoreCol = score>=75?'var(--ok)':score>=50?'var(--warn)':'var(--danger)';
+  el.innerHTML = '<div style="text-align:center;padding:1.5rem">' +
+    '<div style="font-family:var(--mono);font-size:3rem;color:' + scoreCol + ';font-weight:700">' + score + '</div>' +
+    '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">/100 SECURITY SCORE</div>' +
+    '<div style="font-family:var(--mono);font-size:.65rem;color:var(--white);margin-top:.8rem">' + (dev.device_name||dev.hostname||'My Device') + '</div>' +
+    '<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">' + (dev.os||'') + '</div>' +
+    '</div>';
+}
+
+async function inviteEmployee() {
+  var email = (document.getElementById('inviteEmail')||{}).value||'';
+  var name  = (document.getElementById('inviteName')||{}).value||'';
+  var role  = (document.getElementById('inviteRole')||{}).value||'employee';
+  if (!email) { if(typeof showToast==='function') showToast('Enter employee email','warn'); return; }
+  try {
+    var r = await apiPost('/api/org/invite', {email,name,role});
+    if (r.ok) {
+      if(typeof showToast==='function') showToast('Invite sent to ' + email,'ok');
+      document.getElementById('inviteEmail').value='';
+      document.getElementById('inviteName').value='';
+      loadOrgData();
+    } else {
+      if(typeof showToast==='function') showToast(r.detail||'Invite failed','warn');
+    }
+  } catch(e) { console.error(e); }
+}
+
+async function registerMyDevice() {
+  var hostname = window.location.hostname || 'my-device';
+  try {
+    var r = await apiPost('/api/org/devices/register', {
+      hostname: hostname, device_name: hostname,
+      device_type: 'laptop', os: navigator.platform||'Unknown'
+    });
+    if (r.ok) {
+      if(typeof showToast==='function') showToast('Device registered! Agent token: ' + (r.device||{}).agent_token,'ok');
+      loadOrgData();
+    }
+  } catch(e) { console.error(e); }
+}
+
+// Auto-load on startup
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(loadOrgData, 1500);
+});
+
 </script>
 </body>
 </html>
