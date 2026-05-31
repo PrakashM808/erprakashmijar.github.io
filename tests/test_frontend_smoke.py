@@ -114,7 +114,10 @@ def main():
             check("client portal hides admin section", client_view["admin"] is False, str(client_view))
             check("client portal hides SOC section", client_view["soc"] is False, str(client_view))
             check("client portal hides SIEM section", client_view["siem"] is False, str(client_view))
-            check("client role badge shows CLIENT", client_view["badge"] == "CLIENT", str(client_view))
+            # applyRolePortal() groups user/client/employee into the "PERSONAL" portal
+            # (see comment "PERSONAL (user / client / employee)" in 01-app-core.js), so a
+            # client role intentionally renders the PERSONAL badge, not "CLIENT".
+            check("client role badge shows PERSONAL", client_view["badge"] == "PERSONAL", str(client_view))
 
         browser.close()
 

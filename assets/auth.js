@@ -762,7 +762,12 @@ const AUTH = (() => {
     forgotPassword, verifyOTP, resetPassword, changePassword,
     getAllUsers, getAllUsersAdmin,
     adminUpdateUser, adminDeleteUser, adminCreateUser,
-    passwordStrength, getUsers, saveUsers
+    passwordStrength, getUsers, saveUsers,
+
+    // 2FA / MFA
+    getMfaSettings, saveMfaSettings, generateBackupCodes,
+    setup2FA, enable2FA, verify2FA, disable2FA,
+    setMfaVerified, isMfaVerified, completeLoginAfter2FA
   };
 })();
 

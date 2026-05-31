@@ -305,7 +305,7 @@ button{cursor:pointer;font-family:var(--mono)}
         <div class="panel">
           <div class="panel-hdr"><div class="panel-title">&#128269; QUICK ACTIONS</div></div>
           <div class="panel-body" style="display:flex;flex-wrap:wrap;gap:.7rem">
-            <a href="../dashboard/index.html" class="btn btn-b">&#128269; Open Scan Dashboard</a>
+            <a href="../dashboard/index.html?stay=1" class="btn btn-b">&#128269; Open Scan Dashboard</a>
             <button class="btn btn-g" onclick="openInviteModal()">&#128231; Invite Employee</button>
             <button class="btn btn-o" onclick="bizNav('devices')">&#128187; Manage Devices</button>
             <button class="btn btn-o" onclick="bizNav('reports')">&#128196; View Reports</button>
@@ -382,7 +382,7 @@ button{cursor:pointer;font-family:var(--mono)}
             <div class="pg-title">DEVICES</div>
             <div class="pg-sub">All registered devices across your organization</div>
           </div>
-          <a href="../dashboard/index.html" class="btn btn-b">&#128269; Scan a Device</a>
+          <a href="../dashboard/index.html?stay=1" class="btn btn-b">&#128269; Scan a Device</a>
         </div>
 
         <div class="panel">
@@ -442,7 +442,7 @@ button{cursor:pointer;font-family:var(--mono)}
         </div>
         <div class="panel"><div class="panel-hdr"><div class="panel-title">&#128269; FULL SCAN REPORTS</div></div>
           <div class="panel-body"><p style="font-family:var(--mono);font-size:.63rem;color:var(--muted);margin-bottom:.8rem">Detailed vulnerability scan reports are available in the Scan Dashboard.</p>
-            <a href="../dashboard/index.html" class="btn btn-b">&#128269; Open Scan Dashboard</a></div></div>
+            <a href="../dashboard/index.html?stay=1" class="btn btn-b">&#128269; Open Scan Dashboard</a></div></div>
       </div>
 
       <!-- ── COMPLIANCE PAGE ── -->
@@ -450,7 +450,7 @@ button{cursor:pointer;font-family:var(--mono)}
         <div class="pg-hdr"><div class="pg-title">COMPLIANCE</div><div class="pg-sub">Regulatory compliance status for your organization</div></div>
         <div class="panel"><div class="panel-hdr"><div class="panel-title">COMPLIANCE FRAMEWORKS</div></div>
           <div class="panel-body"><p style="font-family:var(--mono);font-size:.63rem;color:var(--muted);margin-bottom:.8rem">Full compliance scoring (SOC2, ISO27001, PCI DSS, GDPR, HIPAA, NIST) is in the Scan Dashboard.</p>
-            <a href="../dashboard/index.html" class="btn btn-b">&#128269; View Compliance in Dashboard</a></div></div>
+            <a href="../dashboard/index.html?stay=1" class="btn btn-b">&#128269; View Compliance in Dashboard</a></div></div>
       </div>
 
       <!-- ── SETTINGS PAGE ── -->
@@ -535,7 +535,7 @@ button{cursor:pointer;font-family:var(--mono)}
           <div class="panel"><div class="panel-hdr"><div class="panel-title">LAUNCH NETWORK SCAN</div></div>
             <div class="panel-body">
               <p style="font-family:var(--mono);font-size:.63rem;color:var(--muted);margin-bottom:.8rem">Network discovery runs through the Scan Dashboard with full Nmap integration.</p>
-              <a href="../dashboard/index.html" class="btn btn-g" style="text-decoration:none">&#128269; OPEN SCAN DASHBOARD</a>
+              <a href="../dashboard/index.html?stay=1" class="btn btn-g" style="text-decoration:none">&#128269; OPEN SCAN DASHBOARD</a>
             </div>
           </div>
         </div>
@@ -545,12 +545,12 @@ button{cursor:pointer;font-family:var(--mono)}
           <div class="pg-hdr"><div class="pg-title">RUN SCAN</div><div class="pg-sub">Launch security scans against your organization</div></div>
           <div class="panel"><div class="panel-hdr"><div class="panel-title">SCAN TYPES</div></div>
             <div class="panel-body" style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">
-              <div class="device-card" onclick="window.open('../dashboard/index.html','_blank')" style="cursor:pointer"><div style="font-size:1.5rem;margin-bottom:.4rem">&#128269;</div><div class="device-name">Vulnerability Scan</div><div class="device-meta">SSH, ports, packages, CVEs</div></div>
-              <div class="device-card" onclick="window.open('../dashboard/index.html','_blank')" style="cursor:pointer"><div style="font-size:1.5rem;margin-bottom:.4rem">&#127760;</div><div class="device-name">Network Scan</div><div class="device-meta">Discover devices and open ports</div></div>
-              <div class="device-card" onclick="window.open('../dashboard/index.html','_blank')" style="cursor:pointer"><div style="font-size:1.5rem;margin-bottom:.4rem">&#128081;</div><div class="device-name">Web App Scan</div><div class="device-meta">SQLi, XSS, security headers</div></div>
-              <div class="device-card" onclick="window.open('../dashboard/index.html','_blank')" style="cursor:pointer"><div style="font-size:1.5rem;margin-bottom:.4rem">&#128565;</div><div class="device-name">Dark Web Scan</div><div class="device-meta">Breach check and dark web monitoring</div></div>
+              <div class="device-card" onclick="window.open('../dashboard/index.html?stay=1','_blank')" style="cursor:pointer"><div style="font-size:1.5rem;margin-bottom:.4rem">&#128269;</div><div class="device-name">Vulnerability Scan</div><div class="device-meta">SSH, ports, packages, CVEs</div></div>
+              <div class="device-card" onclick="window.open('../dashboard/index.html?stay=1','_blank')" style="cursor:pointer"><div style="font-size:1.5rem;margin-bottom:.4rem">&#127760;</div><div class="device-name">Network Scan</div><div class="device-meta">Discover devices and open ports</div></div>
+              <div class="device-card" onclick="window.open('../dashboard/index.html?stay=1','_blank')" style="cursor:pointer"><div style="font-size:1.5rem;margin-bottom:.4rem">&#128081;</div><div class="device-name">Web App Scan</div><div class="device-meta">SQLi, XSS, security headers</div></div>
+              <div class="device-card" onclick="window.open('../dashboard/index.html?stay=1','_blank')" style="cursor:pointer"><div style="font-size:1.5rem;margin-bottom:.4rem">&#128565;</div><div class="device-name">Dark Web Scan</div><div class="device-meta">Breach check and dark web monitoring</div></div>
             </div>
-            <div style="margin-top:.9rem"><a href="../dashboard/index.html" class="btn btn-g" style="text-decoration:none">&#128269; OPEN SCAN DASHBOARD</a></div>
+            <div style="margin-top:.9rem"><a href="../dashboard/index.html?stay=1" class="btn btn-g" style="text-decoration:none">&#128269; OPEN SCAN DASHBOARD</a></div>
           </div>
         </div>
 
@@ -558,7 +558,7 @@ button{cursor:pointer;font-family:var(--mono)}
         <div class="page" id="biz-scanhistory">
           <div class="pg-hdr"><div class="pg-title">SCAN HISTORY</div><div class="pg-sub">All previous scans across your organization</div></div>
           <div class="panel"><div class="panel-body" id="scanHistoryList">
-            <div style="text-align:center;padding:2rem;font-family:var(--mono);font-size:.65rem;color:var(--muted)">No scan history yet. <a href="../dashboard/index.html" style="color:var(--g2)">Run your first scan</a>.</div>
+            <div style="text-align:center;padding:2rem;font-family:var(--mono);font-size:.65rem;color:var(--muted)">No scan history yet. <a href="../dashboard/index.html?stay=1" style="color:var(--g2)">Run your first scan</a>.</div>
           </div></div>
         </div>
 
@@ -969,14 +969,14 @@ function renderBilling() {
   var plans = { free:'$0/mo · 3 devices · 10 scans/day', starter:'$19/mo · 10 devices · 50 scans/day', professional:'$79/mo · 50 devices · 500 scans/day', enterprise:'$199/mo · Unlimited devices & scans' };
   el.innerHTML = '<div style="font-family:var(--mono);font-size:.65rem;color:var(--white);margin-bottom:.5rem">Current Plan: <span style="color:var(--ok)">' + (plan||'free').toUpperCase() + '</span></div>' +
     '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-bottom:.9rem">' + (plans[plan]||'') + '</div>' +
-    '<div style="display:flex;gap:.6rem"><a href="../billing/pricing.html" class="btn btn-g btn-sm">UPGRADE PLAN</a><a href="../dashboard/index.html" onclick="setTimeout(function(){window.nav&&nav(\'billing\');},300)" class="btn btn-o btn-sm">MANAGE BILLING</a></div>';
+    '<div style="display:flex;gap:.6rem"><a href="../billing/pricing.html" class="btn btn-g btn-sm">UPGRADE PLAN</a><a href="../dashboard/index.html?stay=1" onclick="setTimeout(function(){window.nav&&nav(\'billing\');},300)" class="btn btn-o btn-sm">MANAGE BILLING</a></div>';
 }
 
 /* ── Reports ── */
 function generateReport() {
   bizToast('Report generation requires backend connection.', 'info');
   var el = document.getElementById('recentReports');
-  if (el) el.innerHTML = '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);padding:.5rem 0">Connect backend to generate PDF reports. <a href="../dashboard/index.html">Open Scan Dashboard</a> for full reports.</div>';
+  if (el) el.innerHTML = '<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);padding:.5rem 0">Connect backend to generate PDF reports. <a href="../dashboard/index.html?stay=1">Open Scan Dashboard</a> for full reports.</div>';
 }
 
 /* ── Invite ── */
@@ -1082,7 +1082,7 @@ function bizToast(msg, type) {
   } catch(e3) {}
 })();
 
-function bizOpenScan() { window.open('../dashboard/index.html', '_blank'); }
+function bizOpenScan() { window.open('../dashboard/index.html?stay=1', '_blank'); }
 function renderNetworkPage() {}
 function renderRiskDashboard() {
   var s = BIZ_DATA.stats || {};
@@ -1112,7 +1112,7 @@ function renderIntegrations() {}
 function renderRoles() {}
 
 
-function bizOpenScan() { window.open('../dashboard/index.html', '_blank'); }
+function bizOpenScan() { window.open('../dashboard/index.html?stay=1', '_blank'); }
 function renderNetworkPage() {}
 function renderRiskDashboard() {
   var s = BIZ_DATA.stats || {};
@@ -1179,7 +1179,7 @@ function renderAssetPage(type) {
 }
 function renderExecReports() {
   var el = document.getElementById('recentReports');
-  if (el) el.innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted)">Executive reports are generated from your latest scan data. <a href="../dashboard/index.html">Run a scan</a> first, then export as PDF.</div>';
+  if (el) el.innerHTML = '<div style="font-family:var(--mono);font-size:.63rem;color:var(--muted)">Executive reports are generated from your latest scan data. <a href="../dashboard/index.html?stay=1">Run a scan</a> first, then export as PDF.</div>';
   bizNav('reports');
 }
 function renderCompReports() {
@@ -1217,7 +1217,7 @@ function goToBizScanner() {
       localStorage.setItem('pm_portal_jwt', localStorage.getItem('pm_biz_jwt')||'');
     } catch(e) {}
   }
-  window.location.href = '../dashboard/index.html';
+  window.location.href = '../dashboard/index.html?stay=1';
 }
 </script>
 </body>

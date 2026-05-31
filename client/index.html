@@ -316,7 +316,7 @@
     <div style="display:flex;gap:.5rem;align-items:center">
       <button class="btn btn-out btn-sm" onclick="window.print()">&#128424; Print</button>
       <button class="btn btn-blue btn-sm" onclick="window.print()">&#11015; PDF</button>
-      <a href="../dashboard/index.html" class="btn btn-blue btn-sm" style="text-decoration:none;font-size:.75rem">&#128269; Scan Dashboard</a>
+      <a href="../dashboard/index.html?stay=1" class="btn btn-blue btn-sm" style="text-decoration:none;font-size:.75rem">&#128269; Scan Dashboard</a>
     </div>
   </div>
 </div>
@@ -357,7 +357,7 @@
     <div style="background:#fff;border-radius:10px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,.06)">
       <div style="font-size:.78rem;font-weight:700;color:#1e293b;margin-bottom:.6rem">&#9989; Quick Actions</div>
       <div style="display:flex;flex-direction:column;gap:.4rem">
-        <a href="../dashboard/index.html" style="display:block;padding:.45rem .7rem;background:#eff6ff;color:#1d4ed8;border-radius:6px;font-size:.72rem;font-weight:600;text-decoration:none">&#128269; Run Security Scan</a>
+        <a href="../dashboard/index.html?stay=1" style="display:block;padding:.45rem .7rem;background:#eff6ff;color:#1d4ed8;border-radius:6px;font-size:.72rem;font-weight:600;text-decoration:none">&#128269; Run Security Scan</a>
         <button onclick="tab('devices')" style="display:block;padding:.45rem .7rem;background:#f0fdf4;color:#15803d;border-radius:6px;font-size:.72rem;font-weight:600;text-align:left;border:none;cursor:pointer;width:100%">&#128187; Manage My Devices</button>
         <button onclick="tab('ai')" style="display:block;padding:.45rem .7rem;background:#fdf4ff;color:#7c3aed;border-radius:6px;font-size:.72rem;font-weight:600;text-align:left;border:none;cursor:pointer;width:100%">&#129302; Ask AI Assistant</button>
       </div>
@@ -375,7 +375,7 @@
 <div class="tab-pane" id="tp-devices">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem">
     <h3 style="font-size:.9rem;font-weight:700;color:#1e293b">&#128187; My Devices</h3>
-    <a href="../dashboard/index.html" style="font-size:.72rem;padding:.35rem .7rem;background:#1d4ed8;color:#fff;border-radius:6px;text-decoration:none;font-weight:600">+ Add Device (Scanner)</a>
+    <a href="../dashboard/index.html?stay=1" style="font-size:.72rem;padding:.35rem .7rem;background:#1d4ed8;color:#fff;border-radius:6px;text-decoration:none;font-weight:600">+ Add Device (Scanner)</a>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.6rem" id="clDeviceGrid">
     <div style="background:#fff;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)">
@@ -410,7 +410,7 @@
     </div>
   </div>
   <div style="margin-top:1rem;padding:.8rem;background:#eff6ff;border-radius:8px;font-size:.75rem;color:#1d4ed8">
-    &#128269; Use the <a href="../dashboard/index.html" style="font-weight:700">Scanner Dashboard</a> to scan and register each device. Results appear here automatically.
+    &#128269; Use the <a href="../dashboard/index.html?stay=1" style="font-weight:700">Scanner Dashboard</a> to scan and register each device. Results appear here automatically.
   </div>
 </div>
 
@@ -420,12 +420,12 @@
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">
     <div style="background:#fff;border-radius:10px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,.06)">
       <div style="font-size:.78rem;font-weight:700;color:#1e293b;margin-bottom:.6rem">&#128269; Scan Reports</div>
-      <div id="clScanReports" style="font-size:.75rem;color:#64748b">No scan reports yet. <a href="../dashboard/index.html">Run a scan</a> to generate reports.</div>
+      <div id="clScanReports" style="font-size:.75rem;color:#64748b">No scan reports yet. <a href="../dashboard/index.html?stay=1">Run a scan</a> to generate reports.</div>
     </div>
     <div style="background:#fff;border-radius:10px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,.06)">
       <div style="font-size:.78rem;font-weight:700;color:#1e293b;margin-bottom:.6rem">&#11015; Export</div>
       <button onclick="window.print()" style="width:100%;padding:.5rem;background:#1d4ed8;color:#fff;border:none;border-radius:6px;font-size:.72rem;font-weight:600;cursor:pointer;margin-bottom:.4rem">&#11015; PDF Export</button>
-      <a href="../dashboard/index.html" style="display:block;text-align:center;padding:.5rem;background:#f1f5f9;color:#475569;border-radius:6px;font-size:.72rem;font-weight:600;text-decoration:none">&#128196; Full Report (Scanner)</a>
+      <a href="../dashboard/index.html?stay=1" style="display:block;text-align:center;padding:.5rem;background:#f1f5f9;color:#475569;border-radius:6px;font-size:.72rem;font-weight:600;text-decoration:none">&#128196; Full Report (Scanner)</a>
     </div>
   </div>
 </div>
@@ -451,7 +451,7 @@
       <button onclick="clAiAsk('What should I do first to improve security?')" style="padding:.25rem .5rem;background:#ede9fe;color:#7c3aed;border:none;border-radius:4px;font-size:.68rem;cursor:pointer">Quick recommendations</button>
     </div>
   </div>
-  <a href="../dashboard/index.html" style="display:block;text-align:center;padding:.6rem;background:#f1f5f9;color:#475569;border-radius:8px;font-size:.75rem;font-weight:600;text-decoration:none">&#128269; Full AI Analysis in Scanner Dashboard</a>
+  <a href="../dashboard/index.html?stay=1" style="display:block;text-align:center;padding:.6rem;background:#f1f5f9;color:#475569;border-radius:8px;font-size:.75rem;font-weight:600;text-decoration:none">&#128269; Full AI Analysis in Scanner Dashboard</a>
 </div>
 
 <!-- ── BILLING TAB ── -->
@@ -726,6 +726,9 @@ function plainEnglish(issue) {
 
 /* ── RENDER ── */
 function renderAll() {
+  // The new dashboard layout uses loadClDashboard(); the functions below render
+  // the legacy "report" layout. Skip them entirely when that layout isn't present.
+  if (!document.getElementById('scoreNum') && !document.getElementById('issueList')) return;
   renderScore();
   renderStrip();
   renderIssues();
@@ -736,6 +739,7 @@ function renderAll() {
 }
 
 function renderScore() {
+  if (!document.getElementById('scoreNum')) return;  // old report layout not present (new dashboard layout active)
   var s = DATA.score;
   var grade = s>=90?'A':s>=80?'B':s>=70?'C':s>=55?'D':'F';
   var lbl = s>=80?'Good Security Posture':s>=60?'Some Issues Need Attention':s>=40?'Action Required':'Urgent — High Risk';
@@ -764,12 +768,14 @@ function renderStrip() {
 }
 
 function renderBanner() {
+  if (!document.getElementById('approveBanner')) return;  // old report layout not present
   var pending=DATA.issues.filter(function(i){return i.severity!=='low'&&(!APPROVALS[i.id]||APPROVALS[i.id]==='pending');}).length;
   document.getElementById('approveBanner').style.display=pending>0?'flex':'none';
 }
 
 function renderIssues() {
   var el=document.getElementById('issueList');
+  if (!el) return;  // old report layout not present
   if (!DATA.issues.length) {
     el.innerHTML='<div class="empty"><div class="empty-ico">&#9989;</div><div class="empty-title">No Issues Found</div><div class="empty-desc">All security checks passed. Great work!</div></div>';
     return;
@@ -811,6 +817,7 @@ function renderIssues() {
 }
 
 function renderTimeline() {
+  if (!document.getElementById('tlContent')) return;  // old report layout not present
   var crit=DATA.issues.filter(function(i){return i.severity==='critical';});
   var high=DATA.issues.filter(function(i){return i.severity==='high';});
   var med=DATA.issues.filter(function(i){return i.severity==='medium';});
@@ -1064,9 +1071,21 @@ function toast(msg, color) {
    MULTI-TENANT EMPLOYEE PORTAL ENHANCEMENTS
 ═══════════════════════════════════════════════════════════ */
 
+/* This block's employee/org UI lives in business/index.html. In the personal
+   portal those elements don't exist, so every render guards with `if(!el)return`.
+   These shims stop the org loader from throwing on the personal portal where
+   the dashboard runtime (API_ONLINE/SESSION/apiGet/apiPost) isn't present. */
+if (typeof API_ONLINE === 'undefined') { var API_ONLINE = true; }
+if (typeof SESSION === 'undefined') { var SESSION = (AUTH && AUTH.getSession) ? AUTH.getSession() : null; }
+if (typeof apiGet === 'undefined') {
+  var _portalApiBase = (typeof teamBackendUrl === 'function') ? teamBackendUrl : function(){ return (localStorage.getItem('pm_railway_url')||'https://pm-offsec-backend-production.up.railway.app'); };
+  async function apiGet(path){ try{ var t=localStorage.getItem('pm_jwt_token')||''; var r=await fetch(_portalApiBase()+path,{headers:{'Authorization':'Bearer '+t}}); return r.ok?await r.json():null; }catch(e){ return null; } }
+  async function apiPost(path,body){ try{ var t=localStorage.getItem('pm_jwt_token')||''; var r=await fetch(_portalApiBase()+path,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+t},body:JSON.stringify(body||{})}); var d=r.ok?await r.json():null; return Object.assign({ok:r.ok},d||{}); }catch(e){ return {ok:false}; } }
+}
+
 // Load org data for employee/owner
 async function loadOrgData() {
-  if (!API_ONLINE || typeof SESSION === 'undefined') return;
+  if (!API_ONLINE || !SESSION) return;
   try {
     var data = await apiGet('/api/org/me');
     if (!data) return;
@@ -1275,7 +1294,7 @@ function loadClDashboard() {
       return '<div style="padding:.4rem 0;border-bottom:1px solid #f1f5f9;font-size:.75rem;display:flex;justify-content:space-between">'+
         '<span style="color:#1e293b">'+(s.hostname||s.host||'Device')+'</span>'+
         '<span style="color:#64748b">'+(s.date||'').substring(0,10)+' · Score: '+(s.score||'--')+'</span></div>';
-    }).join('') : '<div style="color:#64748b;font-size:.75rem">No scan reports yet. <a href="../dashboard/index.html">Run a scan.</a></div>';
+    }).join('') : '<div style="color:#64748b;font-size:.75rem">No scan reports yet. <a href="../dashboard/index.html?stay=1">Run a scan.</a></div>';
   }
 
   // Current plan
@@ -1361,7 +1380,7 @@ function goToClientScanner() {
       localStorage.setItem('pm_portal_session', JSON.stringify(Object.assign({}, sess, {ts: Date.now()})));
     } catch(e) {}
   }
-  window.location.href = '../dashboard/index.html';
+  window.location.href = '../dashboard/index.html?stay=1';
 }
 
 </script>

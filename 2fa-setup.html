@@ -229,6 +229,7 @@ AUTH.requireAuth('login.html');
 initCanvas('bgCanvas');
 
 var SESSION = AUTH.getSession();
+if (!SESSION) { window.location.href = 'login.html'; }
 var selectedMethod = 'totp';
 var pendingSecret  = null;
 var pendingCodes   = [];

@@ -15,6 +15,11 @@ if (!SESSION) throw new Error('Not authenticated');
     var role = SESSION.role;
     var ctype = SESSION.client_type || 'individual';
     var stay = /[?&]stay=1/.test(location.search);
+    // ?stay=1 is the explicit "I intentionally opened the operator/scanner
+    // dashboard" signal that every portal's "Scanner Dashboard" link/button
+    // now sends. Honor it for ALL roles so admins, clients and employees are
+    // not bounced straight back to their own portal.
+    if (stay) return;
     if (role === 'client' && ctype !== 'business') { location.replace('../client/index.html?preview=1'); return; }
     if (role === 'employee') { location.replace('../client/index.html?preview=1'); return; }
     if (role === 'admin' && !stay) { location.replace('../admin/index.html'); return; }

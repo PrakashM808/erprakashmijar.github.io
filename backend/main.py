@@ -389,6 +389,15 @@ async def jwt_register(req: JWTRegisterReq, background_tasks: BackgroundTasks):
     user_create(user_id=user_id, name=req.name, email=req.email, password=hashed,
                 role="user", plan=req.plan, company=req.company, phone=req.phone, client_type=ctype)
     plan_set(user_id, req.plan)
+    reg_role = "user"
+    # Business accounts get an organization automatically so the business portal works immediately.
+    if ctype == "business":
+        try:
+            org = org_create(req.company or (req.name + "'s Organization"), user_id, req.plan)
+            user_update(user_id, org_id=org["id"], role="owner")
+            reg_role = "owner"
+        except Exception as _e:
+            print(f"[register] org auto-create note: {_e}")
     if req.plan != "free":
         try: start_trial(user_id, req.plan)
         except: pass
@@ -396,9 +405,9 @@ async def jwt_register(req: JWTRegisterReq, background_tasks: BackgroundTasks):
         background_tasks.add_task(send_welcome_email, req.email, req.name, req.plan)
     token = ""
     if JWT_AVAILABLE:
-        token = pyjwt.encode({"sub":req.email,"user_id":user_id,"plan":req.plan,"role":"user","client_type":ctype,
+        token = pyjwt.encode({"sub":req.email,"user_id":user_id,"plan":req.plan,"role":reg_role,"client_type":ctype,
             "exp":datetime.utcnow()+timedelta(hours=JWT_EXPIRY_HOURS)}, JWT_SECRET, algorithm=JWT_ALGORITHM)
-    return {"ok":True,"access_token":token,"user_id":user_id,"email":req.email,"name":req.name,"plan":req.plan,"role":"user","client_type":ctype}
+    return {"ok":True,"access_token":token,"user_id":user_id,"email":req.email,"name":req.name,"plan":req.plan,"role":reg_role,"client_type":ctype}
 
 @app.post("/api/auth/login")
 async def jwt_login(req: JWTLoginReq):
@@ -1405,7 +1414,7 @@ async def create_org(body: OrgCreateReq, current_user: dict = Depends(get_curren
     org = org_create(body.name, user_id)
     # Update user's org_id and role
     users = user_get(user_id)
-    user_update(user_id, {"org_id": org["id"], "role": "owner"})
+    user_update(user_id, org_id=org["id"], role="owner")
     audit_action("org_create", org["id"], user_id)
     return {"ok": True, "org": org}
 
@@ -1479,7 +1488,7 @@ async def accept_invite(body: AcceptInviteReq):
             raise HTTPException(400, new_user.get("error", "Registration failed."))
     else:
         # Existing user joining org
-        user_update(users[0]["id"], {"org_id": inv["org_id"], "role": inv.get("role", "employee")})
+        user_update(users[0]["id"], org_id=inv["org_id"], role=inv.get("role", "employee"))
     invite_accept(body.token)
     return {"ok": True, "message": "Welcome! You can now log in."}
 
@@ -1509,7 +1518,7 @@ async def remove_employee(employee_id: str, current_user: dict = Depends(get_cur
     user_id = current_user.get("id") or current_user.get("user_id")
     if current_user.get("role") not in ("owner", "admin"):
         raise HTTPException(403, "Only org owners can remove employees.")
-    user_update(employee_id, {"org_id": None, "role": "user", "status": "active"})
+    user_update(employee_id, org_id="", role="user", status="active")
     audit_action("remove_employee", employee_id, user_id)
     return {"ok": True}
 

@@ -441,7 +441,7 @@
               <div style="margin-top:1rem;font-size:.8rem;color:var(--ink3)">
                 Malware detection uses signature matching on scan results. Connect your backend ransomware feed for real-time monitoring.
               </div>
-              <a href="../dashboard/index.html" class="btn btn-blue btn-sm" style="margin-top:.8rem;text-decoration:none;display:inline-flex">&#128269; Open Scan Dashboard for Deep Scan</a>
+              <a href="../dashboard/index.html?stay=1" class="btn btn-blue btn-sm" style="margin-top:.8rem;text-decoration:none;display:inline-flex">&#128269; Open Scan Dashboard for Deep Scan</a>
             </div>
           </div>
         </div>
@@ -742,7 +742,7 @@
                   <div style="font-size:2rem;margin-bottom:.5rem">&#127760;</div>
                   <div>Interactive threat map — connect <a href="https://api.ransomware.live" target="_blank" style="color:var(--blue)">Ransomwatch</a> and <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" style="color:var(--blue)">CISA KEV</a></div>
                   <div style="margin-top:.5rem;font-size:.75rem">Live feed integration available in Scan Dashboard → Dark Web page</div>
-                  <a href="../dashboard/index.html" class="btn btn-blue btn-sm" style="margin-top:.8rem;display:inline-flex;text-decoration:none">Open Scan Dashboard</a>
+                  <a href="../dashboard/index.html?stay=1" class="btn btn-blue btn-sm" style="margin-top:.8rem;display:inline-flex;text-decoration:none">Open Scan Dashboard</a>
                 </div>
               </div>
               <div style="margin-top:.8rem;display:grid;grid-template-columns:1fr 1fr;gap:.6rem" id="threatActorList">
@@ -834,7 +834,7 @@
         <div class="page" id="p-docs">
           <div class="pg-hdr"><div class="pg-ttl">Documentation</div><div class="pg-sub">Platform documentation and user guides</div></div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem">
-            <div class="card" style="cursor:pointer" onclick="window.open('../dashboard/index.html','_blank')"><div class="card-hdr"><div class="card-title">&#128269; Scanner Guide</div></div><div class="card-body" style="font-size:.8rem;color:var(--ink3)">How to use the Vulnerability Scanner</div></div>
+            <div class="card" style="cursor:pointer" onclick="window.open('../dashboard/index.html?stay=1','_blank')"><div class="card-hdr"><div class="card-title">&#128269; Scanner Guide</div></div><div class="card-body" style="font-size:.8rem;color:var(--ink3)">How to use the Vulnerability Scanner</div></div>
             <div class="card"><div class="card-hdr"><div class="card-title">&#127760; API Reference</div></div><div class="card-body" style="font-size:.8rem;color:var(--ink3)">REST API endpoints for integration</div></div>
             <div class="card"><div class="card-hdr"><div class="card-title">&#128268; Integration Setup</div></div><div class="card-body" style="font-size:.8rem;color:var(--ink3)">Slack, Jira, Microsoft 365 setup</div></div>
           </div>
@@ -845,7 +845,7 @@
           <div class="pg-hdr"><div class="pg-ttl">Knowledge Base</div><div class="pg-sub">Help articles and FAQs for users</div></div>
           <div class="card"><div class="card-hdr"><div class="card-title">&#128218; Popular Articles</div></div>
             <div class="card-body">
-              <div class="ff-item"><div><div class="ff-name">How to run your first scan</div><div class="ff-desc">Getting started with vulnerability scanning</div></div><a href="../dashboard/index.html" class="btn btn-out btn-sm">View</a></div>
+              <div class="ff-item"><div><div class="ff-name">How to run your first scan</div><div class="ff-desc">Getting started with vulnerability scanning</div></div><a href="../dashboard/index.html?stay=1" class="btn btn-out btn-sm">View</a></div>
               <div class="ff-item"><div><div class="ff-name">Setting up 2FA / MFA</div><div class="ff-desc">Securing your account with two-factor authentication</div></div><button class="btn btn-out btn-sm" onclick="toast('KB articles — connect CMS for full content','info')">View</button></div>
               <div class="ff-item"><div><div class="ff-name">Understanding CVSS scores</div><div class="ff-desc">What vulnerability scores mean and how to prioritize</div></div><button class="btn btn-out btn-sm" onclick="ap('learn')">View</button></div>
               <div class="ff-item"><div><div class="ff-name">Inviting team members</div><div class="ff-desc">How to add employees to your organization</div></div><button class="btn btn-out btn-sm" onclick="toast('KB articles — connect CMS for full content','info')">View</button></div>
@@ -1933,7 +1933,7 @@ function renderMalware() {
   el.innerHTML = '<div style="background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:8px;padding:.9rem;margin-bottom:.8rem;font-size:.82rem;color:var(--ok)">'+
     '&#9989; No malware detections reported across any tenant today. Platform is clean.</div>'+
     '<div style="font-size:.78rem;color:var(--ink3);margin-bottom:.8rem">Malware detection uses signature matching on scan results. Connect your backend ransomware feed for real-time monitoring.</div>'+
-    '<a href="../dashboard/index.html" style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .8rem;background:var(--blue);color:#fff;border-radius:6px;font-size:.78rem;font-weight:600;text-decoration:none">&#128269; Open Scan Dashboard for Deep Scan</a>';
+    '<a href="../dashboard/index.html?stay=1" style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .8rem;background:var(--blue);color:#fff;border-radius:6px;font-size:.78rem;font-weight:600;text-decoration:none">&#128269; Open Scan Dashboard for Deep Scan</a>';
 }
 function renderTickets() {
   var tb = document.getElementById('ticketsFullTable');
@@ -1950,7 +1950,7 @@ function filterTickets() {
 /* ── NEW ADMIN FUNCTIONS ── */
 function goToDashboard() {
   /* Scanner Dashboard link — opens in same tab and dashboard has portal back button */
-  window.location.href = '../dashboard/index.html';
+  window.location.href = '../dashboard/index.html?stay=1';
   return false;
 }
 
@@ -2073,6 +2073,34 @@ function saveAISettings() {
 
 function checkApiKeys() { toast('Check Railway dashboard → Variables tab for key status', 'info'); }
 
+/* Tab renderers for SMTP / API Keys / AI Settings.
+   ap() calls these on tab open; they were referenced but never defined,
+   which threw a ReferenceError and broke those three tabs. They hydrate
+   each panel's form fields from the same localStorage keys the matching
+   save handlers write to (pm_smtp_config / pm_ai_config). */
+function renderSMTP() {
+  var cfg = {};
+  try { cfg = JSON.parse(localStorage.getItem('pm_smtp_config') || '{}'); } catch(e) {}
+  var set = function(id, v) { var el = document.getElementById(id); if (el && v != null) el.value = v; };
+  set('smtpHost', cfg.host); set('smtpPort', cfg.port); set('smtpEnc', cfg.enc);
+  set('smtpUser', cfg.user); set('smtpName', cfg.name);
+}
+
+function renderApiKeys() {
+  /* The key table is static (status comes from Railway env vars);
+     nothing to hydrate, but define the function so the tab opens cleanly. */
+}
+
+function renderAISettings() {
+  var cfg = {};
+  try { cfg = JSON.parse(localStorage.getItem('pm_ai_config') || '{}'); } catch(e) {}
+  var setVal = function(id, v) { var el = document.getElementById(id); if (el && v != null) el.value = v; };
+  var setChk = function(id, v) { var el = document.getElementById(id); if (el && v != null) el.checked = !!v; };
+  setVal('aiModel', cfg.model); setVal('aiMaxTokens', cfg.maxTokens);
+  setChk('aiFixes', cfg.fixes); setChk('aiChat', cfg.chat);
+  setChk('aiReports', cfg.reports); setChk('aiTriage', cfg.triage);
+}
+
 
 function goToScannerDashboard() {
   // Write ADMIN_SESSION to pm_session_v2 so dashboard knows role=admin
@@ -2083,7 +2111,7 @@ function goToScannerDashboard() {
       localStorage.setItem('pm_portal_jwt', localStorage.getItem('pm_admin_jwt')||localStorage.getItem('pm_jwt_token')||'');
     } catch(e) {}
   }
-  window.location.href = '../dashboard/index.html';
+  window.location.href = '../dashboard/index.html?stay=1';
 }
 
 
