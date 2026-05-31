@@ -1697,7 +1697,7 @@ function applyRolePortal() {
 
   /* Helper: show/hide a nav item by its nav('xxx') target */
   function showItem(page, show) {
-    document.querySelectorAll('.sb-item[onclick*="nav(\'"+page+"\')"]').forEach(function(el){
+    document.querySelectorAll('.sb-item[data-nav="'+page+'"]').forEach(function(el){
       el.style.display = show ? '' : 'none';
     });
   }

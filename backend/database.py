@@ -25,17 +25,20 @@ print(f"[DB] Mode: {'PostgreSQL' if POSTGRES_AVAILABLE else 'In-Memory (localSto
 _pool = None
 
 def get_pool():
-    global _pool
+    global _pool, POSTGRES_AVAILABLE
     if _pool is None and POSTGRES_AVAILABLE:
         try:
             _pool = ThreadedConnectionPool(
-                minconn=1, maxconn=10,
+                minconn=1, maxconn=5,
                 dsn=DATABASE_URL,
+                connect_timeout=5,
                 cursor_factory=psycopg2.extras.RealDictCursor
             )
             print("[DB] Connection pool created")
         except Exception as e:
             print(f"[DB] Pool creation failed: {e}")
+            POSTGRES_AVAILABLE = False  # Disable further attempts after failure
+            _pool = None
     return _pool
 
 @contextmanager

@@ -1207,14 +1207,18 @@ function renderInvoicesBiz() {
 function goToBizScanner() {
   if (BIZ_SESSION) {
     try {
-      localStorage.setItem('pm_session_v2', JSON.stringify(BIZ_SESSION));
-      localStorage.setItem('pm_portal_session', JSON.stringify(Object.assign({}, BIZ_SESSION, {ts: Date.now()})));
+      var dashSess = Object.assign({}, BIZ_SESSION, {
+        ts: Date.now(),
+        client_type: 'business',
+        role: BIZ_SESSION.role === 'admin' ? 'admin' : 'owner'
+      });
+      localStorage.setItem('pm_session_v2', JSON.stringify(dashSess));
+      localStorage.setItem('pm_portal_session', JSON.stringify(dashSess));
       localStorage.setItem('pm_portal_jwt', localStorage.getItem('pm_biz_jwt')||'');
     } catch(e) {}
   }
   window.location.href = '../dashboard/index.html';
 }
-
 </script>
 </body>
 </html>

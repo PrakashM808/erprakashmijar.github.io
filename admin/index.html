@@ -1161,86 +1161,36 @@ function getUserScoreInfo(userId) {
 
 /* ── OVERVIEW ── */
 function renderOverview() {
-  var clients=getClientUsers();
-  var devices=getDevicesForUser();
-  var allIssues=devices.flatMap(function(d){return d.issues||[];});
-  var critIssues=allIssues.filter(function(i){return i.severity==='critical';});
-  // When real backend client data is loaded, sum the per-client critical counts
-  // (localStorage devices are empty in production, which previously showed 0).
-  var critCount = critIssues.length;
-  if (_BACKEND_CLIENTS) {
-    critCount = _BACKEND_CLIENTS.reduce(function(s,c){ return s + (c.critical_count||0); }, 0);
-  }
-  var agreements=getAllAgreements();
-
-  // Pending approvals
-  var pendingCount=0;
-  clients.forEach(function(u){
-    var ap=getApprovalsForUser(u.id);
-    var devs=getDevicesForUser(u.id);
-    devs.flatMap(function(d){return d.issues||[];}).filter(function(i){return i.severity==='critical'||i.severity==='high';}).forEach(function(iss){
-      var issId=(iss.title||'').replace(/\s/g,'_');
-      if(!ap[issId]||ap[issId]==='pending') pendingCount++;
-    });
+  var clients = typeof _BACKEND_CLIENTS !== 'undefined' ? (_BACKEND_CLIENTS||[]) : [];
+  try { var st=JSON.parse(localStorage.getItem('pm_users_list')||'[]'); if(!clients.length) clients=st; } catch(e){}
+  var totalClients=clients.length, critical=0, agreements=0, approvals=0;
+  clients.forEach(function(c){ critical+=(c.critical_issues||0); if(c.agreement_status==='signed') agreements++; approvals+=(c.pending_approvals||0); });
+  var stats=document.getElementById('overviewStats');
+  if(stats) stats.innerHTML=
+    '<div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Total Clients</span><div class="stat-box-ico ico-blue">&#128101;</div></div><div class="stat-box-num">'+totalClients+'</div><div class="stat-box-hint">Active accounts</div></div>'+
+    '<div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Critical Issues</span><div class="stat-box-ico ico-red">&#128683;</div></div><div class="stat-box-num">'+critical+'</div><div class="stat-box-hint">Across all clients</div></div>'+
+    '<div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Pending Approvals</span><div class="stat-box-ico ico-orange">&#9201;</div></div><div class="stat-box-num">'+approvals+'</div><div class="stat-box-hint">Awaiting review</div></div>'+
+    '<div class="stat-box"><div class="stat-box-top"><span class="stat-box-lbl">Agreements Signed</span><div class="stat-box-ico ico-green">&#9878;</div></div><div class="stat-box-num">'+agreements+'</div><div class="stat-box-hint">Legal documents</div></div>';
+  var tb=document.getElementById('clientActivityTable');
+  if(!tb) return;
+  if(!clients.length){ tb.innerHTML='<tr><td colspan="6" class="empty-state">No clients yet — add a client or connect backend.</td></tr>'; return; }
+  var rows=[];
+  clients.forEach(function(c){
+    var score=c.avg_score||0, grade=score>=75?'A':score>=60?'B':score>=45?'C':'D';
+    var col=score>=75?'var(--ok)':score>=50?'var(--warn)':'var(--red)';
+    var av=(c.name||'?')[0].toUpperCase();
+    var row=document.createElement('tr');
+    row.innerHTML='<td><div style="display:flex;align-items:center;gap:.5rem"><div style="width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700">'+av+'</div>'+
+      '<div><div style="font-weight:500">'+(c.name||'Unknown')+'</div><div style="font-size:.72rem;color:var(--ink3)">'+(c.email||'')+'</div></div></div></td>'+
+      '<td style="color:var(--ink3)">'+(c.last_scan||'Never')+'</td>'+
+      '<td><span style="background:rgba(37,99,235,.08);color:'+col+';border-radius:4px;padding:.12rem .4rem;font-size:.72rem;font-weight:700">'+(score||'--')+' ('+grade+')</span></td>'+
+      '<td><span style="color:var(--red);font-size:.75rem">'+(c.critical_issues||0)+' critical</span></td>'+
+      '<td><span style="background:var(--blue-lt);color:var(--blue);border-radius:4px;padding:.1rem .35rem;font-size:.7rem">'+(c.plan||'starter').toUpperCase()+'</span></td>'+
+      '<td><button class="btn btn-out btn-sm" onclick="goToClients()" type="button">&#128270; View</button></td>';
+    rows.push(row.outerHTML);
   });
-
-  // Update sidebar badge
-  var pb=document.getElementById('sbApprovalBadge');
-  if(pendingCount>0){pb.style.display='';pb.textContent=pendingCount;}
-
-  document.getElementById('sbClientBadge').textContent=clients.length;
-
-  document.getElementById('overviewStats').innerHTML=
-    statBox('&#128101;','Total Clients',clients.length,'Active accounts','ico-blue')
-    +statBox('&#128683;','Critical Issues',critCount,'Across all clients','ico-red')
-    +statBox('&#9201;','Pending Approvals',pendingCount,'Awaiting client review','ico-orange')
-    +statBox('&#9878;','Agreements Signed',agreements.length,'Legal documents','ico-green');
-
-  // Overview table
-  var rows=clients.slice(0,10).map(function(u){
-    var info=getUserScoreInfo(u.id);
-    var scoreHtml=info.score!=null?scoreChip(info.score):'<span style="color:var(--ink4);font-size:.75rem">Not scanned</span>';
-    return '<tr>'
-      +'<td><div style="display:flex;align-items:center;gap:.6rem"><div class="avatar">'+u.name[0].toUpperCase()+'</div>'
-      +'<div><div style="font-weight:600;font-size:.8rem">'+u.name+'</div><div style="font-size:.7rem;color:var(--ink3)">'+u.email+'</div></div></div></td>'
-      +'<td style="color:var(--ink3);font-size:.75rem">'+(u.lastLogin?new Date(u.lastLogin).toLocaleDateString():'Never')+'</td>'
-      +'<td>'+scoreHtml+'</td>'
-      +'<td>'+(info.crit>0?'<span class="badge b-red">'+info.crit+' critical</span>':'<span class="badge b-green">None</span>')+'</td>'
-      +'<td><span class="badge '+(u.plan==='enterprise'?'b-purple':u.plan==='pro'?'b-blue':u.plan==='starter'?'b-green':'b-gray')+'">'+u.plan.toUpperCase()+'</span></td>'
-      +'<td><button class="btn btn-out btn-sm" onclick="viewClientReport(\''+u.id+'\')">&#128065; View</button></td>'
-      +'</tr>';
-  }).join('');
-
-  document.getElementById('overviewTable').innerHTML=rows||'<tr><td colspan="6" style="text-align:center;color:var(--ink4);padding:2rem">No clients yet. <button class="btn btn-blue btn-sm" onclick="ap(\'addclient\')">Add first client</button></td></tr>';
-
-  // Critical issues list
-  var critList=critIssues.slice(0,5).map(function(i){
-    return '<div style="display:flex;align-items:center;gap:.6rem;padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.78rem">'
-      +'<span class="badge b-critical">CRITICAL</span>'
-      +'<span style="flex:1;color:var(--ink2)">'+(i.title||'Unknown')+'</span>'
-      +'</div>';
-  }).join('');
-  document.getElementById('critIssuesList').innerHTML=critList||'<div style="text-align:center;padding:1.5rem;color:var(--ink4);font-size:.78rem">&#9989; No critical issues</div>';
-
-  // Pending approvals list
-  var pendList=[];
-  clients.forEach(function(u){
-    var ap=getApprovalsForUser(u.id);
-    var devs=getDevicesForUser(u.id);
-    devs.flatMap(function(d){return d.issues||[];}).filter(function(i){return i.severity==='critical';}).slice(0,2).forEach(function(iss){
-      var issId=(iss.title||'').replace(/\s/g,'_');
-      if(!ap[issId]||ap[issId]==='pending'){
-        pendList.push('<div style="display:flex;align-items:center;gap:.6rem;padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.78rem">'
-          +'<div class="avatar" style="width:22px;height:22px;font-size:.6rem">'+u.name[0]+'</div>'
-          +'<span style="flex:1;color:var(--ink2)">'+(iss.title||'')+'</span>'
-          +'<span class="badge b-gray">Pending</span>'
-          +'</div>');
-      }
-    });
-  });
-  document.getElementById('pendingApprList').innerHTML=pendList.slice(0,5).join('')||'<div style="text-align:center;padding:1.5rem;color:var(--ink4);font-size:.78rem">&#9989; No pending approvals</div>';
+  tb.innerHTML=rows.join('');
 }
-
 function statBox(ico,lbl,val,sub,icoClass) {
   return '<div class="stat-box">'
     +'<div class="stat-box-top"><span class="stat-box-lbl">'+lbl+'</span><div class="stat-box-ico '+icoClass+'">'+ico+'</div></div>'
@@ -1673,25 +1623,27 @@ var FEATURE_FLAGS = [
 ];
 
 async function renderAnalytics() {
-  if (typeof loadPlatformStats === 'function') await loadPlatformStats();
-  if (typeof loadAllOrgs === 'function') await loadAllOrgs();
-  // Populate stat cards
-  var orgsEl = document.getElementById('orgsTableBody');
-  if (orgsEl) {
-    var data = await adminApiGet('/api/admin/platform-stats');
-    if (data) {
-      var setEl = function(id, val) { var e=document.getElementById(id); if(e) e.textContent=val; };
-      setEl('anTotalUsers',  data.total_users  || '-');
-      setEl('anActiveToday', data.active_users || '-');
-      setEl('anScansWeek',   '-');
-      // MRR calc
-      var plans = data.by_plan || {};
-      var mrr = ((plans.starter||0)*19 + (plans.professional||0)*79 + (plans.enterprise||0)*199);
-      setEl('anMRR', '$'+mrr);
-    }
-  }
-}
+  var clients = typeof _BACKEND_CLIENTS !== 'undefined' ? (_BACKEND_CLIENTS||[]) : [];
+  try { var stored = JSON.parse(localStorage.getItem('pm_users_list')||'[]'); if(!clients.length) clients=stored; } catch(e){}
 
+  var planPrices = {free:0, starter:19, professional:79, enterprise:199};
+  var mrr = clients.reduce(function(a,c){ return a+(planPrices[c.plan||'free']||0); }, 0);
+  var planCounts = {free:0,starter:0,professional:0,enterprise:0};
+  clients.forEach(function(c){ var p=c.plan||'free'; if(planCounts[p]!==undefined) planCounts[p]++; });
+
+  var setEl = function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
+  setEl('anTotalUsers', clients.length);
+  setEl('anActiveToday', '—');
+  setEl('anScansWeek', '—');
+  setEl('anMRR', '$'+mrr);
+
+  var pb = document.getElementById('planBreakdown');
+  if (pb) pb.innerHTML = Object.entries(planCounts).map(function(e){
+    var pct = clients.length ? Math.round(e[1]/clients.length*100) : 0;
+    return '<div style="margin-bottom:.7rem"><div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.25rem"><span style="font-weight:500">'+e[0].toUpperCase()+'</span><span>'+e[1]+' ('+pct+'%)</span></div>'+
+           '<div style="height:6px;background:var(--border);border-radius:3px"><div style="height:6px;background:var(--blue);border-radius:3px;width:'+pct+'%"></div></div></div>';
+  }).join('');
+}
 async function renderAllUsers() {
   var tb = document.getElementById('usersTable');
   if (!tb) return;
@@ -2134,6 +2086,8 @@ function goToScannerDashboard() {
   window.location.href = '../dashboard/index.html';
 }
 
+
+function goToClients(){ap("clients");}
 </script>
 </body>
 </html>
