@@ -220,6 +220,11 @@
       border-left:2px solid #00d4ff!important;
       color:#00d4ff!important;
     }
+
+  /* Hide global score-hero and status-strip — only show in dashboard tab via JS */
+  .score-hero, .status-strip { display: none; }
+  .show-in-dash .score-hero, .show-in-dash .status-strip { display: block; }
+  .show-in-dash .status-strip { display: grid; }
 </style>
 </head>
 <body>
@@ -256,27 +261,19 @@
   <aside style="width:220px;background:#0f172a;border-right:1px solid rgba(148,163,184,.1);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100">
     <div style="padding:1rem 1rem .6rem;border-bottom:1px solid rgba(148,163,184,.1)">
       <div style="font-family:'Space Mono',monospace;font-size:.75rem;color:#f1f5f9;font-weight:700;letter-spacing:.08em">PM::OFFSEC</div>
-      <div style="font-family:'Space Mono',monospace;font-size:.55rem;color:#00d4ff;letter-spacing:.1em;margin-top:.15rem">PERSONAL PORTAL</div>
+      <div style="font-family:'Space Mono',monospace;font-size:.55rem;color:#00d4ff;letter-spacing:.1em;margin-top:.12rem">PERSONAL PORTAL</div>
     </div>
     <div style="padding:.5rem 1rem;background:rgba(0,212,255,.07);border-bottom:1px solid rgba(148,163,184,.1)">
-      <div style="font-family:'Space Mono',monospace;font-size:.62rem;color:#f1f5f9;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="sidebarUserName">My Account</div>
+      <div style="font-family:'Space Mono',monospace;font-size:.62rem;color:#f1f5f9;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="sidebarUserName">My Account</div>
       <div style="font-family:'Space Mono',monospace;font-size:.5rem;color:#00d4ff;margin-top:.1rem">&#9679; PERSONAL SECURITY</div>
     </div>
     <nav style="padding:.4rem 0;flex:1;overflow-y:auto">
 
       <div class="cl-sb-sec">Dashboard</div>
-      <button onclick="tab('dashboard')" id="clTab-dashboard" class="cl-sb-btn cl-sb-active">&#128202; Security Score</button>
-      <button onclick="tab('dashboard')" class="cl-sb-btn">&#128737; Devices Protected</button>
-      <button onclick="tab('alerts')" id="clTab-alerts" class="cl-sb-btn">&#128276; Latest Alerts</button>
+      <button onclick="tab('dashboard')" id="clTab-dashboard" class="cl-sb-btn cl-sb-active">&#128202; Security Dashboard</button>
 
       <div class="cl-sb-sec">My Devices</div>
-      <button onclick="tab('devices')" id="clTab-devices" class="cl-sb-btn">&#128187; Laptop</button>
-      <button onclick="tab('devices')" class="cl-sb-btn">&#128421; Desktop</button>
-      <button onclick="tab('devices')" class="cl-sb-btn">&#128241; Mobile Phone</button>
-      <button onclick="tab('devices')" class="cl-sb-btn">&#128203; Tablet</button>
-      <button onclick="tab('devices')" class="cl-sb-btn">&#128250; Smart TV</button>
-      <button onclick="tab('devices')" class="cl-sb-btn">&#127760; Router</button>
-      <button onclick="tab('devices')" class="cl-sb-btn">&#128247; Home CCTV</button>
+      <button onclick="tab('devices')" id="clTab-devices" class="cl-sb-btn">&#128187; My Devices</button>
 
       <div class="cl-sb-sec">Reports</div>
       <button onclick="tab('reports')" id="clTab-reports" class="cl-sb-btn">&#128196; Scan Reports</button>
@@ -284,9 +281,7 @@
       <button onclick="window.print()" class="cl-sb-btn">&#11015; PDF Export</button>
 
       <div class="cl-sb-sec">AI Security Assistant</div>
-      <button onclick="tab('ai')" id="clTab-ai" class="cl-sb-btn">&#129302; Security Questions</button>
-      <button onclick="tab('ai')" class="cl-sb-btn">&#128737; Threat Explanations</button>
-      <button onclick="tab('ai')" class="cl-sb-btn">&#128269; Recommendations</button>
+      <button onclick="tab('ai')" id="clTab-ai" class="cl-sb-btn">&#129302; Ask AI Assistant</button>
 
       <div class="cl-sb-sec">Billing</div>
       <button onclick="tab('billing')" id="clTab-billing" class="cl-sb-btn">&#128179; Subscription</button>
@@ -298,7 +293,7 @@
       <button onclick="tab('settings')" class="cl-sb-btn">&#128737; Security Preferences</button>
 
       <div class="cl-sb-sec">Portal</div>
-      <button onclick="window.location.href='../dashboard/index.html'" class="cl-sb-btn">&#128269; Scanner Dashboard</button>
+      <button onclick="goToClientScanner()" class="cl-sb-btn">&#128269; Scanner Dashboard</button>
 
     </nav>
     <div style="padding:.8rem 1rem;border-top:1px solid rgba(148,163,184,.1)">
@@ -329,125 +324,7 @@
 <!-- PORTAL BODY -->
 <div id="portalBody" style="display:none;margin-left:220px;padding-top:72px">
 <div class="wrap">
-
-  <!-- Score Hero -->
-  <div class="score-hero">
-    <div class="score-hero-inner">
-      <div class="score-ring">
-        <svg width="108" height="108" viewBox="0 0 108 108">
-          <circle cx="54" cy="54" r="45" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="8"/>
-          <circle cx="54" cy="54" r="45" fill="none" stroke="#fff" stroke-width="8"
-            stroke-dasharray="283" id="scoreArc" stroke-dashoffset="283" stroke-linecap="round"/>
-        </svg>
-        <div class="score-ring-txt">
-          <div class="score-num" id="scoreNum">--</div>
-          <div class="score-grade" id="scoreGrade">--</div>
-        </div>
-      </div>
-      <div class="score-info">
-        <div class="score-lbl" id="scoreLbl">Loading your report...</div>
-        <div class="score-desc" id="scoreDesc">Fetching your security data...</div>
-        <div class="score-meta">
-          <span>&#128197; <span id="scanDate">-</span></span>
-          <span>&#128268; <span id="devCount">-</span></span>
-          <span>&#128203; <span id="rptId">-</span></span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Status strip -->
-  <div class="status-strip">
-    <div class="stat-card danger"><div class="stat-ico">&#128683;</div><div class="stat-num red" id="cCrit">-</div><div class="stat-lbl">Critical Issues</div><div class="stat-hint">Immediate action</div></div>
-    <div class="stat-card warn"><div class="stat-ico">&#9888;</div><div class="stat-num orange" id="cHigh">-</div><div class="stat-lbl">High Risk</div><div class="stat-hint">Within 7 days</div></div>
-    <div class="stat-card info"><div class="stat-ico">&#128202;</div><div class="stat-num blue" id="cMed">-</div><div class="stat-lbl">Medium Issues</div><div class="stat-hint">Within 30 days</div></div>
-    <div class="stat-card ok"><div class="stat-ico">&#9989;</div><div class="stat-num green" id="cPass">-</div><div class="stat-lbl">Checks Passed</div><div class="stat-hint">No action needed</div></div>
-  </div>
-
-  <!-- Tabs -->
-  <div class="tabs no-print">
-    <button class="tab active" onclick="tab('issues')">Issues &amp; Fixes</button>
-    <button class="tab" onclick="tab('team')">Team &amp; Devices</button>
-    <button class="tab" onclick="tab('timeline')">Fix Timeline</button>
-    <button class="tab" onclick="tab('summary')">Executive Summary</button>
-    <button class="tab" onclick="tab('history')">History</button>
-  </div>
-
-  <!-- Issues tab -->
-  <div class="tab-pane active" id="tp-issues">
-    <div class="approve-banner no-print" id="approveBanner" style="display:none">
-      <div>
-        <div class="approve-banner-txt">&#128161; Your consultant has prepared fixes for all issues below.</div>
-        <div class="approve-banner-sub">Review and approve or decline each fix. Approved fixes will be scheduled.</div>
-      </div>
-      <div style="display:flex;gap:.5rem">
-        <button class="btn btn-green btn-sm" onclick="approveAll()">&#9989; Approve All</button>
-        <button class="btn btn-out btn-sm" onclick="declineAll()" style="color:var(--red)">&#10005; Decline All</button>
-      </div>
-    </div>
-    <div id="issueList"><div class="loading"><div class="spinner"></div>Loading your issues...</div></div>
-  </div>
-
-  <!-- Team & Devices tab -->
-  <div class="tab-pane" id="tp-team">
-    <div class="card">
-      <div class="card-hdr"><div><div class="card-title">&#128187; Your Team &amp; Devices</div><div class="card-sub">Add your employees' laptops and devices so we can monitor their security</div></div></div>
-      <div style="padding:1rem 0;display:grid;grid-template-columns:1fr 1fr;gap:.7rem;max-width:680px">
-        <div><label style="font-size:.72rem;color:var(--gray-500);display:block;margin-bottom:.25rem">Employee name</label><input id="td_emp" placeholder="e.g. Jane Smith" style="width:100%;padding:.55rem .7rem;border:1px solid var(--gray-300);border-radius:8px;font-size:.85rem"/></div>
-        <div><label style="font-size:.72rem;color:var(--gray-500);display:block;margin-bottom:.25rem">Employee email</label><input id="td_email" placeholder="jane@company.com" style="width:100%;padding:.55rem .7rem;border:1px solid var(--gray-300);border-radius:8px;font-size:.85rem"/></div>
-        <div><label style="font-size:.72rem;color:var(--gray-500);display:block;margin-bottom:.25rem">Device name *</label><input id="td_dev" placeholder="e.g. Jane-Laptop" style="width:100%;padding:.55rem .7rem;border:1px solid var(--gray-300);border-radius:8px;font-size:.85rem"/></div>
-        <div><label style="font-size:.72rem;color:var(--gray-500);display:block;margin-bottom:.25rem">Operating system</label><input id="td_os" placeholder="e.g. Windows 11" style="width:100%;padding:.55rem .7rem;border:1px solid var(--gray-300);border-radius:8px;font-size:.85rem"/></div>
-      </div>
-      <button onclick="addOrgDevice()" style="background:var(--blue);color:#fff;border:none;padding:.55rem 1.1rem;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer">&#10133; Add Device</button>
-      <span id="td_msg" style="margin-left:.7rem;font-size:.78rem"></span>
-    </div>
-
-    <div class="card" style="margin-top:1rem">
-      <div class="card-hdr"><div><div class="card-title">Registered Devices</div><div class="card-sub" id="td_count">—</div></div></div>
-      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.82rem">
-        <thead><tr style="text-align:left;color:var(--gray-500);font-size:.72rem">
-          <th style="padding:.5rem">DEVICE</th><th style="padding:.5rem">EMPLOYEE</th><th style="padding:.5rem">OS</th><th style="padding:.5rem">ADDED BY</th><th style="padding:.5rem"></th>
-        </tr></thead>
-        <tbody id="td_table"></tbody>
-      </table></div>
-    </div>
-
-    <div class="card" style="margin-top:1rem">
-      <div class="card-hdr"><div><div class="card-title">&#128279; Invite Employees</div><div class="card-sub">Share this code so employees can register and add their own devices</div></div></div>
-      <div style="padding:.8rem 0;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">
-        <code id="td_orgcode" style="background:var(--gray-100);padding:.5rem .9rem;border-radius:8px;font-size:.85rem;color:var(--blue);font-weight:600">—</code>
-        <button onclick="copyOrgCode()" style="background:var(--gray-100);border:1px solid var(--gray-300);padding:.45rem .8rem;border-radius:8px;font-size:.78rem;cursor:pointer">&#128203; Copy code</button>
-        <span style="font-size:.74rem;color:var(--gray-500)">Employees register at <strong>erprakashmijar.com/client/join.html</strong> with this code.</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Timeline tab -->
-  <div class="tab-pane" id="tp-timeline">
-    <div class="card"><div class="card-hdr"><div><div class="card-title">Remediation Timeline</div><div class="card-sub">Recommended order of fixes by risk level</div></div></div>
-    <div class="card-body"><div class="tl" id="tlContent"><div class="loading"><div class="spinner"></div></div></div></div></div>
-  </div>
-
-  <!-- Summary tab -->
-  <div class="tab-pane" id="tp-summary">
-    <div class="exec" id="execDiv"><div class="loading"><div class="spinner"></div>Generating summary...</div></div>
-    <div class="card no-print"><div class="card-body" style="text-align:center">
-      <div style="font-size:.83rem;color:var(--gray-600);margin-bottom:.7rem">Share this report with your team or save for records.</div>
-      <div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap">
-        <button class="btn btn-blue" onclick="window.print()">&#128424; Print Summary</button>
-        <button class="btn btn-out" onclick="copyLink()">&#128279; Copy Link</button>
-      </div>
-    </div></div>
-  </div>
-
-  <!-- History tab -->
-  <div class="tab-pane" id="tp-history">
-    <div class="card"><div class="card-hdr"><div class="card-title">Security Score by Device</div></div>
-    <div class="card-body" id="histContent"><div class="loading"><div class="spinner"></div></div></div></div>
-  </div>
-<!-- ── DASHBOARD TAB ── -->
-<div class="tab-pane" id="tp-dashboard">
-  <div id="clDashHero" style="background:linear-gradient(135deg,#1e3a5f,#0f2a4a);border-radius:12px;padding:1.4rem;margin-bottom:1rem;color:#fff">
+<div id="clDashHero" style="background:linear-gradient(135deg,#1e3a5f,#0f2a4a);border-radius:12px;padding:1.4rem;margin-bottom:1rem;color:#fff">
     <div style="display:flex;align-items:center;gap:1rem;margin-bottom:.8rem">
       <div id="clScoreCircle" style="width:70px;height:70px;border-radius:50%;border:3px solid #22e3ff;display:flex;align-items:center;justify-content:center;flex-shrink:0">
         <div style="text-align:center"><div id="clScoreNum" style="font-size:1.4rem;font-weight:700;font-family:var(--mono)">--</div><div style="font-size:.45rem;color:rgba(255,255,255,.6)">SCORE</div></div>
@@ -637,7 +514,6 @@
 </div>
 
 
-</div>
 </div>
 
 <script src="../assets/auth.js"></script>
@@ -1031,6 +907,9 @@ function renderHistory() {
 /* ── INTERACTIONS ── */
 function tab(name) {
   // Update old tab buttons (still present for tablet/mobile)
+  // Show/hide score-hero and status-strip (dashboard tab only)
+  var wrap = document.querySelector('.wrap');
+  if (wrap) { wrap.classList.toggle('show-in-dash', name === 'dashboard' || name === 'issues'); }
   document.querySelectorAll('.tab').forEach(function(t){
     t.classList.toggle('active', (t.getAttribute('onclick')||'').indexOf("'"+name+"'")!==-1);
   });
@@ -1472,6 +1351,17 @@ function saveClProfile() {
   sess.name = name;
   try { localStorage.setItem('pm_session_v2', JSON.stringify(sess)); } catch(e){}
   alert('Profile saved');
+}
+
+
+function goToClientScanner() {
+  var sess = AUTH && AUTH.getSession ? AUTH.getSession() : null;
+  if (sess) {
+    try {
+      localStorage.setItem('pm_portal_session', JSON.stringify(Object.assign({}, sess, {ts: Date.now()})));
+    } catch(e) {}
+  }
+  window.location.href = '../dashboard/index.html';
 }
 
 </script>

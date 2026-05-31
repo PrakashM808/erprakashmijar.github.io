@@ -219,7 +219,7 @@ button{cursor:pointer;font-family:var(--mono)}
       <button class="sb-item" onclick="bizNav('settings')"><span class="sb-ico">&#128276;</span>Notification Settings</button>
 
       <div class="sb-section">Portal</div>
-      <button class="sb-item" onclick="window.location.href='../dashboard/index.html'"><span class="sb-ico">&#128269;</span>Scanner Dashboard</button>
+      <button class="sb-item" onclick="goToBizScanner()"><span class="sb-ico">&#128269;</span>Scanner Dashboard</button>
     </div>
     <div class="sb-footer">
       <button class="btn btn-o btn-sm" style="width:100%;justify-content:center" onclick="bizLogout()">&#128682; Logout</button>
@@ -1201,6 +1201,18 @@ function renderUsage() {
 }
 function renderInvoicesBiz() {
   bizToast('Invoices — connect Stripe for billing history', 'info');
+}
+
+
+function goToBizScanner() {
+  if (BIZ_SESSION) {
+    try {
+      localStorage.setItem('pm_session_v2', JSON.stringify(BIZ_SESSION));
+      localStorage.setItem('pm_portal_session', JSON.stringify(Object.assign({}, BIZ_SESSION, {ts: Date.now()})));
+      localStorage.setItem('pm_portal_jwt', localStorage.getItem('pm_biz_jwt')||'');
+    } catch(e) {}
+  }
+  window.location.href = '../dashboard/index.html';
 }
 
 </script>
