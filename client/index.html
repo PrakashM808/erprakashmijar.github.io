@@ -192,6 +192,29 @@
   .toast{position:fixed;bottom:1.4rem;right:1.4rem;color:#fff;padding:.7rem 1.1rem;border-radius:8px;font-size:.81rem;font-weight:600;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,.2);max-width:300px;line-height:1.5;animation:fadeUp .3s ease}
   @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
+  /* ── Mobile (personal portal) ── */
+  .cl-hamburger{display:none}
+  @media(max-width:768px){
+    /* Sidebar becomes a slide-in drawer */
+    aside.cl-aside{transform:translateX(-100%);transition:transform .25s;box-shadow:0 0 40px rgba(0,0,0,.4)}
+    aside.cl-aside.open{transform:translateX(0)}
+    /* Content + top bar go full width */
+    #portalBody{margin-left:0!important;padding-top:60px!important;padding-left:.7rem;padding-right:.7rem}
+    .cl-topbar{left:0!important;padding:0 .7rem!important}
+    .cl-topbar .cl-actions{gap:.3rem!important}
+    .cl-topbar .cl-actions .btn{padding:.3rem .5rem!important;font-size:.62rem!important}
+    .cl-hamburger{display:inline-flex!important;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid var(--gray-200);border-radius:7px;background:#fff;cursor:pointer;font-size:1rem;margin-right:.5rem;flex-shrink:0}
+    .cl-drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99;display:none}
+    .cl-drawer-overlay.open{display:block}
+    /* Tighter hero + cards */
+    #clDashHero{padding:1rem!important}
+    .card{padding:.9rem!important}
+  }
+  @media(max-width:480px){
+    .cl-topbar .cl-actions .btn-out{display:none}  /* drop Print on tiny screens, keep PDF + Scan */
+    #clTopTitle{font-size:.78rem!important}
+  }
+
   /* Print */
   @media print{
     .no-print,.hdr,.approve-banner,.approve-btns,.tabs{display:none!important}
@@ -258,7 +281,7 @@
 <!-- PORTAL HEADER -->
 <div class="hdr no-print" id="portalHdr" style="display:none">
   <!-- Sidebar -->
-  <aside style="width:220px;background:#0f172a;border-right:1px solid rgba(148,163,184,.1);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100">
+  <aside class="cl-aside" style="width:220px;background:#0f172a;border-right:1px solid rgba(148,163,184,.1);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100">
     <div style="padding:1rem 1rem .6rem;border-bottom:1px solid rgba(148,163,184,.1)">
       <div style="font-family:'Space Mono',monospace;font-size:.75rem;color:#f1f5f9;font-weight:700;letter-spacing:.08em">PM::OFFSEC</div>
       <div style="font-family:'Space Mono',monospace;font-size:.55rem;color:#00d4ff;letter-spacing:.1em;margin-top:.12rem">PERSONAL PORTAL</div>
@@ -308,12 +331,16 @@
     </div>
   </aside>
   <!-- Top bar (for mobile / breadcrumb) -->
-  <div style="position:fixed;top:0;left:220px;right:0;height:52px;background:#fff;border-bottom:1px solid var(--gray-200);z-index:99;display:flex;align-items:center;justify-content:space-between;padding:0 1.4rem">
-    <div>
-      <div style="font-size:.85rem;font-weight:700;color:var(--gray-900)" id="clTopTitle">Issues &amp; Fixes</div>
-      <div style="font-size:.7rem;color:var(--gray-500)" id="clientOrg">Your Organization</div>
+  <div class="cl-drawer-overlay" id="clDrawerOverlay" onclick="clCloseDrawer()"></div>
+  <div class="cl-topbar" style="position:fixed;top:0;left:220px;right:0;height:52px;background:#fff;border-bottom:1px solid var(--gray-200);z-index:99;display:flex;align-items:center;justify-content:space-between;padding:0 1.4rem">
+    <div style="display:flex;align-items:center">
+      <button class="cl-hamburger" onclick="clToggleDrawer()" aria-label="Menu">&#9776;</button>
+      <div>
+        <div style="font-size:.85rem;font-weight:700;color:var(--gray-900)" id="clTopTitle">Issues &amp; Fixes</div>
+        <div style="font-size:.7rem;color:var(--gray-500)" id="clientOrg">Your Organization</div>
+      </div>
     </div>
-    <div style="display:flex;gap:.5rem;align-items:center">
+    <div class="cl-actions" style="display:flex;gap:.5rem;align-items:center">
       <button class="btn btn-out btn-sm" onclick="window.print()">&#128424; Print</button>
       <button class="btn btn-blue btn-sm" onclick="window.print()">&#11015; PDF</button>
       <a href="../dashboard/index.html?stay=1" class="btn btn-blue btn-sm" style="text-decoration:none;font-size:.75rem">&#128269; Scan Dashboard</a>
@@ -553,6 +580,17 @@ function demoLogin() {
 }
 
 function doLogout() { try { localStorage.removeItem('pm_portal_session'); localStorage.removeItem('pm_portal_jwt'); localStorage.removeItem('pm_biz_jwt'); } catch(e){} AUTH.logout('../login.html'); }
+
+function clToggleDrawer() {
+  var a = document.querySelector('aside.cl-aside'), o = document.getElementById('clDrawerOverlay');
+  if (a) a.classList.toggle('open');
+  if (o) o.classList.toggle('open');
+}
+function clCloseDrawer() {
+  var a = document.querySelector('aside.cl-aside'), o = document.getElementById('clDrawerOverlay');
+  if (a) a.classList.remove('open');
+  if (o) o.classList.remove('open');
+}
 
 function applyClientTypeUI() {
   var s = AUTH.getSession() || {};
@@ -913,6 +951,7 @@ function renderHistory() {
 
 /* ── INTERACTIONS ── */
 function tab(name) {
+  if (typeof clCloseDrawer === 'function') clCloseDrawer();   // close mobile menu on navigation
   // Update old tab buttons (still present for tablet/mobile)
   // Show/hide score-hero and status-strip (dashboard tab only)
   var wrap = document.querySelector('.wrap');
@@ -1057,11 +1096,13 @@ function toast(msg, color) {
   var s=AUTH.getSession();
   var preview = /[?&]preview=1/.test(location.search);
   if (s && s.id) {
-    if (preview) { showPortal(); return; }   // admin previewing — don't bounce
-    // Route mismatched roles to their own surface.
+    if (preview) { showPortal(); return; }   // admin/owner previewing — don't bounce
+    // Route by ACCOUNT TYPE, not role: this is the personal portal for individuals.
     if (s.role === 'admin') { location.replace('../admin/index.html'); return; }
-    if (s.role && s.role !== 'client') { location.replace('../dashboard/index.html?stay=1'); return; }
-    showPortal();
+    if (s.client_type === 'business' || s.role === 'owner' || s.role === 'manager') {
+      location.replace('../business/index.html'); return;
+    }
+    showPortal();   // individual (user/client/employee) belongs here
   }
   document.addEventListener('keydown', function(e){ if(e.key==='Enter'&&document.getElementById('loginWrap').style.display!=='none') doLogin(); });
 })();

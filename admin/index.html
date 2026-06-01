@@ -25,6 +25,8 @@
     --sh-md:0 4px 6px -1px rgba(0,0,0,.08),0 2px 4px rgba(0,0,0,.05);
   }
   body{font-family:var(--font);background:var(--surface2);color:var(--ink);font-size:14px;line-height:1.5}
+  html,body{overflow-x:hidden;max-width:100%}
+  @media(max-width:768px){ .admin-sidebar{box-shadow:0 0 40px rgba(0,0,0,.4)} }
   button,input,select,textarea{font-family:var(--font)}
   a{color:var(--blue);text-decoration:none}
 
@@ -241,7 +243,7 @@
         <button class="sb-item" onclick="ap('apikeys')"><span class="sb-item-ico">&#128273;</span>API Keys</button>
         <button class="sb-item" onclick="ap('sysconfig')"><span class="sb-item-ico">&#9881;</span>System Settings</button>
         <button class="sb-item" onclick="ap('aisettings')"><span class="sb-item-ico">&#129302;</span>AI Settings</button>
-      </div></div>
+      </div>
       <div class="sb-bottom">
         <div class="sb-user">
           <div class="sb-avatar" id="sbAvatar">A</div>

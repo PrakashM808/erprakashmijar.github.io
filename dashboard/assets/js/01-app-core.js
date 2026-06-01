@@ -1948,7 +1948,7 @@ function renderPortalNavButtons() {
   } else if (role === 'owner' || role === 'manager' || clientType === 'business') {
     html = '<a href="../business/index.html" style="' + s + 'background:rgba(123,47,255,.12);border-color:rgba(123,47,255,.35);color:#b060ff;">← BUSINESS PORTAL</a>';
   } else {
-    html = '<a href="../client/index.html" style="' + s + 'background:rgba(0,212,255,.08);border-color:rgba(0,212,255,.25);color:#00d4ff;">← MY PORTAL</a>';
+    html = '<a href="../client/index.html?preview=1" style="' + s + 'background:rgba(0,212,255,.08);border-color:rgba(0,212,255,.25);color:#00d4ff;">← MY PORTAL</a>';
   }
   container.innerHTML = html;
 }
