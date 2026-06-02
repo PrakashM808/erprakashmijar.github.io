@@ -192,6 +192,7 @@ html,body{overflow-x:hidden;max-width:100%}
     <div class="sb-nav">
       <div class="sb-section">Dashboard</div>
       <button class="sb-item active" onclick="bizNav('overview')"><span class="sb-ico">&#128202;</span>Security Overview</button>
+      <button class="sb-item" onclick="bizNav('executive')"><span class="sb-ico">&#128188;</span>Executive Dashboard</button>
 
       <div class="sb-section">Team Management</div>
       <button class="sb-item" onclick="bizNav('employees')"><span class="sb-ico">&#128101;</span>Employees<span class="sb-badge" id="sbEmpBadge" style="display:none">0</span></button>
@@ -209,18 +210,7 @@ html,body{overflow-x:hidden;max-width:100%}
       <button class="sb-item" onclick="bizNav('devices')"><span class="sb-ico">&#128247;</span>CCTV Cameras</button>
 
       <div class="sb-section">Security Scans</div>
-      <button class="sb-item" onclick="bizScan('webscan')"><span class="sb-ico">&#127760;</span>Website Scanner</button>
-      <button class="sb-item" onclick="bizScan('scan')"><span class="sb-ico">&#128225;</span>Network Scanner</button>
-      <button class="sb-item" onclick="bizScan('attacksurface')"><span class="sb-ico">&#127919;</span>Attack Surface</button>
-      <button class="sb-item" onclick="bizScan('osint')"><span class="sb-ico">&#128270;</span>OSINT Recon</button>
-      <button class="sb-item" onclick="bizScan('darkweb')"><span class="sb-ico">&#127761;</span>Dark Web Monitor</button>
-      <button class="sb-item" onclick="bizScan('phishing')"><span class="sb-ico">&#127907;</span>Phishing Simulation</button>
-      <button class="sb-item" onclick="bizScan('cameras')"><span class="sb-ico">&#128247;</span>Camera Scanner</button>
-      <button class="sb-item" onclick="bizScan('pentest')"><span class="sb-ico">&#128299;</span>Pentest Tools</button>
-      <button class="sb-item" onclick="bizScan('mitre')"><span class="sb-ico">&#9876;</span>MITRE ATT&amp;CK</button>
-      <button class="sb-item" onclick="bizScan('incidents')"><span class="sb-ico">&#128680;</span>Incidents</button>
-      <button class="sb-item" onclick="bizScan('iocs')"><span class="sb-ico">&#129534;</span>IOC Database</button>
-      <button class="sb-item" onclick="goToBizScanner()"><span class="sb-ico">&#128202;</span>All Scanner Tools &#8594;</button>
+      <button class="sb-item" onclick="goToBizScanner()"><span class="sb-ico">&#128269;</span>Run Security Scan &#8594;</button>
 
       <div class="sb-section">Reports</div>
       <button class="sb-item" onclick="bizNav('reports')"><span class="sb-ico">&#128196;</span>Executive Reports</button>
@@ -337,6 +327,68 @@ html,body{overflow-x:hidden;max-width:100%}
             <button class="btn btn-o" onclick="bizNav('devices')">&#128187; Manage Devices</button>
             <button class="btn btn-o" onclick="bizNav('reports')">&#128196; View Reports</button>
             <a href="../dashboard/index.html#page-compliance" class="btn btn-o">&#9989; Compliance Check</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── EXECUTIVE DASHBOARD PAGE ── -->
+      <div class="page" id="biz-executive">
+        <div class="pg-hdr" style="display:flex;align-items:flex-start;justify-content:space-between">
+          <div>
+            <div class="pg-title">EXECUTIVE DASHBOARD</div>
+            <div class="pg-sub">Your security posture in plain language — for decision makers</div>
+          </div>
+          <button class="btn btn-g btn-sm" onclick="downloadExecReport()">&#11015; Download PDF Report</button>
+        </div>
+
+        <!-- Headline risk banner -->
+        <div id="execRiskBanner" style="border-radius:14px;padding:1.4rem 1.6rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+          <div>
+            <div style="font-family:var(--mono);font-size:.6rem;letter-spacing:.15em;opacity:.85">BUSINESS RISK LEVEL</div>
+            <div id="execRiskLevel" style="font-size:2.4rem;font-weight:800;line-height:1.1">—</div>
+            <div id="execRiskSummary" style="font-size:.8rem;opacity:.9;max-width:560px">Analyzing your organization's security…</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;opacity:.85">SECURITY SCORE</div>
+            <div id="execScore" style="font-size:3rem;font-weight:800;line-height:1">--</div>
+            <div style="font-size:.6rem;opacity:.85">out of 100</div>
+          </div>
+        </div>
+
+        <!-- KPI cards -->
+        <div class="grid-3" style="margin-bottom:1rem">
+          <div class="panel"><div class="panel-body" style="text-align:center">
+            <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);letter-spacing:.1em">CRITICAL ISSUES</div>
+            <div id="execCritical" style="font-size:2rem;font-weight:800;color:var(--danger)">0</div>
+            <div style="font-size:.62rem;color:var(--muted)">need attention now</div>
+          </div></div>
+          <div class="panel"><div class="panel-body" style="text-align:center">
+            <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);letter-spacing:.1em">COMPLIANCE</div>
+            <div id="execCompliance" style="font-size:2rem;font-weight:800;color:var(--g)">--</div>
+            <div style="font-size:.62rem;color:var(--muted)">controls in place</div>
+          </div></div>
+          <div class="panel"><div class="panel-body" style="text-align:center">
+            <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);letter-spacing:.1em">EST. EXPOSURE</div>
+            <div id="execExposure" style="font-size:2rem;font-weight:800;color:var(--warn)">$0</div>
+            <div style="font-size:.62rem;color:var(--muted)">potential financial impact</div>
+          </div></div>
+        </div>
+
+        <!-- Top risks in plain language -->
+        <div class="panel">
+          <div class="panel-hdr"><div class="panel-title">&#9888; TOP RISKS TO ADDRESS</div></div>
+          <div class="panel-body" id="execTopRisks"><div class="empty">Loading…</div></div>
+        </div>
+
+        <!-- Asset health summary -->
+        <div class="panel" style="margin-top:1rem">
+          <div class="panel-hdr"><div class="panel-title">&#128202; ASSET HEALTH</div></div>
+          <div class="panel-body">
+            <div class="grid-3">
+              <div style="text-align:center"><div id="execHealthy" style="font-size:1.6rem;font-weight:800;color:var(--ok)">0</div><div style="font-size:.62rem;color:var(--muted)">Healthy</div></div>
+              <div style="text-align:center"><div id="execAtRisk" style="font-size:1.6rem;font-weight:800;color:var(--warn)">0</div><div style="font-size:.62rem;color:var(--muted)">At Risk</div></div>
+              <div style="text-align:center"><div id="execCriticalAssets" style="font-size:1.6rem;font-weight:800;color:var(--danger)">0</div><div style="font-size:.62rem;color:var(--muted)">Critical</div></div>
+            </div>
           </div>
         </div>
       </div>
@@ -467,9 +519,8 @@ html,body{overflow-x:hidden;max-width:100%}
             </div>
           </div>
         </div>
-        <div class="panel"><div class="panel-hdr"><div class="panel-title">&#128269; FULL SCAN REPORTS</div></div>
-          <div class="panel-body"><p style="font-family:var(--mono);font-size:.63rem;color:var(--muted);margin-bottom:.8rem">Detailed vulnerability scan reports are available in the Scan Dashboard.</p>
-            <a href="../dashboard/index.html?stay=1" class="btn btn-b">&#128269; Open Scan Dashboard</a></div></div>
+        <div class="panel"><div class="panel-hdr"><div class="panel-title">&#128269; FULL SCAN REPORTS</div><button class="btn btn-o btn-sm" onclick="goToBizScanner()">&#128269; Run New Scan</button></div>
+          <div class="panel-body"><div id="bizScanReports"><div class="empty"><div class="empty-icon">&#128269;</div>No scans yet. Click "Run New Scan" to open the Scanner Dashboard.</div></div></div></div>
       </div>
 
       <!-- ── COMPLIANCE PAGE ── -->
@@ -801,6 +852,8 @@ function bizNav(page) {
   if (page === 'execreports')  renderExecReports();
   if (page === 'compreports')  renderCompReports();
   if (page === 'secreports')   renderSecReports();
+  if (page === 'reports')      renderBizScanReports();
+  if (page === 'executive')    renderExecutive();
   if (page === 'secpolicies')  renderSecPolicies();
   if (page === 'notifications') renderNotifSettings();
   var assetPages = ['servers','workstations','laptops','routers','switches','firewalls','cameras'];
@@ -1241,6 +1294,153 @@ function renderInvoicesBiz() {
   bizToast('Invoices — connect Stripe for billing history', 'info');
 }
 
+
+// ── Executive dashboard: translate technical scan data into business terms ──
+function computeExecModel() {
+  var devices = [];
+  try { devices = JSON.parse(localStorage.getItem('pm_devices_v3') || '[]'); } catch(e) {}
+  var alerts = [];
+  try { alerts = JSON.parse(localStorage.getItem('pm_alerts_v3') || '[]'); } catch(e) {}
+  var hist = [];
+  try { hist = JSON.parse(localStorage.getItem('pm_scan_history_v3') || '[]'); } catch(e) {}
+
+  // Prefer backend org data if present
+  var orgDevices = (BIZ_DATA && BIZ_DATA.devices && BIZ_DATA.devices.length) ? BIZ_DATA.devices : devices;
+  var scored = orgDevices.map(function(d){ return (d.security_score!=null?d.security_score:(d.last_score!=null?d.last_score:null)); }).filter(function(v){ return v!=null; });
+  var avg = scored.length ? Math.round(scored.reduce(function(a,b){return a+b;},0)/scored.length) : (hist.length ? (hist[hist.length-1].score||0) : 0);
+
+  var critical = alerts.filter(function(a){ return (a.severity||'').toLowerCase()==='critical'; }).length;
+  var high = alerts.filter(function(a){ return (a.severity||'').toLowerCase()==='high'; }).length;
+
+  var healthy = scored.filter(function(s){ return s>=75; }).length;
+  var atRisk  = scored.filter(function(s){ return s>=50 && s<75; }).length;
+  var critAssets = scored.filter(function(s){ return s<50; }).length;
+
+  // Risk level from score + critical findings
+  var level, color, bg, summary;
+  if (avg>=80 && critical===0) { level='LOW'; color='#052e16'; bg='linear-gradient(135deg,#22c55e,#16a34a)'; summary='Your organization is in good shape. Keep scanning regularly to stay protected.'; }
+  else if (avg>=60 && critical<=1) { level='MEDIUM'; color='#1c1917'; bg='linear-gradient(135deg,#f59e0b,#d97706)'; summary='Some weaknesses need attention. Address the items below to reduce your exposure.'; }
+  else { level='HIGH'; color='#fff'; bg='linear-gradient(135deg,#ef4444,#b91c1c)'; summary='Your organization has significant security gaps. Prioritise the critical items below.'; }
+
+  // Compliance estimate: blend of avg score and how many assets are scanned
+  var coverage = orgDevices.length ? Math.round((scored.length/orgDevices.length)*100) : 0;
+  var compliance = Math.max(0, Math.min(100, Math.round(avg*0.7 + coverage*0.3)));
+
+  // Rough financial exposure: critical + high findings × industry-style per-incident estimates
+  var exposure = critical*15000 + high*5000 + critAssets*8000;
+
+  // Plain-language top risks
+  var risks = [];
+  if (critical>0) risks.push({sev:'critical', text: critical+' critical security alert'+(critical>1?'s':'')+' detected — these can lead to a breach if not fixed.'});
+  if (critAssets>0) risks.push({sev:'critical', text: critAssets+' device'+(critAssets>1?'s are':' is')+' in critical condition (score below 50).'});
+  if (high>0) risks.push({sev:'high', text: high+' high-severity issue'+(high>1?'s':'')+' found across your assets.'});
+  if (coverage<100 && orgDevices.length>0) risks.push({sev:'medium', text: (100-coverage)+'% of your devices haven\'t been scanned recently — run a scan for full visibility.'});
+  if (orgDevices.length===0) risks.push({sev:'medium', text: 'No devices registered yet. Add your team\'s devices so they can be monitored.'});
+  if (!risks.length) risks.push({sev:'low', text: 'No major risks detected. Maintain regular scanning to stay secure.'});
+
+  return {avg:avg, level:level, color:color, bg:bg, summary:summary, critical:critical, compliance:compliance,
+          exposure:exposure, healthy:healthy, atRisk:atRisk, critAssets:critAssets, risks:risks,
+          deviceCount:orgDevices.length, employeeCount:(BIZ_DATA&&BIZ_DATA.employees?BIZ_DATA.employees.length:0)};
+}
+
+function renderExecutive() {
+  var m = computeExecModel();
+  var setText = function(id,v){ var e=document.getElementById(id); if(e) e.textContent=v; };
+  var banner = document.getElementById('execRiskBanner');
+  if (banner) { banner.style.background=m.bg; banner.style.color=m.color; }
+  setText('execRiskLevel', m.level);
+  setText('execRiskSummary', m.summary);
+  setText('execScore', m.avg||'--');
+  setText('execCritical', m.critical);
+  setText('execCompliance', m.compliance+'%');
+  setText('execExposure', '$'+m.exposure.toLocaleString());
+  setText('execHealthy', m.healthy);
+  setText('execAtRisk', m.atRisk);
+  setText('execCriticalAssets', m.critAssets);
+  var rc = {critical:'var(--danger)', high:'#f97316', medium:'var(--warn)', low:'var(--ok)'};
+  var el = document.getElementById('execTopRisks');
+  if (el) {
+    el.innerHTML = m.risks.map(function(r){
+      return '<div style="display:flex;align-items:flex-start;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--border)">'
+        + '<span style="width:8px;height:8px;border-radius:50%;background:'+(rc[r.sev]||'var(--muted)')+';margin-top:.35rem;flex-shrink:0"></span>'
+        + '<div style="font-size:.76rem;color:var(--white)">'+bizEsc(r.text)+'</div></div>';
+    }).join('');
+  }
+}
+
+// ── Executive PDF report: opens a clean printable report (browser → Save as PDF) ──
+function downloadExecReport() {
+  var m = computeExecModel();
+  var s = (typeof BIZ_SESSION!=='undefined' && BIZ_SESSION) ? BIZ_SESSION : {};
+  var orgName = (s.company || s.name || 'Your Organization');
+  var today = new Date().toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
+  var levelColor = m.level==='LOW'?'#16a34a':m.level==='MEDIUM'?'#d97706':'#b91c1c';
+  var riskRows = m.risks.map(function(r){
+    var c = r.sev==='critical'?'#b91c1c':r.sev==='high'?'#f97316':r.sev==='medium'?'#d97706':'#16a34a';
+    return '<tr><td style="padding:8px;border-bottom:1px solid #eee"><span style="display:inline-block;padding:2px 8px;border-radius:10px;background:'+c+';color:#fff;font-size:11px;text-transform:uppercase">'+r.sev+'</span></td>'
+         + '<td style="padding:8px;border-bottom:1px solid #eee;font-size:13px">'+bizEsc(r.text)+'</td></tr>';
+  }).join('');
+  var html = '<!doctype html><html><head><meta charset="utf-8"><title>Security Report — '+bizEsc(orgName)+'</title>'
+    + '<style>body{font-family:Arial,Helvetica,sans-serif;color:#1e293b;max-width:780px;margin:24px auto;padding:0 24px}'
+    + 'h1{font-size:22px;margin:0} .sub{color:#64748b;font-size:13px;margin-top:4px}'
+    + '.banner{background:'+levelColor+';color:#fff;border-radius:10px;padding:18px 22px;margin:18px 0;display:flex;justify-content:space-between;align-items:center}'
+    + '.kpis{display:flex;gap:12px;margin:16px 0}.kpi{flex:1;border:1px solid #e2e8f0;border-radius:8px;padding:12px;text-align:center}'
+    + '.kpi .n{font-size:24px;font-weight:800}.kpi .l{font-size:11px;color:#64748b;text-transform:uppercase}'
+    + 'table{width:100%;border-collapse:collapse;margin-top:8px}h2{font-size:15px;border-bottom:2px solid #1e293b;padding-bottom:4px;margin-top:24px}'
+    + '.foot{margin-top:30px;font-size:11px;color:#94a3b8;border-top:1px solid #eee;padding-top:10px}'
+    + '@media print{.noprint{display:none}}</style></head><body>'
+    + '<div style="display:flex;justify-content:space-between;align-items:flex-start">'
+    + '<div><h1>Security Posture Report</h1><div class="sub">'+bizEsc(orgName)+' &middot; '+today+'</div></div>'
+    + '<div style="text-align:right;font-weight:800;color:#0f172a">PM::OFFSEC</div></div>'
+    + '<div class="banner"><div><div style="font-size:11px;opacity:.9;letter-spacing:1px">BUSINESS RISK LEVEL</div>'
+    + '<div style="font-size:30px;font-weight:800">'+m.level+'</div><div style="font-size:12px;opacity:.95;max-width:480px">'+bizEsc(m.summary)+'</div></div>'
+    + '<div style="text-align:center"><div style="font-size:11px;opacity:.9">SECURITY SCORE</div><div style="font-size:36px;font-weight:800">'+(m.avg||'--')+'</div><div style="font-size:11px;opacity:.9">/ 100</div></div></div>'
+    + '<div class="kpis">'
+    + '<div class="kpi"><div class="n" style="color:#b91c1c">'+m.critical+'</div><div class="l">Critical Issues</div></div>'
+    + '<div class="kpi"><div class="n" style="color:#16a34a">'+m.compliance+'%</div><div class="l">Compliance</div></div>'
+    + '<div class="kpi"><div class="n" style="color:#d97706">$'+m.exposure.toLocaleString()+'</div><div class="l">Est. Exposure</div></div>'
+    + '</div>'
+    + '<h2>Top Risks to Address</h2><table>'+riskRows+'</table>'
+    + '<h2>Asset Health</h2><div class="kpis">'
+    + '<div class="kpi"><div class="n" style="color:#16a34a">'+m.healthy+'</div><div class="l">Healthy</div></div>'
+    + '<div class="kpi"><div class="n" style="color:#d97706">'+m.atRisk+'</div><div class="l">At Risk</div></div>'
+    + '<div class="kpi"><div class="n" style="color:#b91c1c">'+m.critAssets+'</div><div class="l">Critical</div></div></div>'
+    + '<p style="font-size:13px;color:#475569;margin-top:10px">This organization has '+m.deviceCount+' registered device(s) and '+m.employeeCount+' team member(s). '
+    + 'Run regular scans from the Scanner Dashboard to keep this report current.</p>'
+    + '<div class="foot">Generated by PM::OFFSEC Security Platform on '+today+'. This report summarises automated scan results and is intended for informational purposes.</div>'
+    + '<div class="noprint" style="margin-top:20px;text-align:center"><button onclick="window.print()" style="background:#1d4ed8;color:#fff;border:none;padding:10px 20px;border-radius:6px;font-size:14px;cursor:pointer">Save as PDF / Print</button></div>'
+    + '<script>setTimeout(function(){window.print();},500);<\/script>'
+    + '</body></html>';
+  var w = window.open('', '_blank');
+  if (!w) { alert('Please allow pop-ups to download the report.'); return; }
+  w.document.write(html); w.document.close();
+}
+
+function renderBizScanReports() {
+  var el = document.getElementById('bizScanReports');
+  if (!el) return;
+  var hist = [];
+  try { hist = JSON.parse(localStorage.getItem('pm_scan_history_v3') || '[]'); } catch(e) {}
+  if (!hist.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">&#128269;</div>No scans yet. Click "Run New Scan" to open the Scanner Dashboard. Results will appear here automatically.</div>';
+    return;
+  }
+  var rows = hist.slice(-25).reverse().map(function(s){
+    var score = (s.score != null) ? s.score : null;
+    var color = score==null ? 'var(--muted)' : score>=75 ? 'var(--ok)' : score>=50 ? 'var(--warn)' : 'var(--danger)';
+    var grade = s.grade || (score==null?'—':score>=90?'A':score>=75?'B':score>=50?'C':score>=30?'D':'F');
+    var when = s.date || (s.ts ? new Date(s.ts).toLocaleDateString() : '');
+    var target = s.hostname || s.host || s.target || 'Scan';
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:.55rem .7rem;border:1px solid var(--border);border-radius:8px;margin-bottom:.4rem">'
+      + '<div><div style="font-size:.72rem;color:var(--white);font-weight:600">' + bizEsc(target) + '</div>'
+      + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">' + bizEsc(when) + '</div></div>'
+      + '<div style="text-align:right"><span style="font-family:var(--mono);font-size:.95rem;font-weight:700;color:' + color + '">' + (score==null?'—':score) + '</span>'
+      + '<span style="font-size:.55rem;color:var(--muted)">/100 · ' + grade + '</span></div></div>';
+  }).join('');
+  el.innerHTML = rows
+    + '<div style="margin-top:.6rem"><button class="btn btn-b btn-sm" onclick="goToBizScanner()">&#128269; Run another scan in Scanner Dashboard</button></div>';
+}
+function bizEsc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
 
 function goToBizScanner() { _bizGoScanner(null); }
 function bizScan(tool) { bizCloseDrawer(); _bizGoScanner(tool); }
