@@ -1899,8 +1899,10 @@ function init() {
   document.getElementById('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}});
   document.getElementById('chatInput').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,72)+'px';});
 
-  // Restore last visited page after refresh (or default to dashboard)
-  var _lastPage = localStorage.getItem('pm_last_page') || 'dashboard';
+  // Restore last visited page after refresh (or default to dashboard).
+  // A ?tool= query (e.g. from the business portal "Security Scans" links) opens that tool directly.
+  var _toolParam = new URLSearchParams(location.search).get('tool');
+  var _lastPage = _toolParam || localStorage.getItem('pm_last_page') || 'dashboard';
   setTimeout(function() {
     nav(_lastPage);
     if (_lastPage === 'dashboard') {

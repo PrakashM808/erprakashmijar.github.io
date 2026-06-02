@@ -344,6 +344,7 @@
       <button class="btn btn-out btn-sm" onclick="window.print()">&#128424; Print</button>
       <button class="btn btn-blue btn-sm" onclick="window.print()">&#11015; PDF</button>
       <a href="../dashboard/index.html?stay=1" class="btn btn-blue btn-sm" style="text-decoration:none;font-size:.75rem">&#128269; Scan Dashboard</a>
+      <button class="btn btn-out btn-sm" onclick="doLogout()" style="color:#dc2626;border-color:#fecaca">&#128682; Logout</button>
     </div>
   </div>
 </div>
@@ -351,6 +352,8 @@
 <!-- PORTAL BODY -->
 <div id="portalBody" style="display:none;margin-left:220px;padding-top:72px">
 <div class="wrap">
+<!-- ── DASHBOARD TAB (only shows on Security Dashboard nav) ── -->
+<div class="tab-pane active" id="tp-dashboard">
 <div id="clDashHero" style="background:linear-gradient(135deg,#1e3a5f,#0f2a4a);border-radius:12px;padding:1.4rem;margin-bottom:1rem;color:#fff">
     <div style="display:flex;align-items:center;gap:1rem;margin-bottom:.8rem">
       <div id="clScoreCircle" style="width:70px;height:70px;border-radius:50%;border:3px solid #22e3ff;display:flex;align-items:center;justify-content:center;flex-shrink:0">
@@ -391,6 +394,7 @@
     </div>
   </div>
 </div>
+</div><!-- /tp-dashboard -->
 
 <!-- ── ALERTS TAB ── -->
 <div class="tab-pane" id="tp-alerts">
@@ -402,42 +406,32 @@
 <div class="tab-pane" id="tp-devices">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem">
     <h3 style="font-size:.9rem;font-weight:700;color:#1e293b">&#128187; My Devices</h3>
-    <a href="../dashboard/index.html?stay=1" style="font-size:.72rem;padding:.35rem .7rem;background:#1d4ed8;color:#fff;border-radius:6px;text-decoration:none;font-weight:600">+ Add Device (Scanner)</a>
+    <button onclick="document.getElementById('addDevForm').style.display=document.getElementById('addDevForm').style.display==='none'?'block':'none'" style="font-size:.72rem;padding:.35rem .7rem;background:#1d4ed8;color:#fff;border-radius:6px;border:none;font-weight:600;cursor:pointer">+ Add Device</button>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.6rem" id="clDeviceGrid">
-    <div style="background:#fff;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)">
-      <div style="font-size:1.8rem;margin-bottom:.4rem">&#128187;</div>
-      <div style="font-size:.72rem;font-weight:600;color:#1e293b">Laptop</div>
-      <div style="font-size:.62rem;color:#94a3b8;margin-top:.2rem">Not scanned</div>
+
+  <!-- Add device form (employees register their devices here; details go to the business owner) -->
+  <div id="addDevForm" style="display:none;background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1rem;margin-bottom:1rem">
+    <div style="font-size:.78rem;font-weight:700;color:#1e293b;margin-bottom:.6rem">Register a device</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+      <div><label style="font-size:.68rem;color:#64748b">Device name *</label><input id="myDevName" placeholder="e.g. Jane's Laptop" style="width:100%;padding:.45rem;border:1px solid #cbd5e1;border-radius:6px;font-size:.78rem"/></div>
+      <div><label style="font-size:.68rem;color:#64748b">Type</label><select id="myDevType" style="width:100%;padding:.45rem;border:1px solid #cbd5e1;border-radius:6px;font-size:.78rem"><option value="laptop">Laptop</option><option value="desktop">Desktop</option><option value="mobile">Mobile Phone</option><option value="router">Router</option><option value="tv">Smart TV</option><option value="cctv">CCTV Camera</option><option value="server">Server</option><option value="other">Other</option></select></div>
+      <div><label style="font-size:.68rem;color:#64748b">Operating system</label><input id="myDevOS" placeholder="e.g. Windows 11" style="width:100%;padding:.45rem;border:1px solid #cbd5e1;border-radius:6px;font-size:.78rem"/></div>
+      <div><label style="font-size:.68rem;color:#64748b">Hostname (optional)</label><input id="myDevHost" placeholder="e.g. jane-pc" style="width:100%;padding:.45rem;border:1px solid #cbd5e1;border-radius:6px;font-size:.78rem"/></div>
+      <div><label style="font-size:.68rem;color:#64748b">IP address (optional)</label><input id="myDevIP" placeholder="e.g. 192.168.1.20" style="width:100%;padding:.45rem;border:1px solid #cbd5e1;border-radius:6px;font-size:.78rem"/></div>
+      <div><label style="font-size:.68rem;color:#64748b">MAC address (optional)</label><input id="myDevMAC" placeholder="e.g. 00:1A:2B:3C:4D:5E" style="width:100%;padding:.45rem;border:1px solid #cbd5e1;border-radius:6px;font-size:.78rem"/></div>
     </div>
-    <div style="background:#fff;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)">
-      <div style="font-size:1.8rem;margin-bottom:.4rem">&#128421;</div>
-      <div style="font-size:.72rem;font-weight:600;color:#1e293b">Desktop</div>
-      <div style="font-size:.62rem;color:#94a3b8;margin-top:.2rem">Not scanned</div>
-    </div>
-    <div style="background:#fff;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)">
-      <div style="font-size:1.8rem;margin-bottom:.4rem">&#128241;</div>
-      <div style="font-size:.72rem;font-weight:600;color:#1e293b">Mobile Phone</div>
-      <div style="font-size:.62rem;color:#94a3b8;margin-top:.2rem">Not scanned</div>
-    </div>
-    <div style="background:#fff;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)">
-      <div style="font-size:1.8rem;margin-bottom:.4rem">&#127760;</div>
-      <div style="font-size:.72rem;font-weight:600;color:#1e293b">Router</div>
-      <div style="font-size:.62rem;color:#94a3b8;margin-top:.2rem">Not scanned</div>
-    </div>
-    <div style="background:#fff;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)">
-      <div style="font-size:1.8rem;margin-bottom:.4rem">&#128250;</div>
-      <div style="font-size:.72rem;font-weight:600;color:#1e293b">Smart TV</div>
-      <div style="font-size:.62rem;color:#94a3b8;margin-top:.2rem">Not scanned</div>
-    </div>
-    <div style="background:#fff;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)">
-      <div style="font-size:1.8rem;margin-bottom:.4rem">&#128247;</div>
-      <div style="font-size:.72rem;font-weight:600;color:#1e293b">Home CCTV</div>
-      <div style="font-size:.62rem;color:#94a3b8;margin-top:.2rem">Not scanned</div>
+    <div style="margin-top:.7rem;display:flex;gap:.5rem;align-items:center">
+      <button onclick="registerMyDevice()" style="background:#1d4ed8;color:#fff;border:none;padding:.45rem .9rem;border-radius:6px;font-size:.78rem;font-weight:600;cursor:pointer">Save Device</button>
+      <span id="myDevMsg" style="font-size:.74rem"></span>
     </div>
   </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.6rem" id="clDeviceGrid">
+    <div style="grid-column:1/-1;text-align:center;color:#94a3b8;font-size:.78rem;padding:1rem">Loading your devices…</div>
+  </div>
+
   <div style="margin-top:1rem;padding:.8rem;background:#eff6ff;border-radius:8px;font-size:.75rem;color:#1d4ed8">
-    &#128269; Use the <a href="../dashboard/index.html?stay=1" style="font-weight:700">Scanner Dashboard</a> to scan and register each device. Results appear here automatically.
+    &#128269; Add your devices here so your organization can monitor their security. Run a deep scan anytime from the <a href="../dashboard/index.html?stay=1" style="font-weight:700">Scanner Dashboard</a>.
   </div>
 </div>
 
@@ -963,6 +957,7 @@ function tab(name) {
   var tp=document.getElementById('tp-'+name);
   if(tp) tp.classList.add('active');
   if(name==='team') loadOrgDevices();
+  if(name==='devices') loadMyDevices();
 
   if (name === 'dashboard') setTimeout(loadClDashboard, 100);
   // Sync sidebar active state
@@ -1118,11 +1113,9 @@ function toast(msg, color) {
    the dashboard runtime (API_ONLINE/SESSION/apiGet/apiPost) isn't present. */
 if (typeof API_ONLINE === 'undefined') { var API_ONLINE = true; }
 if (typeof SESSION === 'undefined') { var SESSION = (AUTH && AUTH.getSession) ? AUTH.getSession() : null; }
-if (typeof apiGet === 'undefined') {
-  var _portalApiBase = (typeof teamBackendUrl === 'function') ? teamBackendUrl : function(){ return (localStorage.getItem('pm_railway_url')||'https://pm-offsec-backend-production.up.railway.app'); };
-  async function apiGet(path){ try{ var t=localStorage.getItem('pm_jwt_token')||''; var r=await fetch(_portalApiBase()+path,{headers:{'Authorization':'Bearer '+t}}); return r.ok?await r.json():null; }catch(e){ return null; } }
-  async function apiPost(path,body){ try{ var t=localStorage.getItem('pm_jwt_token')||''; var r=await fetch(_portalApiBase()+path,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+t},body:JSON.stringify(body||{})}); var d=r.ok?await r.json():null; return Object.assign({ok:r.ok},d||{}); }catch(e){ return {ok:false}; } }
-}
+function _portalApiBase(){ return (typeof teamBackendUrl === 'function') ? teamBackendUrl() : (localStorage.getItem('pm_railway_url')||'https://pm-offsec-backend-production.up.railway.app'); }
+async function apiGet(path){ try{ var t=localStorage.getItem('pm_jwt_token')||''; var r=await fetch(_portalApiBase()+path,{headers:{'Authorization':'Bearer '+t}}); return r.ok?await r.json():null; }catch(e){ return null; } }
+async function apiPost(path,body){ try{ var t=localStorage.getItem('pm_jwt_token')||''; var r=await fetch(_portalApiBase()+path,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+t},body:JSON.stringify(body||{})}); var d=null; try{d=await r.json();}catch(e){} return Object.assign({ok:r.ok},d||{}); }catch(e){ return {ok:false}; } }
 
 // Load org data for employee/owner
 async function loadOrgData() {
@@ -1241,17 +1234,50 @@ async function inviteEmployee() {
 }
 
 async function registerMyDevice() {
-  var hostname = window.location.hostname || 'my-device';
+  var name = (document.getElementById('myDevName')||{}).value || '';
+  var msg = document.getElementById('myDevMsg');
+  if (!name.trim()) { if(msg){msg.textContent='Device name is required.';msg.style.color='#dc2626';} return; }
+  var body = {
+    device_name: name.trim(),
+    hostname: (document.getElementById('myDevHost')||{}).value || name.trim(),
+    device_type: (document.getElementById('myDevType')||{}).value || 'laptop',
+    os: (document.getElementById('myDevOS')||{}).value || '',
+    ip_address: (document.getElementById('myDevIP')||{}).value || '',
+    mac_address: (document.getElementById('myDevMAC')||{}).value || ''
+  };
   try {
-    var r = await apiPost('/api/org/devices/register', {
-      hostname: hostname, device_name: hostname,
-      device_type: 'laptop', os: navigator.platform||'Unknown'
-    });
-    if (r.ok) {
-      if(typeof showToast==='function') showToast('Device registered! Agent token: ' + (r.device||{}).agent_token,'ok');
-      loadOrgData();
+    var r = await apiPost('/api/org/devices/register', body);
+    if (r && r.ok) {
+      if(msg){msg.textContent='\u2713 Device saved — your organization can now see it.';msg.style.color='#16a34a';}
+      ['myDevName','myDevOS','myDevHost','myDevIP','myDevMAC'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+      loadMyDevices();
+    } else {
+      if(msg){msg.textContent=(r&&r.detail)||'Could not save (offline or not signed in).';msg.style.color='#dc2626';}
     }
-  } catch(e) { console.error(e); }
+  } catch(e) { if(msg){msg.textContent='Could not save device.';msg.style.color='#dc2626';} }
+}
+
+async function loadMyDevices() {
+  var grid = document.getElementById('clDeviceGrid');
+  if (!grid) return;
+  var icons = {laptop:'\uD83D\uDCBB',desktop:'\uD83D\uDDA5\uFE0F',mobile:'\uD83D\uDCF1',router:'\uD83C\uDF10',tv:'\uD83D\uDCFA',cctv:'\uD83D\uDCF7',server:'\uD83D\uDDC4\uFE0F',other:'\uD83D\uDD0C'};
+  try {
+    var r = await apiGet('/api/org/devices/all');
+    var devs = (r && r.devices) || [];
+    if (!devs.length) { grid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:#94a3b8;font-size:.78rem;padding:1rem">No devices yet. Click "+ Add Device" to register your first one.</div>'; return; }
+    grid.innerHTML = devs.map(function(d){
+      var score = d.last_score!=null ? d.last_score : null;
+      var scoreColor = score==null?'#94a3b8':score>=75?'#16a34a':score>=50?'#f59e0b':'#dc2626';
+      return '<div style="background:#fff;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)">'
+        +'<div style="font-size:1.8rem;margin-bottom:.4rem">'+(icons[d.device_type]||icons.other)+'</div>'
+        +'<div style="font-size:.72rem;font-weight:600;color:#1e293b">'+esc(d.device_name||d.hostname||'Device')+'</div>'
+        +'<div style="font-size:.6rem;color:#94a3b8;margin-top:.15rem">'+esc(d.os||d.device_type||'')+'</div>'
+        +'<div style="font-size:.62rem;margin-top:.3rem;color:'+scoreColor+'">'+(score==null?'Not scanned':('Score '+score))+'</div>'
+        +'</div>';
+    }).join('');
+  } catch(e) {
+    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:#94a3b8;font-size:.78rem;padding:1rem">Sign in to the server to manage devices.</div>';
+  }
 }
 
 // Auto-load on startup
@@ -1260,12 +1286,11 @@ document.addEventListener('DOMContentLoaded', function() {
   try {
     var shared = JSON.parse(localStorage.getItem('pm_portal_session') || 'null');
     if (shared && shared.id && shared.ts && (Date.now() - shared.ts) < 86400000) {
-      // Route business users away from personal portal
-      if (shared.role === 'owner' || shared.role === 'manager' || shared.client_type === 'business') {
+      // Route business OWNERS/managers to the business portal — but employees stay here.
+      if (shared.role === 'owner' || shared.role === 'manager') {
         window.location.href = '../business/index.html'; return;
       }
       if (shared.role === 'admin') { window.location.href = '../admin/index.html'; return; }
-      // Personal user — show portal directly, no login screen
       if (typeof showPortal === 'function') showPortal();
       return;
     }
@@ -1275,8 +1300,8 @@ document.addEventListener('DOMContentLoaded', function() {
   var sess = AUTH && AUTH.getSession ? AUTH.getSession() : null;
   if (sess && sess.id) {
     if (sess.role === 'admin') { window.location.href = '../admin/index.html'; return; }
-    if (sess.client_type === 'business' || sess.role === 'owner') { window.location.href = '../business/index.html'; return; }
-    if (typeof showPortal === 'function') showPortal();
+    if (sess.role === 'owner' || sess.role === 'manager') { window.location.href = '../business/index.html'; return; }
+    if (typeof showPortal === 'function') showPortal();   // employees + individuals stay here
   }
 
   setTimeout(loadOrgData, 1500);

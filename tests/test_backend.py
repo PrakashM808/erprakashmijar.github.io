@@ -177,38 +177,41 @@ def test_profile_self_update():
 
 
 def test_org_devices_and_employee_flow():
-    """Client adds a device, employee self-registers into the org and adds theirs,
-    client sees both, and a different client sees none (tenant isolation)."""
-    import database
-    # client account
-    rc = client.post("/api/auth/register", json={"email": f"biz_{os.urandom(3).hex()}@acme.com", "password": "Passw0rd!", "name": "Biz", "plan": "professional"})
-    cid = rc.json()["user_id"]; cemail = rc.json()["email"]
-    database.user_update(cid, role="client")
-    ctok = client.post("/api/auth/login", json={"email": cemail, "password": "Passw0rd!"}).json()["access_token"]
+    """Business owner gets an org automatically, an employee joins it and registers
+    a device, and the owner sees the employee + device (tenant data flow)."""
+    # Business owner — org is auto-created on registration
+    rc = client.post("/api/auth/register", json={"email": f"biz_{os.urandom(3).hex()}@acme.com", "password": "Passw0rd!", "name": "Biz", "plan": "professional", "client_type": "business", "company": "Acme"})
+    assert rc.json().get("role") == "owner", rc.text
+    org_id = rc.json().get("org_id")
+    assert org_id, "business owner should have an org_id"
+    ctok = client.post("/api/auth/login", json={"email": rc.json()["email"], "password": "Passw0rd!"}).json()["access_token"]
     ch = {"Authorization": f"Bearer {ctok}"}
 
-    # client adds a device
-    assert client.post("/api/org/devices", json={"device_name": "Jane-Laptop", "employee_name": "Jane"}, headers=ch).status_code == 200
-
-    # employee self-registers into the org
+    # employee self-registers into the org using the owner's org code
     eemail = f"emp_{os.urandom(3).hex()}@acme.com"
-    emp = client.post("/api/org/employee/register", json={"name": "Emp", "email": eemail, "password": "Passw0rd!", "org_id": cid})
+    emp = client.post("/api/org/employee/register", json={"name": "Emp", "email": eemail, "password": "Passw0rd!", "org_id": org_id})
     assert emp.status_code == 200, emp.text
     assert emp.json()["role"] == "employee"
+    assert emp.json()["org_id"] == org_id
     etok = emp.json()["access_token"]
 
-    # employee adds their own device
-    assert client.post("/api/org/devices", json={"device_name": "Emp-Mac"}, headers={"Authorization": f"Bearer {etok}"}).status_code == 200
+    # employee registers their device (the flow the personal portal form uses)
+    dev = client.post("/api/org/devices/register",
+                      json={"device_name": "Emp-Mac", "hostname": "emp-mac", "device_type": "laptop", "os": "macOS"},
+                      headers={"Authorization": f"Bearer {etok}"})
+    assert dev.status_code == 200, dev.text
 
-    # client sees both
-    seen = client.get("/api/org/devices", headers=ch).json()
-    assert seen["device_count"] == 2
+    # owner sees the employee and the device
+    me = client.get("/api/org/me", headers=ch).json()
+    emails = [e.get("email") for e in me.get("employees", [])]
+    assert eemail in emails
+    assert any((d.get("device_name") == "Emp-Mac") for d in me.get("devices", []))
 
-    # a different client sees none
-    ro = client.post("/api/auth/register", json={"email": f"other_{os.urandom(3).hex()}@beta.com", "password": "Passw0rd!", "name": "Other"})
-    database.user_update(ro.json()["user_id"], role="client")
+    # a different business owner sees none of this org's devices (tenant isolation)
+    ro = client.post("/api/auth/register", json={"email": f"other_{os.urandom(3).hex()}@beta.com", "password": "Passw0rd!", "name": "Other", "client_type": "business", "company": "Beta"})
     otok = client.post("/api/auth/login", json={"email": ro.json()["email"], "password": "Passw0rd!"}).json()["access_token"]
-    assert client.get("/api/org/devices", headers={"Authorization": f"Bearer {otok}"}).json()["device_count"] == 0
+    other_me = client.get("/api/org/me", headers={"Authorization": f"Bearer {otok}"}).json()
+    assert len(other_me.get("devices", [])) == 0
 
 
 def test_org_devices_requires_auth():

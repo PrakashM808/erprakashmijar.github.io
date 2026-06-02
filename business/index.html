@@ -208,6 +208,20 @@ html,body{overflow-x:hidden;max-width:100%}
       <button class="sb-item" onclick="bizNav('devices')"><span class="sb-ico">&#128737;</span>Firewalls</button>
       <button class="sb-item" onclick="bizNav('devices')"><span class="sb-ico">&#128247;</span>CCTV Cameras</button>
 
+      <div class="sb-section">Security Scans</div>
+      <button class="sb-item" onclick="bizScan('webscan')"><span class="sb-ico">&#127760;</span>Website Scanner</button>
+      <button class="sb-item" onclick="bizScan('scan')"><span class="sb-ico">&#128225;</span>Network Scanner</button>
+      <button class="sb-item" onclick="bizScan('attacksurface')"><span class="sb-ico">&#127919;</span>Attack Surface</button>
+      <button class="sb-item" onclick="bizScan('osint')"><span class="sb-ico">&#128270;</span>OSINT Recon</button>
+      <button class="sb-item" onclick="bizScan('darkweb')"><span class="sb-ico">&#127761;</span>Dark Web Monitor</button>
+      <button class="sb-item" onclick="bizScan('phishing')"><span class="sb-ico">&#127907;</span>Phishing Simulation</button>
+      <button class="sb-item" onclick="bizScan('cameras')"><span class="sb-ico">&#128247;</span>Camera Scanner</button>
+      <button class="sb-item" onclick="bizScan('pentest')"><span class="sb-ico">&#128299;</span>Pentest Tools</button>
+      <button class="sb-item" onclick="bizScan('mitre')"><span class="sb-ico">&#9876;</span>MITRE ATT&amp;CK</button>
+      <button class="sb-item" onclick="bizScan('incidents')"><span class="sb-ico">&#128680;</span>Incidents</button>
+      <button class="sb-item" onclick="bizScan('iocs')"><span class="sb-ico">&#129534;</span>IOC Database</button>
+      <button class="sb-item" onclick="goToBizScanner()"><span class="sb-ico">&#128202;</span>All Scanner Tools &#8594;</button>
+
       <div class="sb-section">Reports</div>
       <button class="sb-item" onclick="bizNav('reports')"><span class="sb-ico">&#128196;</span>Executive Reports</button>
       <button class="sb-item" onclick="bizNav('compliance')"><span class="sb-ico">&#9989;</span>Compliance Reports</button>
@@ -1228,7 +1242,9 @@ function renderInvoicesBiz() {
 }
 
 
-function goToBizScanner() {
+function goToBizScanner() { _bizGoScanner(null); }
+function bizScan(tool) { bizCloseDrawer(); _bizGoScanner(tool); }
+function _bizGoScanner(tool) {
   if (BIZ_SESSION) {
     try {
       var dashSess = Object.assign({}, BIZ_SESSION, {
@@ -1241,7 +1257,7 @@ function goToBizScanner() {
       localStorage.setItem('pm_portal_jwt', localStorage.getItem('pm_biz_jwt')||'');
     } catch(e) {}
   }
-  window.location.href = '../dashboard/index.html?stay=1';
+  window.location.href = '../dashboard/index.html?stay=1' + (tool ? ('&tool=' + encodeURIComponent(tool)) : '');
 }
 </script>
 </body>

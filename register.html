@@ -757,8 +757,15 @@ function doRegister() {
     }
 
     // Route by account type: business → business dashboard, personal → personal portal.
-    var dest = 'dashboard/index.html';  // All users start at Scan Dashboard; portal button in header takes them to their portal
-    showOk('Account created! Taking you to your security dashboard…');
+    var dest = clientType === 'business' ? 'dashboard/index.html' : 'client/index.html?preview=1';
+    if (result.local_only) {
+      // Backend was unreachable — account exists only in this browser, not on the server.
+      showErr('⚠️ Created an offline account only — could not reach the server, so this account is NOT saved to the database and won\'t work on other devices. Check that the backend is online, then register again.');
+      if (btn) btn.disabled = false;
+      if (txt) txt.textContent = 'CREATE ACCOUNT →';
+      return;
+    }
+    showOk('Account created on the server! Taking you to your ' + (clientType === 'business' ? 'business dashboard' : 'personal portal') + '…');
     setTimeout(function(){ window.location.href = dest; }, 1000);
   }, 400);
 }

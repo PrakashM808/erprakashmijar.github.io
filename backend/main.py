@@ -348,7 +348,7 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(_securi
         if not JWT_AVAILABLE:
             raise HTTPException(500, "JWT not available — run: pip install pyjwt")
         payload = pyjwt.decode(credentials.credentials, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-        return {"user_id": payload.get("user_id"), "email": payload.get("sub"), "plan": payload.get("plan","free"), "role": payload.get("role","user"), "client_type": payload.get("client_type","individual")}
+        return {"user_id": payload.get("user_id"), "email": payload.get("sub"), "plan": payload.get("plan","free"), "role": payload.get("role","user"), "client_type": payload.get("client_type","individual"), "org_id": payload.get("org_id")}
     except Exception as e:
         raise HTTPException(401, f"Invalid token: {str(e)}")
 
@@ -390,12 +390,14 @@ async def jwt_register(req: JWTRegisterReq, background_tasks: BackgroundTasks):
                 role="user", plan=req.plan, company=req.company, phone=req.phone, client_type=ctype)
     plan_set(user_id, req.plan)
     reg_role = "user"
+    reg_org_id = None
     # Business accounts get an organization automatically so the business portal works immediately.
     if ctype == "business":
         try:
             org = org_create(req.company or (req.name + "'s Organization"), user_id, req.plan)
             user_update(user_id, org_id=org["id"], role="owner")
             reg_role = "owner"
+            reg_org_id = org["id"]
         except Exception as _e:
             print(f"[register] org auto-create note: {_e}")
     if req.plan != "free":
@@ -405,9 +407,9 @@ async def jwt_register(req: JWTRegisterReq, background_tasks: BackgroundTasks):
         background_tasks.add_task(send_welcome_email, req.email, req.name, req.plan)
     token = ""
     if JWT_AVAILABLE:
-        token = pyjwt.encode({"sub":req.email,"user_id":user_id,"plan":req.plan,"role":reg_role,"client_type":ctype,
+        token = pyjwt.encode({"sub":req.email,"user_id":user_id,"plan":req.plan,"role":reg_role,"client_type":ctype,"org_id":reg_org_id,
             "exp":datetime.utcnow()+timedelta(hours=JWT_EXPIRY_HOURS)}, JWT_SECRET, algorithm=JWT_ALGORITHM)
-    return {"ok":True,"access_token":token,"user_id":user_id,"email":req.email,"name":req.name,"plan":req.plan,"role":reg_role,"client_type":ctype}
+    return {"ok":True,"access_token":token,"user_id":user_id,"email":req.email,"name":req.name,"plan":req.plan,"role":reg_role,"client_type":ctype,"org_id":reg_org_id}
 
 @app.post("/api/auth/login")
 async def jwt_login(req: JWTLoginReq):
@@ -431,11 +433,12 @@ async def jwt_login(req: JWTLoginReq):
     current_plan = plan_get(user["id"])
     user_role = user.get("role", "user")
     ctype = user.get("client_type", "individual")
+    user_org_id = user.get("org_id")
     token = ""
     if JWT_AVAILABLE:
-        token = pyjwt.encode({"sub":user["email"],"user_id":user["id"],"plan":current_plan,"role":user_role,"client_type":ctype,
+        token = pyjwt.encode({"sub":user["email"],"user_id":user["id"],"plan":current_plan,"role":user_role,"client_type":ctype,"org_id":user_org_id,
             "exp":datetime.utcnow()+timedelta(hours=JWT_EXPIRY_HOURS)}, JWT_SECRET, algorithm=JWT_ALGORITHM)
-    return {"ok":True,"access_token":token,"user_id":user["id"],"email":user["email"],"name":user.get("name",""),"plan":current_plan,"role":user_role,"client_type":ctype}
+    return {"ok":True,"access_token":token,"user_id":user["id"],"email":user["email"],"name":user.get("name",""),"plan":current_plan,"role":user_role,"client_type":ctype,"org_id":user_org_id}
 
 @app.get("/api/auth/verify")
 async def jwt_verify(user: dict = Depends(get_current_user)):
@@ -1608,7 +1611,24 @@ async def platform_stats(current_user: dict = Depends(get_current_user)):
 
 @app.get("/api/health")
 def health():
+    # Report real database connectivity so it's obvious when the app has fallen
+    # back to in-memory mode (data won't persist across restarts).
+    db_mode = "in-memory"
+    db_connected = False
+    try:
+        import database as _db
+        if _db.POSTGRES_AVAILABLE:
+            with _db.get_db() as _conn:
+                if _conn is not None:
+                    _cur = _conn.cursor()
+                    _cur.execute("SELECT 1")
+                    _cur.fetchone()
+                    db_connected = True
+                    db_mode = "postgresql"
+    except Exception as _e:
+        db_mode = "error: " + str(_e)[:80]
     return {"status": "ok", "timestamp": datetime.now().isoformat(),
+            "database": db_mode, "db_connected": db_connected,
             "scheduler": "running", "stripe": bool(os.getenv("STRIPE_SECRET_KEY")),
             "sendgrid": bool(os.getenv("SENDGRID_API_KEY")),
             "ai": bool(os.getenv("ANTHROPIC_API_KEY"))}
@@ -2237,14 +2257,20 @@ class EmployeeJoinReq(BaseModel):
 
 @app.post("/api/org/employee/register")
 def employee_register(req: EmployeeJoinReq):
-    """An employee self-registers into a client's organization. Their account
-    is created with role 'employee' and linked to the client's org_id, so their
-    devices show up on that client's dashboard."""
+    """An employee self-registers into a business's organization using the org code
+    the owner shares. Their account is linked to that org_id so their devices and
+    profile show up on the business owner's portal."""
     if not req.org_id:
         raise HTTPException(400, "An organization code is required")
-    org_owner = user_get(req.org_id)
-    if not org_owner:
-        raise HTTPException(404, "Organization not found")
+    # The org code is the organization's id. Accept either the org id directly,
+    # or an owner's user id (resolve to their org) for convenience.
+    org = org_get(req.org_id)
+    if not org:
+        owner = user_get(req.org_id)
+        if owner:
+            org = org_get_by_owner(req.org_id)
+    if not org:
+        raise HTTPException(404, "Organization not found — check the invite code with your employer")
     existing = user_get_by_email(req.email.lower())
     if existing:
         raise HTTPException(400, "An account with this email already exists")
@@ -2255,13 +2281,13 @@ def employee_register(req: EmployeeJoinReq):
     else:
         hashed = hashlib.sha256(req.password.encode()).hexdigest()
     user_create(user_id=uid, name=req.name.strip(), email=req.email.lower(), password=hashed, role="employee", plan="free", client_type="business")
-    user_update(uid, org_id=req.org_id)
+    user_update(uid, org_id=org["id"])
     token = ""
     if JWT_AVAILABLE:
-        token = pyjwt.encode({"sub": req.email.lower(), "user_id": uid, "plan": "free", "role": "employee", "client_type": "business",
+        token = pyjwt.encode({"sub": req.email.lower(), "user_id": uid, "plan": "free", "role": "employee", "client_type": "business", "org_id": org["id"],
             "exp": datetime.utcnow()+timedelta(hours=JWT_EXPIRY_HOURS)}, JWT_SECRET, algorithm=JWT_ALGORITHM)
     return {"ok": True, "access_token": token, "user_id": uid, "email": req.email.lower(),
-            "name": req.name.strip(), "role": "employee", "org_id": req.org_id, "client_type": "business"}
+            "name": req.name.strip(), "role": "employee", "org_id": org["id"], "client_type": "business"}
 
 # ── PAYMENT & BILLING ENDPOINTS ──────────────────────────────────
 
