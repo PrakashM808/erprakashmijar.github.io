@@ -219,6 +219,22 @@ def test_org_devices_requires_auth():
     assert client.post("/api/org/devices", json={"device_name": "X"}).status_code in (401, 403)
 
 
+def test_netwatch_flow():
+    """Device agent reports suspicious network activity; org owner can read it; bad token rejected."""
+    ro = client.post("/api/auth/register", json={"email": f"nw_{os.urandom(3).hex()}@a.com", "password": "Passw0rd!", "name": "O", "client_type": "business", "company": "Acme"})
+    otok = client.post("/api/auth/login", json={"email": ro.json()["email"], "password": "Passw0rd!"}).json()["access_token"]
+    org = ro.json()["org_id"]
+    emp = client.post("/api/org/employee/register", json={"name": "J", "email": f"e_{os.urandom(3).hex()}@a.com", "password": "Passw0rd!", "org_id": org}).json()
+    dev = client.post("/api/org/devices/register", json={"device_name": "PC", "hostname": "pc", "device_type": "laptop"}, headers={"Authorization": f"Bearer {emp['access_token']}"}).json()
+    token = dev["device"]["agent_token"]
+    alerts = [{"severity": "critical", "type": "arp_spoof", "title": "Possible ARP spoofing", "detail": "MAC claiming 3 IPs"}]
+    rep = client.post("/api/org/netwatch", json={"agent_token": token, "alerts": alerts, "device_count": 4})
+    assert rep.status_code == 200 and rep.json()["recorded"] == 1
+    got = client.get("/api/org/netwatch", headers={"Authorization": f"Bearer {otok}"}).json()
+    assert any(a["type"] == "arp_spoof" for a in got.get("alerts", []))
+    assert client.post("/api/org/netwatch", json={"agent_token": "nope", "alerts": []}).status_code == 404
+
+
 def test_client_type_individual_and_business():
     """Registration records client_type and login returns it (drives portal routing)."""
     ri = client.post("/api/auth/register", json={"email": f"i_{os.urandom(3).hex()}@x.com", "password": "Passw0rd!", "name": "Ind", "client_type": "individual"})

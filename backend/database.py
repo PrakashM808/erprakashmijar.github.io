@@ -1254,6 +1254,36 @@ def org_device_register(org_id: str, user_id: str, hostname: str,
         """, (org_id, user_id, hostname, device_name, device_type, os_name, ip, mac))
         return dict(zip([d[0] for d in cur.description], cur.fetchone()))
 
+def org_for_agent_token(agent_token: str):
+    """Resolve an agent_token to its org_id (so netwatch alerts attach to the org)."""
+    with get_db() as conn:
+        if not conn:
+            for dev in _mem.get('org_devices_v2', {}).values():
+                if dev.get('agent_token') == agent_token:
+                    return dev.get('org_id'), dev.get('id')
+            return None, None
+        cur = conn.cursor()
+        cur.execute("SELECT org_id, id FROM org_devices_v2 WHERE agent_token = %s", (agent_token,))
+        row = cur.fetchone()
+        if row:
+            return (row.get('org_id') if isinstance(row, dict) else row[0],
+                    row.get('id') if isinstance(row, dict) else row[1])
+        return None, None
+
+def netwatch_add(org_id: str, device_id, alerts: list, meta: dict):
+    """Store network-watch alerts for an org (most-recent-first, capped)."""
+    store = _mem.setdefault('netwatch', {})
+    bucket = store.setdefault(org_id or 'unknown', [])
+    entry = {"device_id": device_id, "alerts": alerts,
+             "device_count": meta.get("device_count"), "gateway": meta.get("gateway"),
+             "checked_at": meta.get("checked_at")}
+    bucket.insert(0, entry)
+    del bucket[200:]   # keep last 200 reports
+    return True
+
+def netwatch_get(org_id: str) -> list:
+    return _mem.get('netwatch', {}).get(org_id or 'unknown', [])
+
 def org_device_heartbeat(agent_token: str, score: int = None, ip: str = None) -> bool:
     with get_db() as conn:
         if not conn:

@@ -211,6 +211,7 @@ html,body{overflow-x:hidden;max-width:100%}
 
       <div class="sb-section">Security Scans</div>
       <button class="sb-item" onclick="goToBizScanner()"><span class="sb-ico">&#128269;</span>Run Security Scan &#8594;</button>
+      <button class="sb-item" onclick="bizNav('netwatch')"><span class="sb-ico">&#128225;</span>Network Watch</button>
 
       <div class="sb-section">Reports</div>
       <button class="sb-item" onclick="bizNav('reports')"><span class="sb-ico">&#128196;</span>Executive Reports</button>
@@ -393,9 +394,27 @@ html,body{overflow-x:hidden;max-width:100%}
         </div>
       </div>
 
-      <!-- ── EMPLOYEES PAGE ── -->
-      <div class="page" id="biz-employees">
+      <!-- ── NETWORK WATCH PAGE ── -->
+      <div class="page" id="biz-netwatch">
         <div class="pg-hdr" style="display:flex;align-items:flex-start;justify-content:space-between">
+          <div>
+            <div class="pg-title">NETWORK WATCH</div>
+            <div class="pg-sub">Suspicious activity detected on your team's networks by the device agent</div>
+          </div>
+          <button class="btn btn-o btn-sm" onclick="renderNetWatch()">&#128260; REFRESH</button>
+        </div>
+        <div class="panel" style="margin-bottom:1rem"><div class="panel-body">
+          <p style="font-family:var(--mono);font-size:.63rem;color:var(--muted);line-height:1.6">
+          The PM::OFFSEC device agent monitors each device's local network for new/unknown devices, ARP spoofing (man-in-the-middle), gateway changes, and newly exposed ports — and reports anything suspicious here. Install the agent from the Scanner Dashboard &rarr; Devices to enable monitoring.</p>
+        </div></div>
+        <div class="panel">
+          <div class="panel-hdr"><div class="panel-title">&#9888; SUSPICIOUS ACTIVITY</div></div>
+          <div class="panel-body" id="bizNetWatch"><div class="empty">Loading…</div></div>
+        </div>
+      </div>
+
+      <!-- ── EMPLOYEES PAGE ── -->
+      <div class="page" id="biz-employees">        <div class="pg-hdr" style="display:flex;align-items:flex-start;justify-content:space-between">
           <div>
             <div class="pg-title">EMPLOYEES</div>
             <div class="pg-sub">Manage your team members and their access</div>
@@ -607,6 +626,35 @@ html,body{overflow-x:hidden;max-width:100%}
           </div>
         </div>
 
+        <!-- ── TEAMS ── -->
+        <div class="page" id="biz-teams">
+          <div class="pg-hdr" style="display:flex;align-items:flex-start;justify-content:space-between">
+            <div><div class="pg-title">TEAMS</div><div class="pg-sub">Group employees into teams (e.g. Finance, IT, Sales)</div></div>
+            <button class="btn btn-g btn-sm" onclick="bizAddTeam()">+ NEW TEAM</button>
+          </div>
+          <div class="panel"><div class="panel-hdr"><div class="panel-title">YOUR TEAMS</div></div>
+            <div class="panel-body" id="bizTeamsBody"><div class="empty">Loading…</div></div>
+          </div>
+        </div>
+
+        <!-- ── PERMISSIONS ── -->
+        <div class="page" id="biz-permissions">
+          <div class="pg-hdr"><div class="pg-title">PERMISSIONS</div><div class="pg-sub">What each role can access in your organization</div></div>
+          <div class="panel"><div class="panel-hdr"><div class="panel-title">PERMISSION MATRIX</div></div>
+            <div class="panel-body" style="overflow-x:auto">
+              <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.62rem">
+                <thead><tr>
+                  <th style="padding:.5rem .8rem;border-bottom:1px solid var(--border);color:var(--muted);text-align:left">Capability</th>
+                  <th style="padding:.5rem;border-bottom:1px solid var(--border);color:#b060ff;text-align:center">Owner</th>
+                  <th style="padding:.5rem;border-bottom:1px solid var(--border);color:var(--g2);text-align:center">Manager</th>
+                  <th style="padding:.5rem;border-bottom:1px solid var(--border);color:var(--warn);text-align:center">Employee</th>
+                </tr></thead>
+                <tbody id="permMatrixBody"><tr><td colspan="4" style="padding:1.5rem;text-align:center;color:var(--muted)">Loading…</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
         <!-- ── NETWORK ── -->
         <div class="page" id="biz-network">
           <div class="pg-hdr"><div class="pg-title">NETWORK DISCOVERY</div><div class="pg-sub">Discover devices and check for open ports on your network</div></div>
@@ -642,11 +690,12 @@ html,body{overflow-x:hidden;max-width:100%}
 
         <!-- ── INCIDENTS ── -->
         <div class="page" id="biz-incidents">
-          <div class="pg-hdr"><div class="pg-title">INCIDENTS</div><div class="pg-sub">Track and remediate security incidents</div></div>
-          <div class="panel"><div class="panel-hdr"><div class="panel-title">OPEN INCIDENTS</div>
-            <button class="btn btn-r btn-sm" onclick="bizToast('Connect backend to create incidents','info')">+ NEW INCIDENT</button>
-          </div><div class="panel-body">
-            <div style="text-align:center;padding:2rem;font-family:var(--mono);font-size:.65rem;color:var(--ok)">&#9989; No open incidents. Organization is clean.</div>
+          <div class="pg-hdr" style="display:flex;align-items:flex-start;justify-content:space-between">
+            <div><div class="pg-title">INCIDENTS</div><div class="pg-sub">Track and remediate security incidents</div></div>
+            <button class="btn btn-r btn-sm" onclick="bizNewIncident()">+ NEW INCIDENT</button>
+          </div>
+          <div class="panel"><div class="panel-hdr"><div class="panel-title">INCIDENTS</div></div><div class="panel-body" id="bizIncidentsBody">
+            <div class="empty">Loading…</div>
           </div></div>
         </div>
 
@@ -654,12 +703,12 @@ html,body{overflow-x:hidden;max-width:100%}
         <div class="page" id="biz-integrations">
           <div class="pg-hdr"><div class="pg-title">INTEGRATIONS</div><div class="pg-sub">Connect PM::OFFSEC with your existing tools</div></div>
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.8rem">
-            <div class="device-card"><div style="font-size:1.8rem;margin-bottom:.4rem">&#127970;</div><div class="device-name">Microsoft 365</div><div class="device-meta">Exchange, Teams, Entra ID</div><button class="btn btn-o btn-sm" style="margin-top:.7rem;width:100%;justify-content:center" onclick="bizToast('Connect backend to enable','info')">CONFIGURE</button></div>
-            <div class="device-card"><div style="font-size:1.8rem;margin-bottom:.4rem">&#128309;</div><div class="device-name">Google Workspace</div><div class="device-meta">Gmail, Drive, Admin security</div><button class="btn btn-o btn-sm" style="margin-top:.7rem;width:100%;justify-content:center" onclick="bizToast('Connect backend to enable','info')">CONFIGURE</button></div>
-            <div class="device-card"><div style="font-size:1.8rem;margin-bottom:.4rem">&#128172;</div><div class="device-name">Slack</div><div class="device-meta">Real-time security alerts</div><button class="btn btn-o btn-sm" style="margin-top:.7rem;width:100%;justify-content:center" onclick="bizToast('Connect backend to enable','info')">CONFIGURE</button></div>
-            <div class="device-card"><div style="font-size:1.8rem;margin-bottom:.4rem">&#127919;</div><div class="device-name">Jira</div><div class="device-meta">Auto-create vulnerability tickets</div><button class="btn btn-o btn-sm" style="margin-top:.7rem;width:100%;justify-content:center" onclick="bizToast('Connect backend to enable','info')">CONFIGURE</button></div>
-            <div class="device-card"><div style="font-size:1.8rem;margin-bottom:.4rem">&#128202;</div><div class="device-name">Splunk / SIEM</div><div class="device-meta">Forward logs to your SIEM</div><button class="btn btn-o btn-sm" style="margin-top:.7rem;width:100%;justify-content:center" onclick="bizToast('Connect backend to enable','info')">CONFIGURE</button></div>
-            <div class="device-card"><div style="font-size:1.8rem;margin-bottom:.4rem">&#128384;</div><div class="device-name">PagerDuty</div><div class="device-meta">On-call alerting for critical issues</div><button class="btn btn-o btn-sm" style="margin-top:.7rem;width:100%;justify-content:center" onclick="bizToast('Connect backend to enable','info')">CONFIGURE</button></div>
+            <div class="device-card"><div style="font-size:1.8rem;margin-bottom:.4rem">&#127970;</div><div class="device-name">Microsoft 365</div><div class="device-meta">Exchange, Teams, Entra ID</div><button class="btn btn-o btn-sm" id="intg-m365" style="margin-top:.7rem;width:100%;justify-content:center" onclick="bizConfigIntegration('Microsoft 365','m365','Tenant ID / Client ID')">CONFIGURE</button></div>
+            <div class="device-card"><div style="font-size:1.8rem;margin-bottom:.4rem">&#128309;</div><div class="device-name">Google Workspace</div><div class="device-meta">Gmail, Drive, Admin security</div><button class="btn btn-o btn-sm" id="intg-google" style="margin-top:.7rem;width:100%;justify-content:center" onclick="bizConfigIntegration('Google Workspace','google','Admin SDK API key')">CONFIGURE</button></div>
+            <div class="device-card"><div style="font-size:1.8rem;margin-bottom:.4rem">&#128172;</div><div class="device-name">Slack</div><div class="device-meta">Real-time security alerts</div><button class="btn btn-o btn-sm" id="intg-slack" style="margin-top:.7rem;width:100%;justify-content:center" onclick="bizConfigIntegration('Slack','slack','Incoming Webhook URL')">CONFIGURE</button></div>
+            <div class="device-card"><div style="font-size:1.8rem;margin-bottom:.4rem">&#127919;</div><div class="device-name">Jira</div><div class="device-meta">Auto-create vulnerability tickets</div><button class="btn btn-o btn-sm" id="intg-jira" style="margin-top:.7rem;width:100%;justify-content:center" onclick="bizConfigIntegration('Jira','jira','Jira site URL + API token')">CONFIGURE</button></div>
+            <div class="device-card"><div style="font-size:1.8rem;margin-bottom:.4rem">&#128202;</div><div class="device-name">Splunk / SIEM</div><div class="device-meta">Forward logs to your SIEM</div><button class="btn btn-o btn-sm" id="intg-splunk" style="margin-top:.7rem;width:100%;justify-content:center" onclick="bizConfigIntegration('Splunk / SIEM','splunk','HEC endpoint + token')">CONFIGURE</button></div>
+            <div class="device-card"><div style="font-size:1.8rem;margin-bottom:.4rem">&#128384;</div><div class="device-name">PagerDuty</div><div class="device-meta">On-call alerting for critical issues</div><button class="btn btn-o btn-sm" id="intg-pagerduty" style="margin-top:.7rem;width:100%;justify-content:center" onclick="bizConfigIntegration('PagerDuty','pagerduty','Integration key')">CONFIGURE</button></div>
           </div>
         </div>
 
@@ -854,6 +903,9 @@ function bizNav(page) {
   if (page === 'secreports')   renderSecReports();
   if (page === 'reports')      renderBizScanReports();
   if (page === 'executive')    renderExecutive();
+  if (page === 'netwatch')     renderNetWatch();
+  if (page === 'incidents')    renderIncidents();
+  if (page === 'integrations') renderIntegrations();
   if (page === 'secpolicies')  renderSecPolicies();
   if (page === 'notifications') renderNotifSettings();
   var assetPages = ['servers','workstations','laptops','routers','switches','firewalls','cameras'];
@@ -1249,11 +1301,61 @@ function renderRoles() {
 }
 
 
+function bizAddTeam() {
+  var name = prompt('Team name (e.g. Finance, IT, Sales):');
+  if (!name) return;
+  var teams = [];
+  try { teams = JSON.parse(localStorage.getItem('pm_biz_teams') || '[]'); } catch(e) {}
+  teams.push({ name: name.trim(), created: new Date().toISOString() });
+  localStorage.setItem('pm_biz_teams', JSON.stringify(teams));
+  renderTeams();
+}
 function renderTeams() {
-  bizToast('Teams management — invite employees first to create teams', 'info');
+  var el = document.getElementById('bizTeamsBody');
+  if (!el) return;
+  var teams = [];
+  try { teams = JSON.parse(localStorage.getItem('pm_biz_teams') || '[]'); } catch(e) {}
+  var emps = (BIZ_DATA && BIZ_DATA.employees) ? BIZ_DATA.employees : [];
+  if (!teams.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">&#128101;</div>No teams yet. Click "New Team" to group your '
+      + emps.length + ' employee'+(emps.length===1?'':'s')+' into teams like Finance, IT or Sales.</div>';
+    return;
+  }
+  el.innerHTML = teams.map(function(t, i){
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:.6rem .2rem;border-bottom:1px solid var(--border)">'
+      + '<div><div style="font-size:.78rem;color:var(--white);font-weight:600">&#128101; '+bizEsc(t.name)+'</div>'
+      + '<div style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">0 members assigned</div></div>'
+      + '<button class="btn btn-o btn-sm" onclick="bizRemoveTeam('+i+')">Remove</button></div>';
+  }).join('');
+}
+function bizRemoveTeam(i) {
+  var teams = [];
+  try { teams = JSON.parse(localStorage.getItem('pm_biz_teams') || '[]'); } catch(e) {}
+  teams.splice(i, 1);
+  localStorage.setItem('pm_biz_teams', JSON.stringify(teams));
+  renderTeams();
 }
 function renderPermissions() {
-  bizNav('roles');  // Permissions are part of roles
+  var body = document.getElementById('permMatrixBody');
+  if (!body) return;
+  var caps = [
+    ['View security dashboard', 1,1,1],
+    ['Run security scans',      1,1,1],
+    ['Add / manage devices',    1,1,1],
+    ['Invite employees',        1,1,0],
+    ['Manage teams & roles',    1,1,0],
+    ['View executive reports',  1,1,0],
+    ['Manage billing & plan',   1,0,0],
+    ['Delete the organization', 1,0,0]
+  ];
+  var tick = '<span style="color:var(--ok)">&#10003;</span>';
+  var cross = '<span style="color:var(--muted)">&#8212;</span>';
+  body.innerHTML = caps.map(function(c){
+    return '<tr><td style="padding:.45rem .8rem;border-bottom:1px solid var(--border);color:var(--white)">'+c[0]+'</td>'
+      + '<td style="padding:.45rem;border-bottom:1px solid var(--border);text-align:center">'+(c[1]?tick:cross)+'</td>'
+      + '<td style="padding:.45rem;border-bottom:1px solid var(--border);text-align:center">'+(c[2]?tick:cross)+'</td>'
+      + '<td style="padding:.45rem;border-bottom:1px solid var(--border);text-align:center">'+(c[3]?tick:cross)+'</td></tr>';
+  }).join('');
 }
 function renderAssetPage(type) {
   // All asset types load from the devices list, filtered by type
@@ -1414,6 +1516,101 @@ function downloadExecReport() {
   var w = window.open('', '_blank');
   if (!w) { alert('Please allow pop-ups to download the report.'); return; }
   w.document.write(html); w.document.close();
+}
+
+// ── Incidents (local tracking) ──
+function bizNewIncident() {
+  var title = prompt('Incident title (e.g. "Phishing email reported by staff"):');
+  if (!title) return;
+  var sev = (prompt('Severity — type one: critical, high, medium, low', 'high') || 'high').toLowerCase();
+  if (['critical','high','medium','low'].indexOf(sev) < 0) sev = 'high';
+  var inc = [];
+  try { inc = JSON.parse(localStorage.getItem('pm_biz_incidents') || '[]'); } catch(e) {}
+  inc.unshift({ id: 'inc-'+Date.now(), title: title.trim(), severity: sev, status: 'open', created: new Date().toISOString() });
+  localStorage.setItem('pm_biz_incidents', JSON.stringify(inc));
+  renderIncidents();
+  bizToast('Incident created.', 'ok');
+}
+function bizSetIncident(id, status) {
+  var inc = [];
+  try { inc = JSON.parse(localStorage.getItem('pm_biz_incidents') || '[]'); } catch(e) {}
+  inc = inc.map(function(i){ if (i.id===id) i.status=status; return i; });
+  localStorage.setItem('pm_biz_incidents', JSON.stringify(inc));
+  renderIncidents();
+}
+function renderIncidents() {
+  var el = document.getElementById('bizIncidentsBody');
+  if (!el) return;
+  var inc = [];
+  try { inc = JSON.parse(localStorage.getItem('pm_biz_incidents') || '[]'); } catch(e) {}
+  if (!inc.length) {
+    el.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--mono);font-size:.65rem;color:var(--ok)">&#9989; No incidents logged. Click "New Incident" if something needs tracking.</div>';
+    return;
+  }
+  var sc = {critical:'var(--danger)', high:'#f97316', medium:'var(--warn)', low:'var(--ok)'};
+  el.innerHTML = inc.map(function(i){
+    var resolved = i.status === 'resolved';
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:.6rem .2rem;border-bottom:1px solid var(--border);opacity:'+(resolved?'.6':'1')+'">'
+      + '<div style="display:flex;gap:.6rem;align-items:center">'
+      + '<span style="display:inline-block;padding:2px 8px;border-radius:10px;background:'+(sc[i.severity]||'var(--muted)')+';color:#0b0f1a;font-size:.55rem;font-weight:700;text-transform:uppercase">'+bizEsc(i.severity)+'</span>'
+      + '<div><div style="font-size:.76rem;color:var(--white);'+(resolved?'text-decoration:line-through':'')+'">'+bizEsc(i.title)+'</div>'
+      + '<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">'+bizEsc(i.status)+' · '+new Date(i.created).toLocaleDateString()+'</div></div></div>'
+      + (resolved
+          ? '<button class="btn btn-o btn-sm" onclick="bizSetIncident(\''+i.id+'\',\'open\')">Reopen</button>'
+          : '<button class="btn btn-g btn-sm" onclick="bizSetIncident(\''+i.id+'\',\'resolved\')">Resolve</button>')
+      + '</div>';
+  }).join('');
+}
+
+// ── Integrations (local config) ──
+function bizConfigIntegration(name, key, fieldLabel) {
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem('pm_biz_integrations') || '{}'); } catch(e) {}
+  var current = saved[key] || '';
+  var val = prompt('Configure ' + name + '\n\nEnter your ' + fieldLabel + ':', current);
+  if (val === null) return;   // cancelled
+  if (val.trim()) {
+    saved[key] = val.trim();
+    bizToast(name + ' connected.', 'ok');
+  } else {
+    delete saved[key];
+    bizToast(name + ' disconnected.', 'info');
+  }
+  localStorage.setItem('pm_biz_integrations', JSON.stringify(saved));
+  renderIntegrations();
+}
+function renderIntegrations() {
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem('pm_biz_integrations') || '{}'); } catch(e) {}
+  [['m365'],['google'],['slack'],['jira'],['splunk'],['pagerduty']].forEach(function(p){
+    var btn = document.getElementById('intg-' + p[0]);
+    if (!btn) return;
+    if (saved[p[0]]) { btn.textContent = '\u2713 CONNECTED'; btn.style.color = 'var(--ok)'; btn.style.borderColor = 'var(--ok)'; }
+    else { btn.textContent = 'CONFIGURE'; btn.style.color = ''; btn.style.borderColor = ''; }
+  });
+}
+
+async function renderNetWatch() {
+  var el = document.getElementById('bizNetWatch');
+  if (!el) return;
+  el.innerHTML = '<div class="empty">Loading…</div>';
+  var data = null;
+  try { data = await bizFetch('/api/org/netwatch'); } catch(e) {}
+  var alerts = (data && data.alerts) || [];
+  if (!alerts.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">&#9989;</div>No suspicious network activity detected. Devices running the agent are reporting clean.</div>';
+    return;
+  }
+  var sevColor = {critical:'var(--danger)', high:'#f97316', medium:'var(--warn)', low:'var(--ok)'};
+  el.innerHTML = alerts.map(function(a){
+    var c = sevColor[a.severity] || 'var(--muted)';
+    return '<div style="display:flex;gap:.7rem;align-items:flex-start;padding:.6rem .2rem;border-bottom:1px solid var(--border)">'
+      + '<span style="display:inline-block;padding:2px 8px;border-radius:10px;background:'+c+';color:#0b0f1a;font-size:.55rem;font-weight:700;text-transform:uppercase;flex-shrink:0">'+bizEsc(a.severity||'info')+'</span>'
+      + '<div style="flex:1"><div style="font-size:.76rem;color:var(--white);font-weight:600">'+bizEsc(a.title||'Alert')+'</div>'
+      + '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">'+bizEsc(a.detail||'')+'</div>'
+      + (a.checked_at?'<div style="font-size:.55rem;color:var(--muted);margin-top:.15rem">'+bizEsc(a.checked_at)+'</div>':'')
+      + '</div></div>';
+  }).join('');
 }
 
 function renderBizScanReports() {

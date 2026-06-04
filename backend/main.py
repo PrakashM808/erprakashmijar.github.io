@@ -46,6 +46,7 @@ from database import (
     invite_create, invite_get, invite_accept,
     refresh_token_create, refresh_token_verify,
     org_device_register, org_device_heartbeat,
+    org_for_agent_token, netwatch_add, netwatch_get,
     POSTGRES_AVAILABLE, get_db
 )
 
@@ -1572,6 +1573,38 @@ async def device_heartbeat(body: DeviceHeartbeatReq):
     if not ok:
         raise HTTPException(404, "Device not found.")
     return {"ok": True}
+
+class NetWatchReq(BaseModel):
+    agent_token: str
+    alerts: list = []
+    device_count: int = None
+    gateway: str = None
+    checked_at: str = None
+
+@app.post("/api/org/netwatch")
+async def netwatch_report(body: NetWatchReq):
+    """Device agent reports suspicious local-network activity. Authenticated by agent_token."""
+    org_id, device_id = org_for_agent_token(body.agent_token)
+    if org_id is None and device_id is None:
+        raise HTTPException(404, "Device not found.")
+    netwatch_add(org_id, device_id, body.alerts or [],
+                 {"device_count": body.device_count, "gateway": body.gateway, "checked_at": body.checked_at})
+    return {"ok": True, "recorded": len(body.alerts or [])}
+
+@app.get("/api/org/netwatch")
+async def netwatch_list(current_user: dict = Depends(get_current_user)):
+    """Business owner/admin reads recent network-watch alerts for their org."""
+    org_id = current_user.get("org_id")
+    if not org_id:
+        u = user_get(current_user.get("user_id"))
+        org_id = u.get("org_id") if u else None
+    reports = netwatch_get(org_id)
+    # flatten recent alerts for convenience
+    recent = []
+    for rep in reports[:50]:
+        for a in rep.get("alerts", []):
+            recent.append({**a, "checked_at": rep.get("checked_at"), "device_id": rep.get("device_id")})
+    return {"reports": reports[:50], "alerts": recent[:100], "org_id": org_id}
 
 # ── Refresh token ────────────────────────────────────────────
 

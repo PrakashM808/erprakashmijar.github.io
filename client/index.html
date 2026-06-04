@@ -298,6 +298,9 @@
       <div class="cl-sb-sec">My Devices</div>
       <button onclick="tab('devices')" id="clTab-devices" class="cl-sb-btn">&#128187; My Devices</button>
 
+      <div class="cl-sb-sec">Home Security</div>
+      <button onclick="tab('wifi')" id="clTab-wifi" class="cl-sb-btn">&#128246; WiFi Security Check</button>
+
       <div class="cl-sb-sec">Reports</div>
       <button onclick="tab('reports')" id="clTab-reports" class="cl-sb-btn">&#128196; Scan Reports</button>
       <button onclick="tab('summary')" id="clTab-summary" class="cl-sb-btn">&#128196; Security Reports</button>
@@ -435,6 +438,40 @@
   </div>
 </div>
 
+<!-- ── WIFI SECURITY CHECK TAB ── -->
+<div class="tab-pane" id="tp-wifi">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;flex-wrap:wrap;gap:.5rem">
+    <h3 style="font-size:.95rem;font-weight:700;color:#1e293b">&#128246; WiFi &amp; Home Network Security Check</h3>
+    <button onclick="resetWifiCheck()" style="font-size:.7rem;padding:.3rem .65rem;background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer">Reset</button>
+  </div>
+  <p style="font-size:.76rem;color:#64748b;margin-bottom:.9rem">Tick each step you've completed to secure your home or office network. Your score updates as you go.</p>
+
+  <!-- Score header -->
+  <div style="background:linear-gradient(135deg,#1e3a5f,#0f2a4a);border-radius:12px;padding:1.2rem 1.4rem;margin-bottom:1rem;color:#fff;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+    <div>
+      <div style="font-size:.62rem;letter-spacing:.12em;opacity:.8">YOUR WIFI SECURITY SCORE</div>
+      <div id="wifiScoreLabel" style="font-size:1.1rem;font-weight:700;margin-top:.2rem">Getting started…</div>
+      <div id="wifiScoreSub" style="font-size:.72rem;opacity:.85">Complete the checklist below to improve your score.</div>
+    </div>
+    <div style="text-align:center">
+      <div id="wifiScoreNum" style="font-size:2.6rem;font-weight:800;line-height:1">0</div>
+      <div style="font-size:.6rem;opacity:.8">out of 100</div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div style="background:#e2e8f0;border-radius:999px;height:10px;overflow:hidden;margin-bottom:1rem">
+    <div id="wifiProgressBar" style="height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#16a34a);transition:width .3s"></div>
+  </div>
+
+  <!-- Checklist (built by JS) -->
+  <div id="wifiChecklist"></div>
+
+  <div style="margin-top:1rem;padding:.8rem;background:#eff6ff;border-radius:8px;font-size:.74rem;color:#1d4ed8">
+    &#128161; These steps follow widely-recommended home-network hardening practice. For a deep scan of your devices, open the <a href="../dashboard/index.html?stay=1" style="font-weight:700">Scanner Dashboard</a>.
+  </div>
+</div>
+
 <!-- ── REPORTS TAB ── -->
 <div class="tab-pane" id="tp-reports">
   <h3 style="font-size:.9rem;font-weight:700;margin-bottom:.8rem;color:#1e293b">&#128196; Reports</h3>
@@ -447,6 +484,24 @@
       <div style="font-size:.78rem;font-weight:700;color:#1e293b;margin-bottom:.6rem">&#11015; Export</div>
       <button onclick="window.print()" style="width:100%;padding:.5rem;background:#1d4ed8;color:#fff;border:none;border-radius:6px;font-size:.72rem;font-weight:600;cursor:pointer;margin-bottom:.4rem">&#11015; PDF Export</button>
       <a href="../dashboard/index.html?stay=1" style="display:block;text-align:center;padding:.5rem;background:#f1f5f9;color:#475569;border-radius:6px;font-size:.72rem;font-weight:600;text-decoration:none">&#128196; Full Report (Scanner)</a>
+    </div>
+  </div>
+</div>
+
+<!-- ── SECURITY REPORTS (SUMMARY) TAB ── -->
+<div class="tab-pane" id="tp-summary">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem;flex-wrap:wrap;gap:.5rem">
+    <h3 style="font-size:.9rem;font-weight:700;color:#1e293b">&#128196; Security Reports</h3>
+    <button onclick="downloadMyReport()" style="font-size:.72rem;padding:.35rem .7rem;background:#1d4ed8;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer">&#11015; Download PDF</button>
+  </div>
+  <div id="clSummaryBody">
+    <div style="background:#fff;border-radius:10px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:.8rem">
+      <div style="font-size:.78rem;font-weight:700;color:#1e293b;margin-bottom:.6rem">Your Security Summary</div>
+      <div id="clSummaryStats" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem"></div>
+    </div>
+    <div style="background:#fff;border-radius:10px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:.78rem;font-weight:700;color:#1e293b;margin-bottom:.4rem">Recommendations</div>
+      <div id="clSummaryRecs" style="font-size:.74rem;color:#475569"></div>
     </div>
   </div>
 </div>
@@ -493,12 +548,12 @@
         <div style="padding:.6rem;border:2px solid #e2e8f0;border-radius:8px">
           <div style="font-size:.75rem;font-weight:700;color:#1e293b">Pro — $9/mo</div>
           <div style="font-size:.65rem;color:#64748b">5 devices · Dark web · AI reports</div>
-          <button onclick="alert('Connect Stripe to enable billing')" style="width:100%;margin-top:.4rem;padding:.35rem;background:#1d4ed8;color:#fff;border:none;border-radius:5px;font-size:.68rem;cursor:pointer">Upgrade to Pro</button>
+          <button onclick="window.location.href='../billing/pricing.html'" style="width:100%;margin-top:.4rem;padding:.35rem;background:#1d4ed8;color:#fff;border:none;border-radius:5px;font-size:.68rem;cursor:pointer">Upgrade to Pro</button>
         </div>
         <div style="padding:.6rem;border:2px solid #e2e8f0;border-radius:8px">
           <div style="font-size:.75rem;font-weight:700;color:#1e293b">Family — $19/mo</div>
           <div style="font-size:.65rem;color:#64748b">10 devices · Full suite</div>
-          <button onclick="alert('Connect Stripe to enable billing')" style="width:100%;margin-top:.4rem;padding:.35rem;background:#7c3aed;color:#fff;border:none;border-radius:5px;font-size:.68rem;cursor:pointer">Upgrade to Family</button>
+          <button onclick="window.location.href='../billing/pricing.html'" style="width:100%;margin-top:.4rem;padding:.35rem;background:#7c3aed;color:#fff;border:none;border-radius:5px;font-size:.68rem;cursor:pointer">Upgrade to Family</button>
         </div>
       </div>
     </div>
@@ -528,7 +583,7 @@
           <label style="display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:#475569"><input type="checkbox" checked/> Two-factor authentication</label>
           <label style="display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:#475569"><input type="checkbox" checked/> Login notifications</label>
         </div>
-        <button onclick="alert('Settings saved')" style="padding:.4rem;background:#1d4ed8;color:#fff;border:none;border-radius:5px;font-size:.7rem;cursor:pointer">Save Settings</button>
+        <button onclick="saveClSettings(this)" style="padding:.4rem;background:#1d4ed8;color:#fff;border:none;border-radius:5px;font-size:.7rem;cursor:pointer">Save Settings</button>
       </div>
     </div>
   </div>
@@ -958,6 +1013,8 @@ function tab(name) {
   if(tp) tp.classList.add('active');
   if(name==='team') loadOrgDevices();
   if(name==='devices') loadMyDevices();
+  if(name==='wifi') renderWifiCheck();
+  if(name==='summary') renderSummary();
 
   if (name === 'dashboard') setTimeout(loadClDashboard, 100);
   // Sync sidebar active state
@@ -1257,6 +1314,105 @@ async function registerMyDevice() {
   } catch(e) { if(msg){msg.textContent='Could not save device.';msg.style.color='#dc2626';} }
 }
 
+// ── WiFi / Home Network Security Checklist (interactive self-assessment) ──
+var WIFI_ITEMS = [
+  {id:'pw',     title:'Change default router password',  desc:'Replace the factory admin login right after setup.',         threat:'Prevents unauthorised router access'},
+  {id:'wpa3',   title:'Use WPA3 (or WPA2) encryption',    desc:'Select the strongest encryption your router supports.',       threat:'Stops traffic interception & eavesdropping'},
+  {id:'strong', title:'Set a strong WiFi password',       desc:'Use 16+ characters with mixed letters, numbers & symbols.',   threat:'Defeats brute-force password attacks'},
+  {id:'guest',  title:'Create a guest network',           desc:'Keep visitors separate from your main devices.',              threat:'Prevents lateral movement across your network'},
+  {id:'wps',    title:'Disable WPS',                      desc:'Turn off WiFi Protected Setup in router settings.',           threat:'Eliminates the WPS PIN brute-force weakness'},
+  {id:'ssid',   title:'Rename your network (SSID)',       desc:'Avoid names that reveal your identity or address.',           threat:'Reduces targeted social engineering'},
+  {id:'audit',  title:'Audit connected devices',         desc:'Review the device list in your router panel regularly.',      threat:'Detects unauthorised devices early'},
+  {id:'fw',     title:'Enable your firewall',             desc:'Turn it on at both the router and your device OS.',           threat:'Blocks unsolicited inbound connections'},
+  {id:'vpn',    title:'Use a VPN on public WiFi',         desc:'Protect yourself on open or shared networks.',                threat:'Prevents man-in-the-middle attacks'},
+  {id:'remote', title:'Disable remote management',        desc:'Switch it off unless you genuinely need it.',                 threat:'Closes an external admin access point'},
+  {id:'mac',    title:'Consider MAC address filtering',   desc:'Allow only known devices where practical.',                   threat:'Raises the barrier for unknown devices'},
+  {id:'iot',    title:'Isolate IoT / smart devices',      desc:'Put cameras, TVs and smart plugs on a separate network.',     threat:'Contains breaches to non-critical devices'},
+  {id:'reboot', title:'Reboot & review monthly',          desc:'Restart your router and re-check settings regularly.',        threat:'Clears temporary exploits & stale sessions'}
+];
+function wifiState(){ try { return JSON.parse(localStorage.getItem('pm_wifi_check')||'{}'); } catch(e){ return {}; } }
+function saveWifiState(st){ try { localStorage.setItem('pm_wifi_check', JSON.stringify(st)); } catch(e){} }
+function toggleWifiItem(id){ var st=wifiState(); st[id]=!st[id]; saveWifiState(st); renderWifiCheck(); }
+function resetWifiCheck(){ saveWifiState({}); renderWifiCheck(); }
+function renderWifiCheck(){
+  var list=document.getElementById('wifiChecklist'); if(!list) return;
+  var st=wifiState();
+  var done=WIFI_ITEMS.filter(function(it){return st[it.id];}).length, total=WIFI_ITEMS.length;
+  var score=Math.round((done/total)*100);
+  list.innerHTML=WIFI_ITEMS.map(function(it,i){
+    var ck=!!st[it.id];
+    return '<div onclick="toggleWifiItem(\''+it.id+'\')" style="display:flex;gap:.7rem;align-items:flex-start;background:#fff;border:1px solid '+(ck?'#bbf7d0':'#e2e8f0')+';border-radius:10px;padding:.7rem .9rem;margin-bottom:.5rem;cursor:pointer">'
+      +'<div style="width:22px;height:22px;border-radius:6px;flex-shrink:0;border:2px solid '+(ck?'#16a34a':'#cbd5e1')+';background:'+(ck?'#16a34a':'#fff')+';color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;margin-top:.1rem">'+(ck?'&#10003;':'')+'</div>'
+      +'<div style="flex:1"><div style="font-size:.8rem;font-weight:700;color:#1e293b">'+(i+1)+'. '+esc(it.title)+'</div>'
+      +'<div style="font-size:.72rem;color:#64748b;margin-top:.15rem">'+esc(it.desc)+'</div>'
+      +'<div style="font-size:.66rem;color:#16a34a;margin-top:.25rem">&#128737; '+esc(it.threat)+'</div></div></div>';
+  }).join('');
+  var num=document.getElementById('wifiScoreNum'); if(num) num.textContent=score;
+  var bar=document.getElementById('wifiProgressBar'); if(bar) bar.style.width=score+'%';
+  var lbl=document.getElementById('wifiScoreLabel'), sub=document.getElementById('wifiScoreSub');
+  if(lbl&&sub){
+    if(score===100){lbl.textContent='Excellent — fully hardened!';sub.textContent='You\'ve completed every recommended step. Re-check monthly.';}
+    else if(score>=70){lbl.textContent='Good progress';sub.textContent=(total-done)+' step'+((total-done)>1?'s':'')+' left to fully secure your network.';}
+    else if(score>=40){lbl.textContent='Needs attention';sub.textContent='Several important steps are still open — keep going.';}
+    else{lbl.textContent='At risk';sub.textContent='Your network has major gaps. Start ticking off the steps below.';}
+  }
+}
+
+function _mySecModel() {
+  var devices=[]; try{devices=JSON.parse(localStorage.getItem('pm_devices_v3')||'[]');}catch(e){}
+  var alerts=[]; try{alerts=JSON.parse(localStorage.getItem('pm_alerts_v3')||'[]');}catch(e){}
+  var wifi={}; try{wifi=JSON.parse(localStorage.getItem('pm_wifi_check')||'{}');}catch(e){}
+  var wifiDone=Object.keys(wifi).filter(function(k){return wifi[k];}).length;
+  var wifiScore=Math.round((wifiDone/13)*100);
+  var scored=devices.map(function(d){return d.security_score!=null?d.security_score:null;}).filter(function(v){return v!=null;});
+  var devScore=scored.length?Math.round(scored.reduce(function(a,b){return a+b;},0)/scored.length):null;
+  var crit=alerts.filter(function(a){return (a.severity||'').toLowerCase()==='critical';}).length;
+  // overall = blend of device score (if any) and wifi score
+  var overall = devScore!=null ? Math.round(devScore*0.6 + wifiScore*0.4) : wifiScore;
+  return {devices:devices.length, wifiScore:wifiScore, devScore:devScore, crit:crit, overall:overall, alerts:alerts.length};
+}
+function renderSummary() {
+  var m=_mySecModel();
+  var stats=document.getElementById('clSummaryStats');
+  if (stats) {
+    var card=function(label,val,color){return '<div style="text-align:center;padding:.6rem;background:#f8fafc;border-radius:8px"><div style="font-size:1.5rem;font-weight:800;color:'+color+'">'+val+'</div><div style="font-size:.6rem;color:#64748b;text-transform:uppercase">'+label+'</div></div>';};
+    var oc=m.overall>=75?'#16a34a':m.overall>=50?'#d97706':'#dc2626';
+    stats.innerHTML=card('Overall Score',m.overall,oc)+card('Devices',m.devices,'#1d4ed8')+card('WiFi Score',m.wifiScore+'%',m.wifiScore>=70?'#16a34a':'#d97706');
+  }
+  var recs=document.getElementById('clSummaryRecs');
+  if (recs) {
+    var items=[];
+    if (m.wifiScore<100) items.push('Complete your <b>WiFi Security Check</b> ('+m.wifiScore+'% done) to harden your home network.');
+    if (m.devices===0) items.push('Add your devices under <b>My Devices</b> so they can be monitored.');
+    if (m.crit>0) items.push('You have <b>'+m.crit+' critical alert(s)</b> — review them in the Dashboard.');
+    if (m.devScore==null && m.devices>0) items.push('Run a scan from the <b>Scanner Dashboard</b> to score your devices.');
+    if (!items.length) items.push('Great — no outstanding recommendations. Keep scanning regularly to stay secure.');
+    recs.innerHTML='<ul style="margin:0;padding-left:1.1rem">'+items.map(function(i){return '<li style="margin-bottom:.3rem">'+i+'</li>';}).join('')+'</ul>';
+  }
+}
+function downloadMyReport() {
+  var m=_mySecModel();
+  var s=AUTH.getSession()||{};
+  var today=new Date().toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
+  var oc=m.overall>=75?'#16a34a':m.overall>=50?'#d97706':'#dc2626';
+  var html='<!doctype html><html><head><meta charset="utf-8"><title>My Security Report</title>'
+    +'<style>body{font-family:Arial,sans-serif;color:#1e293b;max-width:720px;margin:24px auto;padding:0 24px}'
+    +'h1{font-size:22px;margin:0}.sub{color:#64748b;font-size:13px}.banner{background:'+oc+';color:#fff;border-radius:10px;padding:18px;margin:16px 0;text-align:center}'
+    +'.kpis{display:flex;gap:12px}.kpi{flex:1;border:1px solid #e2e8f0;border-radius:8px;padding:12px;text-align:center}.kpi .n{font-size:22px;font-weight:800}.kpi .l{font-size:11px;color:#64748b}'
+    +'@media print{.noprint{display:none}}</style></head><body>'
+    +'<h1>My Security Report</h1><div class="sub">'+esc(s.name||'My account')+' &middot; '+today+'</div>'
+    +'<div class="banner"><div style="font-size:12px;opacity:.9">OVERALL SECURITY SCORE</div><div style="font-size:40px;font-weight:800">'+m.overall+'</div><div style="font-size:12px;opacity:.9">out of 100</div></div>'
+    +'<div class="kpis"><div class="kpi"><div class="n">'+m.devices+'</div><div class="l">Devices</div></div>'
+    +'<div class="kpi"><div class="n">'+m.wifiScore+'%</div><div class="l">WiFi Check</div></div>'
+    +'<div class="kpi"><div class="n" style="color:#dc2626">'+m.crit+'</div><div class="l">Critical Alerts</div></div></div>'
+    +'<p style="font-size:13px;color:#475569;margin-top:16px">Generated by PM::OFFSEC on '+today+'. Keep your WiFi checklist complete and scan your devices regularly to maintain a strong score.</p>'
+    +'<div class="noprint" style="text-align:center;margin-top:20px"><button onclick="window.print()" style="background:#1d4ed8;color:#fff;border:none;padding:10px 20px;border-radius:6px;cursor:pointer">Save as PDF</button></div>'
+    +'<script>setTimeout(function(){window.print();},500);<\/script></body></html>';
+  var w=window.open('','_blank');
+  if(!w){alert('Please allow pop-ups to download your report.');return;}
+  w.document.write(html); w.document.close();
+}
+
 async function loadMyDevices() {
   var grid = document.getElementById('clDeviceGrid');
   if (!grid) return;
@@ -1431,11 +1587,27 @@ async function clAiSend() {
 
 function saveClProfile() {
   var name = (document.getElementById('clProfileName').value||'').trim();
-  if (!name) return;
+  if (!name) { alert('Please enter your name.'); return; }
   var sess = AUTH && AUTH.getSession ? AUTH.getSession() : {};
   sess.name = name;
+  try { sessionStorage.setItem('pm_session_v2', JSON.stringify(sess)); } catch(e){}
   try { localStorage.setItem('pm_session_v2', JSON.stringify(sess)); } catch(e){}
-  alert('Profile saved');
+  // reflect in the sidebar/header immediately
+  var av=document.getElementById('clAvatar'), nm=document.getElementById('clName');
+  if (nm) nm.textContent = name;
+  alert('Profile saved.');
+}
+
+function saveClSettings(btn) {
+  // Persist the notification/security toggles next to this button
+  var card = btn.closest('div');
+  var prefs = {};
+  var boxes = card ? card.querySelectorAll('input[type=checkbox]') : [];
+  boxes.forEach(function(cb, i){ prefs['pref'+i] = cb.checked; });
+  try { localStorage.setItem('pm_cl_settings', JSON.stringify(prefs)); } catch(e){}
+  var old = btn.textContent;
+  btn.textContent = '\u2713 Saved';
+  setTimeout(function(){ btn.textContent = old; }, 1500);
 }
 
 
