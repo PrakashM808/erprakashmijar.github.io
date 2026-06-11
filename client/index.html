@@ -304,7 +304,7 @@
       <div class="cl-sb-sec">Reports</div>
       <button onclick="tab('reports')" id="clTab-reports" class="cl-sb-btn">&#128196; Scan Reports</button>
       <button onclick="tab('summary')" id="clTab-summary" class="cl-sb-btn">&#128196; Security Reports</button>
-      <button onclick="window.print()" class="cl-sb-btn">&#11015; PDF Export</button>
+      <button onclick="tab('summary');downloadMyReport()" class="cl-sb-btn">&#11015; PDF Export</button>
 
       <div class="cl-sb-sec">AI Security Assistant</div>
       <button onclick="tab('ai')" id="clTab-ai" class="cl-sb-btn">&#129302; Ask AI Assistant</button>
@@ -314,9 +314,9 @@
       <button onclick="tab('billing')" class="cl-sb-btn">&#11014; Upgrade Plan</button>
 
       <div class="cl-sb-sec">Settings</div>
-      <button onclick="tab('settings')" id="clTab-settings" class="cl-sb-btn">&#128100; Profile</button>
-      <button onclick="tab('settings')" class="cl-sb-btn">&#128276; Notifications</button>
-      <button onclick="tab('settings')" class="cl-sb-btn">&#128737; Security Preferences</button>
+      <button onclick="tab('settings');clSettingsView('profile')" id="clTab-settings" class="cl-sb-btn">&#128100; Profile</button>
+      <button onclick="tab('settings');clSettingsView('notif')" class="cl-sb-btn">&#128276; Notifications</button>
+      <button onclick="tab('settings');clSettingsView('notif')" class="cl-sb-btn">&#128737; Security Preferences</button>
 
       <div class="cl-sb-sec">Portal</div>
       <button onclick="goToClientScanner()" class="cl-sb-btn">&#128269; Scanner Dashboard</button>
@@ -564,7 +564,7 @@
 <div class="tab-pane" id="tp-settings">
   <h3 style="font-size:.9rem;font-weight:700;margin-bottom:.8rem;color:#1e293b">&#9881; Settings</h3>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">
-    <div style="background:#fff;border-radius:10px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+    <div id="clSetProfile" style="background:#fff;border-radius:10px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,.06)">
       <div style="font-size:.78rem;font-weight:700;color:#1e293b;margin-bottom:.6rem">&#128100; Profile</div>
       <div style="display:flex;flex-direction:column;gap:.4rem">
         <div><label style="font-size:.68rem;color:#64748b;display:block;margin-bottom:.15rem">Name</label><input style="width:100%;padding:.4rem .5rem;border:1px solid #e2e8f0;border-radius:5px;font-size:.75rem" id="clProfileName" placeholder="Your name"/></div>
@@ -572,7 +572,7 @@
         <button onclick="saveClProfile()" style="padding:.4rem;background:#1d4ed8;color:#fff;border:none;border-radius:5px;font-size:.7rem;cursor:pointer;margin-top:.3rem">Save Profile</button>
       </div>
     </div>
-    <div style="background:#fff;border-radius:10px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+    <div id="clSetNotif" style="background:#fff;border-radius:10px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,.06)">
       <div style="font-size:.78rem;font-weight:700;color:#1e293b;margin-bottom:.6rem">&#128276; Notifications & Security</div>
       <div style="display:flex;flex-direction:column;gap:.5rem">
         <label style="display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:#475569"><input type="checkbox" checked/> Email alerts for critical issues</label>
@@ -1598,8 +1598,19 @@ function saveClProfile() {
   alert('Profile saved.');
 }
 
+function clSettingsView(which) {
+  setTimeout(function(){
+    var id = which==='notif' ? 'clSetNotif' : 'clSetProfile';
+    var el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({behavior:'smooth', block:'center'});
+      el.style.transition='box-shadow .3s';
+      el.style.boxShadow='0 0 0 2px #1d4ed8';
+      setTimeout(function(){ el.style.boxShadow='0 1px 4px rgba(0,0,0,.06)'; }, 1200);
+    }
+  }, 60);
+}
 function saveClSettings(btn) {
-  // Persist the notification/security toggles next to this button
   var card = btn.closest('div');
   var prefs = {};
   var boxes = card ? card.querySelectorAll('input[type=checkbox]') : [];

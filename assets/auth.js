@@ -457,7 +457,7 @@ const AUTH = (() => {
   }
 
   /* ── Backend-first register (real server account when online) ── */
-  async function registerBackend(name, email, password, clientType) {
+  async function registerBackend(name, email, password, clientType, industry) {
     if (!name || name.trim().length < 2) return { ok:false, error:'Name must be at least 2 characters.' };
     if (!email || !email.includes('@')) return { ok:false, error:'Please enter a valid email address.' };
     if (!password || password.length < 8) return { ok:false, error:'Password must be at least 8 characters.' };
@@ -465,7 +465,7 @@ const AUTH = (() => {
     if (!/[0-9]/.test(password)) return { ok:false, error:'Password must contain at least one number.' };
 
     var ctype = (clientType === 'business') ? 'business' : 'individual';
-    var resp = await backendCall('/api/auth/register', { email: email.toLowerCase(), password: password, name: name.trim(), plan: 'free', client_type: ctype });
+    var resp = await backendCall('/api/auth/register', { email: email.toLowerCase(), password: password, name: name.trim(), plan: 'free', client_type: ctype, industry: industry || '' });
     if (resp.offline) {
       var r = register(name, email, password, ctype);   // backend down → local fallback
       if (r.ok) r.local_only = true;

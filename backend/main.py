@@ -370,6 +370,7 @@ class JWTRegisterReq(BaseModel):
     phone: str = ""
     plan: str = "free"
     client_type: str = "individual"   # 'individual' | 'business'
+    industry: str = ""
 
 class JWTLoginReq(BaseModel):
     email: str
@@ -395,7 +396,7 @@ async def jwt_register(req: JWTRegisterReq, background_tasks: BackgroundTasks):
     # Business accounts get an organization automatically so the business portal works immediately.
     if ctype == "business":
         try:
-            org = org_create(req.company or (req.name + "'s Organization"), user_id, req.plan)
+            org = org_create(req.company or (req.name + "'s Organization"), user_id, req.plan, req.industry or 'generic')
             user_update(user_id, org_id=org["id"], role="owner")
             reg_role = "owner"
             reg_org_id = org["id"]

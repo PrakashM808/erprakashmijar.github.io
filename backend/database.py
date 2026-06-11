@@ -1103,12 +1103,12 @@ def get_score_history(user_id: str, days: int = 30) -> List[dict]:
 
 # ── Organization helpers ─────────────────────────────────────────────────────
 
-def org_create(name: str, owner_id: str, plan: str = 'starter') -> dict:
+def org_create(name: str, owner_id: str, plan: str = 'starter', industry: str = 'generic') -> dict:
     with get_db() as conn:
         if not conn:
             oid = 'org-' + owner_id[:8]
             _mem.setdefault('orgs', {})[oid] = {
-                'id': oid, 'name': name, 'owner_id': owner_id, 'plan': plan,
+                'id': oid, 'name': name, 'owner_id': owner_id, 'plan': plan, 'industry': industry or 'generic',
                 'status': 'active', 'max_devices': 10, 'max_employees': 25
             }
             return _mem['orgs'][oid]

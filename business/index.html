@@ -200,14 +200,16 @@ html,body{overflow-x:hidden;max-width:100%}
       <button class="sb-item" onclick="bizNav('roles')"><span class="sb-ico">&#127919;</span>Roles</button>
       <button class="sb-item" onclick="bizNav('permissions')"><span class="sb-ico">&#128275;</span>Permissions</button>
 
-      <div class="sb-section">Asset Management</div>
-      <button class="sb-item" onclick="bizNav('devices')"><span class="sb-ico">&#128421;</span>Servers<span class="sb-badge" id="sbDevBadge" style="display:none">0</span></button>
-      <button class="sb-item" onclick="bizNav('devices')"><span class="sb-ico">&#128187;</span>Workstations</button>
-      <button class="sb-item" onclick="bizNav('devices')"><span class="sb-ico">&#128187;</span>Laptops</button>
-      <button class="sb-item" onclick="bizNav('devices')"><span class="sb-ico">&#127760;</span>Routers</button>
-      <button class="sb-item" onclick="bizNav('devices')"><span class="sb-ico">&#128257;</span>Switches</button>
-      <button class="sb-item" onclick="bizNav('devices')"><span class="sb-ico">&#128737;</span>Firewalls</button>
-      <button class="sb-item" onclick="bizNav('devices')"><span class="sb-ico">&#128247;</span>CCTV Cameras</button>
+      <div class="sb-section" id="sbAssetSection">Asset Management</div>
+      <div id="sbAssetItems">
+      <button class="sb-item" onclick="bizNav('servers')"><span class="sb-ico">&#128421;</span>Servers<span class="sb-badge" id="sbDevBadge" style="display:none">0</span></button>
+      <button class="sb-item" onclick="bizNav('workstations')"><span class="sb-ico">&#128187;</span>Workstations</button>
+      <button class="sb-item" onclick="bizNav('laptops')"><span class="sb-ico">&#128187;</span>Laptops</button>
+      <button class="sb-item" onclick="bizNav('routers')"><span class="sb-ico">&#127760;</span>Routers</button>
+      <button class="sb-item" onclick="bizNav('switches')"><span class="sb-ico">&#128257;</span>Switches</button>
+      <button class="sb-item" onclick="bizNav('firewalls')"><span class="sb-ico">&#128737;</span>Firewalls</button>
+      <button class="sb-item" onclick="bizNav('cameras')"><span class="sb-ico">&#128247;</span>CCTV Cameras</button>
+      </div>
 
       <div class="sb-section">Security Scans</div>
       <button class="sb-item" onclick="goToBizScanner()"><span class="sb-ico">&#128269;</span>Run Security Scan &#8594;</button>
@@ -226,13 +228,13 @@ html,body{overflow-x:hidden;max-width:100%}
 
       <div class="sb-section">Billing</div>
       <button class="sb-item" onclick="bizNav('billing')"><span class="sb-ico">&#128179;</span>Subscription</button>
-      <button class="sb-item" onclick="bizNav('billing')"><span class="sb-ico">&#128200;</span>Usage</button>
-      <button class="sb-item" onclick="bizNav('billing')"><span class="sb-ico">&#128203;</span>Invoices</button>
+      <button class="sb-item" onclick="bizBillingView('usage')"><span class="sb-ico">&#128200;</span>Usage</button>
+      <button class="sb-item" onclick="bizBillingView('invoices')"><span class="sb-ico">&#128203;</span>Invoices</button>
 
       <div class="sb-section">Settings</div>
-      <button class="sb-item" onclick="bizNav('settings')"><span class="sb-ico">&#127970;</span>Company Profile</button>
-      <button class="sb-item" onclick="bizNav('settings')"><span class="sb-ico">&#128737;</span>Security Policies</button>
-      <button class="sb-item" onclick="bizNav('settings')"><span class="sb-ico">&#128276;</span>Notification Settings</button>
+      <button class="sb-item" onclick="bizSettingsView('profile')"><span class="sb-ico">&#127970;</span>Company Profile</button>
+      <button class="sb-item" onclick="bizSettingsView('policies')"><span class="sb-ico">&#128737;</span>Security Policies</button>
+      <button class="sb-item" onclick="bizSettingsView('notifications')"><span class="sb-ico">&#128276;</span>Notification Settings</button>
 
       <div class="sb-section">Portal</div>
       <button class="sb-item" onclick="goToBizScanner()"><span class="sb-ico">&#128269;</span>Scanner Dashboard</button>
@@ -252,6 +254,14 @@ html,body{overflow-x:hidden;max-width:100%}
         <div class="topbar-title" id="bizPageTitle">OVERVIEW</div>
       </div>
       <div class="topbar-right">
+        <select id="bizIndustrySelect" onchange="setBizIndustry(this.value)" title="Business type" style="background:var(--card2,#0f1626);color:var(--text,#cbd5e1);border:1px solid var(--border,#1e2a44);border-radius:6px;font-family:var(--mono);font-size:.6rem;padding:.3rem .4rem;cursor:pointer">
+          <option value="generic">&#127970; Generic Business</option>
+          <option value="bank">&#127974; Bank / ATM</option>
+          <option value="hotel">&#127976; Hotel</option>
+          <option value="gas">&#9981; Gas Station</option>
+          <option value="retail">&#128722; Retail Store</option>
+          <option value="clinic">&#127973; Clinic</option>
+        </select>
         <span class="chip chip-green" id="bizApiChip">&#9679; API OFFLINE</span>
         <span class="chip chip-purple" id="bizPlanChip">FREE</span>
         <div style="width:30px;height:30px;border-radius:50%;background:var(--g3);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.65rem;font-weight:700;color:#fff;flex-shrink:0" id="bizAvatar">?</div>
@@ -477,8 +487,8 @@ html,body{overflow-x:hidden;max-width:100%}
       <div class="page" id="biz-devices">
         <div class="pg-hdr" style="display:flex;align-items:flex-start;justify-content:space-between">
           <div>
-            <div class="pg-title">DEVICES</div>
-            <div class="pg-sub">All registered devices across your organization</div>
+            <div class="pg-title" id="bizDevTitle">DEVICES</div>
+            <div class="pg-sub" id="bizDevSub">All registered devices across your organization</div>
           </div>
           <a href="../dashboard/index.html?stay=1" class="btn btn-b">&#128269; Scan a Device</a>
         </div>
@@ -544,10 +554,10 @@ html,body{overflow-x:hidden;max-width:100%}
 
       <!-- ── COMPLIANCE PAGE ── -->
       <div class="page" id="biz-compliance">
-        <div class="pg-hdr"><div class="pg-title">COMPLIANCE</div><div class="pg-sub">Regulatory compliance status for your organization</div></div>
-        <div class="panel"><div class="panel-hdr"><div class="panel-title">COMPLIANCE FRAMEWORKS</div></div>
-          <div class="panel-body"><p style="font-family:var(--mono);font-size:.63rem;color:var(--muted);margin-bottom:.8rem">Full compliance scoring (SOC2, ISO27001, PCI DSS, GDPR, HIPAA, NIST) is in the Scan Dashboard.</p>
-            <a href="../dashboard/index.html?stay=1" class="btn btn-b">&#128269; View Compliance in Dashboard</a></div></div>
+        <div class="pg-hdr"><div class="pg-title">COMPLIANCE</div><div class="pg-sub" id="bizCompSub">Regulatory compliance status for your organization</div></div>
+        <div class="panel"><div class="panel-hdr"><div class="panel-title" id="bizCompFramework">COMPLIANCE FRAMEWORK</div></div>
+          <div class="panel-body" id="bizComplianceBody"><div class="empty">Loading…</div></div>
+        </div>
       </div>
 
       <!-- ── SETTINGS PAGE ── -->
@@ -747,6 +757,171 @@ html,body{overflow-x:hidden;max-width:100%}
 var BIZ_SESSION = null;
 var BIZ_ORG     = null;
 var BIZ_DATA    = { employees: [], devices: [], stats: {} };
+
+/* ═══════════════════════════════════════════════════════
+   INDUSTRY PROFILES — tailor the portal to the business type.
+   Each profile defines: the assets that matter, the relevant
+   compliance framework + checklist, and executive-dashboard language.
+   Adding a new industry = add one entry here.
+═══════════════════════════════════════════════════════ */
+var INDUSTRY_PROFILES = {
+  generic: {
+    label: 'Generic Business', icon: '\uD83C\uDFE2', assetTitle: 'Asset Management',
+    assets: [
+      {type:'servers',     ico:'\uD83D\uDDA5\uFE0F', label:'Servers'},
+      {type:'workstations',ico:'\uD83D\uDCBB', label:'Workstations'},
+      {type:'laptops',     ico:'\uD83D\uDCBB', label:'Laptops'},
+      {type:'routers',     ico:'\uD83C\uDF10', label:'Routers'},
+      {type:'firewalls',   ico:'\uD83D\uDEE1\uFE0F', label:'Firewalls'},
+      {type:'cameras',     ico:'\uD83D\uDCF7', label:'CCTV Cameras'}
+    ],
+    framework: 'General Security Best Practice',
+    checklist: [
+      'Strong passwords & MFA on all admin accounts',
+      'Firewall enabled at network and device level',
+      'Regular software & OS updates applied',
+      'Staff trained on phishing awareness',
+      'Backups taken and tested regularly'
+    ],
+    execFocus: 'overall security posture'
+  },
+  bank: {
+    label: 'Bank / ATM Network', icon: '\uD83C\uDFE6', assetTitle: 'Banking Assets',
+    assets: [
+      {type:'atms',        ico:'\uD83C\uDFE7', label:'ATMs'},
+      {type:'servers',     ico:'\uD83D\uDDA5\uFE0F', label:'Core Servers'},
+      {type:'workstations',ico:'\uD83D\uDCBB', label:'Teller Workstations'},
+      {type:'firewalls',   ico:'\uD83D\uDEE1\uFE0F', label:'Firewalls'},
+      {type:'routers',     ico:'\uD83C\uDF10', label:'Network Devices'},
+      {type:'cameras',     ico:'\uD83D\uDCF7', label:'Surveillance'}
+    ],
+    framework: 'PCI-DSS + Financial Regulation',
+    checklist: [
+      'ATMs on isolated network segment (not shared with office)',
+      'PCI-DSS: cardholder data encrypted in transit and at rest',
+      'Dual-control & tamper monitoring on ATM hardware',
+      'Privileged access logged and reviewed (audit trail)',
+      'Anti-skimming inspection schedule in place',
+      'Segregation of duties for fund-handling systems'
+    ],
+    execFocus: 'cardholder data & ATM network risk'
+  },
+  hotel: {
+    label: 'Hotel / Hospitality', icon: '\uD83C\uDFE8', assetTitle: 'Hotel Systems',
+    assets: [
+      {type:'pos',         ico:'\uD83D\uDCB3', label:'POS Terminals'},
+      {type:'guestwifi',   ico:'\uD83D\uDCF6', label:'Guest WiFi'},
+      {type:'doorlocks',   ico:'\uD83D\uDD10', label:'Door Lock Systems'},
+      {type:'servers',     ico:'\uD83D\uDDA5\uFE0F', label:'PMS / Booking Servers'},
+      {type:'cameras',     ico:'\uD83D\uDCF7', label:'CCTV'},
+      {type:'workstations',ico:'\uD83D\uDCBB', label:'Front-Desk PCs'}
+    ],
+    framework: 'PCI-DSS + Guest Data Protection',
+    checklist: [
+      'Guest WiFi isolated from payment & back-office networks',
+      'PCI-DSS: card payments on POS are encrypted/tokenised',
+      'Door-lock system firmware kept up to date',
+      'Booking/PMS server access restricted to staff roles',
+      'Guest personal data stored and disposed of securely',
+      'CCTV retention complies with local privacy law'
+    ],
+    execFocus: 'guest data & payment system risk'
+  },
+  gas: {
+    label: 'Gas / Petrol Station', icon: '\u26FD', assetTitle: 'Station Systems',
+    assets: [
+      {type:'pumps',       ico:'\u26FD', label:'Fuel Pump Controllers'},
+      {type:'pos',         ico:'\uD83D\uDCB3', label:'POS / Payment'},
+      {type:'cameras',     ico:'\uD83D\uDCF7', label:'CCTV'},
+      {type:'routers',     ico:'\uD83C\uDF10', label:'Network Devices'},
+      {type:'workstations',ico:'\uD83D\uDCBB', label:'Back-Office PC'}
+    ],
+    framework: 'PCI-DSS (Payment Card Industry)',
+    checklist: [
+      'Pump card readers inspected for skimmers regularly',
+      'PCI-DSS: payment terminals encrypt card data',
+      'Pump controllers on segmented network',
+      'Default passwords changed on all payment devices',
+      'CCTV covers all pumps and POS points',
+      'Remote access to forecourt systems disabled or secured'
+    ],
+    execFocus: 'payment skimming & POS risk'
+  },
+  retail: {
+    label: 'Retail Store', icon: '\uD83D\uDED2', assetTitle: 'Store Systems',
+    assets: [
+      {type:'pos',         ico:'\uD83D\uDCB3', label:'POS Terminals'},
+      {type:'servers',     ico:'\uD83D\uDDA5\uFE0F', label:'Inventory Servers'},
+      {type:'cameras',     ico:'\uD83D\uDCF7', label:'CCTV'},
+      {type:'routers',     ico:'\uD83C\uDF10', label:'Network / WiFi'},
+      {type:'workstations',ico:'\uD83D\uDCBB', label:'Back-Office PCs'}
+    ],
+    framework: 'PCI-DSS (Payment Card Industry)',
+    checklist: [
+      'POS terminals run latest patched software',
+      'PCI-DSS: card data encrypted, never stored in clear',
+      'Customer WiFi separated from POS network',
+      'Inventory/server access limited by staff role',
+      'CCTV covers tills and stock areas',
+      'Default device passwords changed'
+    ],
+    execFocus: 'POS & customer payment risk'
+  },
+  clinic: {
+    label: 'Clinic / Healthcare', icon: '\uD83C\uDFE5', assetTitle: 'Clinical Systems',
+    assets: [
+      {type:'ehr',         ico:'\uD83D\uDCCB', label:'EHR / Records Servers'},
+      {type:'workstations',ico:'\uD83D\uDCBB', label:'Clinical Workstations'},
+      {type:'medical',     ico:'\uD83E\uDE7A', label:'Medical Devices'},
+      {type:'cameras',     ico:'\uD83D\uDCF7', label:'CCTV'},
+      {type:'routers',     ico:'\uD83C\uDF10', label:'Network Devices'}
+    ],
+    framework: 'HIPAA / Patient Data Protection',
+    checklist: [
+      'HIPAA: patient records (PHI) encrypted at rest & in transit',
+      'Access to records logged and limited by clinical role',
+      'Medical devices segmented from general network',
+      'Workstations auto-lock when unattended',
+      'Backups of patient data tested and encrypted',
+      'Business-associate agreements in place with vendors'
+    ],
+    execFocus: 'patient data (PHI) & HIPAA risk'
+  }
+};
+
+function getBizIndustry() {
+  try { return localStorage.getItem('pm_biz_industry') || 'generic'; } catch(e) { return 'generic'; }
+}
+function INDUSTRY_ASSET_LABEL(type) {
+  var prof = INDUSTRY_PROFILES[getBizIndustry()] || INDUSTRY_PROFILES.generic;
+  var a = prof.assets.filter(function(x){ return x.type === type; })[0];
+  return a ? a.label : null;
+}
+function setBizIndustry(key) {
+  if (!INDUSTRY_PROFILES[key]) key = 'generic';
+  try { localStorage.setItem('pm_biz_industry', key); } catch(e) {}
+  var sel = document.getElementById('bizIndustrySelect');
+  if (sel) sel.value = key;
+  applyIndustryProfile();
+  if (typeof bizToast === 'function') bizToast('Portal tailored for: ' + INDUSTRY_PROFILES[key].label, 'ok');
+}
+function applyIndustryProfile() {
+  var prof = INDUSTRY_PROFILES[getBizIndustry()] || INDUSTRY_PROFILES.generic;
+  // 1) Rebuild the asset sidebar items
+  var sec = document.getElementById('sbAssetSection');
+  if (sec) sec.textContent = prof.assetTitle;
+  var box = document.getElementById('sbAssetItems');
+  if (box) {
+    box.innerHTML = prof.assets.map(function(a, i){
+      var badge = (i===0) ? '<span class="sb-badge" id="sbDevBadge" style="display:none">0</span>' : '';
+      return '<button class="sb-item" onclick="bizNav(\''+a.type+'\')"><span class="sb-ico">'+a.ico+'</span>'+a.label+badge+'</button>';
+    }).join('');
+  }
+  // 2) Refresh compliance + executive views if currently open
+  if (typeof renderCompliance === 'function') renderCompliance();
+  var execPage = document.getElementById('biz-executive');
+  if (execPage && execPage.classList.contains('active') && typeof renderExecutive === 'function') renderExecutive();
+}
 var BIZ_API     = null;
 
 /* ── Settings init (reuse dashboard settings) ── */
@@ -848,6 +1023,10 @@ function startBizApp() {
   var name = BIZ_SESSION ? (BIZ_SESSION.name || BIZ_SESSION.email || 'User') : 'User';
   document.getElementById('bizUserName').textContent = name.split(' ')[0];
   document.getElementById('bizAvatar').textContent = (name[0] || '?').toUpperCase();
+  // Apply the saved industry profile (tailors assets, compliance, exec view)
+  var indSel = document.getElementById('bizIndustrySelect');
+  if (indSel) indSel.value = getBizIndustry();
+  applyIndustryProfile();
   loadOrgData();
 }
 
@@ -904,12 +1083,14 @@ function bizNav(page) {
   if (page === 'reports')      renderBizScanReports();
   if (page === 'executive')    renderExecutive();
   if (page === 'netwatch')     renderNetWatch();
+  if (page === 'compliance')   renderCompliance();
   if (page === 'incidents')    renderIncidents();
   if (page === 'integrations') renderIntegrations();
   if (page === 'secpolicies')  renderSecPolicies();
   if (page === 'notifications') renderNotifSettings();
-  var assetPages = ['servers','workstations','laptops','routers','switches','firewalls','cameras'];
-  if (assetPages.indexOf(page) >= 0) renderAssetPage(page);
+  var staticAssets = ['servers','workstations','laptops','routers','switches','firewalls','cameras'];
+  var industryAssets = (INDUSTRY_PROFILES[getBizIndustry()]||INDUSTRY_PROFILES.generic).assets.map(function(a){return a.type;});
+  if (staticAssets.indexOf(page) >= 0 || industryAssets.indexOf(page) >= 0) renderAssetPage(page);
 }
 
 /* ── Data loading ── */
@@ -919,6 +1100,13 @@ async function loadOrgData() {
   if (!data) { renderDemoData(); return; }
 
   BIZ_ORG  = data.org;
+  // If the org has a stored business type, tailor the portal to it
+  if (data.org && data.org.industry && INDUSTRY_PROFILES[data.org.industry]) {
+    try { localStorage.setItem('pm_biz_industry', data.org.industry); } catch(e) {}
+    var indSel = document.getElementById('bizIndustrySelect');
+    if (indSel) indSel.value = data.org.industry;
+    applyIndustryProfile();
+  }
   BIZ_DATA = {
     employees: data.employees || [],
     devices:   data.devices   || [],
@@ -1066,14 +1254,21 @@ function renderEmployeeTable() {
 }
 
 /* ── Device Grid ── */
-function renderDeviceGrid() {
+function renderDeviceGrid(typeFilter) {
   var el = document.getElementById('devicesGrid');
   var countEl = document.getElementById('devCount');
   if (!el) return;
   var devs = BIZ_DATA.devices;
+  // Filter by asset type when a specific asset page is open
+  var typeMap = {servers:['server'],workstations:['workstation','desktop'],laptops:['laptop'],routers:['router'],switches:['switch'],firewalls:['firewall'],cameras:['camera','cctv'],
+    atms:['atm'],pos:['pos','payment','terminal'],guestwifi:['wifi','ap','accesspoint'],doorlocks:['lock','doorlock'],pumps:['pump','fuelpump','controller'],ehr:['ehr','emr','records'],medical:['medical','iomt','device']};
+  if (typeFilter && typeMap[typeFilter]) {
+    devs = devs.filter(function(d){ return typeMap[typeFilter].indexOf((d.device_type||'').toLowerCase()) >= 0; });
+  }
   if (countEl) countEl.textContent = devs.length + ' device' + (devs.length===1?'':'s');
   if (!devs.length) {
-    el.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="empty-icon">&#128187;</div>No devices registered.<br>Employees can register via their portal.</div>';
+    var what = typeFilter ? typeFilter : 'devices';
+    el.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="empty-icon">&#128187;</div>No ' + what + ' registered yet.<br>Employees register devices from their portal; assign the type when adding.</div>';
     return;
   }
   el.innerHTML = devs.map(function(dev) {
@@ -1357,16 +1552,73 @@ function renderPermissions() {
       + '<td style="padding:.45rem;border-bottom:1px solid var(--border);text-align:center">'+(c[3]?tick:cross)+'</td></tr>';
   }).join('');
 }
+// ── Billing sub-views (Subscription / Usage / Invoices) ──
+function bizBillingView(view) {
+  bizNav('billing');
+  var el = document.getElementById('bizBillingContent');
+  if (!el) return;
+  var plan = (BIZ_SESSION && BIZ_SESSION.plan) ? BIZ_SESSION.plan : 'free';
+  var title = document.querySelector('#biz-billing .pg-title');
+  var sub = document.querySelector('#biz-billing .pg-sub');
+  if (view === 'usage') {
+    if (title) title.textContent = 'USAGE';
+    if (sub) sub.textContent = 'Your current usage against plan limits';
+    var emps = (BIZ_DATA && BIZ_DATA.employees) ? BIZ_DATA.employees.length : 0;
+    var devs = (BIZ_DATA && BIZ_DATA.devices) ? BIZ_DATA.devices.length : 0;
+    var scans = 0; try { scans = JSON.parse(localStorage.getItem('pm_scan_history_v3')||'[]').length; } catch(e){}
+    var limits = {free:{emp:3,dev:5,scan:10}, starter:{emp:10,dev:25,scan:100}, professional:{emp:50,dev:200,scan:1000}, enterprise:{emp:9999,dev:9999,scan:99999}};
+    var lim = limits[plan] || limits.free;
+    var row = function(label,used,max){
+      var pct = Math.min(100, Math.round((used/max)*100));
+      var col = pct>=90?'var(--danger)':pct>=70?'var(--warn)':'var(--ok)';
+      return '<div style="margin-bottom:.9rem"><div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--white);margin-bottom:.25rem"><span>'+label+'</span><span style="font-family:var(--mono)">'+used+' / '+(max>=9999?'\u221e':max)+'</span></div>'
+        + '<div style="background:var(--border);border-radius:999px;height:8px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:'+col+'"></div></div></div>';
+    };
+    el.innerHTML = '<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-bottom:.8rem">PLAN: '+plan.toUpperCase()+'</div>'
+      + row('Employees', emps, lim.emp) + row('Devices', devs, lim.dev) + row('Scans this month', scans, lim.scan);
+  } else if (view === 'invoices') {
+    if (title) title.textContent = 'INVOICES';
+    if (sub) sub.textContent = 'Your billing history';
+    el.innerHTML = '<div class="empty"><div class="empty-icon">&#128203;</div>No invoices yet. On the free plan there\'s nothing to pay. '
+      + 'When you upgrade, your invoices will appear here.<br><br><a href="../billing/pricing.html" class="btn btn-b btn-sm">View Plans</a></div>';
+  } else {
+    renderBilling();
+  }
+}
+
+// ── Settings sub-views (Profile / Policies / Notifications) ──
+function bizSettingsView(view) {
+  bizNav('settings');
+  // briefly highlight the relevant panel
+  setTimeout(function(){
+    var panels = document.querySelectorAll('#biz-settings .panel');
+    var idx = view==='policies' ? 1 : 0;
+    if (view==='notifications') {
+      bizToast('Notification settings are managed in the Security Policies panel.', 'info');
+      idx = 1;
+    }
+    if (panels[idx]) {
+      panels[idx].scrollIntoView({behavior:'smooth', block:'center'});
+      panels[idx].style.transition='box-shadow .3s';
+      panels[idx].style.boxShadow='0 0 0 2px var(--g2)';
+      setTimeout(function(){ panels[idx].style.boxShadow=''; }, 1200);
+    }
+  }, 60);
+}
+
 function renderAssetPage(type) {
   // All asset types load from the devices list, filtered by type
   var page = document.getElementById('biz-devices');
   if (!page) return;
-  // Re-use the devices page but with a type filter applied
-  renderDeviceGrid();
+  renderDeviceGrid(type);
   var typeLabel = {servers:'Servers',workstations:'Workstations',laptops:'Laptops',routers:'Routers',switches:'Switches',firewalls:'Firewalls',cameras:'CCTV Cameras'};
-  var title = document.getElementById('bizPageTitle');
-  if (title) title.textContent = typeLabel[type] || type.toUpperCase();
-  // Show the devices page
+  var label = typeLabel[type] || INDUSTRY_ASSET_LABEL(type) || 'Assets';
+  var title = document.getElementById('bizDevTitle');
+  if (title) title.textContent = label;
+  var topTitle = document.getElementById('bizPageTitle');
+  if (topTitle) topTitle.textContent = label.toUpperCase();
+  var sub = document.getElementById('bizDevSub');
+  if (sub) sub.textContent = 'Showing ' + (typeLabel[type] || 'all assets').toLowerCase() + ' in your organization';
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
   page.classList.add('active');
 }
@@ -1447,11 +1699,12 @@ function computeExecModel() {
 
 function renderExecutive() {
   var m = computeExecModel();
+  var prof = INDUSTRY_PROFILES[getBizIndustry()] || INDUSTRY_PROFILES.generic;
   var setText = function(id,v){ var e=document.getElementById(id); if(e) e.textContent=v; };
   var banner = document.getElementById('execRiskBanner');
   if (banner) { banner.style.background=m.bg; banner.style.color=m.color; }
   setText('execRiskLevel', m.level);
-  setText('execRiskSummary', m.summary);
+  setText('execRiskSummary', 'As a ' + prof.label + ', your key concern is ' + prof.execFocus + '. ' + m.summary);
   setText('execScore', m.avg||'--');
   setText('execCritical', m.critical);
   setText('execCompliance', m.compliance+'%');
@@ -1588,6 +1841,41 @@ function renderIntegrations() {
     if (saved[p[0]]) { btn.textContent = '\u2713 CONNECTED'; btn.style.color = 'var(--ok)'; btn.style.borderColor = 'var(--ok)'; }
     else { btn.textContent = 'CONFIGURE'; btn.style.color = ''; btn.style.borderColor = ''; }
   });
+}
+
+// ── Industry compliance checklist ──
+function bizCompState() {
+  try { return JSON.parse(localStorage.getItem('pm_biz_compliance_' + getBizIndustry()) || '{}'); } catch(e) { return {}; }
+}
+function toggleCompItem(i) {
+  var st = bizCompState();
+  st[i] = !st[i];
+  try { localStorage.setItem('pm_biz_compliance_' + getBizIndustry(), JSON.stringify(st)); } catch(e) {}
+  renderCompliance();
+}
+function renderCompliance() {
+  var prof = INDUSTRY_PROFILES[getBizIndustry()] || INDUSTRY_PROFILES.generic;
+  var fw = document.getElementById('bizCompFramework');
+  var sub = document.getElementById('bizCompSub');
+  var body = document.getElementById('bizComplianceBody');
+  if (fw) fw.textContent = prof.framework.toUpperCase();
+  if (sub) sub.textContent = 'Compliance for ' + prof.label + ' — ' + prof.framework;
+  if (!body) return;
+  var st = bizCompState();
+  var done = prof.checklist.filter(function(_, i){ return st[i]; }).length;
+  var total = prof.checklist.length;
+  var pct = Math.round((done / total) * 100);
+  var col = pct>=80?'var(--ok)':pct>=50?'var(--warn)':'var(--danger)';
+  var bar = '<div style="margin-bottom:1rem"><div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--white);margin-bottom:.3rem"><span>Compliance progress</span><span style="font-family:var(--mono);color:'+col+'">'+pct+'% ('+done+'/'+total+')</span></div>'
+    + '<div style="background:var(--border);border-radius:999px;height:9px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:'+col+'"></div></div></div>';
+  var items = prof.checklist.map(function(c, i){
+    var ck = !!st[i];
+    return '<div onclick="toggleCompItem('+i+')" style="display:flex;gap:.6rem;align-items:flex-start;padding:.55rem .2rem;border-bottom:1px solid var(--border);cursor:pointer">'
+      + '<div style="width:20px;height:20px;border-radius:5px;flex-shrink:0;border:2px solid '+(ck?'var(--ok)':'var(--muted)')+';background:'+(ck?'var(--ok)':'transparent')+';color:#0b0f1a;display:flex;align-items:center;justify-content:center;font-size:.7rem;margin-top:.1rem">'+(ck?'\u2713':'')+'</div>'
+      + '<div style="font-size:.74rem;color:var(--white)">'+bizEsc(c)+'</div></div>';
+  }).join('');
+  body.innerHTML = bar + items
+    + '<div style="margin-top:.8rem;font-family:var(--mono);font-size:.58rem;color:var(--muted)">This is a self-assessment checklist tailored to your business type. Full automated compliance scoring is available in the Scanner Dashboard.</div>';
 }
 
 async function renderNetWatch() {

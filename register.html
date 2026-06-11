@@ -321,10 +321,13 @@
           <div class="form-group">
             <label class="form-label">INDUSTRY</label>
             <select class="form-input" id="industry">
-              <option value="">Select industry...</option>
-              <option>Technology</option><option>Healthcare</option><option>Finance</option>
-              <option>Education</option><option>Retail</option><option>Manufacturing</option>
-              <option>Legal Services</option><option>Real Estate</option><option>Other</option>
+              <option value="">Select business type...</option>
+              <option value="generic">Generic Business / Office</option>
+              <option value="bank">Bank / ATM Network</option>
+              <option value="hotel">Hotel / Hospitality</option>
+              <option value="gas">Gas / Petrol Station</option>
+              <option value="retail">Retail Store</option>
+              <option value="clinic">Clinic / Healthcare</option>
             </select>
           </div>
           <div class="form-group">
@@ -726,7 +729,7 @@ function doRegister() {
   setTimeout(async function() {
     var fullName = (fn + ' ' + ln).trim();
     var clientType = (document.getElementById('clientType')||{}).value || 'individual';
-    var result = await AUTH.registerBackend(fullName, em, pw, clientType);
+    var result = await AUTH.registerBackend(fullName, em, pw, clientType, industry || 'generic');
 
     if (!result.ok) {
       showErr(result.error || 'Registration failed. Please try again.');
@@ -743,7 +746,13 @@ function doRegister() {
       users[idx].phone   = ph;
       users[idx].plan    = selPlan;
       users[idx].client_type = clientType;
+      users[idx].industry = industry || 'generic';
       AUTH.saveUsers(users);
+    }
+
+    // Save chosen business type so the business portal tailors itself from first login
+    if (clientType === 'business') {
+      try { localStorage.setItem('pm_biz_industry', industry || 'generic'); } catch(e) {}
     }
 
     // Update session with plan info
@@ -753,11 +762,12 @@ function doRegister() {
       session.company = co;
       session.phone   = ph;
       session.client_type = clientType;
+      session.industry = industry || 'generic';
       sessionStorage.setItem('pm_session_v2', JSON.stringify(session));
     }
 
-    // Route by account type: business → business dashboard, personal → personal portal.
-    var dest = clientType === 'business' ? 'dashboard/index.html' : 'client/index.html?preview=1';
+    // Route by account type: business → business portal, personal → personal portal.
+    var dest = clientType === 'business' ? 'business/index.html' : 'client/index.html?preview=1';
     if (result.local_only) {
       // Backend was unreachable — account exists only in this browser, not on the server.
       showErr('⚠️ Created an offline account only — could not reach the server, so this account is NOT saved to the database and won\'t work on other devices. Check that the backend is online, then register again.');
